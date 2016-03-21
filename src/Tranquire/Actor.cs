@@ -22,12 +22,12 @@ namespace Tranquire
             return (T)_abilities[typeof(T)];
         }
 
-        public IActor AttemptsTo(IPerformable performable)
+        public IActor AttemptsTo<TPerformable>(TPerformable performable) where TPerformable : IPerformable
         {
             return performable.PerformAs(this);
         }
 
-        public IActor WasAbleTo(IPerformable performable)
+        public IActor WasAbleTo<TPerformable>(TPerformable performable) where TPerformable : IPerformable
         {
             return performable.PerformAs(this);
         }
@@ -36,7 +36,7 @@ namespace Tranquire
         {
             _abilities[typeof(T)] = doSomething;
             return this;
-        }        
+        }
 
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
