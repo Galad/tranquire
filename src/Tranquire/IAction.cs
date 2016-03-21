@@ -28,8 +28,8 @@ namespace Tranquire
 
     public interface IActor
     {
-        IActor WasAbleTo(ITask performable);
-        IActor AttemptsTo(IAction performable);
+        IActor WasAbleTo(IPerformable performable);
+        IActor AttemptsTo(IPerformable performable);
         IActor Can<T>(T doSomething) where T : IAbility<T>;
         TAbility AbilityTo<TAbility>() where TAbility : IAbility<TAbility>;
         TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question);
