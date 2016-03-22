@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
-    public interface IAction : IPerformable
+    public interface IPerformable
     {
-    }  
+        T PerformAs<T>(T actor) where T : IActor;
+    }
 }

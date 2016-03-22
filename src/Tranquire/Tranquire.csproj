@@ -46,7 +46,12 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="CompositeAction.cs" />
+    <Compile Include="IAbility.cs" />
     <Compile Include="IAction.cs" />
+    <Compile Include="IActor.cs" />
+    <Compile Include="IPerformable.cs" />
+    <Compile Include="IQuestion.cs" />
+    <Compile Include="ITask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
