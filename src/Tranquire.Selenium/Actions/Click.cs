@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,9 @@ namespace Tranquire.Selenium
             this.xpath = xpath;
         }
 
-        public static Click On(string xpath)
+        public static ClickOnBy On(By by)
         {
-            return new Click(xpath);
-        }
-
-        public ClickAction ViewedBy(IActor actor)
-        {
-            return new ClickAction(xpath, actor);
-        }
+            return new ClickOnBy(by);
+        }        
     }
 }

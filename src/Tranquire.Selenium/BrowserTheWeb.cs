@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium
 {
-    public class BrowseTheWeb : IAbility<BrowseTheWeb>
+    public partial class BrowseTheWeb : IAbility<BrowseTheWeb>
     {
         private readonly IActor _actor;
 
@@ -30,7 +30,7 @@ namespace Tranquire.Selenium
 
         public static BrowseTheWeb As(IActor actor)
         {
-            return actor.AbilityTo<BrowseTheWeb>();
+            return actor.AbilityTo<BrowseTheWeb>().AsActor(actor);
         }
 
         public BrowseTheWeb AsActor(IActor actor)
