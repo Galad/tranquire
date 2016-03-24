@@ -11,6 +11,7 @@
     <AssemblyName>Tranquire</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="CompositeAction.cs" />
+    <Compile Include="Guard.cs" />
     <Compile Include="IAbility.cs" />
     <Compile Include="IAction.cs" />
     <Compile Include="IActor.cs" />

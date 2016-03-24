@@ -54,7 +54,7 @@ namespace Tranquire.Selenium
                 throw new NotImplementedException();
             }
 
-            public IActor AttemptsTo<TPerformable>(TPerformable performable) where TPerformable : IPerformable
+            public IActor AttemptsTo(IPerformable performable)
             {
                 throw new NotImplementedException();
             }
@@ -64,7 +64,7 @@ namespace Tranquire.Selenium
                 throw new NotImplementedException();
             }
 
-            public IActor WasAbleTo<TPerformable>(TPerformable performable) where TPerformable : IPerformable
+            public IActor WasAbleTo(IPerformable performable)
             {
                 throw new NotImplementedException();
             }
