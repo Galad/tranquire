@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actor.cs" />
-    <Compile Include="CompositeAction.cs" />
+    <Compile Include="CompositePerformable.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IAbility.cs" />
     <Compile Include="IAction.cs" />

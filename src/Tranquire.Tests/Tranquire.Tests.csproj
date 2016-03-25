@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorTests.cs" />
+    <Compile Include="CompositePerformableTests.cs" />
     <Compile Include="DomainAutoDataAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

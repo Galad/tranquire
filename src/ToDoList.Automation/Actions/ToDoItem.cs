@@ -37,7 +37,7 @@ namespace ToDoList.Automation.Actions
 
         public static IAction AddToDoItems(ImmutableArray<string> items)
         {
-            return new CompositeAction(items.Select(i => new ToDoItem(i)).ToArray());
+            return new CompositePerformable(items.Select(i => new ToDoItem(i)).ToArray());
         }
     }
 }
