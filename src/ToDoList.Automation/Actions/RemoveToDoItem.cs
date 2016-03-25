@@ -5,7 +5,7 @@ using OpenQA.Selenium;
 
 namespace ToDoList.Automation.Actions
 {
-    public class RemoveToDoItem : IAction
+    public class RemoveToDoItem : ITask
     {
         private string item;
 

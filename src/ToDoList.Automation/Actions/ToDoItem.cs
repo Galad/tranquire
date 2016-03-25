@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ToDoList.Automation.Actions
 {
-    public class ToDoItem : Tranquire.IAction
+    public class ToDoItem : Tranquire.ITask
     {
         private readonly string _title;
 
@@ -25,17 +25,17 @@ namespace ToDoList.Automation.Actions
             return actor;
         }
 
-        public static IAction RemoveAToDoItem(string item)
+        public static ITask RemoveAToDoItem(string item)
         {
             return new RemoveToDoItem(item);
         }
 
-        public static IAction AddAToDoItem(string title)
+        public static ITask AddAToDoItem(string title)
         {
             return new ToDoItem(title);
         }
 
-        public static IAction AddToDoItems(ImmutableArray<string> items)
+        public static ITask AddToDoItems(ImmutableArray<string> items)
         {
             return new CompositePerformable(items.Select(i => new ToDoItem(i)).ToArray());
         }
