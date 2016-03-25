@@ -11,7 +11,7 @@ namespace ToDoList.Automation.Actions
     {
         public const string SiteUrl = "http://localhost:57897/";
 
-        public static ITask TheApplication()
+        public static IPerformable TheApplication()
         {
             return Navigate.To(SiteUrl);
         }

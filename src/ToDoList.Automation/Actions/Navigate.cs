@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ToDoList.Automation.Actions
 {
-    public class Navigate : IAction, ITask
+    public class Navigate : IAction
     {
         private string _url;
 
@@ -22,7 +22,7 @@ namespace ToDoList.Automation.Actions
             return new Navigate("myprofile");
         }
 
-        public static ITask To(string siteUrl)
+        public static IAction To(string siteUrl)
         {
             return new Navigate(siteUrl);
         }
