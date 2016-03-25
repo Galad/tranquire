@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Questions.Texts
 {
     public class IntegerTextValue : IQuestion<int>
     {

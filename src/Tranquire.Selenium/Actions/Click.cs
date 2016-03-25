@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tranquire.Selenium.Actions.Clicks;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Actions
 {
     public class Click
     {

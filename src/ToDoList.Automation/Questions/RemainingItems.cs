@@ -1,6 +1,7 @@
 ﻿using System;
 using Tranquire;
 using Tranquire.Selenium;
+using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.Questions
 {

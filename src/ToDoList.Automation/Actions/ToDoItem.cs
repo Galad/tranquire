@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {

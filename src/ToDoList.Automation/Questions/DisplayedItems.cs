@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using Tranquire;
 using Tranquire.Selenium;
+using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.Questions
 {

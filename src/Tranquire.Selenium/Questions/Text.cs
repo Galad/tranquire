@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tranquire.Selenium.Questions.Texts;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Questions
 {
     public class Text
     {

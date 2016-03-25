@@ -2,7 +2,7 @@
 using Tranquire;
 using System;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Actions.Enters
 {
     public class EnterValue : Tranquire.IAction
     {

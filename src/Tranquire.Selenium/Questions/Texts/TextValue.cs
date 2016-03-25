@@ -3,7 +3,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Questions.Texts
 {
     public class StringArrayTextValue : IQuestion<ImmutableArray<string>>
     {        
