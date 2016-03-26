@@ -20,7 +20,7 @@ namespace Tranquire.Selenium.Questions
             return CreateQuestion<int>();
         }
 
-        public IQuestion<DateTime> AsDate()
+        public IQuestion<DateTime> AsDateTime()
         {
             return CreateQuestion<DateTime>();
         }

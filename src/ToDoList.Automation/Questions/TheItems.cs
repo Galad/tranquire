@@ -6,7 +6,7 @@ namespace ToDoList.Automation.Questions
 {
     public class TheItems
     {
-        public static IQuestion<ImmutableArray<string>> Displayed()
+        public static IQuestion<ImmutableArray<Model.ToDoItem>> Displayed()
         {
             return new DisplayedItems();
         }

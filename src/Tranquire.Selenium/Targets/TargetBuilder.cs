@@ -24,5 +24,11 @@ namespace Tranquire.Selenium.Targets
             Guard.ForNull(formatValue, nameof(formatValue));
             return new TargetByParameterizable(createBy, formatValue);
         }
+
+        public ITarget LocatedByWebElement(IWebElement webElement)
+        {
+            Guard.ForNull(webElement, nameof(webElement));
+            return new TargetByWebElement(webElement);
+        }
     }
 }

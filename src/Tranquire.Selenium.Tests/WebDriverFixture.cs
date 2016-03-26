@@ -9,6 +9,7 @@ using Owin;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Owin.StaticFiles.Infrastructure;
 using Microsoft.Owin.FileSystems;
+using System.Threading;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -17,16 +18,17 @@ namespace Tranquire.Selenium.Tests
         public static int Port = 30000;
         private readonly IDisposable _host;
         public IActor Actor { get; }
+        private readonly int _port;
         
         public WebDriverFixture()
         {
-            Port++;
+            _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
             WebDriver = new FirefoxDriver();
             Actor = new Actor("James").Can(BrowseTheWeb.With(WebDriver));
         }
 
-        public string RootUrl => "http://localhost:" + Port.ToString();
+        public string RootUrl => "http://localhost:" + _port.ToString();
 
         public void NavigateTo(string localFileName)
         {

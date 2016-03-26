@@ -24,7 +24,7 @@ namespace Tranquire.Selenium.Questions
             return CreateQuestion<int>();
         }
 
-        public IQuestion<ImmutableArray<DateTime>> AsDate()
+        public IQuestion<ImmutableArray<DateTime>> AsDateTime()
         {
             return CreateQuestion<DateTime>();
         }

@@ -13,5 +13,6 @@ namespace Tranquire.Selenium
     {
         IWebElement ResolveFor(IActor actor);
         ImmutableArray<IWebElement> ResoveAllFor(IActor actor);
+        ITarget RelativeTo(ITarget targetSource);
     }
 }

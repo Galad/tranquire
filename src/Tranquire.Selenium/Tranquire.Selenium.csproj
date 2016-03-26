@@ -73,19 +73,24 @@
     <Compile Include="Questions\Converters\GenericConverter.cs" />
     <Compile Include="Questions\Converters\ICanConvert.cs" />
     <Compile Include="Questions\Converters\IConverter.cs" />
+    <Compile Include="Questions\Element.cs" />
     <Compile Include="Questions\ManyUIState.cs" />
     <Compile Include="Questions\SingleUIState.cs" />
     <Compile Include="Questions\StringConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questions\Text.cs" />
     <Compile Include="Questions\UIState.cs" />
+    <Compile Include="Questions\WebElementConverter.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="Targets\IParameterizedTarget.cs" />
     <Compile Include="Targets\ITargetBuilder.cs" />
     <Compile Include="ITargetWithParameters.cs" />
     <Compile Include="Targets\TargetBuilder.cs" />
     <Compile Include="Targets\TargetBy.cs" />
+    <Compile Include="Targets\TargetByBase.cs" />
     <Compile Include="Targets\TargetByParameterizable.cs" />
+    <Compile Include="Targets\TargetByRelative.cs" />
+    <Compile Include="Targets\TargetByWebElement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowseTheWeb.WebDriver.cs" />

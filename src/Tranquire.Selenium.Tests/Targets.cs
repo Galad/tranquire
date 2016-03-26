@@ -17,8 +17,10 @@ namespace Tranquire.Selenium.Tests
         public const string PElementClass = "pelementclass";
         public const string UlElement = "ulelement";
         public static readonly string[] LiElementsContent = new[] { "Red", "Blue", "Yellow", "Green", "Black" };
-        public static readonly string YellowClass = "yellow";
-        public static readonly string YellowContent = "Yellow";
+        public const string YellowClass = "yellow";
+        public const string YellowContent = "Yellow";
+        public const string DivContainer = "divcontainer";
+        public const string RelativeText = "Relative Text";
 
         public TargetsTests(WebDriverFixture fixture)
         {
@@ -114,6 +116,20 @@ namespace Tranquire.Selenium.Tests
                                .ResoveAllFor(_fixture.Actor)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent.Where(s => s != YellowContent), actual);
+        }
+
+        [Fact]
+        public void ResolveFor_LocatedByCss_RelativeToOtherTarget_ShouldReturnCorrectValue()
+        {
+            var containerTarget = Target.The("container")
+                                        .LocatedBy(By.Id(DivContainer));
+
+            var actual = Target.The("relative text")                               
+                               .LocatedBy(By.CssSelector("div p"))
+                               .RelativeTo(containerTarget)
+                               .ResolveFor(_fixture.Actor)
+                               .Text;
+            Assert.Equal(RelativeText, actual);
         }
     }
 }
