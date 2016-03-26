@@ -1,4 +1,5 @@
 ﻿using System;
+using ToDoList.Automation.Actions;
 using Tranquire;
 using Tranquire.Selenium;
 using Tranquire.Selenium.Questions;
@@ -9,7 +10,7 @@ namespace ToDoList.Automation.Questions
     {
         public int AnsweredBy(IActor actor)
         {
-            return actor.AsksFor(Text.Of("#todo-count").AsInteger());
+            return actor.AsksFor(Text.Of(ToDoPage.ToDoItemsLeftCounter).AsInteger());
         }
     }
 }

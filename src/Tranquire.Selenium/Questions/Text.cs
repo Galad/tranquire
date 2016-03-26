@@ -1,34 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium.Questions.Texts;
+﻿using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Questions
 {
-    public class Text
+    public class Text : SingleUIState<string>
     {
-        private string id;
-
-        public Text(string id)
+        public Text(ITarget target): base (target, new StringConverter())
         {
-            this.id = id;
         }
 
-        public static Text Of(string id)
+        public static Text Of(ITarget target)
         {
-            return new Text(id);
+            return new Text(target);
         }
 
-        public StringArrayTextValue AsStringArray()
+        protected override string ResolveFor(IWebElement element)
         {
-            return new StringArrayTextValue(id);
-        }
-
-        public IntegerTextValue AsInteger()
-        {
-            return new IntegerTextValue(id);
+            return element.Text;
         }
     }
 }

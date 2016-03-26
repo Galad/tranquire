@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using ToDoList.Automation.Actions;
 using Tranquire;
 using Tranquire.Selenium;
 using Tranquire.Selenium.Questions;
@@ -10,7 +11,7 @@ namespace ToDoList.Automation.Questions
     {
         public ImmutableArray<string> AnsweredBy(IActor actor)
         {
-            return actor.AsksFor(Text.Of("ul.todo-list li div label").AsStringArray());
+            return actor.AsksFor(Text.Of(ToDoPage.ToDoItem).Many().AsText());
         }
     }
 }
