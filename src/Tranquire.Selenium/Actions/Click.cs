@@ -10,16 +10,9 @@ namespace Tranquire.Selenium.Actions
 {
     public class Click
     {
-        private string xpath;
-
-        public Click(string xpath)
+        public static ClickOnAction On(ITarget target)
         {
-            this.xpath = xpath;
-        }
-
-        public static ClickOnBy On(By by)
-        {
-            return new ClickOnBy(by);
+            return new ClickOnAction(target);
         }        
     }
 }

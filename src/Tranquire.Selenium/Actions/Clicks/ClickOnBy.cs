@@ -3,25 +3,15 @@ using System;
 
 namespace Tranquire.Selenium.Actions.Clicks
 {
-    public class ClickOnBy : IAction
-    {        
-        private readonly By _by;
-
-        public ClickOnBy(By by)
+    public class ClickOnAction : TargetedAction
+    {
+        public ClickOnAction(ITarget target) : base(target)
         {
-            if(by == null)
-            {
-                throw new ArgumentNullException(nameof(by));
-            }
-            _by = by;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
-        {            
-            actor.BrowseTheWeb()
-                 .FindElement(_by)                 
-                 .Click();
-            return actor;
+        protected override void ExecuteAction<T>(T actor, IWebElement element)
+        {
+            element.Click();
         }
     }
 }
