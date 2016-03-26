@@ -53,6 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Tranquire\Guard.cs">
+      <Link>Guard.cs</Link>
+    </Compile>
     <Compile Include="Actions\Hits\HitAction.cs" />
     <Compile Include="ActorExtensions.cs" />
     <Compile Include="BrowseTheWeb.cs" />
@@ -61,10 +64,18 @@
     <Compile Include="Actions\Enter.cs" />
     <Compile Include="Actions\Enters\EnterValue.cs" />
     <Compile Include="Actions\Hit.cs" />
+    <Compile Include="ITarget.cs" />
     <Compile Include="Questions\Texts\IntegerTextValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questions\Text.cs" />
     <Compile Include="Questions\Texts\TextValue.cs" />
+    <Compile Include="Target.cs" />
+    <Compile Include="Targets\IParameterizedTarget.cs" />
+    <Compile Include="Targets\ITargetBuilder.cs" />
+    <Compile Include="Targets\ITargetWithParameters.cs" />
+    <Compile Include="Targets\TargetBuilder.cs" />
+    <Compile Include="Targets\TargetBy.cs" />
+    <Compile Include="Targets\TargetByParameterizable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowseTheWeb.WebDriver.cs" />

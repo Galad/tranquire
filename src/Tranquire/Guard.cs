@@ -15,5 +15,13 @@ namespace Tranquire
                 throw new ArgumentNullException(name);
             }
         }
+
+        public static void ForNullOrEmpty(string value, string name)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(name);
+            }
+        }
     }
 }

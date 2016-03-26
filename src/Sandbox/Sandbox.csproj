@@ -41,6 +41,10 @@
       <HintPath>..\packages\FluentAssertions.4.2.2\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.1.38.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.1.38-beta-23516\lib\dotnet5.1\System.Collections.Immutable.dll</HintPath>
@@ -72,6 +76,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tranquire.Selenium.Tests\Tranquire.Selenium.Tests.csproj">
+      <Project>{67bdb2c4-9d61-40f4-b3f2-7a819561d9bf}</Project>
+      <Name>Tranquire.Selenium.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tranquire.Selenium\Tranquire.Selenium.csproj">
       <Project>{ed646b23-0272-4516-9e30-7f07a34b3528}</Project>
       <Name>Tranquire.Selenium</Name>
