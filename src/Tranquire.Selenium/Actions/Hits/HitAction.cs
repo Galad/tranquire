@@ -7,21 +7,20 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Hits
 {
-    public class HitId : IAction
+    public class HitAction : TargetedAction
     {
-        private string id;
         private string _keys;
 
-        public HitId(string id, string _keys)
+        public HitAction(ITarget target, string keys)
+            :base(target)
         {
-            this.id = id;
-            this._keys = _keys;
+            Guard.ForNull(keys, nameof(keys));         
+            this._keys = keys;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
+        protected override void ExecuteAction<T>(T actor, IWebElement element)
         {
-            actor.BrowseTheWeb().FindElement(By.Id(id)).SendKeys(_keys);
-            return actor;            
+            element.SendKeys(_keys);
         }
     }
 }

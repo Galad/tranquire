@@ -57,7 +57,10 @@
       <Link>Guard.cs</Link>
     </Compile>
     <Compile Include="Actions\Hits\HitAction.cs" />
+    <Compile Include="Actions\ITargetableAction.cs" />
     <Compile Include="Actions\JsClick.cs" />
+    <Compile Include="Actions\TargetableAction.cs" />
+    <Compile Include="Actions\TargetedAction.cs" />
     <Compile Include="ActorExtensions.cs" />
     <Compile Include="BrowseTheWeb.cs" />
     <Compile Include="Actions\Click.cs" />
