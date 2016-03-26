@@ -4,21 +4,20 @@ using System;
 
 namespace Tranquire.Selenium.Actions.Enters
 {
-    public class EnterValue : Tranquire.IAction
+    public class EnterValue : TargetedAction
     {
-        private readonly string id;
         private readonly string _value;
 
-        public EnterValue(string id, string value)
+        public EnterValue(string value, ITarget target)
+            : base(target)
         {
-            this.id = id;
+            Guard.ForNull(value, nameof(value));
             _value = value;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
+        protected override void ExecuteAction<T>(T actor, IWebElement element)
         {
-            actor.AbilityTo<BrowseTheWeb>().Driver.FindElement(By.Id(id)).SendKeys(_value);
-            return actor;
+            element.SendKeys(_value);
         }
     }
 }

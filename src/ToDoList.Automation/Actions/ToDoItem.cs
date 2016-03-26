@@ -21,7 +21,7 @@ namespace ToDoList.Automation.Actions
 
         public T PerformAs<T>(T actor) where T : IActor
         {
-            actor.AttemptsTo(Enter.TheValue(_title).Into("new-todo"))
+            actor.AttemptsTo(Enter.TheValue(_title).Into(ToDoPage.NewToDoItemInput))
                  .AttemptsTo(Hit.Enter().Into(ToDoPage.NewToDoItemInput));
             return actor;
         }

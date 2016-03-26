@@ -7,11 +7,11 @@ using Tranquire.Selenium.Actions.Enters;
 
 namespace Tranquire.Selenium.Actions
 {
-    public class Enter
+    public class Enter : TargetableAction<EnterValue>
     {
         private readonly string value;
 
-        public Enter(string value)
+        public Enter(string value) : base(t => new EnterValue(value, t))
         {
             this.value = value;
         }
@@ -19,11 +19,6 @@ namespace Tranquire.Selenium.Actions
         public static Enter TheValue(string value)
         {
             return new Enter(value);
-        }
-
-        public EnterValue Into(string id)
-        {
-            return new EnterValue(id, value);
         }
     }
 }

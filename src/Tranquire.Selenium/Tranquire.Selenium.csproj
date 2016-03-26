@@ -56,7 +56,6 @@
     <Compile Include="..\Tranquire\Guard.cs">
       <Link>Guard.cs</Link>
     </Compile>
-    <Compile Include="Actions\Hits\HitAction.cs" />
     <Compile Include="Actions\ITargetableAction.cs" />
     <Compile Include="Actions\JsClick.cs" />
     <Compile Include="Actions\TargetableAction.cs" />
