@@ -1,7 +1,6 @@
 ﻿using System;
 using Tranquire;
-using Tranquire.Selenium;
-using OpenQA.Selenium;
+using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
@@ -16,9 +15,8 @@ namespace ToDoList.Automation.Actions
 
         public T PerformAs<T>(T actor) where T : IActor
         {
-            var element = ToDoPage.RemoveToDoItemButton.Of(item).ResolveFor(actor);
-            ((IJavaScriptExecutor)actor.AbilityTo<BrowseTheWeb>().Driver).ExecuteScript("arguments[0].click();", element);            
+            actor.AttemptsTo(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));
             return actor;
         }
-    }
+    }    
 }

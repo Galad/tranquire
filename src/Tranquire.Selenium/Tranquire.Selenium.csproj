@@ -57,6 +57,7 @@
       <Link>Guard.cs</Link>
     </Compile>
     <Compile Include="Actions\Hits\HitAction.cs" />
+    <Compile Include="Actions\JsClick.cs" />
     <Compile Include="ActorExtensions.cs" />
     <Compile Include="BrowseTheWeb.cs" />
     <Compile Include="Actions\Click.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="Target.cs" />
     <Compile Include="Targets\IParameterizedTarget.cs" />
     <Compile Include="Targets\ITargetBuilder.cs" />
-    <Compile Include="Targets\ITargetWithParameters.cs" />
+    <Compile Include="ITargetWithParameters.cs" />
     <Compile Include="Targets\TargetBuilder.cs" />
     <Compile Include="Targets\TargetBy.cs" />
     <Compile Include="Targets\TargetByParameterizable.cs" />

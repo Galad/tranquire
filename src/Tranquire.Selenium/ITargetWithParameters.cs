@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tranquire.Selenium.Targets
+namespace Tranquire.Selenium
 {
     public interface ITargetWithParameters
     {
