@@ -57,6 +57,7 @@
     <Compile Include="Actions\Open.cs" />
     <Compile Include="Actions\RemoveToDoItem.cs" />
     <Compile Include="Actions\ToDoItem.cs" />
+    <Compile Include="Actions\ToDoPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questions\DisplayedItems.cs" />
     <Compile Include="Questions\RemainingItems.cs" />

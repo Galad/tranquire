@@ -16,8 +16,7 @@ namespace ToDoList.Automation.Actions
 
         public T PerformAs<T>(T actor) where T : IActor
         {
-            var xpath = $"//*[@class='view' and contains(.,'{item}')]//button[@class='destroy']";
-            var element = actor.AbilityTo<BrowseTheWeb>().Driver.FindElement(By.XPath(xpath));
+            var element = ToDoPage.RemoveToDoItemButton.Of(item).ResolveFor(actor);
             ((IJavaScriptExecutor)actor.AbilityTo<BrowseTheWeb>().Driver).ExecuteScript("arguments[0].click();", element);            
             return actor;
         }

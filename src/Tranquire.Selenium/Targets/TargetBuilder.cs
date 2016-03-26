@@ -18,7 +18,7 @@ namespace Tranquire.Selenium.Targets
             return new TargetBy(by);
         }
 
-        public ITargetWithParameters LocatedBy(Func<string, By> createBy, string formatValue)
+        public ITargetWithParameters LocatedBy(string formatValue, Func<string, By> createBy)
         {
             Guard.ForNull(createBy, nameof(createBy));
             Guard.ForNull(formatValue, nameof(formatValue));

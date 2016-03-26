@@ -29,7 +29,7 @@ namespace ToDoList.Automation.Actions
 
         public T PerformAs<T>(T actor) where T : IActor
         {
-            actor.AbilityTo<BrowseTheWeb>().AsActor(actor).Driver.Navigate().GoToUrl(_url);            
+            actor.BrowseTheWeb().Navigate().GoToUrl(_url);            
             return actor;
         }
     }

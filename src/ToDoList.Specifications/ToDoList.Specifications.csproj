@@ -78,6 +78,10 @@
       <HintPath>..\packages\xunit.extensibility.core.2.2.0-beta1-build3239\lib\dotnet\xunit.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.2.0.3239, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.execution.2.2.0-beta1-build3239\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddToDoItems.feature.cs">

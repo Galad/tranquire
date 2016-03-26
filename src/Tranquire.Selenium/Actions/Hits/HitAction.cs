@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace Tranquire.Selenium.Actions.Hits
 
         public T PerformAs<T>(T actor) where T : IActor
         {
+            actor.BrowseTheWeb().FindElement(By.Id(id)).SendKeys(_keys);
             return actor;            
         }
     }

@@ -57,7 +57,7 @@ namespace Tranquire.Selenium.Tests
         public void ResolveFor_LocatedByFormattableId_ShouldReturnCorrectValue()
         {
             var actual = Target.The("target formattable by id")
-                               .LocatedBy(s => By.Id(s), PElementId)
+                               .LocatedBy(PElementId, s => By.Id(s))
                                .Of()
                                .ResolveFor(_fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
@@ -67,7 +67,7 @@ namespace Tranquire.Selenium.Tests
         public void ResolveFor_LocatedByFormattableId_WithParameters_ShouldReturnCorrectValue()
         {
             var actual = Target.The("target formattable by id with parameter")
-                               .LocatedBy(s => By.Id(s), "{0}")
+                               .LocatedBy("{0}", s => By.Id(s))
                                .Of(PElementId)
                                .ResolveFor(_fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
@@ -87,7 +87,7 @@ namespace Tranquire.Selenium.Tests
         public void ResolveAllFor_LocatedByFormattableCss_ShouldReturnCorrectValue()
         {
             var actual = Target.The("target by id")
-                               .LocatedBy(s => By.CssSelector(s), $"ul#{UlElement} li")
+                               .LocatedBy($"ul#{UlElement} li", s => By.CssSelector(s))
                                .Of()
                                .ResoveAllFor(_fixture.Actor)
                                .Select(w => w.Text);
@@ -98,7 +98,7 @@ namespace Tranquire.Selenium.Tests
         public void ResolveAllFor_LocatedByFormattableCss_WithParameters_ShouldReturnCorrectValue()
         {
             var actual = Target.The("target by id")
-                               .LocatedBy(s => By.CssSelector(s), "ul#{0} li")
+                               .LocatedBy("ul#{0} li", s => By.CssSelector(s))
                                .Of(UlElement)
                                .ResoveAllFor(_fixture.Actor)
                                .Select(w => w.Text);
@@ -109,7 +109,7 @@ namespace Tranquire.Selenium.Tests
         public void ResolveAllFor_LocatedByFormattableXPath_WithParameters_ShouldReturnCorrectValue()
         {
             var actual = Target.The("target by id")
-                               .LocatedBy(s => By.XPath(s), "//ul[@id='{0}']/li[not(contains(@class, '{1}'))]")
+                               .LocatedBy("//ul[@id='{0}']/li[not(contains(@class, '{1}'))]", s => By.XPath(s))
                                .Of(UlElement, YellowClass)
                                .ResoveAllFor(_fixture.Actor)
                                .Select(w => w.Text);

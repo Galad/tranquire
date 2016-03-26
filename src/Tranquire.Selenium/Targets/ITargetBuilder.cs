@@ -10,6 +10,6 @@ namespace Tranquire.Selenium.Targets
     public interface ITargetBuilder
     {
         ITarget LocatedBy(By by);
-        ITargetWithParameters LocatedBy(Func<string, By> createBy, string formatValue);
+        ITargetWithParameters LocatedBy(string formatValue, Func<string, By> createBy);
     }
 }
