@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,17 +9,14 @@ using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
 {
-    public class Element : SingleUIState<IWebElement>
+    public class Element : SingleUIState<IWebElement, Element>
     {
-        private readonly IEnumerable<ICanConvert<IWebElement>> _customConverters;
-
-        public Element(ITarget target) : this(target, Enumerable.Empty<ICanConvert<IWebElement>>())
+        public Element(ITarget target) : base(target)
         {
         }
 
-        public Element(ITarget target, IEnumerable<ICanConvert<IWebElement>> customConverters) : base(target, new WebElementConverter(customConverters.ToArray()))
+        public Element(ITarget target, CultureInfo culture) : base(target, culture)
         {
-            _customConverters = customConverters;
         }
 
         public static Element Of(ITarget target)
@@ -26,9 +24,9 @@ namespace Tranquire.Selenium.Questions
             return new Element(target);
         }
 
-        public Element WithCustomConverter(ICanConvert<IWebElement> converter)
+        public override Element CreateState(ITarget target, CultureInfo culture)
         {
-            return new Element(Target, _customConverters.Concat(new[] { converter }));
+            return new Element(target, culture);
         }
 
         protected override IWebElement ResolveFor(IWebElement element)

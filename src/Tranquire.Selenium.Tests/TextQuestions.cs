@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,12 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests
 {
-    public class Questions : IClassFixture<WebDriverFixture>
+    public class TextQuestions : IClassFixture<WebDriverFixture>
     {
         private readonly WebDriverFixture _fixture;
+        private readonly CultureInfo DefaultCulture = CultureInfo.GetCultureInfo("fr-FR");
 
-        public Questions(WebDriverFixture fixture)
+        public TextQuestions(WebDriverFixture fixture)
         {
             fixture.NavigateTo("Questions.html");
             _fixture = fixture;
@@ -28,7 +30,7 @@ namespace Tranquire.Selenium.Tests
         private void TestQuestion<T>(string id, Func<Text, IQuestion<T>> getQuestion, T expected)
         {
             //arrange
-            var question = getQuestion(Text.Of(CreateTarget(id)));
+            var question = getQuestion(Text.Of(CreateTarget(id)).WithCulture(DefaultCulture));
             //act
             var actual = question.AnsweredBy(_fixture.Actor);
             //assert            
@@ -39,6 +41,12 @@ namespace Tranquire.Selenium.Tests
         public void TextQuestion_ShouldReturnCorrectValue()
         {
             TestQuestion("Text", t => t.AsText(), "Text value");
+        }
+
+        [Fact]
+        public void TextWithFormattingQuestion_ShouldReturnCorrectValue()
+        {
+            TestQuestion("TextWithFormatting", t => t.AsText(), "Text value with some formatting");
         }
 
         [Fact]
@@ -54,9 +62,15 @@ namespace Tranquire.Selenium.Tests
         }
 
         [Fact]
-        public void DateTimeQuestion_ShouldReturnCorrectValue()
+        public void DateTimeFRQuestion_ShouldReturnCorrectValue()
         {
-            TestQuestion("DateTime", t => t.AsDateTime(), new DateTime(2016, 3, 26));
+            TestQuestion("DateTimeFR", t => t.WithCulture(CultureInfo.GetCultureInfo("fr-FR")).AsDateTime(), new DateTime(2016, 3, 26));
+        }
+
+        [Fact]
+        public void DateTimeENQuestion_ShouldReturnCorrectValue()
+        {
+            TestQuestion("DateTimeEN", t => t.WithCulture(CultureInfo.GetCultureInfo("en-US")).AsDateTime(), new DateTime(2016, 3, 26));
         }
 
         private void TestQuestionMany<T>(string id, Func<Text, IQuestion<ImmutableArray<T>>> getQuestion, IEnumerable<T> expected)
@@ -66,7 +80,7 @@ namespace Tranquire.Selenium.Tests
             var target = Target.The("many element")
                                .LocatedBy(By.CssSelector($"#{id} p"))
                                .RelativeTo(targetSource);
-            var question = getQuestion(Text.Of(target));
+            var question = getQuestion(Text.Of(target).WithCulture(DefaultCulture));
             //act
             var actual = question.AnsweredBy(_fixture.Actor);
             //assert            

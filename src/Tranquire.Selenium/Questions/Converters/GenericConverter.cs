@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Tranquire.Selenium.Questions.Converters
 {
-    public class GenericConverter<TSource, TConverted> : ExplicitConverter<TSource, TConverted>
+    public class GenericConverter<TSource, TConverted> : IConverter<TSource, TConverted>
     {
-        public GenericConverter(Func<TSource, TConverted> convertFunction)
+        public GenericConverter(Func<TSource, TConverted> convertFunction) : this((v, c) => convertFunction(v))
+        {
+            Guard.ForNull(convertFunction, nameof(convertFunction));
+        }
+
+        public GenericConverter(Func<TSource, CultureInfo, TConverted> convertFunction)
         {
             Guard.ForNull(convertFunction, nameof(convertFunction));
             ConvertFunction = convertFunction;
         }
 
-        public Func<TSource, TConverted> ConvertFunction
-        {
-            get;
-            private set;
-        }
+        public Func<TSource, CultureInfo, TConverted> ConvertFunction { get; }
 
-        public override TConverted Convert(TSource source)
+        public TConverted Convert(TSource source, CultureInfo culture)
         {
-            return ConvertFunction(source);
+            return ConvertFunction(source, culture);
         }
     }
 }

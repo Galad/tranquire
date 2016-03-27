@@ -10,19 +10,24 @@ using Tranquire.Selenium;
 using Tranquire;
 using Tranquire.Selenium.Questions;
 using ToDoList.Automation.Actions;
+using System.Globalization;
 
 namespace ToDoList.Automation.Questions.Converters
 {
-    public sealed class WebElementToToDoItemConverter : ExplicitConverter<IWebElement, Model.ToDoItem>
+    public sealed class WebElementToToDoItemConverter : IConverter<IWebElement, Model.ToDoItem>
     {
         private readonly IActor _actor;
 
         public WebElementToToDoItemConverter(IActor actor)
         {
+            if(actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
             _actor = actor;
         }
 
-        public override Model.ToDoItem Convert(IWebElement source)
+        public Model.ToDoItem Convert(IWebElement source, CultureInfo culture)
         {
             var target = Target.The("To do item").LocatedByWebElement(source);
             return new Model.ToDoItem(

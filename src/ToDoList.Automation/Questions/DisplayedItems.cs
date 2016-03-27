@@ -12,7 +12,7 @@ namespace ToDoList.Automation.Questions
     {
         public ImmutableArray<Model.ToDoItem> AnsweredBy(IActor actor)
         {
-            return actor.AsksFor(Element.Of(ToDoPage.ToDoItem).WithCustomConverter(new WebElementToToDoItemConverter(actor)).Many().As<Model.ToDoItem>());
+            return actor.AsksFor(Element.Of(ToDoPage.ToDoItem).Many().As(new WebElementToToDoItemConverter(actor)));
         }
     }
 }

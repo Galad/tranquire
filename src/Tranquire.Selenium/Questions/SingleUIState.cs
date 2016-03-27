@@ -1,84 +1,56 @@
 ﻿using OpenQA.Selenium;
 using System;
+using System.Globalization;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
 {
-    public abstract class SingleUIState<T> : UIState<T>
+    public abstract class SingleUIState<T, TState> : UIState<T> where TState : SingleUIState<T, TState>
     {
-        public SingleUIState(ITarget target, IConverter<T> converter): base (target, converter)
+        public SingleUIState(ITarget target): this (target, CultureInfo.CurrentCulture)
         {
         }
 
-        public IQuestion<string> AsText()
+        public SingleUIState(ITarget target, CultureInfo culture) : base (target, culture)
         {
-            return new Question<T, string>(Target, ResolveFor, Converter);
         }
+                
+        public IQuestion<T> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
 
-        public IQuestion<int> AsInteger()
+        public IQuestion<TAnswer> As<TAnswer>(IConverter<T, TAnswer> converter)
         {
-            return CreateQuestion<int>();
-        }
-
-        public IQuestion<DateTime> AsDateTime()
-        {
-            return CreateQuestion<DateTime>();
-        }
-
-        public IQuestion<bool> AsBoolean()
-        {
-            return CreateQuestion<bool>();
-        }
-
-        public IQuestion<T> Value => CreateQuestion<T>();
-
-        public IQuestion<TCustom> As<TCustom>()
-        {
-            return CreateQuestion<TCustom>();
+            return CreateQuestion(converter);
         }
 
         public ManyUIState<T> Many()
         {
-            return new ManyUIState<T>(Target, Converter, ResolveFor);
+            return new ManyUIState<T>(Target, ResolveFor);
         }
 
-        private IQuestion<TAnswer> CreateQuestion<TAnswer>()
+        private IQuestion<TAnswer> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
         {
-            return new Question<T, TAnswer>(Target, ResolveFor, Converter);
+            return new SingleQuestion<T, TAnswer>(Target, ResolveFor, converter, Culture);
         }
 
-        private class Question<TSource, TConverted> : IQuestion<TConverted>
+        public TState WithCulture(CultureInfo culture)
         {
-            public Func<IWebElement, T> WebElementResolver
+            return CreateState(Target, culture);
+        }
+
+        public abstract TState CreateState(ITarget target, CultureInfo culture);
+
+        private class SingleQuestion<TSource, TConverted> : Question<TSource, TConverted, TConverted>
+        {
+            public SingleQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
+                : base (target, webElementResolver, converter, culture)
             {
-                get;
             }
 
-            public ITarget Target
-            {
-                get;
-            }
-
-            public IConverter<T> Converter
-            {
-                get;
-            }
-
-            public Question(ITarget target, Func<IWebElement, T> webElementResolver, IConverter<T> converter)
-            {
-                Guard.ForNull(target, nameof(target));
-                Guard.ForNull(webElementResolver, nameof(webElementResolver));
-                Guard.ForNull(converter, nameof(converter));
-                Target = target;
-                WebElementResolver = webElementResolver;
-                Converter = converter;
-            }
-
-            public TConverted AnsweredBy(IActor actor)
+            public override TConverted AnsweredBy(IActor actor)
             {
                 var webElement = Target.ResolveFor(actor);
                 var value = WebElementResolver(webElement);
-                return Converter.Convert<TConverted>(value);
+                return Convert(value);
             }
         }
     }

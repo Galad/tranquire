@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using Tranquire.Selenium.Questions.Converters;
 
@@ -9,41 +10,27 @@ namespace Tranquire.Selenium.Questions
     public class ManyUIState<T> : UIState<T>
     {
         private readonly Func<IWebElement, T> Resolve;
-        public ManyUIState(ITarget target, IConverter<T> converter, Func<IWebElement, T> resolve): base (target, converter)
+        public ManyUIState(ITarget target, Func<IWebElement, T> resolve)
+            : this(target, resolve, CultureInfo.CurrentCulture)
+        {
+        }
+
+        public ManyUIState(ITarget target, Func<IWebElement, T> resolve, CultureInfo culture)
+            : base(target, culture)
         {
             Resolve = resolve;
         }
 
-        public IQuestion<ImmutableArray<string>> AsText()
+        public IQuestion<ImmutableArray<T>> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
+
+        public IQuestion<ImmutableArray<TAnswer>> As<TAnswer>(IConverter<T, TAnswer> converter)
         {
-            return new Question<T, string>(Target, ResolveFor, Converter);
+            return CreateQuestion(converter);
         }
 
-        public IQuestion<ImmutableArray<int>> AsInteger()
+        private IQuestion<ImmutableArray<TAnswer>> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
         {
-            return CreateQuestion<int>();
-        }
-
-        public IQuestion<ImmutableArray<DateTime>> AsDateTime()
-        {
-            return CreateQuestion<DateTime>();
-        }
-
-        public IQuestion<ImmutableArray<bool>> AsBoolean()
-        {
-            return CreateQuestion<bool>();
-        }
-
-        public IQuestion<ImmutableArray<T>> Value => CreateQuestion<T>();
-
-        public IQuestion<ImmutableArray<TCustom>> As<TCustom>()
-        {
-            return CreateQuestion<TCustom>();
-        }
-
-        private IQuestion<ImmutableArray<TAnswer>> CreateQuestion<TAnswer>()
-        {
-            return new Question<T, TAnswer>(Target, ResolveFor, Converter);
+            return new ManyQuestion<T, TAnswer>(Target, ResolveFor, converter, Culture);
         }
 
         protected override T ResolveFor(IWebElement element)
@@ -51,37 +38,21 @@ namespace Tranquire.Selenium.Questions
             return Resolve(element);
         }
 
-        private class Question<TSource, TConverted> : IQuestion<ImmutableArray<TConverted>>
+        private class ManyQuestion<TSource, TConverted> : Question<TSource, TConverted, ImmutableArray<TConverted>>
         {
-            public Func<IWebElement, T> WebElementResolver
+            public ManyQuestion(ITarget target,
+                                Func<IWebElement, TSource> webElementResolver,
+                                IConverter<TSource, TConverted> converter,
+                                CultureInfo culture)
+                : base(target, webElementResolver, converter, culture)
             {
-                get;
             }
 
-            public ITarget Target
-            {
-                get;
-            }
-
-            public IConverter<T> Converter
-            {
-                get;
-            }
-
-            public Question(ITarget target, Func<IWebElement, T> webElementResolver, IConverter<T> converter)
-            {
-                Guard.ForNull(target, nameof(target));
-                Guard.ForNull(webElementResolver, nameof(webElementResolver));
-                Guard.ForNull(converter, nameof(converter));
-                Target = target;
-                WebElementResolver = webElementResolver;
-                Converter = converter;
-            }
-
-            public ImmutableArray<TConverted> AnsweredBy(IActor actor)
+            public override ImmutableArray<TConverted> AnsweredBy(IActor actor)
             {
                 var webElements = Target.ResoveAllFor(actor);
-                return webElements.Select(w => Converter.Convert<TConverted>(WebElementResolver(w))).ToImmutableArray();
+                return webElements.Select(w => Convert(WebElementResolver(w)))
+                                  .ToImmutableArray();
             }
         }
     }

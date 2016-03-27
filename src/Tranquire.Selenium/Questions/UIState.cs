@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System.Globalization;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
@@ -6,16 +7,16 @@ namespace Tranquire.Selenium.Questions
     public abstract class UIState<T>
     {
         public ITarget Target { get; }
-        public IConverter<T> Converter { get; }
+        public CultureInfo Culture { get; }
 
-        public UIState(ITarget target, IConverter<T> converter)
+        public UIState(ITarget target, CultureInfo culture)
         {
             Guard.ForNull(target, nameof(target));
-            Guard.ForNull(converter, nameof(converter));
+            Guard.ForNull(culture, nameof(culture));
             Target = target;
-            Converter = converter;
+            Culture = culture;
         }
 
-        protected abstract T ResolveFor(IWebElement element);
+        protected abstract T ResolveFor(IWebElement element);        
     }
 }

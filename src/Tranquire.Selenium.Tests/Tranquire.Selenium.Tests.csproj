@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Questions.cs" />
+    <Compile Include="TextQuestions.cs" />
     <Compile Include="Targets.cs" />
     <Compile Include="WebDriverFixture.cs" />
   </ItemGroup>
