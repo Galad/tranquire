@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions
 {
+    /// <summary>
+    /// Base class for building actions performed on a target
+    /// </summary>
+    /// <typeparam name="TAction"></typeparam>
     public abstract class TargetableAction<TAction> : ITargetableAction<TAction> where TAction : IAction
     {
         public TargetableAction(Func<ITarget, TAction> buildAction)

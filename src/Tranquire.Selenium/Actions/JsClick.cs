@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions
 {
+    /// <summary>
+    /// Represent a click with javascript
+    /// </summary>
     public class JsClick : IAction
     {
         private ITarget target;
@@ -17,6 +20,11 @@ namespace Tranquire.Selenium.Actions
             this.target = target;
         }
 
+        /// <summary>
+        /// Creates the click action
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public static IAction On(ITarget target)
         {
             return new JsClick(target);

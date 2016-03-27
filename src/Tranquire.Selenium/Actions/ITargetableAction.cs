@@ -7,8 +7,17 @@ using Tranquire.Selenium;
 
 namespace Tranquire.Selenium.Actions
 {
+    /// <summary>
+    /// Represent an action which is performed on a target
+    /// </summary>
+    /// <typeparam name="TAction"></typeparam>
     public interface ITargetableAction<TAction> where TAction : IAction
     {
+        /// <summary>
+        /// Specifies on what target the action should be performed
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         TAction Into(ITarget target);
     }
 }
