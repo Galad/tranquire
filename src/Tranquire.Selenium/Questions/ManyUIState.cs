@@ -7,6 +7,10 @@ using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
 {
+    /// <summary>
+    /// Represent the UI state for a list of elements in the page
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ManyUIState<T> : UIState<T>
     {
         private readonly Func<IWebElement, T> Resolve;
@@ -23,6 +27,12 @@ namespace Tranquire.Selenium.Questions
 
         public IQuestion<ImmutableArray<T>> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
 
+        /// <summary>
+        /// Creates a question
+        /// </summary>
+        /// <typeparam name="TAnswer">The type of the answer elements</typeparam>
+        /// <param name="converter">The converter used to convert the UI state value to the answer type</param>
+        /// <returns></returns>
         public IQuestion<ImmutableArray<TAnswer>> As<TAnswer>(IConverter<T, TAnswer> converter)
         {
             return CreateQuestion(converter);

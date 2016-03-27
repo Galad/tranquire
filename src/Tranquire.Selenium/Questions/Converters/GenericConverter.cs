@@ -3,6 +3,11 @@ using System.Globalization;
 
 namespace Tranquire.Selenium.Questions.Converters
 {
+    /// <summary>
+    /// A converter that uses the given conversion function
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TConverted"></typeparam>
     public class GenericConverter<TSource, TConverted> : IConverter<TSource, TConverted>
     {
         public GenericConverter(Func<TSource, TConverted> convertFunction) : this((v, c) => convertFunction(v))
