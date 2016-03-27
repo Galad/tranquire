@@ -9,6 +9,9 @@ using System.Globalization;
 
 namespace Tranquire.Selenium.Targets
 {
+    /// <summary>
+    ///  Represent a target with parameters located by a <see cref="By"/> object
+    /// </summary>
     public sealed class TargetByParameterizable : ITargetWithParameters
     {
         public TargetByParameterizable(Func<string, By> createBy, string value)

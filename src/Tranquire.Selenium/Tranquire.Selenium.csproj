@@ -80,8 +80,6 @@
     <Compile Include="Questions\TextStateExtensions.cs" />
     <Compile Include="Questions\UIState.cs" />
     <Compile Include="Target.cs" />
-    <Compile Include="Targets\IParameterizedTarget.cs" />
-    <Compile Include="Targets\ITargetBuilder.cs" />
     <Compile Include="ITargetWithParameters.cs" />
     <Compile Include="Targets\TargetBuilder.cs" />
     <Compile Include="Targets\TargetBy.cs" />

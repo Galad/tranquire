@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium
 {
+    /// <summary>
+    /// Represent the ability to use a web browser with selenium
+    /// </summary>
     public partial class BrowseTheWeb : IAbility<BrowseTheWeb>
     {
         private readonly IActor _actor;

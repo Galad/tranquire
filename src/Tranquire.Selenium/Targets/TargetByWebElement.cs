@@ -4,6 +4,9 @@ using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
 {
+    /// <summary>
+    /// Represent a target of a <see cref="IWebElement"/>
+    /// </summary>
     internal class TargetByWebElement : ITarget
     {
         private readonly IWebElement _webElement;

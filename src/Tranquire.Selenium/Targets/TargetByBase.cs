@@ -3,6 +3,9 @@ using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
 {
+    /// <summary>
+    /// The base class for targets
+    /// </summary>
     public abstract class TargetByBase : ITarget
     {
         public By By
@@ -34,6 +37,11 @@ namespace Tranquire.Selenium.Targets
             return SearchContext(actor).FindElements(By).ToImmutableArray();
         }
 
+        /// <summary>
+        /// Gets the search context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
         protected abstract ISearchContext SearchContext(IActor actor);
     }
 }

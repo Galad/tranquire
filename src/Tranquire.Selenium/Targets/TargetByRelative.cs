@@ -4,6 +4,9 @@ using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
 {
+    /// <summary>
+    /// Represent a relative target
+    /// </summary>
     public class TargetByRelative : TargetByBase
     {
         public ITarget TargetSource { get; }
