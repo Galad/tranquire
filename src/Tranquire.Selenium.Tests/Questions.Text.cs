@@ -11,15 +11,12 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests
 {
-    public class TextQuestions : IClassFixture<WebDriverFixture>
-    {
-        private readonly WebDriverFixture _fixture;
+    public partial class Questions : WebDriverTest
+    {        
         private readonly CultureInfo DefaultCulture = CultureInfo.GetCultureInfo("fr-FR");
 
-        public TextQuestions(WebDriverFixture fixture)
+        public Questions(WebDriverFixture fixture):base(fixture, "Questions.html")
         {
-            fixture.NavigateTo("Questions.html");
-            _fixture = fixture;
         }
 
         private ITarget CreateTarget(string id)
@@ -32,7 +29,7 @@ namespace Tranquire.Selenium.Tests
             //arrange
             var question = getQuestion(Text.Of(CreateTarget(id)).WithCulture(DefaultCulture));
             //act
-            var actual = question.AnsweredBy(_fixture.Actor);
+            var actual = question.AnsweredBy(Fixture.Actor);
             //assert            
             Assert.Equal(expected, actual);
         }
@@ -82,7 +79,7 @@ namespace Tranquire.Selenium.Tests
                                .RelativeTo(targetSource);
             var question = getQuestion(Text.Of(target).WithCulture(DefaultCulture));
             //act
-            var actual = question.AnsweredBy(_fixture.Actor);
+            var actual = question.AnsweredBy(Fixture.Actor);
             //assert            
             Assert.Equal(expected, actual);
         }

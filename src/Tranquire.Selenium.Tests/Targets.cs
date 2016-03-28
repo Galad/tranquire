@@ -8,10 +8,8 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests
 {
-    public class TargetsTests : IClassFixture<WebDriverFixture>
+    public class TargetsTests : WebDriverTest
     {
-        private readonly WebDriverFixture _fixture;
-
         public const string PElementId = "pelement";
         public const string PElementText = "A simple p element text";
         public const string PElementClass = "pelementclass";
@@ -22,10 +20,8 @@ namespace Tranquire.Selenium.Tests
         public const string DivContainer = "divcontainer";
         public const string RelativeText = "Relative Text";
 
-        public TargetsTests(WebDriverFixture fixture)
+        public TargetsTests(WebDriverFixture fixture):base(fixture, "Targets.html")
         {
-            fixture.NavigateTo("Targets.html");
-            _fixture = fixture;
         }
 
         [Fact]
@@ -33,7 +29,7 @@ namespace Tranquire.Selenium.Tests
         {
             var actual = Target.The("target by id")
                                .LocatedBy(By.Id(PElementId))
-                               .ResolveFor(_fixture.Actor);
+                               .ResolveFor(Fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
         }
 
@@ -42,7 +38,7 @@ namespace Tranquire.Selenium.Tests
         {
             var actual = Target.The("target by css")
                                .LocatedBy(By.CssSelector("#" + PElementId))
-                               .ResolveFor(_fixture.Actor);
+                               .ResolveFor(Fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
         }
 
@@ -51,7 +47,7 @@ namespace Tranquire.Selenium.Tests
         {
             var actual = Target.The("target by class")
                                .LocatedBy(By.CssSelector("." + PElementClass))
-                               .ResolveFor(_fixture.Actor);
+                               .ResolveFor(Fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
         }
 
@@ -61,7 +57,7 @@ namespace Tranquire.Selenium.Tests
             var actual = Target.The("target formattable by id")
                                .LocatedBy(PElementId, s => By.Id(s))
                                .Of()
-                               .ResolveFor(_fixture.Actor);
+                               .ResolveFor(Fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
         }
 
@@ -71,7 +67,7 @@ namespace Tranquire.Selenium.Tests
             var actual = Target.The("target formattable by id with parameter")
                                .LocatedBy("{0}", s => By.Id(s))
                                .Of(PElementId)
-                               .ResolveFor(_fixture.Actor);
+                               .ResolveFor(Fixture.Actor);
             Assert.Equal(PElementText, actual.Text);
         }
 
@@ -80,7 +76,7 @@ namespace Tranquire.Selenium.Tests
         {
             var actual = Target.The("target by id")
                                .LocatedBy(By.CssSelector($"ul#{UlElement} li"))
-                               .ResoveAllFor(_fixture.Actor)
+                               .ResoveAllFor(Fixture.Actor)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent, actual);
         }
@@ -91,7 +87,7 @@ namespace Tranquire.Selenium.Tests
             var actual = Target.The("target by id")
                                .LocatedBy($"ul#{UlElement} li", s => By.CssSelector(s))
                                .Of()
-                               .ResoveAllFor(_fixture.Actor)
+                               .ResoveAllFor(Fixture.Actor)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent, actual);
         }
@@ -102,7 +98,7 @@ namespace Tranquire.Selenium.Tests
             var actual = Target.The("target by id")
                                .LocatedBy("ul#{0} li", s => By.CssSelector(s))
                                .Of(UlElement)
-                               .ResoveAllFor(_fixture.Actor)
+                               .ResoveAllFor(Fixture.Actor)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent, actual);
         }
@@ -113,7 +109,7 @@ namespace Tranquire.Selenium.Tests
             var actual = Target.The("target by id")
                                .LocatedBy("//ul[@id='{0}']/li[not(contains(@class, '{1}'))]", s => By.XPath(s))
                                .Of(UlElement, YellowClass)
-                               .ResoveAllFor(_fixture.Actor)
+                               .ResoveAllFor(Fixture.Actor)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent.Where(s => s != YellowContent), actual);
         }
@@ -127,7 +123,7 @@ namespace Tranquire.Selenium.Tests
             var actual = Target.The("relative text")                               
                                .LocatedBy(By.CssSelector("div p"))
                                .RelativeTo(containerTarget)
-                               .ResolveFor(_fixture.Actor)
+                               .ResolveFor(Fixture.Actor)
                                .Text;
             Assert.Equal(RelativeText, actual);
         }

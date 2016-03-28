@@ -94,9 +94,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextQuestions.cs" />
+    <Compile Include="Questions.Attribute.cs" />
+    <Compile Include="Questions.Text.cs" />
     <Compile Include="Targets.cs" />
     <Compile Include="WebDriverFixture.cs" />
+    <Compile Include="WebDriverTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tranquire.Selenium\Tranquire.Selenium.csproj">
