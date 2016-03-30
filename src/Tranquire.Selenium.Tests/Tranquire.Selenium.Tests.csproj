@@ -97,6 +97,7 @@
     <Compile Include="Questions.Attribute.cs" />
     <Compile Include="Questions.Classes.cs" />
     <Compile Include="Questions.cs" />
+    <Compile Include="Questions.CssValue.cs" />
     <Compile Include="Questions.Selected.cs" />
     <Compile Include="Questions.Text.cs" />
     <Compile Include="Targets.cs" />
