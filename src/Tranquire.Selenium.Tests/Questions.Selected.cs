@@ -52,5 +52,33 @@ namespace Tranquire.Selenium.Tests
             //act
             Assert.Throws<UnexpectedTagNameException>(() => Answer(question));
         }
+
+
+        [Theory]
+        [InlineData("SelectedValues", new[] { "2" })]
+        [InlineData("SelectedNoValues", new[] { "Some other option" })]
+        [InlineData("NoSelectedValues", new string[] { "1" })]
+        [InlineData("SelectedValuesMultiple", new[] { "1", "2" })]
+        [InlineData("NoSelectedValuesMultiple", new string[] { })]
+        public void SelectedValuesElement_ShouldReturnCorrectValue(string id, string[] expected)
+        {
+            //arrange
+            var target = Target.The("selected element").LocatedBy(By.Id(id));
+            var question = SelectedValues.Of(target).Value;
+            //act
+            var actual = Answer(question);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void SelectedValuesElement_WhenTargetIsNotASelectElement_ShouldThrow()
+        {
+            //arrange
+            var target = Target.The("selected element").LocatedBy(By.Id("NotASelectElement"));
+            var question = SelectedValues.Of(target).Value;
+            //act
+            Assert.Throws<UnexpectedTagNameException>(() => Answer(question));
+        }
     }
 }
