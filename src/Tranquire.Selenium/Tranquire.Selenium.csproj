@@ -71,6 +71,7 @@
     <Compile Include="Questions\Classes.cs" />
     <Compile Include="Questions\PageTitle.cs" />
     <Compile Include="Questions\Selected.cs" />
+    <Compile Include="Questions\Value.cs" />
     <Compile Include="Questions\Visibility.cs" />
     <Compile Include="Questions\WebAttribute.cs" />
     <Compile Include="Questions\Converters\GenericConverter.cs" />

@@ -117,6 +117,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <Compile Include="Questions.Visible.cs" />
+    <Compile Include="Questions.Value.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Targets.html" />
