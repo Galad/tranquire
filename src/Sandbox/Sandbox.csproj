@@ -76,10 +76,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tranquire.Selenium.Tests\Tranquire.Selenium.Tests.csproj">
-      <Project>{67bdb2c4-9d61-40f4-b3f2-7a819561d9bf}</Project>
-      <Name>Tranquire.Selenium.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tranquire.Selenium\Tranquire.Selenium.csproj">
       <Project>{ed646b23-0272-4516-9e30-7f07a34b3528}</Project>
       <Name>Tranquire.Selenium</Name>

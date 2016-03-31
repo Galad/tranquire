@@ -28,12 +28,12 @@ namespace Sandbox
 
             //    actor.AsksFor(TheItems.Displayed()).Should().Contain("buy some milk");
             //}
-            using (var a = new WebDriverFixture())
-            {
-                a.NavigateTo("Targets.html");
-                Console.Read();
-            }
-            Console.Read();
+            //using (var a = new WebDriverFixture())
+            //{
+            //    a.NavigateTo("Targets.html");
+            //    Console.Read();
+            //}
+            //Console.Read();
         }
     }
 
