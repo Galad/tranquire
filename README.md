@@ -24,3 +24,5 @@ The solution is composed by Tranquire as well as test projects.
 ###Tests projects
 * Tranquire.Tests
 * Tranquire.Selenium.Tests
+
+[![Build status](https://ci.appveyor.com/api/projects/status/qmv6y5576jyvra1q/branch/master?svg=true)](https://ci.appveyor.com/project/Galad/tranquire/branch/master)
