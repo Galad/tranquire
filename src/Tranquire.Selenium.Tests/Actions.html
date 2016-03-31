@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Actions</title>
+</head>
+<body>
+    <input id="ClickInput" />
+    <a href="#" id="LinkToClick" onclick="document.getElementById('ClickExpectedContent').textContent = document.getElementById('ClickInput').value">Click</a>
+    <button id="ButtonToClick" onclick="document.getElementById('ClickExpectedContent').textContent = document.getElementById('ClickInput').value">Click</button>
+    <div id="ClickExpectedContent"></div>
+</body>
+</html>
