@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ToDoList.Automation.Actions;
 using ToDoList.Automation.Questions;
-using Tranquire.Selenium.Tests;
 
 namespace Sandbox
 {
