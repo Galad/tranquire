@@ -14,10 +14,6 @@ namespace Tranquire.Selenium.Questions
     public class ManyUIState<T> : UIState<T>
     {
         private readonly Func<IWebElement, T> Resolve;
-        public ManyUIState(ITarget target, Func<IWebElement, T> resolve)
-            : this(target, resolve, CultureInfo.CurrentCulture)
-        {
-        }
 
         public ManyUIState(ITarget target, Func<IWebElement, T> resolve, CultureInfo culture)
             : base(target, culture)

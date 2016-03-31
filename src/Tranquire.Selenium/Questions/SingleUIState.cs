@@ -39,7 +39,7 @@ namespace Tranquire.Selenium.Questions
         /// <returns></returns>
         public ManyUIState<T> Many()
         {
-            return new ManyUIState<T>(Target, ResolveFor);
+            return new ManyUIState<T>(Target, ResolveFor, Culture);
         }
 
         private IQuestion<TAnswer> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
