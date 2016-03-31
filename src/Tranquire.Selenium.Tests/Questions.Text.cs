@@ -13,6 +13,14 @@ namespace Tranquire.Selenium.Tests
 {
     public partial class Questions : WebDriverTest
     {        
+        public enum TestEnum
+        {
+            Yellow,
+            Green,
+            Blue,
+            Red
+        }
+
         private readonly CultureInfo DefaultCulture = CultureInfo.GetCultureInfo("fr-FR");
 
         public Questions(WebDriverFixture fixture):base(fixture, "Questions.html")
@@ -70,6 +78,14 @@ namespace Tranquire.Selenium.Tests
             TestQuestion("DateTimeEN", t => t.WithCulture(CultureInfo.GetCultureInfo("en-US")).AsDateTime(), new DateTime(2016, 3, 26));
         }
 
+        [Theory]
+        [InlineData("TextEnum", TestEnum.Red)]
+        [InlineData("ValueEnum", TestEnum.Green)]
+        public void EnumQuestion_ShouldReturnCorrectValue(string id, TestEnum expected)
+        {
+            TestQuestion(id, t => t.AsEnum<Text, TestEnum>(), expected);
+        }
+
         private void TestQuestionMany<T>(string id, Func<Text, IQuestion<ImmutableArray<T>>> getQuestion, IEnumerable<T> expected)
         {
             //arrange
@@ -115,6 +131,14 @@ namespace Tranquire.Selenium.Tests
                 new DateTime(1950, 9, 9),
             };
             TestQuestionMany("many-date", t => t.Many().AsDateTime(), expected);
+        }
+
+        [Theory]
+        [InlineData("many-text", new[] { TestEnum.Yellow, TestEnum.Green, TestEnum.Blue, TestEnum.Red })]
+        [InlineData("many-enum-values", new[] { TestEnum.Yellow, TestEnum.Green, TestEnum.Blue, TestEnum.Red })]
+        public void EnumQuestionMany_ShouldReturnCorrectValue(string id, TestEnum[] expected)
+        {
+            TestQuestionMany(id, t => t.Many().AsEnum<TestEnum>(), expected);
         }
     }
 }
