@@ -14,7 +14,7 @@ namespace Tranquire.Selenium.Tests
     {
         public Actions(WebDriverFixture fixture) : base(fixture, "Actions.html")
         {
-            
+
         }
 
         [Theory]
@@ -46,6 +46,41 @@ namespace Tranquire.Selenium.Tests
             Fixture.Actor.AttemptsTo(click(clickTarget));
             //assert
             var actual = Answer(Text.Of(expectedClickContent).Value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("1")]
+        [InlineData("3")]
+        [InlineData("2")]
+        public void SelectAction_ShouldSelectCorrectElement(string expected)
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var target = Target.The("select element").LocatedBy(By.Id("SelectElement"));
+            var action = Select.On(target).TheValue(expected);
+            //act
+            Fixture.Actor.AttemptsTo(action);
+            var actual = Answer(SelectedValue.Of(target).Value);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(1, new string[] { })]
+        [InlineData(1, new string[] { "1" })]
+        [InlineData(1, new string[] { "1", "2", "3" })]
+        [InlineData(1, new string[] { "1", "3" })]
+        public void SelectActionMany_ShouldSelectCorrectElement(int dummy, string[] expected)
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var target = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
+            var action = Select.On(target).TheValues(expected);
+            //act
+            Fixture.Actor.AttemptsTo(action);
+            var actual = Answer(SelectedValues.Of(target).Value);
+            //assert
             Assert.Equal(expected, actual);
         }
     }
