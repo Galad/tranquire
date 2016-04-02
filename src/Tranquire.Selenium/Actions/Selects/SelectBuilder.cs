@@ -31,5 +31,15 @@ namespace Tranquire.Selenium.Actions.Selects
         {
             return new SelectByMany<int>(_target, indexes, new SelectByIndexStrategy());
         }
+
+        public SelectBy<string> TheText(string text)
+        {
+            return new SelectBy<string>(_target, text, new SelectByTextStrategy());
+        }
+
+        public SelectByMany<string> TheTexts(string[] texts)
+        {
+            return new SelectByMany<string>(_target, texts, new SelectByTextStrategy());
+        }
     }
 }

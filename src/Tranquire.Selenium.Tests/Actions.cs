@@ -12,6 +12,8 @@ namespace Tranquire.Selenium.Tests
 {
     public class Actions : WebDriverTest
     {
+        private readonly ITarget SelectElementTarget = Target.The("select element").LocatedBy(By.Id("SelectElement"));
+        private readonly ITarget SelectManyElementTarget = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
         public Actions(WebDriverFixture fixture) : base(fixture, "Actions.html")
         {
 
@@ -57,11 +59,10 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var target = Target.The("select element").LocatedBy(By.Id("SelectElement"));
-            var action = Select.From(target).TheValue(expected);
+            var action = Select.From(SelectElementTarget).TheValue(expected);
             //act
             Fixture.Actor.AttemptsTo(action);
-            var actual = Answer(SelectedValue.Of(target).Value);
+            var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -75,11 +76,10 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var target = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
-            var action = Select.From(target).TheValues(expected);
+            var action = Select.From(SelectManyElementTarget).TheValues(expected);
             //act
             Fixture.Actor.AttemptsTo(action);
-            var actual = Answer(SelectedValues.Of(target).Value);
+            var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -92,11 +92,10 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var target = Target.The("select element").LocatedBy(By.Id("SelectElement"));
-            var action = Select.From(target).TheIndex(index);
+            var action = Select.From(SelectElementTarget).TheIndex(index);
             //act
             Fixture.Actor.AttemptsTo(action);
-            var actual = Answer(SelectedValue.Of(target).Value);
+            var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -110,11 +109,43 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var target = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
-            var action = Select.From(target).TheIndexes(indexes);
+            var action = Select.From(SelectManyElementTarget).TheIndexes(indexes);
             //act
             Fixture.Actor.AttemptsTo(action);
-            var actual = Answer(SelectedValues.Of(target).Value);
+            var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("Yellow", "1")]
+        [InlineData("Red", "3")]
+        [InlineData("Green", "2")]
+        public void SelectByTextAction_ShouldSelectCorrectElement(string text, string expected)
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var action = Select.From(SelectElementTarget).TheText(text);
+            //act
+            Fixture.Actor.AttemptsTo(action);
+            var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(new string[] { }, new string[] { })]
+        [InlineData(new string[] { "Yellow" }, new string[] { "1" })]
+        [InlineData(new string[] { "Yellow", "Green", "Red" }, new string[] { "1", "2", "3" })]
+        [InlineData(new string[] { "Yellow", "Red" }, new string[] { "1", "3" })]
+        public void SelectByTextsAction_ShouldSelectCorrectElement(string[] texts, string[] expected)
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var action = Select.From(SelectManyElementTarget).TheTexts(texts);
+            //act
+            Fixture.Actor.AttemptsTo(action);
+            var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
         }
