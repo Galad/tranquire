@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
-    public sealed class SelectByValue<TValue> : IAction
+    public sealed class SelectBy<TValue> : IAction
     {
         private readonly TValue _value;
         private readonly ITarget _target;
         private readonly ISelectStrategy<TValue> _selectStrategy;
 
-        public SelectByValue(
+        public SelectBy(
             ITarget target, 
             TValue value,
             ISelectStrategy<TValue> selectStrategy)

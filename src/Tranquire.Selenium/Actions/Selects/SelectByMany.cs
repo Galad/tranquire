@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
-    public class SelectByValues<TValue> : IAction
+    public class SelectByMany<TValue> : IAction
     {
         private readonly ISelectStrategy<TValue> _selectStrategy;
         private readonly ITarget _target;
         private readonly ImmutableArray<TValue> _values;
 
-        public SelectByValues(
+        public SelectByMany(
             ITarget target,
             IEnumerable<TValue> values,
             ISelectStrategy<TValue> selectStrategy)

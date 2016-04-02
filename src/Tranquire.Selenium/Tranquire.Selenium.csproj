@@ -64,8 +64,8 @@
     <Compile Include="Actions\Select.cs" />
     <Compile Include="Actions\Selects\ISelectStrategy.cs" />
     <Compile Include="Actions\Selects\SelectBuilder.cs" />
-    <Compile Include="Actions\Selects\SelectByValues.cs" />
-    <Compile Include="Actions\Selects\SelectByValue.cs" />
+    <Compile Include="Actions\Selects\SelectByMany.cs" />
+    <Compile Include="Actions\Selects\SelectBy.cs" />
     <Compile Include="Actions\Selects\SelectStrategies.cs" />
     <Compile Include="Actions\TargetableAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />

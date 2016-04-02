@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
@@ -11,14 +12,24 @@ namespace Tranquire.Selenium.Actions.Selects
             _target = target;
         }
 
-        public SelectByValue<string> TheValue(string value)
+        public SelectBy<string> TheValue(string value)
         {
-            return new SelectByValue<string>(_target, value, new SelectByValueStrategy());
+            return new SelectBy<string>(_target, value, new SelectByValueStrategy());
         }
 
-        public SelectByValues<string> TheValues(IEnumerable<string> values)
+        public SelectByMany<string> TheValues(IEnumerable<string> values)
         {
-            return new SelectByValues<string>(_target, values, new SelectByValueStrategy());
+            return new SelectByMany<string>(_target, values, new SelectByValueStrategy());
+        }
+
+        public SelectBy<int> TheIndex(int index)
+        {
+            return new SelectBy<int>(_target, index, new SelectByIndexStrategy());
+        }
+
+        public SelectByMany<int> TheIndexes(int[] indexes)
+        {
+            return new SelectByMany<int>(_target, indexes, new SelectByIndexStrategy());
         }
     }
 }

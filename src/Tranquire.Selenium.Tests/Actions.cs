@@ -53,7 +53,7 @@ namespace Tranquire.Selenium.Tests
         [InlineData("1")]
         [InlineData("3")]
         [InlineData("2")]
-        public void SelectAction_ShouldSelectCorrectElement(string expected)
+        public void SelectByValueAction_ShouldSelectCorrectElement(string expected)
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
@@ -71,12 +71,47 @@ namespace Tranquire.Selenium.Tests
         [InlineData(1, new string[] { "1" })]
         [InlineData(1, new string[] { "1", "2", "3" })]
         [InlineData(1, new string[] { "1", "3" })]
-        public void SelectActionMany_ShouldSelectCorrectElement(int dummy, string[] expected)
+        public void SelectByValuesAction_ShouldSelectCorrectElement(int dummy, string[] expected)
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
             var target = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
             var action = Select.From(target).TheValues(expected);
+            //act
+            Fixture.Actor.AttemptsTo(action);
+            var actual = Answer(SelectedValues.Of(target).Value);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(0, "1")]
+        [InlineData(2, "3")]
+        [InlineData(1, "2")]
+        public void SelectByIndexAction_ShouldSelectCorrectElement(int index, string expected)
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var target = Target.The("select element").LocatedBy(By.Id("SelectElement"));
+            var action = Select.From(target).TheIndex(index);
+            //act
+            Fixture.Actor.AttemptsTo(action);
+            var actual = Answer(SelectedValue.Of(target).Value);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(new int[] { }, new string[] { })]
+        [InlineData(new int[] { 0 }, new string[] { "1" })]
+        [InlineData(new int[] { 0, 1, 2 }, new string[] { "1", "2", "3" })]
+        [InlineData(new int[] { 0, 2 }, new string[] { "1", "3" })]
+        public void SelectByIndexesAction_ShouldSelectCorrectElement(int[] indexes, string[] expected)
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var target = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
+            var action = Select.From(target).TheIndexes(indexes);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValues.Of(target).Value);
