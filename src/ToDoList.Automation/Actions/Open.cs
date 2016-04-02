@@ -9,7 +9,7 @@ namespace ToDoList.Automation.Actions
 {
     public static class Open
     {
-        public const string SiteUrl = RootUrl + "/ToDo/";
+        public const string SiteUrl = RootUrl + "ToDo/index.html";
         public const string RootUrl = "http://localhost:57897/";
 
         public static IPerformable TheApplication()

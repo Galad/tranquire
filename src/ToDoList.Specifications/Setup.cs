@@ -11,6 +11,9 @@ using Microsoft.Owin.FileSystems;
 using ToDoList.Automation.Actions;
 using System.IO;
 using ToDoList;
+using Xunit;
+using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace ToDoList.Specifications
 {
@@ -21,14 +24,14 @@ namespace ToDoList.Specifications
 
         [BeforeTestRun]
         public static void StartWebServer()
-        {
-            _webServer = WebApp.Start(Open.RootUrl, BuildHost);
+        {            
+            _webServer = WebApp.Start(Open.RootUrl, BuildHost);            
         }
 
         [AfterTestRun]
         public static void StopWebServer()
         {
-            _webServer.Dispose();
+            _webServer.Dispose();            
         }
 
         private static void BuildHost(IAppBuilder builder)
@@ -37,7 +40,13 @@ namespace ToDoList.Specifications
             {
                 FileSystem = new PhysicalFileSystem(Path.GetDirectoryName(typeof(Setup).Assembly.Location)),
                 EnableDirectoryBrowsing = true
-            });
+            });            
+        }
+
+        [StepArgumentTransformation]
+        public ImmutableArray<string> TransformToListOfString(string commaSeparatedList)
+        {
+            return commaSeparatedList.Split(',').ToImmutableArray();
         }
     }
 }
