@@ -59,7 +59,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var action = Select.From(SelectElementTarget).TheValue(expected);
+            var action = Select.TheValue(expected).Into(SelectElementTarget);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
@@ -76,7 +76,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var action = Select.From(SelectManyElementTarget).TheValues(expected);
+            var action = Select.TheValues(expected).Into(SelectManyElementTarget);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
@@ -92,7 +92,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var action = Select.From(SelectElementTarget).TheIndex(index);
+            var action = Select.TheIndex(index).Into(SelectElementTarget);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
@@ -109,7 +109,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var action = Select.From(SelectManyElementTarget).TheIndexes(indexes);
+            var action = Select.TheIndexes(indexes).Into(SelectManyElementTarget);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
@@ -125,7 +125,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var action = Select.From(SelectElementTarget).TheText(text);
+            var action = Select.TheText(text).Into(SelectElementTarget);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
@@ -142,7 +142,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
-            var action = Select.From(SelectManyElementTarget).TheTexts(texts);
+            var action = Select.TheTexts(texts).Into(SelectManyElementTarget);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
