@@ -15,7 +15,7 @@ namespace Tranquire.Selenium.Targets
 
         public TargetBuilder(string friendlyName)
         {
-            this.FriendlyName = friendlyName ?? string.Empty;
+            FriendlyName = friendlyName ?? string.Empty;
         }
 
         /// <summary>

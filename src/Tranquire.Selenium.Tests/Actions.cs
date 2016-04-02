@@ -58,7 +58,7 @@ namespace Tranquire.Selenium.Tests
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
             var target = Target.The("select element").LocatedBy(By.Id("SelectElement"));
-            var action = Select.On(target).TheValue(expected);
+            var action = Select.From(target).TheValue(expected);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValue.Of(target).Value);
@@ -76,7 +76,7 @@ namespace Tranquire.Selenium.Tests
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
             var target = Target.The("select element").LocatedBy(By.Id("SelectElementMultiple"));
-            var action = Select.On(target).TheValues(expected);
+            var action = Select.From(target).TheValues(expected);
             //act
             Fixture.Actor.AttemptsTo(action);
             var actual = Answer(SelectedValues.Of(target).Value);
