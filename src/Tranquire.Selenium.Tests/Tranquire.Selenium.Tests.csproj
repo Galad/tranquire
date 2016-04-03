@@ -101,6 +101,7 @@
     <Compile Include="Actions.cs" />
     <Compile Include="Converters\StringToEnumConverterTests.cs" />
     <Compile Include="PageTests.cs" />
+    <Compile Include="Questions.Presence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questions.Attribute.cs" />
     <Compile Include="Questions.Classes.cs" />

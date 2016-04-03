@@ -85,6 +85,7 @@
     <Compile Include="Questions\Page.cs" />
     <Compile Include="Questions\PageTitle.cs" />
     <Compile Include="Questions\PageUrl.cs" />
+    <Compile Include="Questions\Presence.cs" />
     <Compile Include="Questions\Selected.cs" />
     <Compile Include="Questions\SelectedValues.cs" />
     <Compile Include="Questions\SelectedValue.cs" />
