@@ -9,9 +9,9 @@
     <licenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/Galad/tranquire</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A .NET web UI automation framework based on the screenplay pattern and Selenium</description>
+    <description>Write maintainable UI tests with Selenium using the screenplay pattern.</description>
     <copyright>Copyright 2016</copyright>
-    <tags>Selenium</tags>
+    <tags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</tags>
 	<dependencies>
 	  <dependency id="Tranquire" version="$version$" />
 	  <dependency id="System.Collections" version="4.0.10" />
@@ -28,5 +28,6 @@
   <files>
 	<file src="..\Tranquire.Selenium\bin\Release\Tranquire.Selenium.pdb" target="lib\net460\" />
 	<file src="..\Tranquire.Selenium\bin\Release\Tranquire.Selenium.dll" target="lib\net460\" />
+	<file src="..\Tranquire.Selenium\bin\Release\Tranquire.Selenium.xml" target="lib\net460\" />
   </files>
 </package>
