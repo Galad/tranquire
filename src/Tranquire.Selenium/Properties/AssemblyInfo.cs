@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Tranquire.Selenium")]
-[assembly: AssemblyDescription("An .NET web UI automation framework based on the screenplay pattern and Selenium")]
+[assembly: AssemblyDescription("A .NET web UI automation framework based on the screenplay pattern and Selenium")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Lucas Loegel")]
 [assembly: AssemblyProduct("Tranquire.Selenium")]
