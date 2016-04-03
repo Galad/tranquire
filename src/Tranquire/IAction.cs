@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Represent a direct action on the system.
+    /// </summary>
     public interface IAction : IPerformable
     {
     }  

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Represent an action performed by the actor. It is usually composed of other <see cref="ITask"/> or <see cref="IAction"/>
+    /// </summary>
     public interface ITask : IPerformable
     {
     }

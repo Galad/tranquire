@@ -6,10 +6,20 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Represent a <see cref="IPerformable"/> composed of several <see cref="IPerformable"/>
+    /// </summary>
     public class CompositePerformable : IAction, ITask
     {
+        /// <summary>
+        /// The list of actions to execute
+        /// </summary>
         public IEnumerable<IPerformable> Actions { get; }
 
+        /// <summary>
+        /// Create a new instance of <see cref="CompositePerformable"/>
+        /// </summary>
+        /// <param name="actions">The list of actions to execute</param>
         public CompositePerformable(IEnumerable<IPerformable> actions)
         {
             Guard.ForNull(actions, nameof(actions));
