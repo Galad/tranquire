@@ -81,6 +81,7 @@
     <Compile Include="Questions\Classes.cs" />
     <Compile Include="Questions\Converters\StringToEnumConverter.cs" />
     <Compile Include="Questions\CssValue.cs" />
+    <Compile Include="Questions\Enabled.cs" />
     <Compile Include="Questions\PageTitle.cs" />
     <Compile Include="Questions\Selected.cs" />
     <Compile Include="Questions\SelectedValues.cs" />
