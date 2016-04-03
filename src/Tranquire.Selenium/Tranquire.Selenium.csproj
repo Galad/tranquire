@@ -88,7 +88,7 @@
     <Compile Include="Questions\SelectedValue.cs" />
     <Compile Include="Questions\Value.cs" />
     <Compile Include="Questions\Visibility.cs" />
-    <Compile Include="Questions\WebAttribute.cs" />
+    <Compile Include="Questions\HtmlAttribute.cs" />
     <Compile Include="Questions\Converters\GenericConverter.cs" />
     <Compile Include="Questions\Converters\IConverter.cs" />
     <Compile Include="Questions\Element.cs" />

@@ -8,30 +8,30 @@ using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Questions
 {
-    public class WebAttribute : SingleUIState<string, WebAttribute>
+    public class HtmlAttribute : SingleUIState<string, HtmlAttribute>
     {
         public string AttributeName { get; }
 
-        public WebAttribute(ITarget target, string attributeName) : base(target)
+        public HtmlAttribute(ITarget target, string attributeName) : base(target)
         {
             Guard.ForNullOrEmpty(attributeName, nameof(attributeName));
             AttributeName = attributeName;
         }
 
-        public WebAttribute(ITarget target, string attributeName, CultureInfo culture) : base(target, culture)
+        public HtmlAttribute(ITarget target, string attributeName, CultureInfo culture) : base(target, culture)
         {
             Guard.ForNullOrEmpty(attributeName, nameof(attributeName));
             AttributeName = attributeName;
         }
 
-        public static WebAttributeBuilder Of(ITarget target)
+        public static HtmlAttributeBuilder Of(ITarget target)
         {
-            return new WebAttributeBuilder(target);
+            return new HtmlAttributeBuilder(target);
         }
 
-        protected override WebAttribute CreateState(ITarget target, CultureInfo culture)
+        protected override HtmlAttribute CreateState(ITarget target, CultureInfo culture)
         {
-            return new WebAttribute(target, AttributeName, culture);
+            return new HtmlAttribute(target, AttributeName, culture);
         }
 
         protected override string ResolveFor(IWebElement element)
@@ -39,18 +39,18 @@ namespace Tranquire.Selenium.Questions
             return element.GetAttribute(AttributeName);
         }
 
-        public class WebAttributeBuilder
+        public class HtmlAttributeBuilder
         {
             private readonly ITarget _target;
 
-            public WebAttributeBuilder(ITarget target)
+            public HtmlAttributeBuilder(ITarget target)
             {
                 _target = target;
             }
 
-            public WebAttribute Named(string attributeName)
+            public HtmlAttribute Named(string attributeName)
             {
-                return new WebAttribute(_target, attributeName);
+                return new HtmlAttribute(_target, attributeName);
             }
         }
     }

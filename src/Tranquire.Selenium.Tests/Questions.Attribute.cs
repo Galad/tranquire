@@ -18,7 +18,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             var target = Target.The("element with attribute").LocatedBy(By.Id("ElementWithAttribute"));
-            var question = WebAttribute.Of(target).Named(attribute).Value;
+            var question = HtmlAttribute.Of(target).Named(attribute).Value;
             //act
             var actual = Answer(question);
             //assert
