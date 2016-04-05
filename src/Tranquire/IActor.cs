@@ -12,31 +12,31 @@ namespace Tranquire
     public interface IActor
     {
         /// <summary>
-        /// Execute the given <see cref="IPerformable"/> when the actor changes the state of the system in order to use it with <see cref="AttemptsTo(IPerformable)"/>
+        /// Execute the given <see cref="IGivenCommand"/> when the actor changes the state of the system in order to use it with <see cref="AttemptsTo(IWhenCommand)"/>
         /// </summary>
-        /// <param name="performable">A <see cref="IPerformable"/> representing the action performed by the actor</param>
+        /// <param name="performable">A <see cref="IGivenCommand"/> representing the action performed by the actor</param>
         /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
-        IActor WasAbleTo(IPerformable performable);
+        IActor WasAbleTo(IGivenCommand performable);
         /// <summary>
-        /// Execute the given <see cref="IPerformable"/> when the actor uses the system
+        /// Execute the given <see cref="IWhenCommand"/> when the actor uses the system
         /// </summary>
-        /// <param name="performable">A <see cref="IPerformable"/> representing the action performed by the actor</param>
+        /// <param name="performable">A <see cref="IWhenCommand"/> representing the action performed by the actor</param>
         /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
-        IActor AttemptsTo(IPerformable performable);
+        IActor AttemptsTo(IWhenCommand performable);
         /// <summary>
         /// Give to the actor the given capability
         /// </summary>
         /// <typeparam name="T">The type of the capability</typeparam>
         /// <param name="doSomething">The capability</param>
         /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
-        IActor Can<T>(T doSomething) where T : IAbility<T>;
+        IActor Can<T>(T doSomething) where T : class, IAbility<T>;
         /// <summary>
         /// Retrieve an actor's ability
         /// </summary>
         /// <typeparam name="TAbility">The type of ability to retrieve</typeparam>
         /// <returns>The ability</returns>
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-        TAbility AbilityTo<TAbility>() where TAbility : IAbility<TAbility>;
+        TAbility AbilityTo<TAbility>() where TAbility : class, IAbility<TAbility>;
         /// <summary>
         /// Ask a question about the current state of the system
         /// </summary>

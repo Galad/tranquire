@@ -21,7 +21,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             var expected = Guid.NewGuid().ToString();
-            var action = new CompositePerformable(new IPerformable[] {
+            var action = new Task(new IPerformable[] {
                 Enter.TheValue(expected).Into(Target.The("page title").LocatedBy(By.Id("PageTitle"))),
                 Click.On(Target.The("change title button").LocatedBy(By.Id("ChangeTitle")))
             });

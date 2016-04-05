@@ -34,7 +34,7 @@ namespace Tranquire
         /// <typeparam name="T">The type of ability to retrieve</typeparam>
         /// <returns>The ability</returns>
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-        public T AbilityTo<T>() where T : IAbility<T>
+        public T AbilityTo<T>() where T : class, IAbility<T>
         {
             IAbility ability;
             if(!_abilities.TryGetValue(typeof(T), out ability))
@@ -43,36 +43,20 @@ namespace Tranquire
             }
             return (T)_abilities[typeof(T)];
         }
-
-        /// <summary>
-        /// Execute the given <see cref="IPerformable"/> when the actor uses the system
-        /// </summary>
-        /// <param name="performable">A <see cref="IPerformable"/> representing the action performed by the actor</param>
-        /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
-        public IActor AttemptsTo(IPerformable performable)
+        
+        public IActor AttemptsTo(IWhenCommand performable)
         {
             Guard.ForNull(performable, nameof(performable));
-            return performable.PerformAs(this);
+            return performable.ExecuteWhenAs(this);
         }
-
-        /// <summary>
-        /// Execute the given <see cref="IPerformable"/> when the actor changes the state of the system in order to use it with <see cref="AttemptsTo(IPerformable)"/>
-        /// </summary>
-        /// <param name="performable">A <see cref="IPerformable"/> representing the action performed by the actor</param>
-        /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
-        public IActor WasAbleTo(IPerformable performable)
+        
+        public IActor WasAbleTo(IGivenCommand performable)
         {
             Guard.ForNull(performable, nameof(performable));
-            return performable.PerformAs(this);
+            return performable.ExecuteGivenAs(this);
         }
-
-        /// <summary>
-        /// Give to the actor the given capability
-        /// </summary>
-        /// <typeparam name="T">The type of the capability</typeparam>
-        /// <param name="doSomething">The capability</param>
-        /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
-        public IActor Can<T>(T doSomething) where T : IAbility<T>
+        
+        public IActor Can<T>(T doSomething) where T : class, IAbility<T>
         {
             var ability = (IAbility)doSomething;
             Guard.ForNull(ability, nameof(doSomething));

@@ -38,7 +38,7 @@ namespace ToDoList.Automation.Actions
 
         public static ITask AddToDoItems(ImmutableArray<string> items)
         {
-            return new CompositePerformable(items.Select(i => new ToDoItem(i)).ToArray());
+            return new Tranquire.Task(items.Select(i => new ToDoItem(i)).ToArray());
         }
     }
 }

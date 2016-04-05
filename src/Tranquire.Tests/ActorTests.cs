@@ -93,12 +93,12 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void AttemptsTo_ShouldReturnCorrectValue(
             Actor sut,
-            Mock<IPerformable> performable,
+            Mock<IWhenCommand> command,
             Actor expected)
         {
-            performable.Setup(p => p.PerformAs(sut)).Returns(expected);
+            command.Setup(p => p.ExecuteWhenAs(sut)).Returns(expected);
             //act
-            var actual = sut.AttemptsTo(performable.Object);
+            var actual = sut.AttemptsTo(command.Object);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -106,10 +106,10 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void WasAbleTo_ShouldReturnCorrectValue(
             Actor sut,
-            Mock<IPerformable> performable,
+            Mock<IGivenCommand> performable,
             Actor expected)
         {
-            performable.Setup(p => p.PerformAs(sut)).Returns(expected);
+            performable.Setup(p => p.ExecuteGivenAs(sut)).Returns(expected);
             //act
             var actual = sut.WasAbleTo(performable.Object);
             //assert
