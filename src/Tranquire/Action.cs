@@ -9,27 +9,27 @@ namespace Tranquire
     /// <summary>
     /// Represent an action on the system
     /// </summary>
-    public abstract class Action<TAbility> : IAction where TAbility : IAbility<TAbility>
+    public abstract class Action : IAction
     {
         public T ExecuteGivenAs<T>(T actor) where T : class, IActor
         {
             Guard.ForNull(actor, nameof(actor));
-            ExecuteGiven(new WasAbleToActionCommand<T>(actor));
+            ExecuteGiven(new WasAbleToActionCommand<T>(actor), actor);
             return actor;
         }
 
         public T ExecuteWhenAs<T>(T actor) where T : class, IActor
         {
             Guard.ForNull(actor, nameof(actor));
-            ExecuteWhen(new AttemptsToActionCommand<T>(actor));
+            ExecuteWhen(new AttemptsToActionCommand<T>(actor), actor);
             return actor;
         }
 
-        protected abstract void ExecuteWhen(IActionCommand command);
+        protected abstract void ExecuteWhen(IActionCommand command, IActor actor);
 
-        protected virtual void ExecuteGiven(IActionCommand command)
+        protected virtual void ExecuteGiven(IActionCommand command, IActor actor)
         {
-            ExecuteWhen(command);
+            ExecuteWhen(command, actor);
         }
 
         public interface IActionCommand

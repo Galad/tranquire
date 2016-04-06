@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
@@ -21,8 +22,9 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionTest : Action<TestAbility>
+        public class ActionTest : Action
         {
+            public IActor Actor;
             private readonly IAction _action;
 
             public ActionTest(IAction action)
@@ -34,19 +36,20 @@ namespace Tranquire.Tests
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActionCommand command)
+            protected override void ExecuteWhen(IActionCommand command, IActor actor)
             {
+                Actor = actor;
                 command.Execute(_action);
             }
 
-            protected override void ExecuteGiven(IActionCommand command)
+            protected override void ExecuteGiven(IActionCommand command, IActor actor)
             {
-                base.ExecuteGiven(command);
+                Actor = actor;
                 command.Execute(_action);
             }
         }
 
-        public class ActionTestExecuteGivenNotImplemented : Action<TestAbility>
+        public class ActionTestExecuteGivenNotImplemented : Action
         {
             private readonly IAction _action;
 
@@ -59,14 +62,14 @@ namespace Tranquire.Tests
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActionCommand command)
+            protected override void ExecuteWhen(IActionCommand command, IActor actor)
             {
                 command.Execute(_action);
             }
         }
 
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Action<TestAbility> sut)
+        public void Sut_ShouldBeAction(Action sut)
         {
             Assert.IsAssignableFrom(typeof(IAction), sut);
         }
@@ -141,6 +144,32 @@ namespace Tranquire.Tests
             var actual = sut.ExecuteWhenAs(expected.Object);
             //assert
             Assert.Equal(expected.Object, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void ExecuteWhenAs_ShouldReturnAbility(           
+           ActionTest sut,
+           Mock<IActor> actor)
+        {
+            //arrange
+            var expected = actor.Object;            
+            //act
+            sut.ExecuteWhenAs(actor.Object);
+            //assert
+            Assert.Equal(expected, sut.Actor);
+        }
+
+        [Theory, DomainAutoData]
+        public void ExecuteGivenAs_ShouldReturnAbility(           
+           ActionTest sut,
+           Mock<IActor> actor)
+        {
+            //arrange
+            var expected = actor.Object;            
+            //act
+            sut.ExecuteGivenAs(actor.Object);
+            //assert
+            Assert.Equal(expected, sut.Actor);
         }
     }
 }

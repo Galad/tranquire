@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
-    public sealed class SelectBy<TValue> : IAction
+    public sealed class SelectBy<TValue> : Action
     {
         private readonly TValue _value;
         private readonly ITarget _target;
@@ -25,12 +25,11 @@ namespace Tranquire.Selenium.Actions.Selects
             _selectStrategy = selectStrategy;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
+        protected override void ExecuteWhen(IActionCommand command, IActor actor)
         {
             var element = _target.ResolveFor(actor);
             var selectElement = new SelectElement(element);
             _selectStrategy.Select(selectElement, _value);
-            return actor;
         }
     }
 }

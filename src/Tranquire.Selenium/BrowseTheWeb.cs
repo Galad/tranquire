@@ -43,31 +43,27 @@ namespace Tranquire.Selenium
 
         private class NoActor : IActor
         {
-            public NoActor()
-            {
-            }
-
-            public T AbilityTo<T>() where T : IAbility<T>
-            {
-                throw new NotImplementedException();
-            }
-
             public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
             {
                 throw new NotImplementedException();
             }
 
-            public IActor AttemptsTo(IPerformable performable)
+            public IActor AttemptsTo(IWhenCommand performable)
             {
                 throw new NotImplementedException();
             }
 
-            public IActor Can<T>(T doSomething) where T : IAbility<T>
+            public IActor WasAbleTo(IGivenCommand performable)
             {
                 throw new NotImplementedException();
             }
 
-            public IActor WasAbleTo(IPerformable performable)
+            TAbility IActor.AbilityTo<TAbility>()
+            {
+                throw new NotImplementedException();
+            }
+
+            IActor IActor.Can<T>(T doSomething)
             {
                 throw new NotImplementedException();
             }

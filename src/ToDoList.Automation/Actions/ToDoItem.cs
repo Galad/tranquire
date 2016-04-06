@@ -10,33 +10,25 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class ToDoItem : Tranquire.ITask
+    public class ToDoItem : Tranquire.Task
     {
-        private readonly string _title;
-
-        public ToDoItem(string title)
+        public ToDoItem(string title):
+            base(Enter.TheValue(title).Into(ToDoPage.NewToDoItemInput),
+                 Hit.Enter().Into(ToDoPage.NewToDoItemInput))
         {
-            _title = title;
-        }        
+        }     
 
-        public T PerformAs<T>(T actor) where T : IActor
-        {
-            actor.AttemptsTo(Enter.TheValue(_title).Into(ToDoPage.NewToDoItemInput))
-                 .AttemptsTo(Hit.Enter().Into(ToDoPage.NewToDoItemInput));
-            return actor;
-        }
-
-        public static ITask RemoveAToDoItem(string item)
+        public static IAction RemoveAToDoItem(string item)
         {
             return new RemoveToDoItem(item);
         }
 
-        public static ITask AddAToDoItem(string title)
+        public static IAction AddAToDoItem(string title)
         {
             return new ToDoItem(title);
         }
 
-        public static ITask AddToDoItems(ImmutableArray<string> items)
+        public static IAction AddToDoItems(ImmutableArray<string> items)
         {
             return new Tranquire.Task(items.Select(i => new ToDoItem(i)).ToArray());
         }

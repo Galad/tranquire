@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
-    public class SelectByMany<TValue> : IAction
+    public class SelectByMany<TValue> : Action
     {
         private readonly ISelectStrategy<TValue> _selectStrategy;
         private readonly ITarget _target;
@@ -25,11 +25,11 @@ namespace Tranquire.Selenium.Actions.Selects
             _selectStrategy = selectStrategy;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
+        protected override void ExecuteWhen(IActionCommand command, IActor actor)
         {
             if (_values.Length == 0)
             {
-                return actor;
+                return;
             }
             var element = _target.ResolveFor(actor);
             var selectElement = new SelectElement(element);
@@ -37,7 +37,6 @@ namespace Tranquire.Selenium.Actions.Selects
             {
                 _selectStrategy.Select(selectElement, value);
             }
-            return actor;
         }
     }
 }

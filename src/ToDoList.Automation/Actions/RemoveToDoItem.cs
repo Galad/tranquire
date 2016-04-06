@@ -4,7 +4,7 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class RemoveToDoItem : ITask
+    public class RemoveToDoItem : Tranquire.Action
     {
         private string item;
 
@@ -13,10 +13,9 @@ namespace ToDoList.Automation.Actions
             this.item = item;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
+        protected override void ExecuteWhen(IActionCommand command, IActor actor)
         {
-            actor.AttemptsTo(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));
-            return actor;
+            command.Execute(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));            
         }
     }    
 }

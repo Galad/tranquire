@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Base class for actions performed on a target
     /// </summary>
-    public abstract class TargetedAction : IAction
+    public abstract class TargetedAction : Action
     {
         public ITarget Target { get; }
 
@@ -20,11 +20,10 @@ namespace Tranquire.Selenium.Actions
             Target = target;
         }
 
-        public T PerformAs<T>(T actor) where T : IActor
+        protected override void ExecuteWhen(IActionCommand command, IActor actor)
         {
             var element = Target.ResolveFor(actor);
             ExecuteAction(actor, element);
-            return actor;
         }
 
         protected abstract void ExecuteAction<T>(T actor, IWebElement element) where T : IActor;
