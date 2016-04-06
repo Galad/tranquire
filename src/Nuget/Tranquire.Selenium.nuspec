@@ -23,6 +23,8 @@
       <dependency id="System.Runtime" version="4.0.20" />
       <dependency id="System.Runtime.Extensions" version="4.0.10" />
       <dependency id="System.Threading" version="4.0.10" />
+	  <dependency id="Selenium.Support" version="2.53.0" />
+	  <dependency id="Selenium.WebDriver" version="2.53.0" />
 	</dependencies>
   </metadata>
   <files>
