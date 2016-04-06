@@ -36,20 +36,21 @@ namespace Tranquire
 
         public T ExecuteGivenAs<T>(T actor) where T : class, IActor
         {
-            Guard.ForNull(actor, nameof(actor));
-            foreach (var action in Actions)
-            {
-                action.ExecuteGivenAs(actor);
-            }
-            return actor;
+            return Execute(actor, (action) => action.ExecuteGivenAs(actor));
         }
 
+        
         public T ExecuteWhenAs<T>(T actor) where T : class, IActor
+        {
+            return Execute(actor, (action) => action.ExecuteWhenAs(actor));
+        }
+
+        private T Execute<T>(T actor, Action<IAction> executeAction) where T : class, IActor
         {
             Guard.ForNull(actor, nameof(actor));
             foreach (var action in Actions)
             {
-                action.ExecuteWhenAs(actor);
+                executeAction(action);
             }
             return actor;
         }
