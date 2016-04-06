@@ -20,7 +20,7 @@ namespace Tranquire.Selenium.Actions
             Target = target;
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             var element = Target.ResolveFor(actor);
             ExecuteAction(actor, element);

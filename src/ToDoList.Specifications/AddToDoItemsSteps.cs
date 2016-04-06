@@ -44,9 +44,9 @@ namespace ToDoList.Specifications
 
     public static class SpecContext
     {
-        public static IActor Actor(this ScenarioContext context)
+        public static Actor Actor(this ScenarioContext context)
         {
-            return context.Get<IActor>();
+            return context.Get<Actor>();
         }
     }
 }

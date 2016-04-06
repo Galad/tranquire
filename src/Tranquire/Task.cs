@@ -34,13 +34,13 @@ namespace Tranquire
         {
         }
 
-        public T ExecuteGivenAs<T>(T actor) where T : class, IActor
+        public IActor ExecuteGivenAs(IActor actor)
         {
             return Execute(actor, (action) => action.ExecuteGivenAs(actor));
         }
 
         
-        public T ExecuteWhenAs<T>(T actor) where T : class, IActor
+        public IActor ExecuteWhenAs(IActor actor)
         {
             return Execute(actor, (action) => action.ExecuteWhenAs(actor));
         }

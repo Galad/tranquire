@@ -27,7 +27,7 @@ namespace ToDoList.Automation.Actions
             return new Navigate(siteUrl);
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             actor.BrowseTheWeb().Navigate().GoToUrl(_url);
         }

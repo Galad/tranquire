@@ -13,9 +13,9 @@ namespace ToDoList.Automation.Actions
             this.item = item;
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
-            command.Execute(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));            
+            actor.Execute(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));            
         }
     }    
 }

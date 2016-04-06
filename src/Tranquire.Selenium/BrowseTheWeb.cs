@@ -48,12 +48,7 @@ namespace Tranquire.Selenium
                 throw new NotImplementedException();
             }
 
-            public IActor AttemptsTo(IWhenCommand performable)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IActor WasAbleTo(IGivenCommand performable)
+            public IActor Execute(IAction action)
             {
                 throw new NotImplementedException();
             }

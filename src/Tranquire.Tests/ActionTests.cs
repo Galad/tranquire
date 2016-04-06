@@ -22,12 +22,12 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionTest : Action
+        public class ActionExecuteWhen : Action
         {
             public IActor Actor;
             private readonly IAction _action;
 
-            public ActionTest(IAction action)
+            public ActionExecuteWhen(IAction action)
             {
                 if (action == null)
                 {
@@ -36,24 +36,23 @@ namespace Tranquire.Tests
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActionCommand command, IActor actor)
+            protected override void ExecuteWhen(IActor actor)
             {
                 Actor = actor;
-                command.Execute(_action);
+                actor.Execute(_action);
             }
 
-            protected override void ExecuteGiven(IActionCommand command, IActor actor)
+            protected override void ExecuteGiven(IActor actor)
             {
-                Actor = actor;
-                command.Execute(_action);
             }
         }
 
-        public class ActionTestExecuteGivenNotImplemented : Action
+        public class ActionExecuteGiven : Action
         {
+            public IActor Actor;
             private readonly IAction _action;
 
-            public ActionTestExecuteGivenNotImplemented(IAction action)
+            public ActionExecuteGiven(IAction action)
             {
                 if (action == null)
                 {
@@ -62,9 +61,33 @@ namespace Tranquire.Tests
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActionCommand command, IActor actor)
+            protected override void ExecuteWhen(IActor actor)
+            {               
+            }
+
+            protected override void ExecuteGiven(IActor actor)
             {
-                command.Execute(_action);
+                Actor = actor;
+                actor.Execute(_action);
+            }
+        }
+
+        public class ActionExecuteWhenAndGivenNotOverridden : Action
+        {
+            private readonly IAction _action;
+
+            public ActionExecuteWhenAndGivenNotOverridden(IAction action)
+            {
+                if (action == null)
+                {
+                    throw new ArgumentNullException(nameof(action));
+                }
+                _action = action;
+            }
+
+            protected override void ExecuteWhen(IActor actor)
+            {
+                actor.Execute(_action);
             }
         }
 
@@ -78,51 +101,51 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof(ActionTest).GetConstructors());
+            assertion.Verify(typeof(ActionExecuteGiven).GetConstructors());
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldCallActorAttemptsTo(            
+        public void ExecuteWhenAs_ShouldCallActorExecute(            
             [Frozen] IAction expected,
-            ActionTest sut,
+            ActionExecuteWhen sut,
             Mock<IActor> actor)
         {
             //arrange
             //act
             sut.ExecuteWhenAs(actor.Object);
             //assert
-            actor.Verify(a => a.AttemptsTo(expected));
+            actor.Verify(a => a.Execute(expected));
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorWasAbleTo(
+        public void ExecuteGivenAs_ShouldCallActorExecute(
            [Frozen] IAction expected,
-           ActionTest sut,
+           ActionExecuteGiven sut,
            Mock<IActor> actor)
         {
             //arrange
             //act
             sut.ExecuteGivenAs(actor.Object);
             //assert
-            actor.Verify(a => a.WasAbleTo(expected));
+            actor.Verify(a => a.Execute(expected));
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorAttemptsTo(
+        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute(
            [Frozen] IAction expected,
-           ActionTestExecuteGivenNotImplemented sut,
+           ActionExecuteWhenAndGivenNotOverridden sut,
            Mock<IActor> actor)
         {
             //arrange
             //act
             sut.ExecuteGivenAs(actor.Object);
             //assert
-            actor.Verify(a => a.WasAbleTo(expected));
+            actor.Verify(a => a.Execute(expected));
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldReturnCorrectValue(           
-           ActionTestExecuteGivenNotImplemented sut,
+        public void ExecuteGivenAs_ShouldReturnCorrectValue(
+           ActionExecuteWhenAndGivenNotOverridden sut,
            Mock<IActor> actor)
         {
             //arrange
@@ -135,7 +158,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void ExecuteWhenAs_ShouldReturnCorrectValue(
-           ActionTestExecuteGivenNotImplemented sut,
+           ActionExecuteWhen sut,
            Mock<IActor> actor)
         {
             //arrange
@@ -147,8 +170,8 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldReturnAbility(           
-           ActionTest sut,
+        public void ExecuteWhenAs_ShouldUseCorrectActor(           
+           ActionExecuteWhen sut,
            Mock<IActor> actor)
         {
             //arrange
@@ -160,8 +183,8 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldReturnAbility(           
-           ActionTest sut,
+        public void ExecuteGivenAs_ShouldUseCorrectActor(           
+           ActionExecuteGiven sut,
            Mock<IActor> actor)
         {
             //arrange

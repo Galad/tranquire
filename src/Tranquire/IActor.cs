@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
-    /// <summary>
-    /// Represent an actor which use the system under test. The actor can be given capabilities, such as browsing the web, with the method <see cref="Can{T}(T)"/>
-    /// </summary>
-    public interface IActor
+    public interface IActionExecutor
     {
         /// <summary>
         /// Execute the given <see cref="IGivenCommand"/> when the actor changes the state of the system in order to use it with <see cref="AttemptsTo(IWhenCommand)"/>
@@ -23,6 +20,14 @@ namespace Tranquire
         /// <param name="performable">A <see cref="IWhenCommand"/> representing the action performed by the actor</param>
         /// <returns>The current <see cref="IActor"/> instance, allowing to chain calls</returns>
         IActor AttemptsTo(IWhenCommand performable);
+    }
+
+    /// <summary>
+    /// Represent an actor which use the system under test. The actor can be given capabilities, such as browsing the web, with the method <see cref="Can{T}(T)"/>
+    /// </summary>
+    public interface IActor
+    {
+        IActor Execute(IAction action);
         /// <summary>
         /// Give to the actor the given capability
         /// </summary>

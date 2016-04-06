@@ -18,10 +18,10 @@ namespace ToDoList.Specifications
             _notify = notify;
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             _notify(ActionCallFlowTest.ExecuteWhen);
-            command.Execute(new Action2(_notify));
+            actor.Execute(new Action2(_notify));
         }
     }
 
@@ -34,16 +34,16 @@ namespace ToDoList.Specifications
             _notify = notify;
         }
 
-        protected override void ExecuteGiven(IActionCommand command, IActor actor)
+        protected override void ExecuteGiven(IActor actor)
         {
             _notify(ActionCallFlowTest.ExecuteGiven);
-            command.Execute(new Action3(_notify));
+            actor.Execute(new Action3(_notify));
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             _notify(ActionCallFlowTest.ExecuteWhen);
-            command.Execute(new Action3(_notify));
+            actor.Execute(new Action3(_notify));
         }
     }
 
@@ -57,7 +57,7 @@ namespace ToDoList.Specifications
             _notify = notify;
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             _notify(ActionCallFlowTest.ExecuteWhen);
         }

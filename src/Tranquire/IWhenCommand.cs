@@ -11,6 +11,6 @@
         /// <typeparam name = "T">The actor's type</typeparam>
         /// <param name = "actor">The actor used to execute the action</param>
         /// <returns>The current <see cref = "IActor"/> instance, allowing to chain calls</returns>
-        T ExecuteWhenAs<T>(T actor) where T : class, IActor;
+        IActor ExecuteWhenAs(IActor actor);
     }
 }

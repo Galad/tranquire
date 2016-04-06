@@ -17,15 +17,16 @@ namespace Tranquire.Selenium.Tests
     {
         public static int Port = 30000;
         private readonly IDisposable _host;
-        public IActor Actor { get; }
+        public Actor Actor { get; }
         private readonly int _port;
-        
+
         public WebDriverFixture()
         {
             _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
             WebDriver = new FirefoxDriver();
-            Actor = new Actor("James").Can(BrowseTheWeb.With(WebDriver));
+            Actor = new Actor("James");
+            Actor.Can(BrowseTheWeb.With(WebDriver));
         }
 
         public string RootUrl => "http://localhost:" + _port.ToString();

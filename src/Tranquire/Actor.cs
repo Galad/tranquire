@@ -53,7 +53,8 @@ namespace Tranquire
         public IActor WasAbleTo(IGivenCommand performable)
         {
             Guard.ForNull(performable, nameof(performable));
-            return performable.ExecuteGivenAs(this);
+            var actor = new GivenActor(this);
+            return performable.ExecuteGivenAs(actor);
         }
         
         public IActor Can<T>(T doSomething) where T : class, IAbility<T>
@@ -74,6 +75,42 @@ namespace Tranquire
         {
             Guard.ForNull(question, nameof(question));
             return question.AnsweredBy(this);
+        }
+
+        public IActor Execute(IAction action)
+        {
+            Guard.ForNull(action, nameof(action));
+            return action.ExecuteWhenAs(this);           
+        }
+
+        private class GivenActor : IActor
+        {
+            private readonly IActor _innerActor;
+
+            public GivenActor(IActor innerActor)
+            {
+                _innerActor = innerActor;
+            }
+
+            public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
+            {
+                return _innerActor.AsksFor(question);
+            }
+
+            public IActor Execute(IAction action)
+            {
+                return action.ExecuteGivenAs(this);
+            }
+
+            TAbility IActor.AbilityTo<TAbility>()
+            {
+                return _innerActor.AbilityTo<TAbility>();
+            }
+
+            IActor IActor.Can<T>(T doSomething)
+            {
+                return _innerActor.Can(doSomething);
+            }
         }
     }
 }

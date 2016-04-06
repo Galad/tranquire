@@ -21,15 +21,17 @@ namespace ToDoList.Specifications
         public ToDoListSteps(ScenarioContext context)
         {
             Context = context;
-        } 
+        }
 
         [BeforeScenario]
         public void Before()
         {
-            var driver = new FirefoxDriver();            
-            Context.Set(new Actor("John").Can(BrowseTheWeb.With(driver)));
+            var driver = new FirefoxDriver();
+            var actor = new Actor("John");
+            actor.Can(BrowseTheWeb.With(driver));
+            Context.Set(actor);
             Context.Actor().BrowseTheWeb().Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
-            Context.Actor().WasAbleTo(Open.TheApplication());            
+            Context.Actor().WasAbleTo(Open.TheApplication());
         }
 
         [AfterScenario]
@@ -54,7 +56,7 @@ namespace ToDoList.Specifications
         public void GivenIHaveAListWithTheItems(ImmutableArray<string> items)
         {
             Context.Actor().AttemptsTo(ToDoItem.AddToDoItems(items));
-        }     
+        }
 
         [When(@"I remove the item ""(.*)""")]
         public void WhenIRemoveTheItem(string item)

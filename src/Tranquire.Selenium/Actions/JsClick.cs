@@ -30,7 +30,7 @@ namespace Tranquire.Selenium.Actions
             return new JsClick(target);
         }
         
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             var element = target.ResolveFor(actor);
             ((IJavaScriptExecutor)actor.AbilityTo<BrowseTheWeb>().Driver).ExecuteScript("arguments[0].click();", element);            

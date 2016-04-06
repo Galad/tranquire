@@ -11,60 +11,25 @@ namespace Tranquire
     /// </summary>
     public abstract class Action : IAction
     {
-        public T ExecuteGivenAs<T>(T actor) where T : class, IActor
+        public IActor ExecuteGivenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
-            ExecuteGiven(new WasAbleToActionCommand<T>(actor), actor);
+            ExecuteGiven(actor);
             return actor;
         }
 
-        public T ExecuteWhenAs<T>(T actor) where T : class, IActor
+        public IActor ExecuteWhenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
-            ExecuteWhen(new AttemptsToActionCommand<T>(actor), actor);
+            ExecuteWhen(actor);
             return actor;
         }
 
-        protected abstract void ExecuteWhen(IActionCommand command, IActor actor);
+        protected abstract void ExecuteWhen(IActor actor);
 
-        protected virtual void ExecuteGiven(IActionCommand command, IActor actor)
+        protected virtual void ExecuteGiven(IActor actor)
         {
-            ExecuteWhen(command, actor);
-        }
-
-        public interface IActionCommand
-        {
-            void Execute(IAction action);
-        }
-
-        private class AttemptsToActionCommand<T> : IActionCommand where T : class, IActor
-        {
-            private readonly T _actor;
-
-            public AttemptsToActionCommand(T actor)
-            {
-                _actor = actor;
-            }
-
-            public void Execute(IAction action)
-            {
-                _actor.AttemptsTo(action);
-            }
-        }
-
-        private class WasAbleToActionCommand<T> : IActionCommand where T : class, IActor
-        {
-            private readonly T _actor;
-
-            public WasAbleToActionCommand(T actor)
-            {
-                _actor = actor;
-            }
-
-            public void Execute(IAction action)
-            {
-                _actor.WasAbleTo(action);
-            }
+            ExecuteWhen(actor);
         }
     }
 }

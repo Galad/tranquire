@@ -25,7 +25,7 @@ namespace Tranquire.Selenium.Actions.Selects
             _selectStrategy = selectStrategy;
         }
 
-        protected override void ExecuteWhen(IActionCommand command, IActor actor)
+        protected override void ExecuteWhen(IActor actor)
         {
             var element = _target.ResolveFor(actor);
             var selectElement = new SelectElement(element);
