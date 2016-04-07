@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests
 {
-    public partial class Questions
+    public partial class QuestionsTests
     {
         [Theory]
         [InlineData("SelectedElement", true)]

@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests
 {
-    public partial class Questions : WebDriverTest
+    public partial class QuestionsTests : WebDriverTest
     {        
         public enum TestEnum
         {
@@ -23,7 +23,7 @@ namespace Tranquire.Selenium.Tests
 
         private readonly CultureInfo DefaultCulture = CultureInfo.GetCultureInfo("fr-FR");
 
-        public Questions(WebDriverFixture fixture):base(fixture, "Questions.html")
+        public QuestionsTests(WebDriverFixture fixture):base(fixture, "Questions.html")
         {
         }
 

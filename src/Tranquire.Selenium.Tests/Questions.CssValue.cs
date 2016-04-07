@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests
 {
-    public partial class Questions
+    public partial class QuestionsTests
     {
         [Theory]
         [InlineData("CssValueInlineStyle", "font-style", "italic")]
