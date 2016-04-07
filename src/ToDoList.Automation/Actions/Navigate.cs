@@ -17,11 +17,6 @@ namespace ToDoList.Automation.Actions
             this._url = v;
         }
 
-        public static IAction ToMyProfile()
-        {
-            return new Navigate("myprofile");
-        }
-
         public static IAction To(string siteUrl)
         {
             return new Navigate(siteUrl);
