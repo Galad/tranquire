@@ -63,7 +63,6 @@
     </Compile>
     <Compile Include="Actions\ITargetableAction.cs" />
     <Compile Include="Actions\JsClick.cs" />
-    <Compile Include="Actions\sdflk.cs" />
     <Compile Include="Actions\Select.cs" />
     <Compile Include="Actions\Selects\SelectBuilder.cs" />
     <Compile Include="Actions\Selects\SelectBuilderMany.cs" />
