@@ -26,7 +26,7 @@ namespace Tranquire.Selenium.Targets
         public ITarget LocatedBy(By by)
         {
             Guard.ForNull(by, nameof(by));
-            return new TargetBy(by);
+            return new TargetBy(by, FriendlyName);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Tranquire.Selenium.Targets
         {
             Guard.ForNull(createBy, nameof(createBy));
             Guard.ForNull(formatValue, nameof(formatValue));
-            return new TargetByParameterizable(createBy, formatValue);
+            return new TargetByParameterizable(FriendlyName, createBy, formatValue);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Tranquire.Selenium.Targets
         public ITarget LocatedByWebElement(IWebElement webElement)
         {
             Guard.ForNull(webElement, nameof(webElement));
-            return new TargetByWebElement(webElement);
+            return new TargetByWebElement(webElement, FriendlyName);
         }
     }
 }

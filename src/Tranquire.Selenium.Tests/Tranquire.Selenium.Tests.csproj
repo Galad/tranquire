@@ -130,6 +130,7 @@
     <Compile Include="Questions.Selected.cs" />
     <Compile Include="Questions.Text.cs" />
     <Compile Include="Targets.cs" />
+    <Compile Include="WaitTests.cs" />
     <Compile Include="WebDriverFixture.cs" />
     <Compile Include="WebDriverTest.cs" />
   </ItemGroup>
@@ -163,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Page.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Wait.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

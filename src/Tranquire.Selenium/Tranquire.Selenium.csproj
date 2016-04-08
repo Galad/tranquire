@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="Actions\ITargetableAction.cs" />
     <Compile Include="Actions\JsClick.cs" />
+    <Compile Include="Actions\sdflk.cs" />
     <Compile Include="Actions\Select.cs" />
     <Compile Include="Actions\Selects\SelectBuilder.cs" />
     <Compile Include="Actions\Selects\SelectBuilderMany.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Actions\Selects\SelectStrategies.cs" />
     <Compile Include="Actions\TargetableAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
+    <Compile Include="Actions\Wait.cs" />
     <Compile Include="ActorExtensions.cs" />
     <Compile Include="BrowseTheWeb.cs" />
     <Compile Include="Actions\Click.cs" />

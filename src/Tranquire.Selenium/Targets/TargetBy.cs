@@ -7,7 +7,7 @@ namespace Tranquire.Selenium.Targets
     /// </summary>
     public class TargetBy : TargetByBase
     {
-        public TargetBy(By by): base (by)
+        public TargetBy(By by, string name): base (by, name)
         {
         }
 

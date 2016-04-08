@@ -45,6 +45,8 @@ namespace Tranquire.Selenium.Questions
                 _target = target;
             }
 
+            public string Name => _target.Name;
+
             public ITarget RelativeTo(ITarget targetSource)
             {
                 return new SafeResolvedTarget(_target.RelativeTo(targetSource));

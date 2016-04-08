@@ -11,14 +11,18 @@ namespace Tranquire.Selenium.Targets
     {
         private readonly IWebElement _webElement;
 
-        public TargetByWebElement(IWebElement webElement)
+        public TargetByWebElement(IWebElement webElement, string name)
         {
             Guard.ForNull(webElement, nameof(webElement));
+            Guard.ForNullOrEmpty(name, nameof(name));
             _webElement = webElement;
+            Name = name;
         }
 
+        public string Name { get; }
+
         public ITarget RelativeTo(ITarget targetSource)
-        {            
+        {
             return this;
         }
 

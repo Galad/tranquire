@@ -14,21 +14,24 @@ namespace Tranquire.Selenium.Targets
     /// </summary>
     public sealed class TargetByParameterizable : ITargetWithParameters
     {
-        public TargetByParameterizable(Func<string, By> createBy, string value)
+        public TargetByParameterizable(string name, Func<string, By> createBy, string value)
         {
             Guard.ForNull(createBy, nameof(createBy));
             Guard.ForNullOrEmpty(value, nameof(value));
+            Guard.ForNullOrEmpty(name, nameof(name));
             CreateBy = createBy;
             Value = value;
+            Name = name;
         }
 
         public Func<string, By> CreateBy { get; }
         public string Value { get; }
+        public string Name { get; }
 
         public ITarget Of(params object[] parameters)
         {
             Guard.ForNull(parameters, nameof(parameters));
-            return new TargetBy(CreateBy(string.Format(CultureInfo.InvariantCulture, Value, parameters)));
+            return new TargetBy(CreateBy(string.Format(CultureInfo.InvariantCulture, Value, parameters)), Name);
         }
     }
 }

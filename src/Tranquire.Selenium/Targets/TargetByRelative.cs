@@ -11,9 +11,9 @@ namespace Tranquire.Selenium.Targets
     {
         public ITarget TargetSource { get; }
 
-        public TargetByRelative(By by, ITarget targetSource):base(by)
+        public TargetByRelative(By by, string name, ITarget targetSource) : base(by, name)
         {
-            Guard.ForNull(targetSource, nameof(targetSource));         
+            Guard.ForNull(targetSource, nameof(targetSource));
             TargetSource = targetSource;
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
@@ -8,20 +9,20 @@ namespace Tranquire.Selenium.Targets
     /// </summary>
     public abstract class TargetByBase : ITarget
     {
-        public By By
-        {
-            get;
-        }
+        public By By { get; }
+        public string Name { get; }
 
-        public TargetByBase(By by)
+        public TargetByBase(By by, string name)
         {
             Guard.ForNull(by, nameof(by));
+            Guard.ForNullOrEmpty(name, nameof(name));
             By = by;
+            Name = name;
         }
 
         public ITarget RelativeTo(ITarget targetSource)
         {
-            return new TargetByRelative(By, targetSource);
+            return new TargetByRelative(By, Name, targetSource);
         }
 
         public IWebElement ResolveFor(IActor actor)

@@ -32,5 +32,9 @@ namespace Tranquire.Selenium
         /// <param name="targetSource">The target containing this target</param>
         /// <returns></returns>
         ITarget RelativeTo(ITarget targetSource);
+        /// <summary>
+        /// Gets the target name
+        /// </summary>
+        string Name { get; }
     }
 }
