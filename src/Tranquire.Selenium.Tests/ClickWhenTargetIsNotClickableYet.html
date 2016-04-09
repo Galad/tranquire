@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>   
+    <input id="ExpectedValue" />
+    <a id="ClickableElement" href="#">Element</a>
+    <div id="Overlay" style="background: blue; opacity: 0.5;height:100%;width:100%;position:absolute;top:0;left:0"></div>
+
+    <script type="text/javascript">
+        function setupTest(expected, time) {
+            document.getElementById('ClickableElement').onclick = function () {
+                document.getElementById('ExpectedValue').value = expected;
+            };
+            setTimeout(function () {
+                var element = document.getElementById('Overlay');
+                element.parentNode.removeChild(element);
+            },
+            1000);
+        };
+    </script>
+</body>
+</html>

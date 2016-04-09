@@ -13,5 +13,10 @@ namespace Tranquire.Selenium.Actions.Clicks
         {
             element.Click();
         }
+
+        public ClickOnActionWithRetry AllowRetry()
+        {
+            return new ClickOnActionWithRetry(this);
+        }
     }
 }

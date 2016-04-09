@@ -61,6 +61,7 @@
     <Compile Include="..\Tranquire\Guard.cs">
       <Link>Guard.cs</Link>
     </Compile>
+    <Compile Include="Actions\Clicks\ClickOnActionWithRetry.cs" />
     <Compile Include="Actions\ITargetableAction.cs" />
     <Compile Include="Actions\JsClick.cs" />
     <Compile Include="Actions\Select.cs" />
