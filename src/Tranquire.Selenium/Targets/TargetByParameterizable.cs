@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Tranquire.Selenium.Targets
 {
     /// <summary>
     ///  Represent a target with parameters located by a <see cref="By"/> object
     /// </summary>
+    [DebuggerDisplay("Parametarized target : {Name}. Value : {Value}")]
     public sealed class TargetByParameterizable : ITargetWithParameters
     {
         public TargetByParameterizable(string name, Func<string, By> createBy, string value)

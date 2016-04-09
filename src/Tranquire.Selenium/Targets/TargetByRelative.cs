@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Immutable;
 using OpenQA.Selenium;
+using System.Diagnostics;
 
 namespace Tranquire.Selenium.Targets
 {
     /// <summary>
     /// Represent a relative target
     /// </summary>
+    [DebuggerDisplay("Relative target : {TargetSource}; Name : {Name}, {By}")]
     public class TargetByRelative : TargetByBase
     {
         public ITarget TargetSource { get; }

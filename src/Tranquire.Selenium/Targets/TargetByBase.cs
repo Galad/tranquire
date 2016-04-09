@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Immutable;
 using OpenQA.Selenium;
+using System.Diagnostics;
 
 namespace Tranquire.Selenium.Targets
 {
     /// <summary>
     /// The base class for targets
     /// </summary>
+    [DebuggerDisplay("Target {Name}, {By}")]
     public abstract class TargetByBase : ITarget
     {
         public By By { get; }
