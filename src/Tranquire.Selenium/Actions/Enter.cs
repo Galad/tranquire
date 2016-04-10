@@ -12,11 +12,18 @@ namespace Tranquire.Selenium.Actions
     /// </summary>
     public class Enter : TargetableAction<EnterValue>
     {
-        private readonly string value;
+        /// <summary>
+        /// Gets the value to enter
+        /// </summary>
+        public string Value { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Enter"/>
+        /// </summary>
+        /// <param name="value">The value to enter</param>
         public Enter(string value) : base(t => new EnterValue(value, t))
         {
-            this.value = value;
+            Value = value;
         }
 
         /// <summary>

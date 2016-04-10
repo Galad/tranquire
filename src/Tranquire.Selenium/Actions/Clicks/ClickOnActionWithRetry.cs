@@ -8,32 +8,63 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Clicks
 {
+    /// <summary>
+    /// Click on a target. If the click fails, it will be retried every 500ms until the timout expires
+    /// </summary>
     public sealed class ClickOnActionWithRetry : Action
     {
-        private readonly IAction _innerAction;
-        private readonly TimeSpan _timeout;
+        /// <summary>
+        /// Gets the action used to click on the target
+        /// </summary>
+        public IAction InnerAction { get; }
+        /// <summary>
+        /// Gets the duration during which the action will be retried
+        /// </summary>
+        public TimeSpan Timeout { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ClickOnActionWithRetry"/>
+        /// </summary>
+        /// <param name="innerAction">The action used to click on the target</param>
+        /// <param name="timeout">The duration during which the action will be retried</param>
         public ClickOnActionWithRetry(IAction innerAction, TimeSpan timeout)
         {
             Guard.ForNull(innerAction, nameof(innerAction));
-            _innerAction = innerAction;
-            _timeout = timeout;
+            InnerAction = innerAction;
+            Timeout = timeout;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ClickOnActionWithRetry"/> with a default timeout of 5 seconds
+        /// </summary>
+        /// <param name="innerAction">The action used to click on the target</param>
         public ClickOnActionWithRetry(IAction innerAction) : this(innerAction, TimeSpan.FromSeconds(5))
         {
         }
 
+        /// <summary>
+        /// Changes the timeout value
+        /// </summary>
+        /// <param name="time">The duration during which the action will be retried</param>
+        /// <returns>A new instance of <see cref="ClickOnActionWithRetry"/> with the new timeout</returns>
         public ClickOnActionWithRetry During(TimeSpan time)
         {
-            return new ClickOnActionWithRetry(_innerAction, time);
+            return new ClickOnActionWithRetry(InnerAction, time);
         }
 
+        /// <summary>
+        /// Execute the action
+        /// </summary>
+        /// <param name="actor"></param>
         protected override void ExecuteGiven(IActor actor)
         {
             Execute(actor);
         }
 
+        /// <summary>
+        /// Execute the action
+        /// </summary>
+        /// <param name="actor"></param>
         protected override void ExecuteWhen(IActor actor)
         {
             Execute(actor);
@@ -47,12 +78,12 @@ namespace Tranquire.Selenium.Actions.Clicks
             {
                 try
                 {
-                    _innerAction.ExecuteWhenAs(actor);
+                    InnerAction.ExecuteWhenAs(actor);
                     hasSucceeded = true;
                 }
                 catch (WebDriverException)
                 {
-                    if(DateTimeOffset.Now.Subtract(startTime) > _timeout)
+                    if(DateTimeOffset.Now.Subtract(startTime) > Timeout)
                     {
                         throw;
                     }

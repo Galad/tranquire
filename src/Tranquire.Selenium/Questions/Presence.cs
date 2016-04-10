@@ -11,6 +11,9 @@ using System.Drawing;
 
 namespace Tranquire.Selenium.Questions
 {
+    /// <summary>
+    /// Allow to asks a question about wether an element is present
+    /// </summary>
     public class Presence : SingleUIState<bool, Presence>
     {
         private Presence(ITarget target) : base(target)
@@ -21,16 +24,32 @@ namespace Tranquire.Selenium.Questions
         {
         }
 
+        /// <summary>
+        /// Asks a question about wether an element is present
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public static Presence Of(ITarget target)
         {
             return new Presence(new SafeResolvedTarget(target));
         }
 
+        /// <summary>
+        /// Create a new instance of <see cref="Presence"/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         protected override Presence CreateState(ITarget target, CultureInfo culture)
         {
             return new Presence(target, culture);
         }
 
+        /// <summary>
+        /// Returns wether the element is present
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         protected override bool ResolveFor(IWebElement element)
         {
             return element != NotFoundElement.Instance;

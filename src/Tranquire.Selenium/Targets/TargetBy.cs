@@ -7,10 +7,20 @@ namespace Tranquire.Selenium.Targets
     /// </summary>    
     public class TargetBy : TargetByBase
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="TargetBy"/>
+        /// </summary>
+        /// <param name="by">The <see cref="By"/> locator</param>
+        /// <param name="name">The target name</param>
         public TargetBy(By by, string name): base (by, name)
         {
         }
 
+        /// <summary>
+        /// Return the <see cref="ISearchContext"/> for the current target
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
         protected override ISearchContext SearchContext(IActor actor)
         {
             return actor.BrowseTheWeb();

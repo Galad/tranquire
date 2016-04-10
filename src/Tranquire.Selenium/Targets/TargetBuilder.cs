@@ -13,6 +13,10 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         public string FriendlyName { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="TargetBuilder"/>
+        /// </summary>
+        /// <param name="friendlyName"></param>
         public TargetBuilder(string friendlyName)
         {
             FriendlyName = friendlyName ?? string.Empty;

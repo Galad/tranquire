@@ -11,11 +11,18 @@ namespace Tranquire.Selenium.Actions
     /// </summary>
     public class Hit : TargetableAction<EnterValue>
     {
-        private readonly string _keys;
+        /// <summary>
+        /// Gets the keys to hit
+        /// </summary>
+        public string Keys { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Hit"/>
+        /// </summary>
+        /// <param name="keys">The keys to hit</param>
         public Hit(string keys) : base(t => new EnterValue(keys, t))
         {
-            _keys = keys;
+            Keys = keys;
         }
 
         /// <summary>
@@ -24,7 +31,7 @@ namespace Tranquire.Selenium.Actions
         /// <returns></returns>
         public static Hit Enter()
         {
-            return new Hit(Keys.Enter);
+            return new Hit(OpenQA.Selenium.Keys.Enter);
         }
     }   
 }

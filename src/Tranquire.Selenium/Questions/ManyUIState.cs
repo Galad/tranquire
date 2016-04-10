@@ -15,12 +15,21 @@ namespace Tranquire.Selenium.Questions
     {
         private readonly Func<IWebElement, T> Resolve;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ManyUIState{T}"/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="resolve"></param>
+        /// <param name="culture"></param>
         public ManyUIState(ITarget target, Func<IWebElement, T> resolve, CultureInfo culture)
             : base(target, culture)
         {
             Resolve = resolve;
         }
 
+        /// <summary>
+        /// Gets a question which returns the state
+        /// </summary>
         public IQuestion<ImmutableArray<T>> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
 
         /// <summary>
@@ -39,6 +48,11 @@ namespace Tranquire.Selenium.Questions
             return new ManyQuestion<T, TAnswer>(Target, ResolveFor, converter, Culture);
         }
 
+        /// <summary>
+        /// Resolve the element state
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         protected override T ResolveFor(IWebElement element)
         {
             return Resolve(element);

@@ -7,15 +7,28 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Questions.Converters
 {
+    /// <summary>
+    /// Convert a string to an enum
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class StringToEnumConverter<T> : IConverter<string, T> where T : struct
     {
         private readonly HashSet<T> _enumValues;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="StringToEnumConverter{T}"/>
+        /// </summary>
         public StringToEnumConverter()
         {
             _enumValues = new HashSet<T>((IEnumerable<T>)Enum.GetValues(typeof(T)));
         }
 
+        /// <summary>
+        /// Convert a string to an enum
+        /// </summary>
+        /// <param name="value">The string to convert</param>
+        /// <param name="culture">The culture of the value</param>
+        /// <returns>An enum value corresponding to the string</returns>
         public T Convert(string value, CultureInfo culture)
         {
             T result;                        

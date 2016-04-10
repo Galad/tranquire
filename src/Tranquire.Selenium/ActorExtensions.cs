@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Provides extensions for the <see cref="IActor"/>
+    /// </summary>
     public static class ActorExtensions
     {
         /// <summary>

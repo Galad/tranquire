@@ -19,6 +19,11 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         public CultureInfo Culture { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="UIState{T}"/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="culture"></param>
         public UIState(ITarget target, CultureInfo culture)
         {
             Guard.ForNull(target, nameof(target));

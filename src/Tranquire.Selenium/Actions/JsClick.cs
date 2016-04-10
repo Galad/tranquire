@@ -8,12 +8,16 @@ using System.Threading.Tasks;
 namespace Tranquire.Selenium.Actions
 {
     /// <summary>
-    /// Represent a click with javascript
+    /// Represent a click on a target with javascript
     /// </summary>
     public class JsClick : Action
     {
         private ITarget target;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="JsClick"/>
+        /// </summary>
+        /// <param name="target"></param>
         public JsClick(ITarget target)
         {
             Guard.ForNull(target, nameof(target));
@@ -30,6 +34,10 @@ namespace Tranquire.Selenium.Actions
             return new JsClick(target);
         }
         
+        /// <summary>
+        /// Click on the target
+        /// </summary>
+        /// <param name="actor"></param>
         protected override void ExecuteWhen(IActor actor)
         {
             var element = target.ResolveFor(actor);

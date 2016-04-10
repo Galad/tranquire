@@ -12,14 +12,26 @@ namespace Tranquire.Selenium.Questions
     /// <typeparam name="TState"></typeparam>
     public abstract class SingleUIState<T, TState> : UIState<T> where TState : SingleUIState<T, TState>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SingleUIState{T, TState}"/>
+        /// </summary>
+        /// <param name="target"></param>
         public SingleUIState(ITarget target): this (target, CultureInfo.CurrentCulture)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="SingleUIState{T, TState}"/> with a culture
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="culture"></param>
         public SingleUIState(ITarget target, CultureInfo culture) : base (target, culture)
         {
         }
-                        
+        
+        /// <summary>
+        /// Gets a question returning the state
+        /// </summary>
         public IQuestion<T> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
 
         /// <summary>
@@ -57,6 +69,12 @@ namespace Tranquire.Selenium.Questions
             return CreateState(Target, culture);
         }
 
+        /// <summary>
+        /// Creates a new instance of the state
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         protected abstract TState CreateState(ITarget target, CultureInfo culture);
 
         private class SingleQuestion<TSource, TConverted> : Question<TSource, TConverted, TConverted>

@@ -8,8 +8,10 @@ using System.Collections.ObjectModel;
 
 namespace Tranquire.Selenium
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public partial class BrowseTheWeb : IWebDriver
     {
+
         public string CurrentWindowHandle => Driver.CurrentWindowHandle;
         public string PageSource => Driver.PageSource;
         public string Title => Driver.Title;
@@ -62,4 +64,5 @@ namespace Tranquire.Selenium
             return Driver.SwitchTo();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
