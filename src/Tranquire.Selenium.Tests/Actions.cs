@@ -149,5 +149,22 @@ namespace Tranquire.Selenium.Tests
             //assert
             Assert.Equal(expected, actual);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("aaa")]
+        [InlineData("very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+        public void ClearValue_ShouldClearTheValue(string inputValue)
+        {
+            //arrange
+            Fixture.Actor.BrowseTheWeb().Navigate().Refresh();
+            var target = Target.The("input to clear").LocatedBy(By.Id("InputToClear"));
+            Fixture.Actor.AttemptsTo(Enter.TheValue(inputValue).Into(target));
+            //act
+            Fixture.Actor.AttemptsTo(Clear.TheValueOf(target));
+            //assert
+            var actual = Answer(Value.Of(target).Value);
+            Assert.Equal(string.Empty, actual);
+        }
     }
 }
