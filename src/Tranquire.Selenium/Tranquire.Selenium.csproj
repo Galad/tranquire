@@ -73,6 +73,7 @@
     <Compile Include="Actions\Selects\SelectStrategies.cs" />
     <Compile Include="Actions\TargetableAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
+    <Compile Include="Actions\UsingIFrame.cs" />
     <Compile Include="Actions\Wait.cs" />
     <Compile Include="ActorExtensions.cs" />
     <Compile Include="BrowseTheWeb.cs" />

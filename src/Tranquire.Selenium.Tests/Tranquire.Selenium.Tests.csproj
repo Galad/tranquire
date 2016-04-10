@@ -130,6 +130,7 @@
     <Compile Include="Questions.Selected.cs" />
     <Compile Include="Questions.Text.cs" />
     <Compile Include="Targets.cs" />
+    <Compile Include="UsingIFrameTests.cs" />
     <Compile Include="WaitTests.cs" />
     <Compile Include="ClickWhenTargetIsNotClickableYet.cs" />
     <Compile Include="WebDriverFixture.cs" />
@@ -171,6 +172,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="IFrame.html" />
+    <EmbeddedResource Include="PageWithIFrame.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
