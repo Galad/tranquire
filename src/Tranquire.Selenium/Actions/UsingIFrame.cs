@@ -12,13 +12,13 @@ namespace Tranquire.Selenium.Actions
     /// </summary>
     public class UsingIFrame
     {
-        private Actor _actor;
+        private IActor _actor;
 
         /// <summary>
         /// Creates a new instance of <see cref="UsingIFrame"/>
         /// </summary>
         /// <param name="actor">The actor used to retrieve the <see cref="BrowseTheWeb"/> ability</param>
-        public UsingIFrame(Actor actor)
+        public UsingIFrame(IActor actor)
         {
             Guard.ForNull(actor, "actor");
             _actor = actor;
@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <returns>A <see cref="UsingIFrame"/> object that can be used to switch to a frame</returns>
-        public static UsingIFrame For(Actor actor)
+        public static UsingIFrame For(IActor actor)
         {
             return new UsingIFrame(actor);
         }
