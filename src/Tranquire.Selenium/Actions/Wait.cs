@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tranquire.Selenium.Actions.Waiters;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -69,6 +70,18 @@ namespace Tranquire.Selenium.Actions
         public static Wait UntilTargetIsPresent(ITarget target)
         {
             return new Wait(target);
+        }
+
+        /// <summary>
+        /// Wait until a question is answered
+        /// </summary>
+        /// <typeparam name="TAnswer"></typeparam>
+        /// <param name="question">The question to answer</param>
+        /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>
+        /// <returns>An action waiting until the question is answered</returns>
+        public static WaitUntilQuestionIsAnswered<TAnswer> UntilQuestionIsAnswered<TAnswer>(IQuestion<TAnswer> question, Predicate<TAnswer> isAnswered)
+        {
+            return new WaitUntilQuestionIsAnswered<TAnswer>(question, isAnswered);
         }
     }
 }
