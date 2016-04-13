@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -12,7 +11,7 @@ namespace Tranquire.Tests
     public class TaskTests
     {
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeTask(Task sut)
+        public void Sut_ShouldBeTask(Task<object> sut)
         {
             Assert.IsAssignableFrom<IAction>(sut);
         }
@@ -20,67 +19,45 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
         {
-            assertion.Verify(typeof(Task).GetConstructors());
+            assertion.Verify(typeof(Task<object>).GetConstructors());
         }
 
         [Theory, DomainAutoData]
         public void Sut_VerifyConstructorParameters(ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(typeof(Task));
+            assertion.Verify(typeof(Task<object>));
         }
 
         [Theory, DomainAutoData]
         public void ExecuteGivenAs_ShouldCallAllPerformables(
-            Task sut,
+            Task<object> sut,
+            object value,
             IActor actor)
         {
             //arrange            
             //act
-            sut.ExecuteGivenAs(actor);
+            sut.ExecuteGivenAs(actor, value);
             //assert
             foreach (var performable in sut.Actions)
             {
-                Mock.Get(performable).Verify(p => p.ExecuteGivenAs(actor));
+                Mock.Get(performable).Verify(p => p.ExecuteGivenAs(actor, value));
             }
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldReturnCorrectValue(
-            Task sut,
-            IActor expected)
-        {
-            //arrange
-            //act
-            var actual = sut.ExecuteGivenAs(expected);
-            //assert
-            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
         public void ExecuteWhenAs_ShouldCallAllPerformables(
-           Task sut,
+           Task<object> sut,
+           object value,
            IActor actor)
         {
             //arrange            
             //act
-            sut.ExecuteWhenAs(actor);
+            sut.ExecuteWhenAs(actor, value);
             //assert
             foreach (var performable in sut.Actions)
             {
-                Mock.Get(performable).Verify(p => p.ExecuteWhenAs(actor));
+                Mock.Get(performable).Verify(p => p.ExecuteWhenAs(actor, value));
             }
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldReturnCorrectValue(
-            Task sut,
-            IActor expected)
-        {
-            //arrange
-            //act
-            var actual = sut.ExecuteWhenAs(expected);
-            //assert
-            Assert.Equal(expected, actual);
         }
     }
 }

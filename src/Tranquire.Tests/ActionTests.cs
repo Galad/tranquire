@@ -14,7 +14,7 @@ namespace Tranquire.Tests
 {
     public class ActionTests
     {
-        public class TestAbility : IAbility<TestAbility>
+        public class TestAbility : IAbility
         {
             public TestAbility AsActor(IActor actor)
             {
@@ -141,32 +141,6 @@ namespace Tranquire.Tests
             sut.ExecuteGivenAs(actor.Object);
             //assert
             actor.Verify(a => a.Execute(expected));
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldReturnCorrectValue(
-           ActionExecuteWhenAndGivenNotOverridden sut,
-           Mock<IActor> actor)
-        {
-            //arrange
-            var expected = actor;
-            //act
-            var actual = sut.ExecuteGivenAs(expected.Object);
-            //assert
-            Assert.Equal(expected.Object, actual);
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldReturnCorrectValue(
-           ActionExecuteWhen sut,
-           Mock<IActor> actor)
-        {
-            //arrange
-            var expected = actor;
-            //act
-            var actual = sut.ExecuteWhenAs(expected.Object);
-            //assert
-            Assert.Equal(expected.Object, actual);
         }
 
         [Theory, DomainAutoData]

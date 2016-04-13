@@ -27,10 +27,9 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new FirefoxDriver();
-            var actor = new Actor("John");
-            actor.Can(BrowseTheWeb.With(driver));
+            var actor = new Actor("John").Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
-            Context.Actor().BrowseTheWeb().Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
+            driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
             Context.Actor().WasAbleTo(Open.TheApplication());
         }
 

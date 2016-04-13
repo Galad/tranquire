@@ -12,7 +12,7 @@ using Xunit;
 namespace Tranquire.Selenium.Tests
 {
     public partial class QuestionsTests : WebDriverTest
-    {        
+    {
         public enum TestEnum
         {
             Yellow,
@@ -23,7 +23,7 @@ namespace Tranquire.Selenium.Tests
 
         private readonly CultureInfo DefaultCulture = CultureInfo.GetCultureInfo("fr-FR");
 
-        public QuestionsTests(WebDriverFixture fixture):base(fixture, "Questions.html")
+        public QuestionsTests(WebDriverFixture fixture) : base(fixture, "Questions.html")
         {
         }
 
@@ -32,12 +32,12 @@ namespace Tranquire.Selenium.Tests
             return Target.The("element").LocatedBy(By.Id(id));
         }
 
-        private void TestQuestion<T>(string id, Func<Text, IQuestion<T>> getQuestion, T expected)
+        private void TestQuestion<T>(string id, Func<Text, IQuestion<T, BrowseTheWeb>> getQuestion, T expected)
         {
             //arrange
             var question = getQuestion(Text.Of(CreateTarget(id)).WithCulture(DefaultCulture));
             //act
-            var actual = question.AnsweredBy(Fixture.Actor);
+            var actual = question.AnsweredBy(Fixture.Actor, BrowseTheWeb.With(Fixture.WebDriver));
             //assert            
             Assert.Equal(expected, actual);
         }
@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Tests
             TestQuestion(id, t => t.AsEnum<Text, TestEnum>(), expected);
         }
 
-        private void TestQuestionMany<T>(string id, Func<Text, IQuestion<ImmutableArray<T>>> getQuestion, IEnumerable<T> expected)
+        private void TestQuestionMany<T>(string id, Func<Text, IQuestion<ImmutableArray<T>, BrowseTheWeb>> getQuestion, IEnumerable<T> expected)
         {
             //arrange
             var targetSource = Target.The("many container").LocatedBy(By.Id("many"));
@@ -95,7 +95,7 @@ namespace Tranquire.Selenium.Tests
                                .RelativeTo(targetSource);
             var question = getQuestion(Text.Of(target).WithCulture(DefaultCulture));
             //act
-            var actual = question.AnsweredBy(Fixture.Actor);
+            var actual = question.AnsweredBy(Fixture.Actor, BrowseTheWeb.With(Fixture.WebDriver));
             //assert            
             Assert.Equal(expected, actual);
         }

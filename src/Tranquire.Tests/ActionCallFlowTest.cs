@@ -11,9 +11,9 @@ namespace ToDoList.Specifications
 {
     public class Action1 : Tranquire.Action
     {
-        private readonly Action<string> _notify;
+        private readonly System.Action<string> _notify;
 
-        public Action1(Action<string> notify)
+        public Action1(System.Action<string> notify)
         {
             _notify = notify;
         }
@@ -27,9 +27,9 @@ namespace ToDoList.Specifications
 
     public class Action2 : Tranquire.Action
     {
-        private readonly Action<string> _notify;
+        private readonly System.Action<string> _notify;
 
-        public Action2(Action<string> notify)
+        public Action2(System.Action<string> notify)
         {
             _notify = notify;
         }
@@ -50,9 +50,9 @@ namespace ToDoList.Specifications
 
     public class Action3 : Tranquire.Action
     {
-        private readonly Action<string> _notify;
+        private readonly System.Action<string> _notify;
 
-        public Action3(Action<string> notify)
+        public Action3(System.Action<string> notify)
         {
             _notify = notify;
         }
@@ -74,7 +74,7 @@ namespace ToDoList.Specifications
             //arrange
             var actor = new Actor("john");
             var actual = new List<string>();
-            Action<string> notify = (s) => actual.Add(s);
+            System.Action<string> notify = (s) => actual.Add(s);
             //act
             actor.AttemptsTo(new Action1(notify));
             //assert
@@ -93,7 +93,7 @@ namespace ToDoList.Specifications
             //arrange
             var actor = new Actor("john");
             var actual = new List<string>();
-            Action<string> notify = (s) => actual.Add(s);
+            System.Action<string> notify = (s) => actual.Add(s);
             //act
             actor.WasAbleTo(new Action1(notify));
             //assert

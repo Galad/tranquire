@@ -41,9 +41,10 @@ namespace Tranquire.Selenium.Actions
         /// <returns>A <see cref="IDisposable"/> object. When it is disposed, the browser will go back to the parent frame.</returns>
         public IDisposable LocatedBy(ITarget target)
         {
-            var driver = _actor.BrowseTheWeb();
-            driver.SwitchTo().Frame(target.ResolveFor(_actor));
-            return new Disposable(() => driver.SwitchTo().ParentFrame());
+            //var driver = _actor.BrowseTheWeb();
+            //driver.SwitchTo().Frame(target.ResolveFor(_actor));
+            //return new Disposable(() => driver.SwitchTo().ParentFrame());
+            return new Disposable(() => { });
         }
 
         private class Disposable : IDisposable

@@ -35,7 +35,7 @@ namespace Tranquire.Selenium.Tests
             TestClick(buttonId, JsClick.On);
         }
 
-        private void TestClick(string buttonId, Func<ITarget, IAction> click)
+        private void TestClick(string buttonId, Func<ITarget, IAction<BrowseTheWeb>> click)
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
@@ -157,7 +157,7 @@ namespace Tranquire.Selenium.Tests
         public void ClearValue_ShouldClearTheValue(string inputValue)
         {
             //arrange
-            Fixture.Actor.BrowseTheWeb().Navigate().Refresh();
+            Fixture.WebDriver.Navigate().Refresh();
             var target = Target.The("input to clear").LocatedBy(By.Id("InputToClear"));
             Fixture.Actor.AttemptsTo(Enter.TheValue(inputValue).Into(target));
             //act

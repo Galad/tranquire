@@ -12,7 +12,7 @@ namespace Tranquire.Tests
 {
     public class ActorTests
     {
-        public class AbilityTest : IAbility<AbilityTest>
+        public class AbilityTest : IAbility
         {
             public AbilityTest AsActor(IActor actor)
             {
@@ -20,7 +20,7 @@ namespace Tranquire.Tests
             }
         }
 
-        public class AbilityTest2 : IAbility<AbilityTest2>
+        public class AbilityTest2 : IAbility
         {
             public AbilityTest2 AsActor(IActor actor)
             {
@@ -91,32 +91,6 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void AttemptsTo_ShouldReturnCorrectValue(
-            Actor sut,
-            Mock<IWhenCommand> command,
-            Actor expected)
-        {
-            command.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
-            //act
-            var actual = sut.AttemptsTo(command.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory, DomainAutoData]
-        public void WasAbleTo_ShouldReturnCorrectValue(
-            Actor sut,
-            Mock<IGivenCommand> performable,
-            Actor expected)
-        {
-            performable.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>())).Returns(expected);
-            //act
-            var actual = sut.WasAbleTo(performable.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory, DomainAutoData]
         public void AsksFor_ShouldReturnCorrectValue(
             Actor sut,
             Mock<IQuestion<object>> question,
@@ -128,20 +102,7 @@ namespace Tranquire.Tests
             //assert
             Assert.Equal(expected, actual);
         }
-
-        [Theory, DomainAutoData]
-        public void Execute_ShouldReturnCorrectValue(
-           Actor sut,
-           Mock<IAction> action,
-           Actor expected)
-        {
-            action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
-            //act
-            var actual = sut.Execute(action.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
-
+        
         [Theory, DomainAutoData]
         public void Execute_CalledAfterCallingAttempsTo_ShouldCallExecuteWhen(
            Actor sut,

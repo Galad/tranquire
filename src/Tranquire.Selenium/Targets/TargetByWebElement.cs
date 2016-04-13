@@ -7,7 +7,7 @@ namespace Tranquire.Selenium.Targets
 {
     /// <summary>
     /// Represent a target of a <see cref="IWebElement"/>
-    /// </summary>
+    /// </summary>d
     [DebuggerDisplay("Target by web element : {Name}, {WebElement}")]
     internal class TargetByWebElement : ITarget
     {
@@ -28,12 +28,12 @@ namespace Tranquire.Selenium.Targets
             return this;
         }
 
-        public IWebElement ResolveFor(IActor actor)
+        public IWebElement ResolveFor(IWebDriver webDriver)
         {
             return WebElement;
         }
 
-        public ImmutableArray<IWebElement> ResoveAllFor(IActor actor)
+        public ImmutableArray<IWebElement> ResoveAllFor(IWebDriver webDriver)
         {
             return ImmutableArray.Create(WebElement);
         }

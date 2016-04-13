@@ -10,7 +10,7 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class ToDoItem : Tranquire.Task
+    public class ToDoItem : Tranquire.Task<BrowseTheWeb>
     {
         public ToDoItem(string title):
             base(Enter.TheValue(title).Into(ToDoPage.NewToDoItemInput),
@@ -23,14 +23,14 @@ namespace ToDoList.Automation.Actions
             return new RemoveToDoItem(item);
         }
 
-        public static IAction AddAToDoItem(string title)
+        public static IAction<BrowseTheWeb> AddAToDoItem(string title)
         {
             return new ToDoItem(title);
         }
 
-        public static IAction AddToDoItems(ImmutableArray<string> items)
+        public static IAction<BrowseTheWeb> AddToDoItems(ImmutableArray<string> items)
         {
-            return new Tranquire.Task(items.Select(i => new ToDoItem(i)).ToArray());
+            return new Tranquire.Task<BrowseTheWeb>(items.Select(i => new ToDoItem(i)).ToArray());
         }
     }
 }

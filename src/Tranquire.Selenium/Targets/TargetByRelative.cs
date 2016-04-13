@@ -33,9 +33,9 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="actor"></param>
         /// <returns></returns>
-        protected override ISearchContext SearchContext(IActor actor)
+        protected override ISearchContext SearchContext(IWebDriver webDriver)
         {
-            return TargetSource.ResolveFor(actor);
+            return TargetSource.ResolveFor(webDriver);
         }
     }
 }

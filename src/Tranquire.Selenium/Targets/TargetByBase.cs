@@ -48,11 +48,11 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="actor">The actor used to retrieved the element</param>
         /// <returns></returns>
-        public IWebElement ResolveFor(IActor actor)
+        public IWebElement ResolveFor(IWebDriver webDriver)
         {
-            Guard.ForNull(actor, nameof(actor));
+            Guard.ForNull(webDriver, nameof(webDriver));
             //TODO: ensure that the web element is visible
-            return SearchContext(actor).FindElement(By);
+            return SearchContext(webDriver).FindElement(By);
         }
 
         /// <summary>
@@ -60,10 +60,10 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="actor">The actor used to retrieved the element</param>
         /// <returns></returns>
-        public ImmutableArray<IWebElement> ResoveAllFor(IActor actor)
+        public ImmutableArray<IWebElement> ResoveAllFor(IWebDriver webDriver)
         {
-            Guard.ForNull(actor, nameof(actor));
-            return SearchContext(actor).FindElements(By).ToImmutableArray();
+            Guard.ForNull(webDriver, nameof(webDriver));
+            return SearchContext(webDriver).FindElements(By).ToImmutableArray();
         }
 
         /// <summary>
@@ -71,6 +71,6 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="actor"></param>
         /// <returns></returns>
-        protected abstract ISearchContext SearchContext(IActor actor);
+        protected abstract ISearchContext SearchContext(IWebDriver webDriver);
     }
 }

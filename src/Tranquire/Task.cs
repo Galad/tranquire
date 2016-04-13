@@ -9,18 +9,18 @@ namespace Tranquire
     /// <summary>
     /// Represent a <see cref="IAction"/> composed of several <see cref="IAction"/>
     /// </summary>
-    public class Task : IAction
+    public class Task<T> : IAction<T>
     {
         /// <summary>
         /// The list of actions to execute
         /// </summary>
-        public IEnumerable<IAction> Actions { get; }
+        public IEnumerable<IAction<T>> Actions { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="Task"/>
         /// </summary>
         /// <param name="actions">The list of actions to execute</param>
-        public Task(IEnumerable<IAction> actions)
+        public Task(IEnumerable<IAction<T>> actions)
         {
             Guard.ForNull(actions, nameof(actions));
             Actions = actions;
@@ -30,29 +30,27 @@ namespace Tranquire
         /// Create a new instance of <see cref="Task"/>
         /// </summary>
         /// <param name="actions">The list of actions to execute</param>
-        public Task(params IAction[] actions) : this(actions as IEnumerable<IAction>)
+        public Task(params IAction<T>[] actions) : this(actions as IEnumerable<IAction<T>>)
         {
         }
 
-        public IActor ExecuteGivenAs(IActor actor)
+        public void ExecuteGivenAs(IActor actor, T ability)
         {
-            return Execute(actor, (action) => action.ExecuteGivenAs(actor));
+            Execute(actor, (action) => action.ExecuteGivenAs(actor, ability));
         }
-
         
-        public IActor ExecuteWhenAs(IActor actor)
+        public void ExecuteWhenAs(IActor actor, T ability)
         {
-            return Execute(actor, (action) => action.ExecuteWhenAs(actor));
+            Execute(actor, (action) => action.ExecuteWhenAs(actor, ability));
         }
 
-        private T Execute<T>(T actor, Action<IAction> executeAction) where T : class, IActor
+        private void Execute(IActor actor, System.Action<IAction<T>> executeAction)
         {
             Guard.ForNull(actor, nameof(actor));
             foreach (var action in Actions)
             {
                 executeAction(action);
             }
-            return actor;
         }
     }
 }

@@ -8,11 +8,11 @@ using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.Questions
 {
-    public class DisplayedItems : IQuestion<ImmutableArray<Model.ToDoItem>>
+    public class DisplayedItems : IQuestion<ImmutableArray<Model.ToDoItem>, BrowseTheWeb>
     {
-        public ImmutableArray<Model.ToDoItem> AnsweredBy(IActor actor)
+        public ImmutableArray<Model.ToDoItem> AnsweredBy(IActor actor, BrowseTheWeb ability)
         {
-            return actor.AsksFor(Element.Of(ToDoPage.ToDoItem).Many().As(new WebElementToToDoItemConverter(actor)));
+            return actor.AsksFor(Element.Of(ToDoPage.ToDoItem).Many().As(new WebElementToToDoItemConverter(actor, ability.Driver)));
         }
     }
 }

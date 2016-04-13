@@ -30,7 +30,7 @@ namespace Tranquire.Selenium.Questions
         /// <summary>
         /// Gets a question which returns the state
         /// </summary>
-        public IQuestion<ImmutableArray<T>> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
+        public IQuestion<ImmutableArray<T>, BrowseTheWeb> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
 
         /// <summary>
         /// Creates a question
@@ -38,12 +38,12 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TAnswer">The type of the answer elements</typeparam>
         /// <param name="converter">The converter used to convert the UI state value to the answer type</param>
         /// <returns></returns>
-        public IQuestion<ImmutableArray<TAnswer>> As<TAnswer>(IConverter<T, TAnswer> converter)
+        public IQuestion<ImmutableArray<TAnswer>, BrowseTheWeb> As<TAnswer>(IConverter<T, TAnswer> converter)
         {
             return CreateQuestion(converter);
         }
 
-        private IQuestion<ImmutableArray<TAnswer>> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
+        private IQuestion<ImmutableArray<TAnswer>, BrowseTheWeb> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
         {
             return new ManyQuestion<T, TAnswer>(Target, ResolveFor, converter, Culture);
         }
@@ -68,9 +68,9 @@ namespace Tranquire.Selenium.Questions
             {
             }
 
-            public override ImmutableArray<TConverted> AnsweredBy(IActor actor)
+            public override ImmutableArray<TConverted> AnsweredBy(IActor actor, BrowseTheWeb webDriver)
             {
-                var webElements = Target.ResoveAllFor(actor);
+                var webElements = Target.ResoveAllFor(webDriver);
                 return webElements.Select(w => Convert(WebElementResolver(w)))
                                   .ToImmutableArray();
             }

@@ -13,7 +13,7 @@ namespace Tranquire.Selenium.Actions.Waiters
     /// Wait until a question is answered
     /// </summary>
     /// <typeparam name="TAnswer">The type of the answer</typeparam>
-    public class WaitUntilQuestionIsAnswered<TAnswer> : Action
+    public class WaitUntilQuestionIsAnswered<TAnswer> : Action<BrowseTheWeb>
     {
         private Predicate<TAnswer> _isAnswered;
         private IQuestion<TAnswer> _question;
@@ -53,9 +53,9 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// Execute the action
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteWhen(IActor actor)
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
-            var wait = new WebDriverWait(actor.BrowseTheWeb(), _timeout);
+            var wait = new WebDriverWait(ability.Driver, _timeout);
             try
             {
                 wait.Until(_ => _isAnswered(actor.AsksFor(_question)));

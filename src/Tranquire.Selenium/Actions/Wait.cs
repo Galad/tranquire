@@ -12,7 +12,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// An action used to wait for a condition
     /// </summary>
-    public class Wait : Action
+    public class Wait : Action<BrowseTheWeb>
     {
         private readonly TimeSpan _timeout;
         private readonly ITarget _target;
@@ -49,12 +49,12 @@ namespace Tranquire.Selenium.Actions
         /// Wait
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteWhen(IActor actor)
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
-            var wait = new WebDriverWait(actor.BrowseTheWeb(), _timeout);
+            var wait = new WebDriverWait(ability.Driver, _timeout);
             try
             {
-                wait.Until(_ => _target.ResolveFor(actor));
+                wait.Until(_ => _target.ResolveFor(ability.Driver));
             }
             catch (WebDriverTimeoutException ex)
             {

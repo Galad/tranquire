@@ -19,13 +19,13 @@ namespace Tranquire.Selenium
         /// </summary>
         /// <param name="actor">The actor used to retrieved the element</param>
         /// <returns></returns>
-        IWebElement ResolveFor(IActor actor);
+        IWebElement ResolveFor(IWebDriver webDriver);
         /// <summary>
         /// Returns an array of <see cref="IWebElement"/> corresponding to all targets
         /// </summary>
         /// <param name="actor">The actor used to retrieved the element</param>
         /// <returns></returns>
-        ImmutableArray<IWebElement> ResoveAllFor(IActor actor);
+        ImmutableArray<IWebElement> ResoveAllFor(IWebDriver webDriver);
         /// <summary>
         /// Specifies that this target should be resolved starting from the given target
         /// </summary>

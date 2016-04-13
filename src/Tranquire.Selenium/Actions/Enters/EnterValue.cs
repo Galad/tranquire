@@ -32,7 +32,7 @@ namespace Tranquire.Selenium.Actions.Enters
         /// <typeparam name="T"></typeparam>
         /// <param name="actor"></param>
         /// <param name="element"></param>
-        protected override void ExecuteAction<T>(T actor, IWebElement element)
+        protected override void ExecuteAction(IActor actor, IWebElement element)
         {
             element.SendKeys(Value);
         }

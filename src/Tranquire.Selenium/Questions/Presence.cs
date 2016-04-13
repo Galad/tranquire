@@ -71,11 +71,11 @@ namespace Tranquire.Selenium.Questions
                 return new SafeResolvedTarget(_target.RelativeTo(targetSource));
             }
 
-            public IWebElement ResolveFor(IActor actor)
+            public IWebElement ResolveFor(IWebDriver webDriver)
             {
                 try
                 {
-                    return _target.ResolveFor(actor);
+                    return _target.ResolveFor(webDriver);
                 }
                 catch (NoSuchElementException)
                 {
@@ -83,11 +83,11 @@ namespace Tranquire.Selenium.Questions
                 }
             }
 
-            public ImmutableArray<IWebElement> ResoveAllFor(IActor actor)
+            public ImmutableArray<IWebElement> ResoveAllFor(IWebDriver webDriver)
             {
                 try
                 {
-                    return _target.ResoveAllFor(actor);
+                    return _target.ResoveAllFor(webDriver);
                 }
                 catch (NoSuchElementException)
                 {

@@ -9,16 +9,16 @@ namespace Tranquire.Selenium.Questions
     /// <summary>
     /// A question returning the page URL
     /// </summary>
-    public class PageUrl : IQuestion<string>
+    public class PageUrl : IQuestion<string, BrowseTheWeb>
     {
         /// <summary>
         ///  Returns the page URL
         /// </summary>
         /// <param name="actor"></param>
         /// <returns></returns>
-        public string AnsweredBy(IActor actor)
+        public string AnsweredBy(IActor actor, BrowseTheWeb ability)
         {
-            return actor.BrowseTheWeb().Url;
+            return ability.Driver.Url;
         }
     }
 }

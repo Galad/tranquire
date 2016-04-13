@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Represent a click on a target with javascript
     /// </summary>
-    public class JsClick : Action
+    public class JsClick : Action<BrowseTheWeb>
     {
         private ITarget target;
 
@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static IAction On(ITarget target)
+        public static JsClick On(ITarget target)
         {
             return new JsClick(target);
         }
@@ -38,10 +38,10 @@ namespace Tranquire.Selenium.Actions
         /// Click on the target
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteWhen(IActor actor)
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
-            var element = target.ResolveFor(actor);
-            ((IJavaScriptExecutor)actor.AbilityTo<BrowseTheWeb>().Driver).ExecuteScript("arguments[0].click();", element);            
+            var element = target.ResolveFor(ability);
+            ((IJavaScriptExecutor)ability.Driver).ExecuteScript("arguments[0].click();", element);            
         }
     }
 }

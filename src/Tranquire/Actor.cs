@@ -9,7 +9,7 @@ namespace Tranquire
     /// <summary>
     /// Represent an actor which use the system under test. The actor can be given capabilities, such as browsing the web, with the method <see cref="Can{T}(T)"/>
     /// </summary>
-    public class Actor : IActor
+    public class Actor : IActor, ICanHaveAbility
     {
         private readonly Dictionary<Type, IAbility> _abilities = new Dictionary<Type, IAbility>();
 
@@ -34,7 +34,7 @@ namespace Tranquire
         /// <typeparam name="T">The type of ability to retrieve</typeparam>
         /// <returns>The ability</returns>
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-        public T AbilityTo<T>() where T : class, IAbility<T>
+        public T AbilityTo<T>()
         {
             IAbility ability;
             if(!_abilities.TryGetValue(typeof(T), out ability))
@@ -44,20 +44,33 @@ namespace Tranquire
             return (T)_abilities[typeof(T)];
         }
         
-        public IActor AttemptsTo(IWhenCommand performable)
+        public void AttemptsTo<T>(IWhenCommand<T> performable)
         {
             Guard.ForNull(performable, nameof(performable));
-            return performable.ExecuteWhenAs(this);
+            performable.ExecuteWhenAs(this, AbilityTo<T>());
         }
         
-        public IActor WasAbleTo(IGivenCommand performable)
+        public void WasAbleTo<T>(IGivenCommand<T> performable)
         {
             Guard.ForNull(performable, nameof(performable));
             var actor = new GivenActor(this);
-            return performable.ExecuteGivenAs(actor);
+            performable.ExecuteGivenAs(actor, AbilityTo<T>());
         }
-        
-        public IActor Can<T>(T doSomething) where T : class, IAbility<T>
+
+        public void AttemptsTo(IWhenCommand performable)
+        {
+            Guard.ForNull(performable, nameof(performable));
+            performable.ExecuteWhenAs(this);
+        }
+
+        public void WasAbleTo(IGivenCommand performable)
+        {
+            Guard.ForNull(performable, nameof(performable));
+            var actor = new GivenActor(this);
+            performable.ExecuteGivenAs(actor);
+        }
+
+        public IActor Can<T>(T doSomething) where T : class, IAbility
         {
             var ability = (IAbility)doSomething;
             Guard.ForNull(ability, nameof(doSomething));
@@ -76,18 +89,30 @@ namespace Tranquire
             Guard.ForNull(question, nameof(question));
             return question.AnsweredBy(this);
         }
+        
+        public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        {
+            Guard.ForNull(question, nameof(question));
+            return question.AnsweredBy(this, AbilityTo<TAbility>());
+        }
 
-        public IActor Execute(IAction action)
+        public void Execute<T>(IAction<T> action)
         {
             Guard.ForNull(action, nameof(action));
-            return action.ExecuteWhenAs(this);           
+            action.ExecuteWhenAs(this, AbilityTo<T>());           
+        }
+
+        public void Execute(IAction action)
+        {
+            Guard.ForNull(action, nameof(action));
+            action.ExecuteWhenAs(this);
         }
 
         private class GivenActor : IActor
         {
-            private readonly IActor _innerActor;
+            private readonly Actor _innerActor;
 
-            public GivenActor(IActor innerActor)
+            public GivenActor(Actor innerActor)
             {
                 _innerActor = innerActor;
             }
@@ -97,19 +122,19 @@ namespace Tranquire
                 return _innerActor.AsksFor(question);
             }
 
-            public IActor Execute(IAction action)
+            public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
             {
-                return action.ExecuteGivenAs(this);
+                return _innerActor.AsksFor(question);
+            }
+        
+            public void Execute(IAction action)
+            {
+                action.ExecuteGivenAs(this);
             }
 
-            TAbility IActor.AbilityTo<TAbility>()
+            public void Execute<T>(IAction<T> action)
             {
-                return _innerActor.AbilityTo<TAbility>();
-            }
-
-            IActor IActor.Can<T>(T doSomething)
-            {
-                return _innerActor.Can(doSomething);
+                action.ExecuteGivenAs(this, _innerActor.AbilityTo<T>());
             }
         }
     }

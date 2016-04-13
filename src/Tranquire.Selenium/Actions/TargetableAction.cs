@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// Base class for building actions performed on a target
     /// </summary>
     /// <typeparam name="TAction"></typeparam>
-    public abstract class TargetableAction<TAction> : ITargetableAction<TAction> where TAction : IAction
+    public abstract class TargetableAction<TAction> : ITargetableAction<TAction> where TAction : IAction<BrowseTheWeb>
     {
         /// <summary>
         /// Creates a new instance of <see cref="TargetableAction{TAction}"/>

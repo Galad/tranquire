@@ -32,7 +32,7 @@ namespace Tranquire.Selenium.Questions
         /// <summary>
         /// Gets a question returning the state
         /// </summary>
-        public IQuestion<T> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
+        public IQuestion<T, BrowseTheWeb> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
 
         /// <summary>
         /// Creates a question
@@ -40,7 +40,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TAnswer">The type of the answer</typeparam>
         /// <param name="converter">The converter used to convert the UI state value to the answer type</param>
         /// <returns>A <see cref="IQuestion{TAnswer}"/> instance</returns>
-        public IQuestion<TAnswer> As<TAnswer>(IConverter<T, TAnswer> converter)
+        public IQuestion<TAnswer, BrowseTheWeb> As<TAnswer>(IConverter<T, TAnswer> converter)
         {
             return CreateQuestion(converter);
         }
@@ -54,7 +54,7 @@ namespace Tranquire.Selenium.Questions
             return new ManyUIState<T>(Target, ResolveFor, Culture);
         }
 
-        private IQuestion<TAnswer> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
+        private IQuestion<TAnswer, BrowseTheWeb> CreateQuestion<TAnswer>(IConverter<T, TAnswer> converter)
         {
             return new SingleQuestion<T, TAnswer>(Target, ResolveFor, converter, Culture);
         }
@@ -84,9 +84,9 @@ namespace Tranquire.Selenium.Questions
             {
             }
 
-            public override TConverted AnsweredBy(IActor actor)
+            public override TConverted AnsweredBy(IActor actor, BrowseTheWeb webDriver)
             {
-                var webElement = Target.ResolveFor(actor);
+                var webElement = Target.ResolveFor(webDriver);
                 var value = WebElementResolver(webElement);
                 return Convert(value);
             }

@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions.Selects
     /// Represent an action used to select values on an element
     /// </summary>
     /// <typeparam name="TValue">The type of the value to select</typeparam>
-    public class SelectByMany<TValue> : Action
+    public class SelectByMany<TValue> : Action<BrowseTheWeb>
     {
         private readonly ISelectStrategy<TValue> _selectStrategy;
         private readonly ITarget _target;
@@ -39,13 +39,13 @@ namespace Tranquire.Selenium.Actions.Selects
         /// Execute the selection
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteWhen(IActor actor)
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             if (_values.Length == 0)
             {
                 return;
             }
-            var element = _target.ResolveFor(actor);
+            var element = _target.ResolveFor(ability);
             var selectElement = new SelectElement(element);
             foreach (var value in _values)
             {
