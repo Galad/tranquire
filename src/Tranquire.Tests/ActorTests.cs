@@ -132,5 +132,20 @@ namespace Tranquire.Tests
             //assert
             secondAction.Verify(a => a.ExecuteGivenAs(It.IsAny<IActor>()));
         }
+
+        [Theory, DomainAutoData]
+        public void AttemptsTo_WithAbility_ShouldCallExecuteGive(
+          Actor sut,
+          Mock<IAction> action)
+        {
+            var secondAction = new Mock<IAction>(MockBehavior.Loose);
+            IActor actual = null;
+            action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>())).Callback((IActor actor) => actual = actor);
+            //act
+            sut.WasAbleTo(action.Object);
+            actual.Execute(secondAction.Object);
+            //assert
+            secondAction.Verify(a => a.ExecuteGivenAs(It.IsAny<IActor>()));
+        }
     }
 }
