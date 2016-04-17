@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,9 @@ namespace Tranquire
     /// </summary>
     public class Actor : IActor, ICanHaveAbility
     {
-        private readonly Dictionary<Type, IAbility> _abilities = new Dictionary<Type, IAbility>();
+        private readonly IReadOnlyDictionary<Type, object> _abilities;
+
+        public IReadOnlyDictionary<Type, object> Abilities => _abilities;
 
         /// <summary>
         /// Gets the actor name.
@@ -22,11 +25,15 @@ namespace Tranquire
         /// Create a new instance of <see cref="Actor"/>
         /// </summary>
         /// <param name="name">The actor's name</param>
-        public Actor(string name)
+        public Actor(string name, IReadOnlyDictionary<Type, object> abilities)
         {
             Guard.ForNull(name, nameof(name));
+            Guard.ForNull(abilities, nameof(abilities));
             Name = name;
+            _abilities = abilities;
         }
+
+        public Actor(string name):this(name, new Dictionary<Type, object>()) { }
                 
         /// <summary>
         /// Retrieve an actor's ability
@@ -34,9 +41,9 @@ namespace Tranquire
         /// <typeparam name="T">The type of ability to retrieve</typeparam>
         /// <returns>The ability</returns>
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-        public T AbilityTo<T>()
+        private T AbilityTo<T>()
         {
-            IAbility ability;
+            object ability;
             if(!_abilities.TryGetValue(typeof(T), out ability))
             {
                 throw new InvalidOperationException($"The ability {typeof(T).Name} was requested but the actor {Name} does not have it.");
@@ -70,12 +77,12 @@ namespace Tranquire
             performable.ExecuteGivenAs(actor);
         }
 
-        public IActor Can<T>(T doSomething) where T : class, IAbility
-        {
-            var ability = (IAbility)doSomething;
-            Guard.ForNull(ability, nameof(doSomething));
-            _abilities[typeof(T)] = doSomething;            
-            return this;
+        public IActor Can<T>(T doSomething) where T : class
+        {            
+            Guard.ForNull(doSomething, nameof(doSomething));
+            var abilities = _abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
+                                      .ToDictionary(k => k.Key, k => k.Value);
+            return new Actor(Name, abilities);
         }
 
         /// <summary>
@@ -124,7 +131,7 @@ namespace Tranquire
 
             public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
             {
-                return _innerActor.AsksFor(question);
+                return _innerActor.AsksFor(question);                
             }
         
             public void Execute(IAction action)
