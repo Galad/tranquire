@@ -17,7 +17,7 @@ namespace ToDoList.Automation.Actions
             this._url = v;
         }
 
-        public static IAction<BrowseTheWeb> To(string siteUrl)
+        public static IAction<BrowseTheWeb, BrowseTheWeb> To(string siteUrl)
         {
             return new Navigate(siteUrl);
         }

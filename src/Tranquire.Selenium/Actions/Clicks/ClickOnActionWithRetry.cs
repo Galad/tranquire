@@ -16,7 +16,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// <summary>
         /// Gets the action used to click on the target
         /// </summary>
-        public IAction<T> InnerAction { get; }
+        public IAction<T, T> InnerAction { get; }
         /// <summary>
         /// Gets the duration during which the action will be retried
         /// </summary>
@@ -27,7 +27,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// </summary>
         /// <param name="innerAction">The action used to click on the target</param>
         /// <param name="timeout">The duration during which the action will be retried</param>
-        public ClickOnActionWithRetry(IAction<T> innerAction, TimeSpan timeout)
+        public ClickOnActionWithRetry(IAction<T, T> innerAction, TimeSpan timeout)
         {
             Guard.ForNull(innerAction, nameof(innerAction));
             InnerAction = innerAction;
@@ -38,7 +38,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// Creates a new instance of <see cref="ClickOnActionWithRetry"/> with a default timeout of 5 seconds
         /// </summary>
         /// <param name="innerAction">The action used to click on the target</param>
-        public ClickOnActionWithRetry(IAction<T> innerAction) : this(innerAction, TimeSpan.FromSeconds(5))
+        public ClickOnActionWithRetry(IAction<T, T> innerAction) : this(innerAction, TimeSpan.FromSeconds(5))
         {
         }
 

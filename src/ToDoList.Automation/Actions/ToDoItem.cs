@@ -23,12 +23,12 @@ namespace ToDoList.Automation.Actions
             return new RemoveToDoItem(item);
         }
 
-        public static IAction<BrowseTheWeb> AddAToDoItem(string title)
+        public static IAction<BrowseTheWeb, BrowseTheWeb> AddAToDoItem(string title)
         {
             return new ToDoItem(title);
         }
 
-        public static IAction<BrowseTheWeb> AddToDoItems(ImmutableArray<string> items)
+        public static IAction<BrowseTheWeb, BrowseTheWeb> AddToDoItems(ImmutableArray<string> items)
         {
             return new Tranquire.Task<BrowseTheWeb>(items.Select(i => new ToDoItem(i)).ToArray());
         }

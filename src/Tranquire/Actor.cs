@@ -96,10 +96,10 @@ namespace Tranquire
             return question.AnsweredBy(this, AbilityTo<TAbility>());
         }
 
-        public void Execute<T>(IAction<T> action)
+        public void Execute<TGiven, TWhen>(IAction<TGiven, TWhen> action)
         {
             Guard.ForNull(action, nameof(action));
-            action.ExecuteWhenAs(this, AbilityTo<T>());           
+            action.ExecuteWhenAs(this, AbilityTo<TWhen>());           
         }
 
         public void Execute(IAction action)
@@ -132,9 +132,9 @@ namespace Tranquire
                 action.ExecuteGivenAs(this);
             }
 
-            public void Execute<T>(IAction<T> action)
+            public void Execute<TGiven, TWhen>(IAction<TGiven, TWhen> action)
             {
-                action.ExecuteGivenAs(this, _innerActor.AbilityTo<T>());
+                action.ExecuteGivenAs(this, _innerActor.AbilityTo<TGiven>());
             }
         }
     }

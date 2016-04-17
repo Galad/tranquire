@@ -36,7 +36,7 @@ namespace Tranquire
 
     public interface IActor
     {
-        void Execute<T>(IAction<T> action);
+        void Execute<TGiven, TWhen>(IAction<TGiven, TWhen> action);
         void Execute(IAction action);
         /// <summary>
         /// Ask a question about the current state of the system

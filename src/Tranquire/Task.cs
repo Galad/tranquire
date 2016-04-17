@@ -9,18 +9,18 @@ namespace Tranquire
     /// <summary>
     /// Represent a <see cref="IAction"/> composed of several <see cref="IAction"/>
     /// </summary>
-    public class Task<T> : IAction<T>
+    public class Task<T> : IAction<T, T>
     {
         /// <summary>
         /// The list of actions to execute
         /// </summary>
-        public IEnumerable<IAction<T>> Actions { get; }
+        public IEnumerable<IAction<T, T>> Actions { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="Task"/>
         /// </summary>
         /// <param name="actions">The list of actions to execute</param>
-        public Task(IEnumerable<IAction<T>> actions)
+        public Task(IEnumerable<IAction<T, T>> actions)
         {
             Guard.ForNull(actions, nameof(actions));
             Actions = actions;
@@ -30,7 +30,7 @@ namespace Tranquire
         /// Create a new instance of <see cref="Task"/>
         /// </summary>
         /// <param name="actions">The list of actions to execute</param>
-        public Task(params IAction<T>[] actions) : this(actions as IEnumerable<IAction<T>>)
+        public Task(params IAction<T, T>[] actions) : this(actions as IEnumerable<IAction<T, T>>)
         {
         }
 
@@ -44,7 +44,7 @@ namespace Tranquire
             Execute(actor, (action) => action.ExecuteWhenAs(actor, ability));
         }
 
-        private void Execute(IActor actor, System.Action<IAction<T>> executeAction)
+        private void Execute(IActor actor, System.Action<IAction<T, T>> executeAction)
         {
             Guard.ForNull(actor, nameof(actor));
             foreach (var action in Actions)

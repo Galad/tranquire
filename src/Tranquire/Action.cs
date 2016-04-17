@@ -9,7 +9,7 @@ namespace Tranquire
     /// <summary>
     /// Represent an action on the system
     /// </summary>
-    public abstract class Action<T> : IAction<T>
+    public abstract class Action<T> : IAction<T, T>
     {
         public void ExecuteGivenAs(IActor actor, T ability)
         {
