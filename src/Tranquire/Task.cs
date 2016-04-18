@@ -9,47 +9,56 @@ namespace Tranquire
     /// <summary>
     /// Represent a <see cref="IAction"/> composed of several <see cref="IAction"/>
     /// </summary>
-    public class Task<T> : IAction<T, T>
+    public class Task : IAction
     {
         /// <summary>
-        /// The list of actions to execute
+        /// Gets the actions executed by this task
         /// </summary>
-        public IEnumerable<IAction<T, T>> Actions { get; }
+        public IEnumerable<IAction> Actions { get; }
 
         /// <summary>
-        /// Create a new instance of <see cref="Task"/>
+        /// Creates a new instance of task
         /// </summary>
-        /// <param name="actions">The list of actions to execute</param>
-        public Task(IEnumerable<IAction<T, T>> actions)
+        /// <param name="actions">The actions executed by this task</param>
+        public Task(IEnumerable<IAction> actions)
         {
             Guard.ForNull(actions, nameof(actions));
             Actions = actions;
         }
 
         /// <summary>
-        /// Create a new instance of <see cref="Task"/>
+        /// Creates a new instance of task
         /// </summary>
-        /// <param name="actions">The list of actions to execute</param>
-        public Task(params IAction<T, T>[] actions) : this(actions as IEnumerable<IAction<T, T>>)
+        /// <param name="actions">The actions executed by this task</param>
+        public Task(params IAction[] actions) : this(actions as IEnumerable<IAction>)
         {
         }
 
-        public void ExecuteGivenAs(IActor actor, T ability)
+        /// <summary>
+        /// Execute all the actions
+        /// </summary>
+        /// <param name="actor"></param>
+        public void ExecuteGivenAs(IActor actor)
         {
-            Execute(actor, (action) => action.ExecuteGivenAs(actor, ability));
+            ExecuteActions(actor);
         }
-        
-        public void ExecuteWhenAs(IActor actor, T ability)
+       
+        /// <summary>
+        /// Execute all the actions
+        /// </summary>
+        /// <param name="actor"></param>
+        public void ExecuteWhenAs(IActor actor)
         {
-            Execute(actor, (action) => action.ExecuteWhenAs(actor, ability));
+
+            ExecuteActions(actor);
         }
 
-        private void Execute(IActor actor, System.Action<IAction<T, T>> executeAction)
+        private void ExecuteActions(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
-            foreach (var action in Actions)
+            foreach (var task in Actions)
             {
-                executeAction(action);
+                actor.Execute(task);
             }
         }
     }

@@ -52,6 +52,7 @@
     <Compile Include="Action.cs" />
     <Compile Include="Actor.cs" />
     <Compile Include="Task.cs" />
+    <Compile Include="Task.WithAbility.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IAbility.cs" />
     <Compile Include="IAction.cs" />
