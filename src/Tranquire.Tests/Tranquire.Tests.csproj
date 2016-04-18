@@ -101,7 +101,6 @@
     <Compile Include="ActionWithAbilityToActionAdapterTests.cs" />
     <Compile Include="ActorTests.cs" />
     <Compile Include="TaskTests.cs" />
-    <Compile Include="TaskWithAbilityTests.cs" />
     <Compile Include="DomainAutoDataAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ActionCallFlowTest.cs" />
