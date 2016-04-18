@@ -10,18 +10,18 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Allow to switch to a frame and go back to the parent frame
     /// </summary>
-    public class UsingIFrame
+    public class UsingIFrame : Action<BrowseTheWeb>
     {
-        private IActor _actor;
+        private ITarget _target;
 
         /// <summary>
         /// Creates a new instance of <see cref="UsingIFrame"/>
         /// </summary>
-        /// <param name="actor">The actor used to retrieve the <see cref="BrowseTheWeb"/> ability</param>
-        public UsingIFrame(IActor actor)
+        /// <param name="target">The target representing the frame to switch to</param>
+        public UsingIFrame(ITarget target)
         {
-            Guard.ForNull(actor, "actor");
-            _actor = actor;
+            Guard.ForNull(target, "actor");
+            _target = target;
         }
 
         /// <summary>
@@ -29,9 +29,10 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <returns>A <see cref="UsingIFrame"/> object that can be used to switch to a frame</returns>
-        public static UsingIFrame For(IActor actor)
+        public IDisposable ExecuteFor(IActor actor)
         {
-            return new UsingIFrame(actor);
+            actor.Execute(this);            
+            return new Disposable(() => actor.Execute(new SwitchToParentIFrame()));
         }
 
         /// <summary>
@@ -39,12 +40,19 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="target">The target representing the frame to switch to</param>
         /// <returns>A <see cref="IDisposable"/> object. When it is disposed, the browser will go back to the parent frame.</returns>
-        public IDisposable LocatedBy(ITarget target)
+        public static UsingIFrame LocatedBy(ITarget target)
         {
-            //var driver = _actor.BrowseTheWeb();
-            //driver.SwitchTo().Frame(target.ResolveFor(_actor));
-            //return new Disposable(() => driver.SwitchTo().ParentFrame());
-            return new Disposable(() => { });
+            return new UsingIFrame(target);                
+        }
+
+        /// <summary>
+        /// Switch to the IFrame
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="ability"></param>
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        {
+            ability.SwitchTo().Frame(_target.ResolveFor(ability));
         }
 
         private class Disposable : IDisposable
@@ -64,6 +72,14 @@ namespace Tranquire.Selenium.Actions
                 }
                 var action = Interlocked.Exchange(ref _action, null);
                 action();
+            }
+        }
+
+        private class SwitchToParentIFrame : Action<BrowseTheWeb>
+        {            
+            protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+            {
+                ability.SwitchTo().ParentFrame();
             }
         }
     }
