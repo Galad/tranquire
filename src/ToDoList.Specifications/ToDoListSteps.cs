@@ -27,8 +27,9 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new FirefoxDriver();
-            var actor = (Actor)new Actor("John").Can(BrowseTheWeb.With(driver));
+            var actor = new Actor("John").Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
+            Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
             actor.WasAbleTo(Open.TheApplication());
         }
@@ -36,7 +37,7 @@ namespace ToDoList.Specifications
         [AfterScenario]
         public void After()
         {
-            ((BrowseTheWeb)Context.Actor().Abilities[typeof(BrowseTheWeb)]).Dispose();
+            Context.Get<FirefoxDriver>().Dispose();
         }
 
         [Given(@"I have an empty to-do list")]

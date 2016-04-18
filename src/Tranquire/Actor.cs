@@ -10,7 +10,7 @@ namespace Tranquire
     /// <summary>
     /// Represent an actor which use the system under test. The actor can be given capabilities, such as browsing the web, with the method <see cref="Can{T}(T)"/>
     /// </summary>
-    public class Actor : IActor, ICanHaveAbility
+    public class Actor : IActorFacade
     {
         private readonly IReadOnlyDictionary<Type, object> _abilities;
 
@@ -109,7 +109,7 @@ namespace Tranquire
         /// <typeparam name="T">The type of the ability</typeparam>
         /// <param name="doSomething">Ability</param>
         /// <returns>A new actor with the given ability</returns>
-        public IActor Can<T>(T doSomething) where T : class
+        public IActorFacade Can<T>(T doSomething) where T : class
         {            
             Guard.ForNull(doSomething, nameof(doSomething));
             var abilities = _abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
