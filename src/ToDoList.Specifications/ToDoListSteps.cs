@@ -36,7 +36,7 @@ namespace ToDoList.Specifications
         [AfterScenario]
         public void After()
         {
-            //Context.Actor().AbilityTo<BrowseTheWeb>().Driver.Dispose();
+            ((BrowseTheWeb)Context.Actor().Abilities[typeof(BrowseTheWeb)]).Dispose();
         }
 
         [Given(@"I have an empty to-do list")]
