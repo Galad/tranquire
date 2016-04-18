@@ -28,8 +28,7 @@ namespace Tranquire.Selenium.Actions.Enters
 
         /// <summary>
         /// Enter the value
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// </summary>        
         /// <param name="actor"></param>
         /// <param name="element"></param>
         protected override void ExecuteAction(IActor actor, IWebElement element)

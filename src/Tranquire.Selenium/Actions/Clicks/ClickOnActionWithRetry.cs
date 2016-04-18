@@ -23,7 +23,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         public TimeSpan Timeout { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ClickOnActionWithRetry"/>
+        /// Creates a new instance of <see cref="ClickOnActionWithRetry{T}"/>
         /// </summary>
         /// <param name="innerAction">The action used to click on the target</param>
         /// <param name="timeout">The duration during which the action will be retried</param>
@@ -35,7 +35,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ClickOnActionWithRetry"/> with a default timeout of 5 seconds
+        /// Creates a new instance of <see cref="ClickOnActionWithRetry{T}"/> with a default timeout of 5 seconds
         /// </summary>
         /// <param name="innerAction">The action used to click on the target</param>
         public ClickOnActionWithRetry(IAction<T, T> innerAction) : this(innerAction, TimeSpan.FromSeconds(5))
@@ -46,7 +46,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// Changes the timeout value
         /// </summary>
         /// <param name="time">The duration during which the action will be retried</param>
-        /// <returns>A new instance of <see cref="ClickOnActionWithRetry"/> with the new timeout</returns>
+        /// <returns>A new instance of <see cref="ClickOnActionWithRetry{T}"/> with the new timeout</returns>
         public ClickOnActionWithRetry<T> During(TimeSpan time)
         {
             return new ClickOnActionWithRetry<T>(InnerAction, time);
@@ -56,21 +56,23 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// Execute the action
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteGiven(IActor executor, T ability)
+        /// <param name="ability"></param>
+        protected override void ExecuteGiven(IActor actor, T ability)
         {
-            Execute(executor, ability);
+            Execute(actor, ability);
         }
 
         /// <summary>
         /// Execute the action
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteWhen(IActor executor, T ability)
+        /// <param name="ability"></param>
+        protected override void ExecuteWhen(IActor actor, T ability)
         {
-            Execute(executor, ability);
+            Execute(actor, ability);
         }
 
-        private void Execute(IActor executor, T ability)
+        private void Execute(IActor actor, T ability)
         {
             var startTime = DateTimeOffset.Now;
             bool hasSucceeded = false;   
@@ -78,7 +80,7 @@ namespace Tranquire.Selenium.Actions.Clicks
             {
                 try
                 {
-                    InnerAction.ExecuteWhenAs(executor, ability);
+                    InnerAction.ExecuteWhenAs(actor, ability);
                     hasSucceeded = true;
                 }
                 catch (WebDriverException)

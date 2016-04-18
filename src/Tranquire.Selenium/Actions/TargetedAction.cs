@@ -30,19 +30,19 @@ namespace Tranquire.Selenium.Actions
         /// <summary>
         /// Execute the action
         /// </summary>
-        /// <param name="executor"></param>
-        protected override void ExecuteWhen(IActor executor, BrowseTheWeb ability)
+        /// <param name="actor"></param>
+        /// <param name="ability"></param>
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             var element = Target.ResolveFor(ability.Driver);
-            ExecuteAction(executor, element);
+            ExecuteAction(actor, element);
         }
 
         /// <summary>
         /// Execute the action
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="executor"></param>
+        /// </summary>        
+        /// <param name="actor"></param>
         /// <param name="element"></param>
-        protected abstract void ExecuteAction(IActor executor, IWebElement element);
+        protected abstract void ExecuteAction(IActor actor, IWebElement element);
     }
 }

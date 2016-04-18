@@ -46,7 +46,7 @@ namespace Tranquire.Selenium.Targets
         /// <summary>
         /// Returns a <see cref="IWebElement"/> corresponding to the target
         /// </summary>
-        /// <param name="actor">The actor used to retrieved the element</param>
+        /// <param name="webDriver">The <see cref="IWebDriver"/> used to retrieved the element</param>
         /// <returns></returns>
         public IWebElement ResolveFor(IWebDriver webDriver)
         {
@@ -58,7 +58,7 @@ namespace Tranquire.Selenium.Targets
         /// <summary>
         /// Returns an array of <see cref="IWebElement"/> corresponding to all targets
         /// </summary>
-        /// <param name="actor">The actor used to retrieved the element</param>
+        /// <param name="webDriver">The <see cref="IWebDriver"/> used to retrieved the element</param>
         /// <returns></returns>
         public ImmutableArray<IWebElement> ResoveAllFor(IWebDriver webDriver)
         {
@@ -69,7 +69,7 @@ namespace Tranquire.Selenium.Targets
         /// <summary>
         /// Gets the search context
         /// </summary>
-        /// <param name="actor"></param>
+        /// <param name="webDriver"></param>
         /// <returns></returns>
         protected abstract ISearchContext SearchContext(IWebDriver webDriver);
     }

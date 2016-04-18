@@ -7,9 +7,9 @@
     {
         /// <summary>
         /// Execute the action with the given actor
-        /// </summary>
-        /// <typeparam name = "T">The actor's type</typeparam>
+        /// </summary>        
         /// <param name = "actor">The actor used to execute the action</param>
+        /// <param name="ability">The ability required for this action by the actor</param>
         /// <returns>The current <see cref = "IActor"/> instance, allowing to chain calls</returns>
         void ExecuteWhenAs(IActor actor, T ability);
     }
@@ -22,7 +22,6 @@
         /// <summary>
         /// Execute the action with the given actor
         /// </summary>
-        /// <typeparam name = "T">The actor's type</typeparam>
         /// <param name = "actor">The actor used to execute the action</param>
         /// <returns>The current <see cref = "IActor"/> instance, allowing to chain calls</returns>
         void ExecuteWhenAs(IActor actor);

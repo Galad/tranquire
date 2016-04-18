@@ -53,6 +53,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// Execute the action
         /// </summary>
         /// <param name="actor"></param>
+        /// <param name="ability"></param>
         protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             var wait = new WebDriverWait(ability.Driver, _timeout);

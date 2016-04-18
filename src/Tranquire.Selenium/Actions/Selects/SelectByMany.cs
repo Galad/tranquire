@@ -39,6 +39,7 @@ namespace Tranquire.Selenium.Actions.Selects
         /// Execute the selection
         /// </summary>
         /// <param name="actor"></param>
+        /// <param name="ability"></param>
         protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             if (_values.Length == 0)

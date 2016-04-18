@@ -38,6 +38,7 @@ namespace Tranquire.Selenium.Actions
         /// Click on the target
         /// </summary>
         /// <param name="actor"></param>
+        /// <param name="ability"></param>
         protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             var element = target.ResolveFor(ability);

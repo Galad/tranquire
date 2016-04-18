@@ -52,6 +52,9 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
+    <Compile Include="IActionExecutor.cs" />
+    <Compile Include="IActorFacade.cs" />
+    <Compile Include="ICanHaveAbility.cs" />
     <Compile Include="Task.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IAbility.cs" />

@@ -31,7 +31,7 @@ namespace Tranquire.Selenium.Targets
         /// <summary>
         /// Return the target source search context
         /// </summary>
-        /// <param name="actor"></param>
+        /// <param name="webDriver"></param>
         /// <returns></returns>
         protected override ISearchContext SearchContext(IWebDriver webDriver)
         {

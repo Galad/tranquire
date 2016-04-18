@@ -15,6 +15,7 @@ namespace Tranquire.Selenium.Questions
         ///  Returns the page URL
         /// </summary>
         /// <param name="actor"></param>
+        /// <param name="ability"></param>
         /// <returns></returns>
         public string AnsweredBy(IActor actor, BrowseTheWeb ability)
         {

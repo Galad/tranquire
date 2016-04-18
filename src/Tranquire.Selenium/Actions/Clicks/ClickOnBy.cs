@@ -18,11 +18,10 @@ namespace Tranquire.Selenium.Actions.Clicks
 
         /// <summary>
         /// Click on the target
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// </summary>        
         /// <param name="actor"></param>
         /// <param name="element"></param>
-        protected override void ExecuteAction(IActor executor, IWebElement element)
+        protected override void ExecuteAction(IActor actor, IWebElement element)
         {
             element.Click();
         }
@@ -30,7 +29,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// <summary>
         /// Allow the click action to be retried if it fails
         /// </summary>
-        /// <returns>A new instance of <see cref="ClickOnActionWithRetry"/></returns>
+        /// <returns>A new instance of <see cref="ClickOnActionWithRetry{T}"/></returns>
         public ClickOnActionWithRetry<BrowseTheWeb> AllowRetry()
         {
             return new ClickOnActionWithRetry<BrowseTheWeb>(this);

@@ -24,12 +24,14 @@ namespace Tranquire
     /// Represent a question from an ability
     /// </summary>
     /// <typeparam name="TAnswer">The answer's type</typeparam>
+    /// <typeparam name="TAbility">The type of the ability required to answer this question</typeparam>
     public interface IQuestion<TAnswer, TAbility>
     {
         /// <summary>
         /// Answers the question
         /// </summary>
         /// <param name="actor">The actor used to answer the question</param>
+        /// <param name="ability">The ability required by the question</param>
         /// <returns>The answer to the question</returns>
         TAnswer AnsweredBy(IActor actor, TAbility ability);
     }

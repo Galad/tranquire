@@ -34,12 +34,13 @@ namespace Tranquire.Selenium.Actions
         {
             return new Clear(target);
         }
-        
+
         /// <summary>
         /// Clear the value
         /// </summary>
         /// <param name="actor"></param>
-        protected override void ExecuteWhen(IActor executor, BrowseTheWeb ability)
+        /// <param name="ability"></param>
+        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             var element = Target.ResolveFor(ability);
             element.SendKeys(Keys.LeftShift + Keys.Home);

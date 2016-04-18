@@ -19,7 +19,7 @@ namespace Tranquire.Selenium.Targets
         /// <summary>
         /// Return the <see cref="ISearchContext"/> for the current target
         /// </summary>
-        /// <param name="actor"></param>
+        /// <param name="webDriver"></param>
         /// <returns></returns>
         protected override ISearchContext SearchContext(IWebDriver webDriver)
         {
