@@ -29,7 +29,12 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyConstructorParameters(ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(typeof(Task));
+            assertion.Verify(typeof(Task).GetConstructors()
+                                         .Where(c => !c.GetParameters()
+                                                       .Select(pi => pi.ParameterType)
+                                                       .SequenceEqual(new[] { typeof(Func<Task, Task>) })
+                                                )
+                            );
         }
 
         [Theory, DomainAutoData]
@@ -42,7 +47,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorExecute(            
+        public void ExecuteGivenAs_ShouldCallActorExecute(
             Task sut,
             Mock<IActor> actor
             )
@@ -71,6 +76,69 @@ namespace Tranquire.Tests
             {
                 actor.Verify(a => a.Execute(action), Times.Once());
             }
+        }
+
+        [Theory, DomainAutoData]
+        public void And_ShouldAddAction(
+           Task sut,
+           Mock<IActor> actor,
+           IAction expected
+           )
+        {
+            //arrange
+            var existingActions = sut.Actions.ToArray();
+            //act
+            var actual = sut.And(expected);
+            //assert            
+            actual.Actions.Except(existingActions).Single().Should().Be(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void And_WithAbility_ShouldWrapAction(           
+           [FavorEnumerables]Task sut,
+           Mock<IActor> actor,
+           IAction<object, object> expected
+           )
+        {
+            //arrange
+            var existingActions = sut.Actions.ToArray();
+            //act
+            var actual = sut.And(expected);
+            //assert            
+            var actualAction = actual.Actions.Except(existingActions).Single();
+            actualAction.Should()
+                        .BeOfType<ActionWithAbilityToActionAdapter<object, object>>()
+                        .Which
+                        .Action
+                        .Should()
+                        .Be(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void And_WithAbility_ShouldContainExistingAbility(
+          [FavorEnumerables]Task sut,
+          Mock<IActor> actor,
+          IAction<object, object> action
+          )
+        {
+            //arrange
+            var existingActions = sut.Actions.ToArray();
+            //act
+            var actual = sut.And(action);
+            //assert                        
+            actual.Actions.Should().Contain(existingActions);
+        }
+
+        [Theory, DomainAutoData]
+        public void Sut_WithTaskBuilder_ShouldHaveCorrectTasks(
+           IAction[] expected
+           )
+        {
+            //arrange
+            //act
+            var sut = new Task(t => expected.Aggregate(t, (tresult, tt) => tresult.And(tt)));
+            //assert            
+            sut.Actions.Should().Equal(expected);
         }
     }
 }

@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="ActionTests.cs" />
     <Compile Include="ActionWithAbilityTests.cs" />
+    <Compile Include="ActionWithAbilityToActionAdapterTests.cs" />
     <Compile Include="ActorTests.cs" />
     <Compile Include="TaskTests.cs" />
     <Compile Include="TaskWithAbilityTests.cs" />

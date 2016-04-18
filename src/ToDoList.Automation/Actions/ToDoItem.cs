@@ -10,13 +10,13 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class ToDoItem : Tranquire.Task<BrowseTheWeb>
+    public class ToDoItem : Tranquire.Task
     {
-        public ToDoItem(string title):
-            base(Enter.TheValue(title).Into(ToDoPage.NewToDoItemInput),
-                 Hit.Enter().Into(ToDoPage.NewToDoItemInput))
+        public ToDoItem(string title) :
+            base(t => t.And(Enter.TheValue(title).Into(ToDoPage.NewToDoItemInput))
+                       .And(Hit.Enter().Into(ToDoPage.NewToDoItemInput)))
         {
-        }     
+        }
 
         public static IAction RemoveAToDoItem(string item)
         {
