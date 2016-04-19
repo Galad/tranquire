@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium.Actions.Enters;
+﻿using Tranquire.Selenium.Actions.Enters;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -15,13 +10,16 @@ namespace Tranquire.Selenium.Actions
         /// <summary>
         /// Gets the value to enter
         /// </summary>
-        public string Value { get; }
+        public string Value
+        {
+            get;
+        }
 
         /// <summary>
-        /// Creates a new instance of <see cref="Enter"/>
+        /// Creates a new instance of <see cref = "Enter"/>
         /// </summary>
-        /// <param name="value">The value to enter</param>
-        public Enter(string value) : base(t => new EnterValue(value, t))
+        /// <param name = "value">The value to enter</param>
+        public Enter(string value): base (t => new EnterValue(value, t))
         {
             Value = value;
         }
@@ -29,11 +27,21 @@ namespace Tranquire.Selenium.Actions
         /// <summary>
         /// Creates an action which input the given string
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name = "value"></param>
         /// <returns></returns>
         public static Enter TheValue(string value)
         {
             return new Enter(value);
+        }
+
+        /// <summary>
+        /// Creates an action which clear the target value and enter a new value 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EnterNewValue TheNewValue(string value)
+        {
+            return new EnterNewValue(value);
         }
     }
 }

@@ -118,6 +118,7 @@
       <Link>DomainAutoDataAttribute.cs</Link>
     </Compile>
     <Compile Include="Actions\Actions.cs" />
+    <Compile Include="Actions\EnterTests.cs" />
     <Compile Include="Converters\StringToEnumConverterTests.cs" />
     <Compile Include="Questions\PageTests.cs" />
     <Compile Include="Questions\SingleUIStateTests.cs" />
