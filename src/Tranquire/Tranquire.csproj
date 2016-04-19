@@ -52,6 +52,7 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IActionExecutor.cs" />
     <Compile Include="IActorFacade.cs" />
     <Compile Include="ICanHaveAbility.cs" />

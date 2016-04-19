@@ -10,7 +10,7 @@ namespace Tranquire.Selenium
     /// <summary>
     /// Represent the ability to use a web browser with selenium
     /// </summary>
-    public partial class BrowseTheWeb : IAbility
+    public sealed partial class BrowseTheWeb : IAbility
     {
         /// <summary>
         /// Gets the Selenium <see cref="IWebDriver"/>

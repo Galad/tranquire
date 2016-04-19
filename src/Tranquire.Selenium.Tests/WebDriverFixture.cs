@@ -14,7 +14,7 @@ using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Tests
 {
-    public class WebDriverFixture : IDisposable
+    public sealed class WebDriverFixture : IDisposable
     {
         public static int Port = 30000;
         private readonly IDisposable _host;
@@ -44,8 +44,10 @@ namespace Tranquire.Selenium.Tests
                 FileSystem = new EmbeddedResourceFileSystem(typeof(WebDriverFixture).Assembly),
                 EnableDirectoryBrowsing = true
             });
-        }        
+        }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "<WebDriver>k__BackingField")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
         public void Dispose()
         {
             WebDriver.Dispose();
