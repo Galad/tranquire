@@ -18,13 +18,24 @@ namespace Tranquire.Selenium.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Execute_ShouldWait(string expected)
+        public void Execute_WhenAttemptingTo_ShouldWait(string expected)
+        {
+            TestExecute(expected, Fixture.Actor.AttemptsTo);
+        }
+
+        [Theory, DomainAutoData]
+        public void Execute_WhenWasAbleTo_ShouldWait(string expected)
+        {
+            TestExecute(expected, Fixture.Actor.WasAbleTo);
+        }
+
+        private void TestExecute(string expected, System.Action<Tranquire.IAction<BrowseTheWeb, BrowseTheWeb>> execute)
         {
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ClickableElement"));
-            RemoveOverlay( expected, 1000);
+            RemoveOverlay(expected, 1000);
             //act                 
-            Fixture.Actor.AttemptsTo(Click.On(target).AllowRetry());
+            execute(Click.On(target).AllowRetry());
             //assert            
             var actual = Answer(Value.Of(Target.The("expected value").LocatedBy(By.Id("ExpectedValue"))).Value);
             Assert.Equal(expected, actual);

@@ -66,11 +66,11 @@ namespace Tranquire.Selenium.Actions
 
             public void Dispose()
             {
-                if(_action == null)
+                var action = Interlocked.Exchange(ref _action, null);
+                if (action == null)
                 {
                     return;
-                }
-                var action = Interlocked.Exchange(ref _action, null);
+                }                
                 action();
             }
         }

@@ -1,9 +1,11 @@
-﻿using OpenQA.Selenium;
+﻿using Moq;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tranquire.Selenium.Targets;
 using Xunit;
 
 namespace Tranquire.Selenium.Tests
@@ -126,6 +128,48 @@ namespace Tranquire.Selenium.Tests
                                .ResolveFor(Fixture.WebDriver)
                                .Text;
             Assert.Equal(RelativeText, actual);
+        }
+
+        [Fact]
+        public void ResolveFor_LocatedByWebElement_ShouldReturnCorrectValue()
+        {
+            //arrange
+            var expected = new Mock<IWebElement>();            
+            var sut = Target.The("element")
+                            .LocatedByWebElement(expected.Object);
+            //act
+            var actual = sut.ResolveFor(Fixture.WebDriver);
+            //assert
+            Assert.Equal(expected.Object, actual);
+        }
+
+        [Fact]
+        public void ResolveAllFor_LocatedByWebElement_ShouldReturnCorrectValue()
+        {
+            //arrange
+            var element = new Mock<IWebElement>();
+            var sut = Target.The("element")
+                            .LocatedByWebElement(element.Object);
+            //act
+            var actual = sut.ResoveAllFor(Fixture.WebDriver);
+            //assert
+            var expected = new[] { element.Object };
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void RelativeTo_LocatedByWebElement_ShouldReturnCorrectValue()
+        {
+            //arrange
+            var element = new Mock<IWebElement>();
+            var sut = Target.The("element")
+                            .LocatedByWebElement(element.Object);
+            var other = Target.The("other target")
+                              .LocatedBy(By.Id("id"));
+            //act
+            var actual = sut.RelativeTo(other);
+            //assert
+            Assert.Equal(sut, actual);
         }
     }
 }
