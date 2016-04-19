@@ -25,9 +25,10 @@ namespace ToDoList.Specifications
 #line 1 "AddToDoItems.feature"
 #line hidden
         
-        public AddToDoItemsFeature()
+        public AddToDoItemsFeature(Xunit.Abstractions.ITestOutputHelper helper)
         {
             this.TestInitialize();
+            testRunner.FeatureContext.Set(helper);
         }
         
         public static void FeatureSetup()
