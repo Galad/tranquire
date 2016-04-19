@@ -16,7 +16,7 @@ namespace Tranquire.Selenium.Actions.Waiters
     public class WaitUntilQuestionIsAnswered<TAnswer> : Action<BrowseTheWeb>
     {
         private Predicate<TAnswer> _isAnswered;
-        private IQuestion<TAnswer> _question;
+        private IQuestion<TAnswer, BrowseTheWeb> _question;
         private readonly TimeSpan _timeout;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>
         /// <param name="timeout">The duration during which the question must be asked</param>
         public WaitUntilQuestionIsAnswered(
-            IQuestion<TAnswer> question,
+            IQuestion<TAnswer, BrowseTheWeb> question,
             Predicate<TAnswer> isAnswered,
             TimeSpan timeout)
         {
@@ -43,7 +43,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// <param name="question">The question to answer</param>
         /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>        
         public WaitUntilQuestionIsAnswered(
-            IQuestion<TAnswer> question,
+            IQuestion<TAnswer, BrowseTheWeb> question,
             Predicate<TAnswer> isAnswered)
             :this(question, isAnswered, TimeSpan.FromSeconds(5))
         {

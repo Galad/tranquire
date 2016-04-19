@@ -80,7 +80,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="question">The question to answer</param>
         /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>
         /// <returns>An action waiting until the question is answered</returns>
-        public static WaitUntilQuestionIsAnswered<TAnswer> UntilQuestionIsAnswered<TAnswer>(IQuestion<TAnswer> question, Predicate<TAnswer> isAnswered)
+        public static WaitUntilQuestionIsAnswered<TAnswer> UntilQuestionIsAnswered<TAnswer>(IQuestion<TAnswer, BrowseTheWeb> question, Predicate<TAnswer> isAnswered)
         {
             return new WaitUntilQuestionIsAnswered<TAnswer>(question, isAnswered);
         }

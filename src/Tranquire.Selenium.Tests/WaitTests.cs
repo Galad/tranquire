@@ -58,34 +58,34 @@ namespace Tranquire.Selenium.Tests
             js = "setTimeout(function(){" + js + "}, 1000);";
             Fixture.WebDriver.ExecuteScript(js);
         }
-        
-        //[Theory, DomainAutoData]
-        //public void UntilQuestionIsAnswered_ShouldWait(string expected)
-        //{
-        //    //arrange
-        //    var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
-        //    ChangeText(expected);
-        //    var question = Text.Of(target).Value;
-        //    //act
-        //    Fixture.Actor.AttemptsTo(Wait.UntilQuestionIsAnswered(question, t => t == expected));            
-        //    //arrange
-        //    var actual = Answer(question);
-        //    Assert.Equal(expected, actual);
-        //}
 
-        //[Theory, DomainAutoData]
-        //public void UntilQuestionIsAnswered_WhenTimeout_ShouldThrow(string expected)
-        //{
-        //    //arrange
-        //    var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
-        //    ChangeText(expected);
-        //    var question = Text.Of(target).Value;
-        //    //act
-        //    Assert.Throws<TimeoutException>(() =>
-        //    Fixture.Actor.AttemptsTo(Wait.UntilQuestionIsAnswered(question, t => t == expected)
-        //                                 .Timeout(TimeSpan.FromMilliseconds(100))
-        //                            ));            
-        //}
+        [Theory, DomainAutoData]
+        public void UntilQuestionIsAnswered_ShouldWait(string expected)
+        {
+            //arrange
+            var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
+            ChangeText(expected);
+            var question = Text.Of(target).Value;
+            //act
+            Fixture.Actor.AttemptsTo(Wait.UntilQuestionIsAnswered(question, t => t == expected));
+            //arrange
+            var actual = Answer(question);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void UntilQuestionIsAnswered_WhenTimeout_ShouldThrow(string expected)
+        {
+            //arrange
+            var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
+            ChangeText(expected);
+            var question = Text.Of(target).Value;
+            //act
+            Assert.Throws<TimeoutException>(() =>
+            Fixture.Actor.AttemptsTo(Wait.UntilQuestionIsAnswered(question, t => t == expected)
+                                         .Timeout(TimeSpan.FromMilliseconds(100))
+                                    ));
+        }
 
         private void ChangeText(string expected)
         {
