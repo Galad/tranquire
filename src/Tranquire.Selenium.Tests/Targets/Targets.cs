@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Tranquire.Selenium.Targets;
 using Xunit;
 
-namespace Tranquire.Selenium.Tests
+namespace Tranquire.Selenium.Tests.Targets
 {
     public class TargetsTests : WebDriverTest
     {

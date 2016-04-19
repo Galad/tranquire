@@ -8,7 +8,7 @@ using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Xunit;
 
-namespace Tranquire.Selenium.Tests
+namespace Tranquire.Selenium.Tests.Actions
 {
     public class Actions : WebDriverTest
     {

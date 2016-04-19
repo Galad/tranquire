@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Tranquire.Selenium.Actions;
 using Xunit;
 
-namespace Tranquire.Selenium.Tests
+namespace Tranquire.Selenium.Tests.Actions
 {
     public class UsingIFrameTests : WebDriverTest
     {

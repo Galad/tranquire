@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Tranquire.Selenium.Questions;
 using Xunit;
 
-namespace Tranquire.Selenium.Tests
+namespace Tranquire.Selenium.Tests.Questions
 {
     public partial class QuestionsTests 
     {

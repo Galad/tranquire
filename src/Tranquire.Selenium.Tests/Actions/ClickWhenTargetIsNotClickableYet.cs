@@ -9,7 +9,7 @@ using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
 using Xunit;
 
-namespace Tranquire.Selenium.Tests
+namespace Tranquire.Selenium.Tests.Actions
 {
     public class ClickWhenTargetIsNotClickableYet : WebDriverTest
     {

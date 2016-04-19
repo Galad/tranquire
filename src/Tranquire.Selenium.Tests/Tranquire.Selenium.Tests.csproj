@@ -117,22 +117,22 @@
     <Compile Include="..\Tranquire.Tests\DomainAutoDataAttribute.cs">
       <Link>DomainAutoDataAttribute.cs</Link>
     </Compile>
-    <Compile Include="Actions.cs" />
+    <Compile Include="Actions\Actions.cs" />
     <Compile Include="Converters\StringToEnumConverterTests.cs" />
-    <Compile Include="PageTests.cs" />
-    <Compile Include="SingleUIStateTests.cs" />
-    <Compile Include="Questions.Presence.cs" />
+    <Compile Include="Questions\PageTests.cs" />
+    <Compile Include="Questions\SingleUIStateTests.cs" />
+    <Compile Include="Questions\Questions.Presence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Questions.Attribute.cs" />
-    <Compile Include="Questions.Classes.cs" />
-    <Compile Include="Questions.CssValue.cs" />
-    <Compile Include="Questions.Enabled.cs" />
-    <Compile Include="Questions.Selected.cs" />
-    <Compile Include="Questions.Text.cs" />
-    <Compile Include="Targets.cs" />
-    <Compile Include="UsingIFrameTests.cs" />
-    <Compile Include="WaitTests.cs" />
-    <Compile Include="ClickWhenTargetIsNotClickableYet.cs" />
+    <Compile Include="Questions\Questions.Attribute.cs" />
+    <Compile Include="Questions\Questions.Classes.cs" />
+    <Compile Include="Questions\Questions.CssValue.cs" />
+    <Compile Include="Questions\Questions.Enabled.cs" />
+    <Compile Include="Questions\Questions.Selected.cs" />
+    <Compile Include="Questions\Questions.Text.cs" />
+    <Compile Include="Targets\Targets.cs" />
+    <Compile Include="Actions\UsingIFrameTests.cs" />
+    <Compile Include="Actions\WaitTests.cs" />
+    <Compile Include="Actions\ClickWhenTargetIsNotClickableYet.cs" />
     <Compile Include="WebDriverFixture.cs" />
     <Compile Include="WebDriverTest.cs" />
   </ItemGroup>
@@ -149,8 +149,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <Compile Include="Questions.Visible.cs" />
-    <Compile Include="Questions.Value.cs" />
+    <Compile Include="Questions\Questions.Visible.cs" />
+    <Compile Include="Questions\Questions.Value.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Targets.html" />
