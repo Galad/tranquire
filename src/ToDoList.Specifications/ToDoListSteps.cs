@@ -18,18 +18,20 @@ namespace ToDoList.Specifications
 {
     public class ToDoListSteps
     {
+        private readonly StringBuilder _reportingStringBuilder;
         public ScenarioContext Context { get; }
 
         public ToDoListSteps(ScenarioContext context)
         {
             Context = context;
+            _reportingStringBuilder = new StringBuilder();
         }
 
         [BeforeScenario]
         public void Before()
         {
             var driver = new ChromeDriver();
-            var actor = new Actor("John", a => new ReportingActor(new XUnitObserver(() => Context.Get<ITestOutputHelper>()), a)).Can(BrowseTheWeb.With(driver));
+            var actor = new Actor("John", a => new ReportingActor(new InMemoryObserver(_reportingStringBuilder), a)).Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
@@ -40,6 +42,7 @@ namespace ToDoList.Specifications
         public void After()
         {
             Context.Get<ChromeDriver>().Dispose();
+            Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
         }
 
         [Given(@"I have an empty to-do list")]

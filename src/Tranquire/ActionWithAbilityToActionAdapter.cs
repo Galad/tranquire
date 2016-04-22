@@ -48,5 +48,10 @@ namespace Tranquire
             Guard.ForNull(actor, nameof(actor));
             return actor.Execute(Action);
         }
+
+        public override string ToString()
+        {
+            return Action.ToString();
+        }
     }
 }

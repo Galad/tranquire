@@ -10,6 +10,7 @@ namespace Tranquire
     {
         private readonly IActorFacade _actor;
         private readonly IObserver<string> _observer;
+        private Stack<object> _callStack = new Stack<object>();
 
         public ReportingActor(IObserver<string> observer, IActorFacade actor)
         {
@@ -18,51 +19,75 @@ namespace Tranquire
         }
 
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
-        {
-            _observer.OnNext("Asking for question of " + typeof(TAnswer).Name);
-            return _actor.AsksFor(question);
+        {            
+            return ExecuteNotifyingQuestion(() => _actor.AsksFor(question), "Asking for question", question);
         }
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            return _actor.AsksFor(question);
+            return ExecuteNotifyingQuestion(() => _actor.AsksFor(question), "Asking for question", question);
         }
 
         public TResult AttemptsTo<TResult>(IWhenCommand<TResult> performable)
         {
-            _observer.OnNext("AttemptsTo " + performable.GetType().Name);
-            return _actor.AttemptsTo(performable);
+            return ExecuteNotifyingAction(() => _actor.AttemptsTo(performable), "AttemptsTo", performable);
         }
 
         public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> performable)
         {
-            _observer.OnNext("AttemptsTo " + performable.GetType().Name);
-            return _actor.AttemptsTo(performable);
+            return ExecuteNotifyingAction(() => _actor.AttemptsTo(performable), "AttemptsTo", performable);
         }
 
         public IActorFacade Can<T>(T doSomething) where T : class
         {
-            return new ReportingActor(_observer, _actor.Can(doSomething));
+            return _actor.Can(doSomething);
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {
-            return _actor.Execute(action);
+            return ExecuteNotifyingAction(() => _actor.Execute(action), "Execute", action);
         }
 
         public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            return _actor.Execute(action);
+            return ExecuteNotifyingAction(() => _actor.Execute(action), "Execute", action);
         }
 
         public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)
         {
-            return _actor.WasAbleTo(performable);
+            return ExecuteNotifyingAction(() => _actor.WasAbleTo(performable), "WasAbleTo", performable);
         }
 
         public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> performable)
         {
-            return _actor.WasAbleTo(performable);
+            return ExecuteNotifyingAction(() => _actor.WasAbleTo(performable), "WasAbleTo", performable);
+        }
+
+        private TResult ExecuteNotifyingAction<TResult>(System.Func<TResult> executeAction, string prefix, object action)
+        {
+            var actionName = prefix + " " + action.ToString();
+            _callStack.Push(action);
+            Notifiy(actionName);
+            var result = executeAction();
+            Notifiy("(Completed) " + actionName);
+            _callStack.Pop();
+            return result;
+        }
+
+        private T ExecuteNotifyingQuestion<T>(System.Func<T> executeQuestion, string prefix, object question)
+        {
+            _callStack.Push(question);
+            var actionName = prefix + " " + question.ToString();
+            Notifiy(actionName);
+            var result = executeQuestion();
+            Notifiy("(Completed) " + actionName);
+            _callStack.Pop();
+            return result;
+        }
+
+        private void Notifiy(string value)
+        {
+            _observer.OnNext(new string(Enumerable.Repeat('-', _callStack.Count * 3).ToArray()) + value);
         }
     }
 }

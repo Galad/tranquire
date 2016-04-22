@@ -21,16 +21,16 @@ namespace ToDoList.Specifications
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
-        
-#line 1 "AddToDoItems.feature"
-#line hidden
-        
+        private readonly Xunit.Abstractions.ITestOutputHelper _helper;
+
         public AddToDoItemsFeature(Xunit.Abstractions.ITestOutputHelper helper)
         {
-            this.TestInitialize();
-            testRunner.FeatureContext.Set(helper);
+            _helper = helper;
+            this.TestInitialize();           
         }
-        
+
+//#line 1 "AddToDoItems.feature"
+//#line hidden        
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
@@ -54,8 +54,9 @@ namespace ToDoList.Specifications
         }
         
         public virtual void ScenarioSetup(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
-        {
+        {            
             testRunner.OnScenarioStart(scenarioInfo);
+            testRunner.ScenarioContext.Set(_helper);
         }
         
         public virtual void ScenarioCleanup()

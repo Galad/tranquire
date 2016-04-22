@@ -37,7 +37,7 @@ namespace Tranquire
             Guard.ForNull(abilities, nameof(abilities));
             Name = name;
             _abilities = abilities;
-            _innerActor = innerActorBuilder(new DefaultActor(abilities, this));
+            _innerActor = innerActorBuilder(new DefaultActor(abilities, this, innerActorBuilder));
             InnerActorBuilder = innerActorBuilder;
         }
 
@@ -215,16 +215,21 @@ namespace Tranquire
         {
             private readonly IReadOnlyDictionary<Type, object> _abilities;
             private readonly IActorFacade _callbackActor;
+            private readonly Func<IActorFacade, IActorFacade> _actorBuilder;
 
             /// <summary>
             /// Returns the abilities for this actor
             /// </summary>
             public IReadOnlyDictionary<Type, object> Abilities => _abilities;
 
-            public DefaultActor(IReadOnlyDictionary<Type, object> abilities, IActorFacade callbackActor)
+            public DefaultActor(
+                IReadOnlyDictionary<Type, object> abilities,
+                IActorFacade callbackActor,
+                Func<IActorFacade, IActorFacade> actorBuilder)
             {
                 _abilities = abilities;
                 _callbackActor = callbackActor;
+                _actorBuilder = actorBuilder;
             }
 
             /// <summary>
@@ -259,13 +264,13 @@ namespace Tranquire
             public TResult AttemptsTo<TResult>(IWhenCommand<TResult> performable)
             {
                 Guard.ForNull(performable, nameof(performable));
-                return performable.ExecuteWhenAs(this);
+                return performable.ExecuteWhenAs(_callbackActor);
             }
 
             public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> performable)
             {
                 Guard.ForNull(performable, nameof(performable));
-                return performable.ExecuteWhenAs(this, AbilityTo<T>());
+                return performable.ExecuteWhenAs(_callbackActor, AbilityTo<T>());
             }
 
             public IActorFacade Can<T>(T doSomething) where T : class
@@ -273,19 +278,19 @@ namespace Tranquire
                 Guard.ForNull(doSomething, nameof(doSomething));
                 var abilities = _abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
                                           .ToDictionary(k => k.Key, k => k.Value);
-                return new Actor(((Actor)_callbackActor).Name, abilities);
+                return new Actor(((Actor)_callbackActor).Name, abilities, _actorBuilder);
             }
 
             public TResult Execute<TResult>(IAction<TResult> action)
             {
                 Guard.ForNull(action, nameof(action));
-                return action.ExecuteWhenAs(this);
+                return action.ExecuteWhenAs(_callbackActor);
             }
 
             public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
             {
                 Guard.ForNull(action, nameof(action));
-                return action.ExecuteWhenAs(this, AbilityTo<TWhen>());
+                return action.ExecuteWhenAs(_callbackActor, AbilityTo<TWhen>());
             }
 
             public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)

@@ -3,6 +3,7 @@ using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
 using Ploeh.AutoFixture.Idioms;
+using Ploeh.AutoFixture.Kernel;
 using Ploeh.AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
@@ -10,38 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using System.Reflection;
 
 namespace Tranquire.Tests
 {
     public class ActorTests
     {
-        public class Ability1 { }
-        public class Ability2 { }
-        public class Ability3 { }
-
-        public class ActorCustomization : ICustomization
-        {
-            public void Customize(IFixture fixture)
-            {
-                fixture.Register<IReadOnlyDictionary<Type, object>>(() =>
-                {
-                    return new Dictionary<Type, object>()
-                    {
-                        { typeof(Ability1), new Ability1() },
-                        { typeof(Ability2), new Ability2() },
-                        { typeof(Ability3), new Ability3() },
-                    };
-                });
-            }
-        }
-
-        public class ActorAutoData : AutoDataAttribute
-        {
-            public ActorAutoData() : base(new Fixture().Customize(new ActorCustomization()).Customize(new DomainCustomization()))
-            {
-            }
-        }
-
         public class AbilityTest : IAbility
         {
             public AbilityTest AsActor(IActor actor)
@@ -89,9 +64,9 @@ namespace Tranquire.Tests
             actual.Should().BeOfType<Actor>().Which.Abilities.Values.Should().Equal(expected);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void Can_WhenActorHasAbilities_ShouldReturnCorrectValue(
-           [Greedy]Actor sut,
+           Actor sut,
            AbilityTest ability)
         {
             //
@@ -111,7 +86,7 @@ namespace Tranquire.Tests
            object expected)
         {
             //arrange
-            action.Setup(a => a.ExecuteWhenAs(sut)).Returns(expected);
+            action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
             //act            
             var actual = sut.Execute(action.Object);
             //assert
@@ -150,21 +125,21 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void ExecuteWithAbility_ShouldCallExecuteWhen(
           [Greedy]Actor sut,
           Mock<IAction<Ability1, Ability2, object>> action,
           object expected)
         {
             var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
-            action.Setup(a => a.ExecuteWhenAs(sut, expectedAbility)).Returns(expected);
+            action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
             //act            
             var actual = sut.Execute(action.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void ExecuteWithAbility_CalledAfterCallingAttempsTo_ShouldCallExecuteWhen(
            [Greedy]Actor sut,
            Mock<IAction<Ability1, Ability2, object>> action,
@@ -181,7 +156,7 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void ExecuteWithAbility_CalledAfterCallingWasAbleTo_ShouldCallExecuteGiven(
            [Greedy]Actor sut,
            Mock<IAction<Ability1, Ability2, object>> action,
@@ -213,7 +188,7 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void AttemptsToWithAbility_ShouldCallExecuteWhen(
          [Greedy]Actor sut,
          Mock<IAction<Ability1, Ability2, object>> action,
@@ -221,7 +196,7 @@ namespace Tranquire.Tests
         {
             //arrange
             var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
-            action.Setup(a => a.ExecuteWhenAs(sut, expectedAbility)).Returns(expected);
+            action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
             //act
             var actual = sut.AttemptsTo(action.Object);
             //assert
@@ -242,7 +217,7 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void WasAbleToWithAbility_ShouldCallExecuteGiven(
           [Greedy]Actor sut,
           Mock<IAction<Ability1, Ability2, object>> action,
@@ -272,14 +247,14 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void AsksFor_AfterCallingWasAbleTo_ShouldReturnCorrectValue(
           [Greedy]Actor actor,
           Mock<IQuestion<object>> question,
           Mock<IGivenCommand<object>> givenCommand,
           object expected)
-        {
-            question.Setup(q => q.AnsweredBy(actor)).Returns(expected);
+        {            
+            question.Setup(q => q.AnsweredBy(It.IsAny<IActor>())).Returns(expected);
             givenCommand.Setup(g => g.ExecuteGivenAs(It.IsAny<IActor>()))
                         .Returns((IActor a) => a.AsksFor(question.Object));            
             //act
@@ -288,9 +263,9 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, ActorAutoData]
+        [Theory, DomainAutoData]
         public void AsksFor_WithAbility_ShouldReturnCorrectValue(
-          [Greedy]Actor sut,
+          Actor sut,
           Mock<IQuestion<object, Ability1>> question,
           object expected)
         {

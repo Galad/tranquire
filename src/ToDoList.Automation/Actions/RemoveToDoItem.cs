@@ -17,5 +17,10 @@ namespace ToDoList.Automation.Actions
         {
             actor.Execute(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));            
         }
+
+        public override string ToString()
+        {
+            return "Remove an item '" + item + "'";
+        }
     }    
 }

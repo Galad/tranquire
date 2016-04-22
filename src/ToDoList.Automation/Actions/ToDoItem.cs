@@ -12,10 +12,13 @@ namespace ToDoList.Automation.Actions
 {
     public class ToDoItem : Tranquire.Task
     {
+        public string Title { get; }
+
         public ToDoItem(string title) :
             base(t => t.And(Enter.TheValue(title).Into(ToDoPage.NewToDoItemInput))
                        .And(Hit.Enter().Into(ToDoPage.NewToDoItemInput)))
         {
+            Title = title;
         }
 
         public static IAction<Unit> RemoveAToDoItem(string item)
@@ -31,6 +34,11 @@ namespace ToDoList.Automation.Actions
         public static IAction<Unit> AddToDoItems(ImmutableArray<string> items)
         {
             return new Tranquire.Task(items.Select(i => new ToDoItem(i)).ToArray());
+        }
+
+        public override string ToString()
+        {
+            return "Add item '" + Title + "'";
         }
     }
 }
