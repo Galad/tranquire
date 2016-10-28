@@ -116,8 +116,8 @@ namespace Tranquire
         public TResult WasAbleTo<TResult>(IGivenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            var actor = new GivenActor(this);
-            return command.ExecuteGivenAs(actor);
+            var actor = new GivenActor(_innerActor);
+            return _innerActor.WasAbleTo(command);
         }
 
         /// <summary>
@@ -183,9 +183,9 @@ namespace Tranquire
 
         private class GivenActor : IActor
         {
-            private readonly Actor _innerActor;
+            private readonly IActorFacade _innerActor;
 
-            public GivenActor(Actor innerActor)
+            public GivenActor(IActorFacade innerActor)
             {
                 _innerActor = innerActor;
             }

@@ -51,6 +51,11 @@ namespace ToDoList.Specifications
         }
 
         [Given(@"I add the item ""(.*)""")]
+        public void GivenIAddTheItem(string item)
+        {
+            Context.Actor().WasAbleTo(ToDoItem.AddAToDoItem(item));
+        }
+
         [When(@"I add the item ""(.*)""")]
         public void WhenIAddTheItem(string item)
         {
@@ -60,7 +65,7 @@ namespace ToDoList.Specifications
         [Given(@"I have a list with the items ""(.*)""")]
         public void GivenIHaveAListWithTheItems(ImmutableArray<string> items)
         {
-            Context.Actor().AttemptsTo(ToDoItem.AddToDoItems(items));
+            Context.Actor().WasAbleTo(ToDoItem.AddToDoItems(items));
         }
 
         [When(@"I remove the item ""(.*)""")]

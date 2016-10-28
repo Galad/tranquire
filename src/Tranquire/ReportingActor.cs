@@ -69,7 +69,7 @@ namespace Tranquire
             _callStack.Push(action);
             Notifiy(actionName);
             var result = executeAction();
-            Notifiy("(Completed) " + actionName);
+            //Notifiy("(Completed) " + actionName);
             _callStack.Pop();
             return result;
         }
@@ -80,7 +80,7 @@ namespace Tranquire
             var actionName = prefix + " " + question.ToString();
             Notifiy(actionName);
             var result = executeQuestion();
-            Notifiy("(Completed) " + actionName);
+            //Notifiy("(Completed) " + actionName);
             _callStack.Pop();
             return result;
         }

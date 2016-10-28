@@ -35,5 +35,10 @@ namespace Tranquire.Selenium.Actions.Enters
         {
             element.SendKeys(Value);
         }
+
+        public override string ToString()
+        {
+            return $"Enter the value '{Value}' into '{Target.Name}'";
+        }
     }
 }
