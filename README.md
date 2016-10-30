@@ -12,7 +12,7 @@ Getting started
 ---------------
 The core concept of the screenplay pattern is the Actor. An Actor represents typically a user, but more widely it represents any entity exercising the system. In Tranquire, an actor is represented with the `Actor` class.
 
-An actor has capabilities, such as using a web browser to connect to the tested web site, or making http queries in order to consume a REST web service. Basically, a capability is an abstraction of a dependency, such as Selenium, that need to be used to communicate to the system under test from the actual test code. 
+An actor has abilities, such as using a web browser to connect to the tested web site, or making http queries in order to consume a REST web service. Basically, an ability is an abstraction of a dependency, such as Selenium, that need to be used to communicate to the system under test from the actual test code. 
 
 So let's create the actor named John
 
