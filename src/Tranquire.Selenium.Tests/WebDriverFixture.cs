@@ -11,6 +11,7 @@ using Microsoft.Owin.StaticFiles.Infrastructure;
 using Microsoft.Owin.FileSystems;
 using System.Threading;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -20,13 +21,13 @@ namespace Tranquire.Selenium.Tests
         private readonly IDisposable _host;
         public Actor Actor { get; }
         private readonly int _port;        
-        public FirefoxDriver WebDriver { get; }
+        public ChromeDriver WebDriver { get; }
 
         public WebDriverFixture()
         {
             _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
-            WebDriver = new FirefoxDriver();
+            WebDriver = new ChromeDriver();
             Actor = (Actor)(new Actor("James").Can(BrowseTheWeb.With(WebDriver)));
         }
 

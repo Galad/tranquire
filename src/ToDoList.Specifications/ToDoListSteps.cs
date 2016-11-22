@@ -11,6 +11,7 @@ using TechTalk.SpecFlow;
 using ToDoList.Automation.Actions;
 using System.Threading;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace ToDoList.Specifications
 {
@@ -26,7 +27,7 @@ namespace ToDoList.Specifications
         [BeforeScenario]
         public void Before()
         {
-            var driver = new FirefoxDriver();
+            var driver = new ChromeDriver();
             var actor = new Actor("John").Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
             Context.Set(driver);
@@ -37,7 +38,7 @@ namespace ToDoList.Specifications
         [AfterScenario]
         public void After()
         {
-            Context.Get<FirefoxDriver>().Dispose();
+            Context.Get<ChromeDriver>().Dispose();
         }
 
         [Given(@"I have an empty to-do list")]

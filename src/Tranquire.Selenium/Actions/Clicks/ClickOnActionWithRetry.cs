@@ -85,6 +85,14 @@ namespace Tranquire.Selenium.Actions.Clicks
                 }
                 catch (WebDriverException)
                 {
+                    if (DateTimeOffset.Now.Subtract(startTime) > Timeout)
+                    {
+                        throw;
+                    }
+                    Thread.Sleep(500);
+                }
+                catch (InvalidOperationException)
+                {
                     if(DateTimeOffset.Now.Subtract(startTime) > Timeout)
                     {
                         throw;

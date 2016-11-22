@@ -48,7 +48,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var target = Target.The("element to wait for").LocatedBy(By.Id("ClickableElement"));
             RemoveOverlay(expected, 1500);
             //act and assert           
-            Assert.Throws<WebDriverException>(() =>
+            Assert.ThrowsAny<Exception>(() =>
                 Fixture.Actor.AttemptsTo(Click.On(target).AllowRetry().During(TimeSpan.FromMilliseconds(500)))
              );
         }
