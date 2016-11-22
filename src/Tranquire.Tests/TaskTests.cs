@@ -17,7 +17,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_ShouldBeAction(Task sut)
         {
-            sut.Should().BeAssignableTo<IAction>();
+            sut.Should().BeAssignableTo<IAction<Unit>>();
         }
 
         [Theory, DomainAutoData]
@@ -38,7 +38,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_VerifyConstructorWithParams(IAction[] expected)
+        public void Sut_VerifyConstructorWithParams(IAction<Unit>[] expected)
         {
             //act            
             var sut = new Task(expected);
@@ -82,7 +82,7 @@ namespace Tranquire.Tests
         public void And_ShouldAddAction(
            Task sut,
            Mock<IActor> actor,
-           IAction expected
+           IAction<Unit> expected
            )
         {
             //arrange
@@ -97,7 +97,7 @@ namespace Tranquire.Tests
         public void And_WithAbility_ShouldWrapAction(           
            [FavorEnumerables]Task sut,
            Mock<IActor> actor,
-           IAction<object, object> expected
+           IAction<object, object, Unit> expected
            )
         {
             //arrange
@@ -107,7 +107,7 @@ namespace Tranquire.Tests
             //assert            
             var actualAction = actual.Actions.Except(existingActions).Single();
             actualAction.Should()
-                        .BeOfType<ActionWithAbilityToActionAdapter<object, object>>()
+                        .BeOfType<ActionWithAbilityToActionAdapter<object, object, Unit>>()
                         .Which
                         .Action
                         .Should()
@@ -118,7 +118,7 @@ namespace Tranquire.Tests
         public void And_WithAbility_ShouldContainExistingAbility(
           [FavorEnumerables]Task sut,
           Mock<IActor> actor,
-          IAction<object, object> action
+          IAction<object, object, Unit> action
           )
         {
             //arrange
@@ -131,7 +131,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void Sut_WithTaskBuilder_ShouldHaveCorrectTasks(
-           IAction[] expected
+           IAction<Unit>[] expected
            )
         {
             //arrange

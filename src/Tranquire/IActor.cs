@@ -10,13 +10,14 @@
         /// </summary>
         /// <typeparam name = "TGiven">The ability required for the Given context</typeparam>
         /// <typeparam name = "TWhen">The ability required for the When context</typeparam>
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name = "action">The action to execute</param>
-        void Execute<TGiven, TWhen>(IAction<TGiven, TWhen> action);
+        TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
         /// <summary>
         /// Execute an action
         /// </summary>
         /// <param name = "action">The action to execute</param>
-        void Execute(IAction action);
+        TResult Execute<TResult>(IAction<TResult> action);
         /// <summary>
         /// Ask a question about the current state of the system
         /// </summary>

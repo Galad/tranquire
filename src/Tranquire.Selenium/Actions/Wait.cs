@@ -12,7 +12,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// An action used to wait for a condition
     /// </summary>
-    public class Wait : Action<BrowseTheWeb>
+    public class Wait : ActionUnit<BrowseTheWeb>
     {
         private readonly TimeSpan _timeout;
         private readonly ITarget _target;

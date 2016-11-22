@@ -13,7 +13,7 @@ namespace ToDoList.Automation.Actions
         public const string SiteUrl = RootUrl + "ToDo/index.html";
         public const string RootUrl = "http://localhost:57897/";
 
-        public static IAction<BrowseTheWeb, BrowseTheWeb> TheApplication()
+        public static IAction<BrowseTheWeb, BrowseTheWeb, Unit> TheApplication()
         {
             return Navigate.To(SiteUrl);
         }

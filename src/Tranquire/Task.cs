@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 namespace Tranquire
 {
     /// <summary>
-    /// Represent a <see cref="IAction"/> composed of several <see cref="IAction"/>
-    /// </summary>
-    public class Task : IAction
+    /// Represent a <see cref="IAction{TResult}"/> composed of several <see cref="IAction{TResult}"/>
+    /// </summary>    
+    public class Task : IAction<Unit>
     {
         /// <summary>
         /// Gets the actions executed by this task
         /// </summary>
-        public IEnumerable<IAction> Actions { get; }
+        public IEnumerable<IAction<Unit>> Actions { get; }
 
         /// <summary>
         /// Creates a new instance of task
         /// </summary>
         /// <param name="actions">The actions executed by this task</param>
-        public Task(IEnumerable<IAction> actions)
+        public Task(IEnumerable<IAction<Unit>> actions)
         {
             Guard.ForNull(actions, nameof(actions));
             Actions = actions;
@@ -30,7 +30,7 @@ namespace Tranquire
         /// Creates a new instance of task
         /// </summary>
         /// <param name="actions">The actions executed by this task</param>
-        public Task(params IAction[] actions) : this(actions as IEnumerable<IAction>)
+        public Task(params IAction<Unit>[] actions) : this(actions as IEnumerable<IAction<Unit>>)
         {
         }
 
@@ -42,7 +42,7 @@ namespace Tranquire
         {
         }
 
-        private static IEnumerable<IAction> GetActions(Func<Task, Task> taskBuilder)
+        private static IEnumerable<IAction<Unit>> GetActions(Func<Task, Task> taskBuilder)
         {
             Guard.ForNull(taskBuilder, nameof(taskBuilder));
             return taskBuilder(new Task()).Actions;
@@ -52,28 +52,28 @@ namespace Tranquire
         /// Execute all the actions
         /// </summary>
         /// <param name="actor"></param>
-        public void ExecuteGivenAs(IActor actor)
+        public Unit ExecuteGivenAs(IActor actor)
         {
-            ExecuteActions(actor);
+            return ExecuteActions(actor);
         }
        
         /// <summary>
         /// Execute all the actions
         /// </summary>
         /// <param name="actor"></param>
-        public void ExecuteWhenAs(IActor actor)
+        public Unit ExecuteWhenAs(IActor actor)
         {
-
-            ExecuteActions(actor);
+            return ExecuteActions(actor);
         }
 
-        private void ExecuteActions(IActor actor)
+        private Unit ExecuteActions(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
             foreach (var task in Actions)
             {
                 actor.Execute(task);
             }
+            return Unit.Default;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Tranquire
         /// </summary>
         /// <param name="action">The action to add</param>
         /// <returns>A new instance of <see cref="Task"/> containing <paramref name="action"/></returns>
-        public Task And(IAction action)
+        public Task And(IAction<Unit> action)
         {
             Guard.ForNull(action, nameof(action));
             return new Task(Actions.Concat(new[] { action }));
@@ -92,10 +92,10 @@ namespace Tranquire
         /// </summary>
         /// <param name="action">The action to add</param>
         /// <returns>A new instance of <see cref="Task"/> containing <paramref name="action"/></returns>
-        public Task And<TGiven, TWhen>(IAction<TGiven, TWhen> action)
+        public Task And<TGiven, TWhen>(IAction<TGiven, TWhen, Unit> action)
         {
             Guard.ForNull(action, nameof(action));
-            return new Task(Actions.Concat(new[] { new ActionWithAbilityToActionAdapter<TGiven, TWhen>(action) }));
+            return new Task(Actions.Concat(new[] { new ActionWithAbilityToActionAdapter<TGiven, TWhen, Unit>(action) }));
         }
     }
 }

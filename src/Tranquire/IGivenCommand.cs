@@ -3,7 +3,9 @@
     /// <summary>
     /// Represent a action executed in order to put the system in a given context
     /// </summary>
-    public interface IGivenCommand<T>
+    /// <typeparam name="T">The depending ability type</typeparam>
+    /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+    public interface IGivenCommand<T, out TResult>
     {
         /// <summary>
         /// Execute the action with the given actor
@@ -11,19 +13,20 @@
         /// <param name = "actor">The actor used to execute the action</param>
         /// <param name="ability">The ability required for this action by the actor</param>
         /// <returns>The current <see cref = "IActor"/> instance, allowing to chain calls</returns>
-        void ExecuteGivenAs(IActor actor, T ability);
+        TResult ExecuteGivenAs(IActor actor, T ability);
     }
 
     /// <summary>
     /// Represent a action executed in order to put the system in a given context
     /// </summary>
-    public interface IGivenCommand
+    /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+    public interface IGivenCommand<out TResult>
     {
         /// <summary>
         /// Execute the action with the given actor
         /// </summary>        
         /// <param name = "actor">The actor used to execute the action</param>
         /// <returns>The current <see cref = "IActor"/> instance, allowing to chain calls</returns>
-        void ExecuteGivenAs(IActor actor);
+        TResult ExecuteGivenAs(IActor actor);
     }
 }

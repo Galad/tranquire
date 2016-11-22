@@ -20,16 +20,16 @@ namespace Tranquire.Selenium.Tests.Actions
         [Theory, DomainAutoData]
         public void Execute_WhenAttemptingTo_ShouldWait(string expected)
         {
-            TestExecute(expected, Fixture.Actor.AttemptsTo);
+            TestExecute(expected, a => Fixture.Actor.AttemptsTo(a));
         }
 
         [Theory, DomainAutoData]
         public void Execute_WhenWasAbleTo_ShouldWait(string expected)
         {
-            TestExecute(expected, Fixture.Actor.WasAbleTo);
+            TestExecute(expected, a => Fixture.Actor.WasAbleTo(a));
         }
 
-        private void TestExecute(string expected, System.Action<Tranquire.IAction<BrowseTheWeb, BrowseTheWeb>> execute)
+        private void TestExecute(string expected, System.Action<Tranquire.IAction<BrowseTheWeb, BrowseTheWeb, Unit>> execute)
         {
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ClickableElement"));

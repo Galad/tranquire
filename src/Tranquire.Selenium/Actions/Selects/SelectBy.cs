@@ -11,7 +11,7 @@ namespace Tranquire.Selenium.Actions.Selects
     /// Represent an action used to select a value on an element
     /// </summary>
     /// <typeparam name="TValue">The type of the value to select</typeparam>
-    public sealed class SelectBy<TValue> : Action<BrowseTheWeb>
+    public sealed class SelectBy<TValue> : ActionUnit<BrowseTheWeb>
     {
         private readonly TValue _value;
         private readonly ITarget _target;

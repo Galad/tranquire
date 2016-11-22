@@ -17,12 +17,12 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteWhen : Action<TestAbility>
+        public class ActionExecuteWhen : ActionUnit<TestAbility>
         {
             public IActor Actor;
-            private readonly IAction _action;
+            private readonly IAction<Unit> _action;
             public TestAbility Ability;
-            public ActionExecuteWhen(IAction action)
+            public ActionExecuteWhen(IAction<Unit> action)
             {
                 if (action == null)
                 {
@@ -44,12 +44,12 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteGiven : Action<TestAbility>
+        public class ActionExecuteGiven : ActionUnit<TestAbility>
         {
             public IActor Actor;
-            private readonly IAction _action;
+            private readonly IAction<Unit> _action;
             public TestAbility Ability;
-            public ActionExecuteGiven(IAction action)
+            public ActionExecuteGiven(IAction<Unit> action)
             {
                 if (action == null)
                 {
@@ -71,10 +71,10 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteWhenAndGivenNotOverridden : Action<TestAbility>
+        public class ActionExecuteWhenAndGivenNotOverridden : ActionUnit<TestAbility>
         {
-            private readonly IAction _action;
-            public ActionExecuteWhenAndGivenNotOverridden(IAction action)
+            private readonly IAction<Unit> _action;
+            public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
             {
                 if (action == null)
                 {
@@ -91,9 +91,9 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Action<TestAbility> sut)
+        public void Sut_ShouldBeAction(Action<TestAbility, object> sut)
         {
-            Assert.IsAssignableFrom(typeof (IAction<TestAbility, TestAbility>), sut);
+            Assert.IsAssignableFrom(typeof (IAction<TestAbility, TestAbility, object>), sut);
         }
 
         [Theory, DomainAutoData]
@@ -104,7 +104,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction expected, ActionExecuteWhen sut, Mock<IActor> actor, TestAbility ability)
+        public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhen sut, Mock<IActor> actor, TestAbility ability)
         {
             //arrange
             //act
@@ -114,7 +114,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction expected, ActionExecuteGiven sut, Mock<IActor> actor, TestAbility ability)
+        public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteGiven sut, Mock<IActor> actor, TestAbility ability)
         {
             //arrange
             //act
@@ -124,7 +124,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor, TestAbility ability)
+        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor, TestAbility ability)
         {
             //arrange
             //act

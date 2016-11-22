@@ -4,7 +4,7 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class RemoveToDoItem : Tranquire.Action
+    public class RemoveToDoItem : Tranquire.ActionUnit
     {
         private string item;
 

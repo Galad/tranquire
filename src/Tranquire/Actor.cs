@@ -58,49 +58,53 @@ namespace Tranquire
             }
             return (T)_abilities[typeof(T)];
         }
-        
+
         /// <summary>
         /// Execute the action in the When context with an ability
         /// </summary>
         /// <typeparam name="T">Type of the required ability</typeparam>
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name="command">The command to execute</param>
-        public void AttemptsTo<T>(IWhenCommand<T> command)
+        public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            command.ExecuteWhenAs(this, AbilityTo<T>());
+            return command.ExecuteWhenAs(this, AbilityTo<T>());
         }
 
         /// <summary>
         /// Execute the action in the Given context with an ability
         /// </summary>
         /// <typeparam name="T">Type of the required ability</typeparam>
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name="command">The command to execute</param>
-        public void WasAbleTo<T>(IGivenCommand<T> command)
+        public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> command)
         {
             Guard.ForNull(command, nameof(command));
             var actor = new GivenActor(this);
-            command.ExecuteGivenAs(actor, AbilityTo<T>());
+            return command.ExecuteGivenAs(actor, AbilityTo<T>());
         }
 
         /// <summary>
         /// Execute the action in the When context
         /// </summary>
         /// <param name="command">The command to execute</param>
-        public void AttemptsTo(IWhenCommand command)
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+        public TResult AttemptsTo<TResult>(IWhenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            command.ExecuteWhenAs(this);
+            return command.ExecuteWhenAs(this);
         }
 
         /// <summary>
         /// Execute the action in the Given context
         /// </summary>
         /// <param name="command"></param>
-        public void WasAbleTo(IGivenCommand command)
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+        public TResult WasAbleTo<TResult>(IGivenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
             var actor = new GivenActor(this);
-            command.ExecuteGivenAs(actor);
+            return command.ExecuteGivenAs(actor);
         }
 
         /// <summary>
@@ -147,21 +151,23 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TGiven">The ability required for the Given context</typeparam>
         /// <typeparam name="TWhen">The ability required for the When context</typeparam>
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name="action">The action to execute</param>
-        public void Execute<TGiven, TWhen>(IAction<TGiven, TWhen> action)
+        public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             Guard.ForNull(action, nameof(action));
-            action.ExecuteWhenAs(this, AbilityTo<TWhen>());           
+            return action.ExecuteWhenAs(this, AbilityTo<TWhen>());           
         }
 
         /// <summary>
         /// Execute an action
         /// </summary>
         /// <param name="action">The action to execute</param>
-        public void Execute(IAction action)
+        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+        public TResult Execute<TResult>(IAction<TResult> action)
         {
             Guard.ForNull(action, nameof(action));
-            action.ExecuteWhenAs(this);
+            return action.ExecuteWhenAs(this);
         }
 
         private class GivenActor : IActor
@@ -183,14 +189,14 @@ namespace Tranquire
                 return _innerActor.AsksFor(question);                
             }
         
-            public void Execute(IAction action)
+            public TResult Execute<TResult>(IAction<TResult> action)
             {
-                action.ExecuteGivenAs(this);
+                return action.ExecuteGivenAs(this);
             }
 
-            public void Execute<TGiven, TWhen>(IAction<TGiven, TWhen> action)
+            public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
             {
-                action.ExecuteGivenAs(this, _innerActor.AbilityTo<TGiven>());
+                return action.ExecuteGivenAs(this, _innerActor.AbilityTo<TGiven>());
             }
         }
     }

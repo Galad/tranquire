@@ -107,86 +107,95 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Execute_ShouldCallExecuteWhen(
            Actor sut,
-           Mock<IAction> action)
+           Mock<IAction<object>> action,
+           object expected)
         {
+            //arrange
+            action.Setup(a => a.ExecuteWhenAs(sut)).Returns(expected);
             //act            
-            sut.Execute(action.Object);
+            var actual = sut.Execute(action.Object);
             //assert
-            action.Verify(a => a.ExecuteWhenAs(sut));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
         public void Execute_CalledAfterCallingAttempsTo_ShouldCallExecuteWhen(
            Actor sut,
-           Mock<IAction> action)
+           Mock<IAction<object>> action,
+           object expected)
         {
-            var secondAction = new Mock<IAction>(MockBehavior.Loose);
-            IActor actual = null;
-            action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>())).Callback((IActor actor) => actual = actor);
+            var secondAction = new Mock<IAction<object>>(MockBehavior.Loose);
+            secondAction.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
+            action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>()))
+                  .Returns((IActor actor) => actor.Execute(secondAction.Object));
             //act
-            sut.AttemptsTo(action.Object);
-            actual.Execute(secondAction.Object);
+            var actual = sut.AttemptsTo(action.Object);
             //assert
-            secondAction.Verify(a => a.ExecuteWhenAs(It.IsAny<IActor>()));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
         public void Execute_CalledAfterCallingWasAbleTo_ShouldCallExecuteGiven(
            Actor sut,
-           Mock<IAction> action)
+           Mock<IAction<object>> action,
+           object expected)
         {
-            var secondAction = new Mock<IAction>(MockBehavior.Loose);
-            IActor actual = null;
-            action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>())).Callback((IActor actor) => actual = actor);
+            var secondAction = new Mock<IAction<object>>(MockBehavior.Loose);
+            secondAction.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>())).Returns(expected);
+            action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>()))
+                  .Returns((IActor actor) => actor.Execute(secondAction.Object));
             //act
-            sut.WasAbleTo(action.Object);
-            actual.Execute(secondAction.Object);
+            var actual = sut.WasAbleTo(action.Object);
             //assert
-            secondAction.Verify(a => a.ExecuteGivenAs(It.IsAny<IActor>()));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, ActorAutoData]
         public void ExecuteWithAbility_ShouldCallExecuteWhen(
           [Greedy]Actor sut,
-          Mock<IAction<Ability1, Ability2>> action)
+          Mock<IAction<Ability1, Ability2, object>> action,
+          object expected)
         {
-            var expected = sut.Abilities.Values.OfType<Ability2>().First();
+            var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
+            action.Setup(a => a.ExecuteWhenAs(sut, expectedAbility)).Returns(expected);
             //act            
-            sut.Execute(action.Object);
+            var actual = sut.Execute(action.Object);
             //assert
-            action.Verify(a => a.ExecuteWhenAs(sut, expected));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, ActorAutoData]
         public void ExecuteWithAbility_CalledAfterCallingAttempsTo_ShouldCallExecuteWhen(
            [Greedy]Actor sut,
-           Mock<IAction<Ability1, Ability2>> action)
+           Mock<IAction<Ability1, Ability2, object>> action,
+           object expected)
         {
             var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
-            var secondAction = new Mock<IAction<Ability1, Ability2>>(MockBehavior.Loose);
-            IActor actual = null;
-            action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability2>())).Callback((IActor actor, Ability2 _) => actual = actor);
+            var secondAction = new Mock<IAction<Ability1, Ability2, object>>(MockBehavior.Loose);
+            secondAction.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
+            action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability2>()))
+                  .Returns((IActor actor, Ability2 ability) => actor.Execute(secondAction.Object));
             //act
-            sut.AttemptsTo(action.Object);
-            actual.Execute(secondAction.Object);
+            var actual = sut.AttemptsTo(action.Object);
             //assert
-            secondAction.Verify(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, ActorAutoData]
         public void ExecuteWithAbility_CalledAfterCallingWasAbleTo_ShouldCallExecuteGiven(
            [Greedy]Actor sut,
-           Mock<IAction<Ability1, Ability2>> action)
+           Mock<IAction<Ability1, Ability2, object>> action,
+           object expected)
         {
             var expectedAbility = sut.Abilities.Values.OfType<Ability1>().First();
-            var secondAction = new Mock<IAction<Ability1, Ability2>>(MockBehavior.Loose);
-            IActor actual = null;
-            action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Callback((IActor actor, Ability1 _) => actual = actor);
+            var secondAction = new Mock<IAction<Ability1, Ability2, object>>(MockBehavior.Loose);
+            secondAction.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
+            action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>()))
+                  .Returns((IActor actor, Ability1 ability) => actor.Execute(secondAction.Object));
             //act
-            sut.WasAbleTo(action.Object);
-            actual.Execute(secondAction.Object);
+            var actual = sut.WasAbleTo(action.Object);
             //assert
-            secondAction.Verify(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility));
+            Assert.Equal(expected, actual);
         }
         #endregion
 
@@ -194,49 +203,58 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void AttemptsTo_ShouldCallExecuteWhen(
           Actor sut,
-          Mock<IAction> action)
+          Mock<IAction<object>> action,
+          object expected)
         {
+            action.Setup(a => a.ExecuteWhenAs(sut)).Returns(expected);
             //act
-            sut.AttemptsTo(action.Object);
+            var actual = sut.AttemptsTo(action.Object);
             //assert
-            action.Verify(a => a.ExecuteWhenAs(It.IsAny<IActor>()));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, ActorAutoData]
         public void AttemptsToWithAbility_ShouldCallExecuteWhen(
          [Greedy]Actor sut,
-         Mock<IAction<Ability1, Ability2>> action)
+         Mock<IAction<Ability1, Ability2, object>> action,
+         object expected)
         {
             //arrange
-            var expected = sut.Abilities.Values.OfType<Ability2>().First();
+            var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
+            action.Setup(a => a.ExecuteWhenAs(sut, expectedAbility)).Returns(expected);
             //act
-            sut.AttemptsTo(action.Object);
+            var actual = sut.AttemptsTo(action.Object);
             //assert
-            action.Verify(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expected));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
         public void WasAbleTo_ShouldCallExecuteGiven(
          Actor sut,
-         Mock<IAction> action)
+         Mock<IAction<object>> action,
+         object expected)
         {
+            //arrange
+            action.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>())).Returns(expected);
             //act
-            sut.WasAbleTo(action.Object);
+            var actual = sut.WasAbleTo(action.Object);
             //assert
-            action.Verify(a => a.ExecuteGivenAs(It.IsAny<IActor>()));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, ActorAutoData]
         public void WasAbleToWithAbility_ShouldCallExecuteGiven(
           [Greedy]Actor sut,
-          Mock<IAction<Ability1, Ability2>> action)
+          Mock<IAction<Ability1, Ability2, object>> action,
+          object expected)
         {
             //arrange
-            var expected = sut.Abilities.Values.OfType<Ability1>().First();
+            var expectedAbility = sut.Abilities.Values.OfType<Ability1>().First();
+            action.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
             //act
-            sut.WasAbleTo(action.Object);
+            var actual = sut.WasAbleTo(action.Object);
             //assert
-            action.Verify(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expected));
+            Assert.Equal(expected, actual);
         }
         #endregion
 
@@ -254,19 +272,18 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Theory, DomainAutoData]
+        [Theory, ActorAutoData]
         public void AsksFor_AfterCallingWasAbleTo_ShouldReturnCorrectValue(
-          Actor actor,
+          [Greedy]Actor actor,
           Mock<IQuestion<object>> question,
-          Mock<IGivenCommand> givenCommand,
+          Mock<IGivenCommand<object>> givenCommand,
           object expected)
         {
-            IActor sut = null;
-            givenCommand.Setup(g => g.ExecuteGivenAs(It.IsAny<IActor>())).Callback((IActor a) => sut = a);
             question.Setup(q => q.AnsweredBy(actor)).Returns(expected);
-            actor.WasAbleTo(givenCommand.Object);
+            givenCommand.Setup(g => g.ExecuteGivenAs(It.IsAny<IActor>()))
+                        .Returns((IActor a) => a.AsksFor(question.Object));            
             //act
-            var actual = sut.AsksFor(question.Object);
+            var actual = actor.WasAbleTo(givenCommand.Object); 
             //assert
             Assert.Equal(expected, actual);
         }
@@ -285,50 +302,32 @@ namespace Tranquire.Tests
             //assert
             Assert.Equal(expected, actual);
         }
-
-        [Theory, ActorAutoData]
-        public void AsksFor_AfterCallingWasAbleTo_ShouldReturnCorrectValue(
-         [Greedy]Actor actor,
-         Mock<IQuestion<object, Ability1>> question,
-         Mock<IGivenCommand<Ability1>> givenCommand,
-         object expected)         
-        {
-            var expectedAbility = actor.Abilities.Values.OfType<Ability1>().First();
-            IActor sut = null;
-            givenCommand.Setup(g => g.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility)).Callback((IActor a, Ability1 _) => sut = a);
-            question.Setup(q => q.AnsweredBy(actor, expectedAbility)).Returns(expected);
-            actor.WasAbleTo(givenCommand.Object);
-            //act
-            var actual = sut.AsksFor(question.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
         #endregion
 
         public static IEnumerable<object[]> ActionsWithAbility
         {
             get
             {
-                return new Action<Actor, IFixture>[]
+                return new System.Action<Actor, IFixture>[]
                 {
                     (sut, fixture) => sut.AsksFor(fixture.Create<IQuestion<string, AbilityTest>>()),
-                    (sut, fixture) => sut.AttemptsTo(fixture.Create<IWhenCommand<AbilityTest>>()),
-                    (sut, fixture) => sut.WasAbleTo(fixture.Create<IGivenCommand<AbilityTest>>()),
-                    (sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest>>()),
+                    (sut, fixture) => sut.AttemptsTo(fixture.Create<IWhenCommand<AbilityTest, object>>()),
+                    (sut, fixture) => sut.WasAbleTo(fixture.Create<IGivenCommand<AbilityTest, object>>()),
+                    (sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest, object>>()),
                 }
                 .Select(a => new object[] { a });
             }
         }
 
         [Theory, MemberData("ActionsWithAbility")]
-        public void ActionWithAbility_WhenAbilityIsNotRegistered_ShouldThrow(Action<Actor, IFixture> action)
+        public void ActionWithAbility_WhenAbilityIsNotRegistered_ShouldThrow(System.Action<Actor, IFixture> action)
         {
             //arrange
             var fixture = new Fixture().Customize(new ActorCustomization()).Customize(new AutoConfiguredMoqCustomization());
-            var sut = fixture.Create<Actor>();            
+            var sut = fixture.Create<Actor>();
             System.Action testedAction = () => action(sut, fixture);
             //act and assert
-            testedAction.ShouldThrow<InvalidOperationException>().Where(ex => ex.Message.Contains(typeof(AbilityTest).Name));            
+            testedAction.ShouldThrow<InvalidOperationException>().Where(ex => ex.Message.Contains(typeof(AbilityTest).Name));
         }
     }
 }

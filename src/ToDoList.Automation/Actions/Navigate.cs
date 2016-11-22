@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ToDoList.Automation.Actions
 {
-    public class Navigate : Tranquire.Action<BrowseTheWeb>
+    public class Navigate : Tranquire.ActionUnit<BrowseTheWeb>
     {
         private string _url;
 
@@ -17,7 +17,7 @@ namespace ToDoList.Automation.Actions
             this._url = v;
         }
 
-        public static IAction<BrowseTheWeb, BrowseTheWeb> To(string siteUrl)
+        public static IAction<BrowseTheWeb, BrowseTheWeb, Unit> To(string siteUrl)
         {
             return new Navigate(siteUrl);
         }

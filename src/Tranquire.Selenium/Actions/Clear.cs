@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Clear the value of an element
     /// </summary>
-    public sealed class Clear : Action<BrowseTheWeb>
+    public sealed class Clear : ActionUnit<BrowseTheWeb>
     {
         /// <summary>
         /// Gets the target to clear the value from

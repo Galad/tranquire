@@ -3,17 +3,18 @@ using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
 using System;
+using Tranquire;
 using Xunit;
 
 namespace Tranquire.Tests
 {
     public class ActionTests
     {
-        public class ActionExecuteWhen : Action
+        public class ActionExecuteWhen : ActionUnit
         {
             public IActor Actor;
-            private readonly IAction _action;
-            public ActionExecuteWhen(IAction action)
+            private readonly IAction<Unit> _action;
+            public ActionExecuteWhen(IAction<Unit> action)
             {
                 if (action == null)
                 {
@@ -34,11 +35,11 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteGiven : Action
+        public class ActionExecuteGiven : ActionUnit
         {
             public IActor Actor;
-            private readonly IAction _action;
-            public ActionExecuteGiven(IAction action)
+            private readonly IAction<Unit> _action;
+            public ActionExecuteGiven(IAction<Unit> action)
             {
                 if (action == null)
                 {
@@ -59,10 +60,10 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteWhenAndGivenNotOverridden : Action
+        public class ActionExecuteWhenAndGivenNotOverridden : ActionUnit
         {
-            private readonly IAction _action;
-            public ActionExecuteWhenAndGivenNotOverridden(IAction action)
+            private readonly IAction<Unit> _action;
+            public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
             {
                 if (action == null)
                 {
@@ -79,9 +80,9 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Action sut)
+        public void Sut_ShouldBeAction(Action<object> sut)
         {
-            Assert.IsAssignableFrom(typeof (IAction), sut);
+            Assert.IsAssignableFrom(typeof (IAction<object>), sut);
         }
 
         [Theory, DomainAutoData]
@@ -92,7 +93,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction expected, ActionExecuteWhen sut, Mock<IActor> actor)
+        public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhen sut, Mock<IActor> actor)
         {
             //arrange
             //act
@@ -102,7 +103,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction expected, ActionExecuteGiven sut, Mock<IActor> actor)
+        public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteGiven sut, Mock<IActor> actor)
         {
             //arrange
             //act
@@ -112,7 +113,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor)
+        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor)
         {
             //arrange
             //act

@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace ToDoList.Specifications
 {
-    public class Action1 : Tranquire.Action
+    public class Action1 : Tranquire.ActionUnit
     {
         private readonly System.Action<string> _notify;
 
@@ -25,7 +25,7 @@ namespace ToDoList.Specifications
         }
     }
 
-    public class Action2 : Tranquire.Action
+    public class Action2 : Tranquire.ActionUnit
     {
         private readonly System.Action<string> _notify;
 
@@ -48,7 +48,7 @@ namespace ToDoList.Specifications
     }
 
 
-    public class Action3 : Tranquire.Action
+    public class Action3 : Tranquire.ActionUnit
     {
         private readonly System.Action<string> _notify;
 

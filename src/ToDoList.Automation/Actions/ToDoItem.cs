@@ -18,17 +18,17 @@ namespace ToDoList.Automation.Actions
         {
         }
 
-        public static IAction RemoveAToDoItem(string item)
+        public static IAction<Unit> RemoveAToDoItem(string item)
         {
             return new RemoveToDoItem(item);
         }
 
-        public static IAction AddAToDoItem(string title)
+        public static IAction<Unit> AddAToDoItem(string title)
         {
             return new ToDoItem(title);
         }
 
-        public static IAction AddToDoItems(ImmutableArray<string> items)
+        public static IAction<Unit> AddToDoItems(ImmutableArray<string> items)
         {
             return new Tranquire.Task(items.Select(i => new ToDoItem(i)).ToArray());
         }
