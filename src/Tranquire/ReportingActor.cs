@@ -11,6 +11,7 @@ namespace Tranquire
         private readonly IActorFacade _actor;
         private readonly IObserver<string> _observer;
         private Stack<object> _callStack = new Stack<object>();
+        public string Name => _actor.Name;
 
         public ReportingActor(IObserver<string> observer, IActorFacade actor)
         {
@@ -65,7 +66,7 @@ namespace Tranquire
 
         private TResult ExecuteNotifyingAction<TResult>(System.Func<TResult> executeAction, string prefix, object action)
         {
-            var actionName = prefix + " " + action.ToString();
+            var actionName = prefix + " : " + action.ToString();
             _callStack.Push(action);
             Notifiy(actionName);
             var result = executeAction();
@@ -77,7 +78,7 @@ namespace Tranquire
         private T ExecuteNotifyingQuestion<T>(System.Func<T> executeQuestion, string prefix, object question)
         {
             _callStack.Push(question);
-            var actionName = prefix + " " + question.ToString();
+            var actionName = prefix + " : " + question.ToString();
             Notifiy(actionName);
             var result = executeQuestion();
             //Notifiy("(Completed) " + actionName);

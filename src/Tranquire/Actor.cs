@@ -116,7 +116,7 @@ namespace Tranquire
         public TResult WasAbleTo<TResult>(IGivenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            var actor = new GivenActor(_innerActor);
+            var actor = new GivenActor(_innerActor, Abilities);
             return _innerActor.WasAbleTo(command);
         }
 
@@ -185,9 +185,17 @@ namespace Tranquire
         {
             private readonly IActorFacade _innerActor;
 
-            public GivenActor(IActorFacade innerActor)
+            /// <summary>
+            /// Returns the abilities for this actor
+            /// </summary>
+            public IReadOnlyDictionary<Type, object> Abilities { get; }
+
+            public string Name => _innerActor.Name;
+
+            public GivenActor(IActorFacade innerActor, IReadOnlyDictionary<Type, object> abilities)
             {
                 _innerActor = innerActor;
+                Abilities = abilities;
             }
 
             public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
@@ -207,7 +215,23 @@ namespace Tranquire
 
             public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
             {
-                return action.ExecuteGivenAs(this, _innerActor.AbilityTo<TGiven>());
+                return action.ExecuteGivenAs(this, AbilityTo<TGiven>());
+            }
+
+            /// <summary>
+            /// Retrieve an actor's ability
+            /// </summary>
+            /// <typeparam name="T">The type of ability to retrieve</typeparam>
+            /// <returns>The ability</returns>
+            /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
+            private T AbilityTo<T>()
+            {
+                object ability;
+                if (!Abilities.TryGetValue(typeof(T), out ability))
+                {
+                    throw new InvalidOperationException($"The ability {typeof(T).Name} was requested but the actor {_innerActor.Name} does not have it.");
+                }
+                return (T)Abilities[typeof(T)];
             }
         }
 
@@ -216,6 +240,7 @@ namespace Tranquire
             private readonly IReadOnlyDictionary<Type, object> _abilities;
             private readonly IActorFacade _callbackActor;
             private readonly Func<IActorFacade, IActorFacade> _actorBuilder;
+            public string Name => _callbackActor.Name;
 
             /// <summary>
             /// Returns the abilities for this actor
@@ -296,14 +321,14 @@ namespace Tranquire
             public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)
             {
                 Guard.ForNull(performable, nameof(performable));
-                var actor = new GivenActor((Actor)_callbackActor);
+                var actor = new GivenActor((Actor)_callbackActor, Abilities);
                 return performable.ExecuteGivenAs(actor);
             }
 
             public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> performable)
             {
                 Guard.ForNull(performable, nameof(performable));
-                var actor = new GivenActor((Actor)_callbackActor);
+                var actor = new GivenActor((Actor)_callbackActor, Abilities);
                 return performable.ExecuteGivenAs(actor, AbilityTo<T>());
             }
         }

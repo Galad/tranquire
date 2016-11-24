@@ -13,6 +13,7 @@ using System.Threading;
 using OpenQA.Selenium;
 using Xunit.Abstractions;
 using OpenQA.Selenium.Chrome;
+using System.Diagnostics;
 
 namespace ToDoList.Specifications
 {
@@ -31,7 +32,7 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new ChromeDriver();
-            var actor = new Actor("John", a => new ReportingActor(new InMemoryObserver(_reportingStringBuilder), a)).Can(BrowseTheWeb.With(driver));
+            var actor = new Actor("John", a => new HighlightTarget(new SlowSelenium(new TakeScreenshot(new ReportingActor(new InMemoryObserver(_reportingStringBuilder), a))))).Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
@@ -42,7 +43,8 @@ namespace ToDoList.Specifications
         public void After()
         {
             Context.Get<ChromeDriver>().Dispose();
-            Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
+            //Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
+            Debug.WriteLine(_reportingStringBuilder.ToString());
         }
 
         [Given(@"I have an empty to-do list")]

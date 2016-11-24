@@ -86,6 +86,7 @@
     <Compile Include="Actions\Hit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ITarget.cs" />
+    <Compile Include="ITargeted.cs" />
     <Compile Include="Questions\Classes.cs" />
     <Compile Include="Questions\Converters\StringToEnumConverter.cs" />
     <Compile Include="Questions\CssValue.cs" />

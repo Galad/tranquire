@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Base class for actions performed on a target
     /// </summary>
-    public abstract class TargetedAction : ActionUnit<BrowseTheWeb>
+    public abstract class TargetedAction : ActionUnit<BrowseTheWeb>, ITargeted
     {
         /// <summary>
         /// Gets the target into which the action is executed

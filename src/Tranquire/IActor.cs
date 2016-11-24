@@ -33,5 +33,9 @@
         /// <param name = "question">A <see cref = "IQuestion{TAnswer}"/> instance representing the question to ask</param>
         /// <returns>The answer to the question.</returns>
         TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question);
+        /// <summary>
+        /// Gets the actor's name
+        /// </summary>
+        string Name { get; }
     }
 }

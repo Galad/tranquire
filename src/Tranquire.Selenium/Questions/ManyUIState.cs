@@ -74,6 +74,10 @@ namespace Tranquire.Selenium.Questions
                 return webElements.Select(w => Convert(WebElementResolver(w)))
                                   .ToImmutableArray();
             }
+
+            public override string ToString() => $"What are the state of the elements identified by {Target.ToString()} ?";
         }
+
+        public override string ToString() => $"What are the state of the elements identified by {Target.ToString()} ?";
     }
 }

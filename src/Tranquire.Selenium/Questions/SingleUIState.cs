@@ -90,6 +90,10 @@ namespace Tranquire.Selenium.Questions
                 var value = WebElementResolver(webElement);
                 return Convert(value);
             }
+
+            public override string ToString() => $"What is the state of the element identified by {Target.ToString()} ?";
         }
+
+        public override string ToString() => $"What is the state of the element identified by {Target.ToString()} ?";
     }
 }

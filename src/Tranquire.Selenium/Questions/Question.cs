@@ -11,7 +11,7 @@ namespace Tranquire.Selenium.Questions
     /// <typeparam name="TSource">The type of the value in the web page</typeparam>
     /// <typeparam name="TConverted">The converterd type of the value</typeparam>
     /// <typeparam name="TAnswer">The final type of the answer</typeparam>
-    internal abstract class Question<TSource, TConverted, TAnswer> : IQuestion<TAnswer, BrowseTheWeb>
+    internal abstract class Question<TSource, TConverted, TAnswer> : IQuestion<TAnswer, BrowseTheWeb>, ITargeted
     {
         public Func<IWebElement, TSource> WebElementResolver { get; }
         public ITarget Target { get; }

@@ -8,7 +8,7 @@ namespace Tranquire.Selenium.Questions
     /// Base class for the UI state
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class UIState<T>
+    public abstract class UIState<T> : ITargeted
     {
         /// <summary>
         /// Gets The target of the elemnt

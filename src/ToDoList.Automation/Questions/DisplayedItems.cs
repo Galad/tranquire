@@ -14,5 +14,10 @@ namespace ToDoList.Automation.Questions
         {
             return actor.AsksFor(Element.Of(ToDoPage.ToDoItem).Many().As(new WebElementToToDoItemConverter(actor, ability.Driver)));
         }
+
+        public override string ToString()
+        {
+            return "What are the displayed items ?";
+        }
     }
 }
