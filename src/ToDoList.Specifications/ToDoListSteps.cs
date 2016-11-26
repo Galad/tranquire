@@ -32,11 +32,18 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new ChromeDriver();
-            var actor = new Actor("John", a => new HighlightTarget(new SlowSelenium(new TakeScreenshot(new ReportingActor(new InMemoryObserver(_reportingStringBuilder), a))))).Can(BrowseTheWeb.With(driver));
+            var screenshotName = ScenarioContext.Current.ScenarioInfo.Title;
+            int i = 0;
+            var actor = new Actor("John", a => new HighlightTarget(new SlowSelenium(new TakeScreenshot(new ReportingActor(new InMemoryObserver(_reportingStringBuilder), a), () => NextScreenshotName(ref i, screenshotName))))).Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
             actor.WasAbleTo(Open.TheApplication());
+        }
+
+        private string NextScreenshotName(ref int i, string screenshotName)
+        {
+            return $"{screenshotName}_{Interlocked.Increment(ref i)}.jpg";
         }
 
         [AfterScenario]

@@ -46,6 +46,7 @@ namespace Tranquire.Tests
                         { typeof(Ability3), new Ability3() },
                     };
             });
+            fixture.Register<Func<IActor, IActor>>(() => a => a);
             new ConstructorCustomization(typeof(Actor), new ActorConstructorQuery()).Customize(fixture);
         }
 

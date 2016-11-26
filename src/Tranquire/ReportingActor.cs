@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
-    public class ReportingActor : IActorFacade
+    public class ReportingActor : IActor
     {
-        private readonly IActorFacade _actor;
+        private readonly IActor _actor;
         private readonly IObserver<string> _observer;
         private Stack<object> _callStack = new Stack<object>();
         public string Name => _actor.Name;
 
-        public ReportingActor(IObserver<string> observer, IActorFacade actor)
+        public ReportingActor(IObserver<string> observer, IActor actor)
         {
             _observer = observer;
             _actor = actor;
@@ -28,22 +28,7 @@ namespace Tranquire
         {
             return ExecuteNotifyingQuestion(() => _actor.AsksFor(question), "Asking for question", question);
         }
-
-        public TResult AttemptsTo<TResult>(IWhenCommand<TResult> performable)
-        {
-            return ExecuteNotifyingAction(() => _actor.AttemptsTo(performable), "AttemptsTo", performable);
-        }
-
-        public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> performable)
-        {
-            return ExecuteNotifyingAction(() => _actor.AttemptsTo(performable), "AttemptsTo", performable);
-        }
-
-        public IActorFacade Can<T>(T doSomething) where T : class
-        {
-            return _actor.Can(doSomething);
-        }
-
+        
         public TResult Execute<TResult>(IAction<TResult> action)
         {
             return ExecuteNotifyingAction(() => _actor.Execute(action), "Execute", action);
@@ -53,17 +38,7 @@ namespace Tranquire
         {
             return ExecuteNotifyingAction(() => _actor.Execute(action), "Execute", action);
         }
-
-        public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)
-        {
-            return ExecuteNotifyingAction(() => _actor.WasAbleTo(performable), "WasAbleTo", performable);
-        }
-
-        public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> performable)
-        {
-            return ExecuteNotifyingAction(() => _actor.WasAbleTo(performable), "WasAbleTo", performable);
-        }
-
+               
         private TResult ExecuteNotifyingAction<TResult>(System.Func<TResult> executeAction, string prefix, object action)
         {
             var actionName = prefix + " : " + action.ToString();

@@ -5,12 +5,12 @@ using Tranquire.Selenium;
 
 namespace ToDoList.Specifications
 {
-    internal class SlowSelenium : IActorFacade
+    internal class SlowSelenium : IActor
     {
         private const int WaitTime = 500;
-        private IActorFacade _actor;
+        private IActor _actor;
 
-        public SlowSelenium(IActorFacade actor)
+        public SlowSelenium(IActor actor)
         {
             this._actor = actor;
         }
@@ -36,30 +36,6 @@ namespace ToDoList.Specifications
             return value;
         }
 
-        public TResult AttemptsTo<TResult>(IWhenCommand<TResult> performable)
-        {
-            return _actor.AttemptsTo(performable);
-        }
-
-        public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> performable)
-        {
-            if (typeof(T) == typeof(BrowseTheWeb))
-            {
-                Thread.Sleep(WaitTime);
-            }
-            var value = _actor.AttemptsTo(performable);
-            if (typeof(T) == typeof(BrowseTheWeb))
-            {
-                Thread.Sleep(WaitTime);
-            }
-            return value;
-        }
-
-        public IActorFacade Can<T>(T doSomething) where T : class
-        {
-            return _actor.Can(doSomething);
-        }
-
         public TResult Execute<TResult>(IAction<TResult> action)
         {
             return _actor.Execute(action);
@@ -73,26 +49,7 @@ namespace ToDoList.Specifications
             }
             return _actor.Execute(new SlowSeleniumAction<TGiven,TWhen, TResult>(action));
         }
-
-        public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)
-        {
-            return _actor.WasAbleTo(performable);
-        }
-
-        public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> performable)
-        {
-            if (typeof(T) == typeof(BrowseTheWeb))
-            {
-                Thread.Sleep(WaitTime);
-            }
-            var value = _actor.WasAbleTo(performable);
-            if (typeof(T) == typeof(BrowseTheWeb))
-            {
-                Thread.Sleep(WaitTime);
-            }
-            return value;
-        }
-
+        
         private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
         {
             private IAction<TGiven, TWhen, TResult> action;

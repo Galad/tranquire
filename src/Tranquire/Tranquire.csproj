@@ -52,9 +52,11 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
+    <Compile Include="CommandAsAction.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IActionExecutor.cs" />
     <Compile Include="IActorFacade.cs" />
+    <Compile Include="IAsksQuestions.cs" />
     <Compile Include="ICanHaveAbility.cs" />
     <Compile Include="ReportingActor.cs" />
     <Compile Include="Task.cs" />

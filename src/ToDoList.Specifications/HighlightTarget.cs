@@ -5,11 +5,11 @@ using Tranquire.Selenium;
 
 namespace ToDoList.Specifications
 {
-    public class HighlightTarget : IActorFacade
+    public class HighlightTarget : IActor
     {
-        private IActorFacade _actor;
+        private IActor _actor;
 
-        public HighlightTarget(IActorFacade actor)
+        public HighlightTarget(IActor actor)
         {
             this._actor = actor;
         }
@@ -42,42 +42,7 @@ namespace ToDoList.Specifications
                 return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability));
             }
         }
-
-        public TResult AttemptsTo<TResult>(IWhenCommand<TResult> performable)
-        {
-            return _actor.AttemptsTo(performable);
-        }
-
-        public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> performable)
-        {
-            if (typeof(T) == typeof(BrowseTheWeb) && typeof(ITargeted).IsAssignableFrom(performable.GetType()))
-            {
-                return _actor.AttemptsTo(new HighlightedWhenCommand<TResult>((IWhenCommand<BrowseTheWeb, TResult>)performable));
-            }
-            return _actor.AttemptsTo(performable);
-        }
-
-        private sealed class HighlightedWhenCommand<TResult> : IWhenCommand<BrowseTheWeb, TResult>
-        {
-            private IWhenCommand<BrowseTheWeb, TResult> _command;
-            private ITargeted Targeted => (ITargeted)_command;
-
-            public HighlightedWhenCommand(IWhenCommand<BrowseTheWeb, TResult> command)
-            {
-                _command = command;
-            }
-
-            public TResult ExecuteWhenAs(IActor actor, BrowseTheWeb ability)
-            {
-                return Execute(ability, Targeted, () => _command.ExecuteWhenAs(actor, ability));
-            }
-        }
-
-        public IActorFacade Can<T>(T doSomething) where T : class
-        {
-            return _actor.Can(doSomething);
-        }
-
+        
         public TResult Execute<TResult>(IAction<TResult> action)
         {
             return _actor.Execute(action);
@@ -128,35 +93,6 @@ namespace ToDoList.Specifications
             }
         }
 
-        public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)
-        {
-            return _actor.WasAbleTo(performable);
-        }
-
-        public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> performable)
-        {
-            if (typeof(T) == typeof(BrowseTheWeb) && typeof(ITargeted).IsAssignableFrom(performable.GetType()))
-            {
-                return _actor.WasAbleTo(new HighlightedGivenCommand<TResult>((IGivenCommand<BrowseTheWeb, TResult>)performable));
-            }
-            return _actor.WasAbleTo(performable);
-        }
-
-        private sealed class HighlightedGivenCommand<TResult> : IGivenCommand<BrowseTheWeb, TResult>
-        {
-            private IGivenCommand<BrowseTheWeb, TResult> _command;
-
-            public HighlightedGivenCommand(IGivenCommand<BrowseTheWeb, TResult> command)
-            {
-                _command = command;
-            }
-
-            public TResult ExecuteGivenAs(IActor actor, BrowseTheWeb ability)
-            {
-                return Execute(ability, (ITargeted)_command, () => _command.ExecuteGivenAs(actor, ability));
-            }
-        }
-
         public static TResult Execute<TResult>(BrowseTheWeb browseTheWeb, ITargeted targeted, Func<TResult> execute)
         {
             var webElements = targeted.Target.ResoveAllFor(browseTheWeb);
@@ -170,7 +106,8 @@ namespace ToDoList.Specifications
             }
             finally
             {
-                foreach (var el in webElements)
+                var webElements2 = targeted.Target.ResoveAllFor(browseTheWeb);
+                foreach (var el in webElements2)
                 {
                     ((IJavaScriptExecutor)browseTheWeb.Driver).ExecuteScript($"arguments[0].style.border = 'thick solid #ACD372';", el);
                 }

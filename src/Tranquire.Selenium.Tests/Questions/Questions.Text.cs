@@ -37,7 +37,7 @@ namespace Tranquire.Selenium.Tests.Questions
             //arrange
             var question = getQuestion(Text.Of(CreateTarget(id)).WithCulture(DefaultCulture));
             //act
-            var actual = question.AnsweredBy(Fixture.Actor, BrowseTheWeb.With(Fixture.WebDriver));
+            var actual = Fixture.Actor.AsksFor(question);
             //assert            
             Assert.Equal(expected, actual);
         }
@@ -95,7 +95,7 @@ namespace Tranquire.Selenium.Tests.Questions
                                .RelativeTo(targetSource);
             var question = getQuestion(Text.Of(target).WithCulture(DefaultCulture));
             //act
-            var actual = question.AnsweredBy(Fixture.Actor, BrowseTheWeb.With(Fixture.WebDriver));
+            var actual = Fixture.Actor.AsksFor(question);
             //assert            
             Assert.Equal(expected, actual);
         }

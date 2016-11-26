@@ -12,35 +12,49 @@ namespace Tranquire
     /// </summary>
     public class Actor : IActorFacade
     {
-        private readonly IReadOnlyDictionary<Type, object> _abilities;
-        private readonly IActorFacade _innerActor;
-
         /// <summary>
         /// Returns the abilities for this actor
         /// </summary>
-        public IReadOnlyDictionary<Type, object> Abilities => _abilities;
+        public IReadOnlyDictionary<Type, object> Abilities { get; }
 
         /// <summary>
         /// Gets the actor name.
         /// </summary>
         public string Name { get; }
-        public Func<IActorFacade, IActorFacade> InnerActorBuilder { get; }
+        /// <summary>
+        /// Gets the function used to decorate an actor
+        /// </summary>
+        public Func<IActor, IActor> InnerActorBuilder { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="Actor"/>
         /// </summary>
         /// <param name="name">The actor's name</param>
         /// <param name="abilities">A dictionary containing the abilities for the actor</param>
-        public Actor(string name, IReadOnlyDictionary<Type, object> abilities, Func<IActorFacade, IActorFacade> innerActorBuilder)
+        /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.AttemptsTo{TResult}(IWhenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.AttemptsTo{T, TResult}(IWhenCommand{T, TResult})"/>, 
+        /// <see cref="IActionExecutor.WasAbleTo{TResult}(IGivenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.WasAbleTo{T, TResult}(IGivenCommand{T, TResult})"/>.
+        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        /// </param>
+        public Actor(
+            string name, 
+            IReadOnlyDictionary<Type, object> abilities, 
+            Func<IActor, IActor> innerActorBuilder)
         {
             Guard.ForNull(name, nameof(name));
             Guard.ForNull(abilities, nameof(abilities));
+            Guard.ForNull(innerActorBuilder, nameof(innerActorBuilder));
             Name = name;
-            _abilities = abilities;
-            _innerActor = innerActorBuilder(new DefaultActor(abilities, this, innerActorBuilder));
+            Abilities = abilities;            
             InnerActorBuilder = innerActorBuilder;
         }
 
+        /// <summary>
+        /// Create a new instance of <see cref="Actor"/>
+        /// </summary>
+        /// <param name="name">The actor's name</param>
+        /// <param name="abilities">A dictionary containing the abilities for the actor</param>
         public Actor(string name, IReadOnlyDictionary<Type, object> abilities)
             : this(name, abilities, a => a)
         {
@@ -49,9 +63,19 @@ namespace Tranquire
         /// <summary>
         /// Create a new instance of <see cref="Actor"/> without abilities
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The actor's name</param>
         public Actor(string name) : this(name, new Dictionary<Type, object>()) { }
-        public Actor(string name, Func<IActorFacade, IActorFacade> innerActorBuilder)
+
+        /// <summary>
+        /// Create a new instance of <see cref="Actor"/> without abilities
+        /// </summary>
+        /// <param name="name">The actor's name</param>
+        /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.AttemptsTo{TResult}(IWhenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.AttemptsTo{T, TResult}(IWhenCommand{T, TResult})"/>, 
+        /// <see cref="IActionExecutor.WasAbleTo{TResult}(IGivenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.WasAbleTo{T, TResult}(IGivenCommand{T, TResult})"/>.
+        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        public Actor(string name, Func<IActor, IActor> innerActorBuilder)
             :this(name, new Dictionary<Type, object>(), innerActorBuilder)
         {
         }
@@ -63,14 +87,16 @@ namespace Tranquire
         /// <typeparam name="T">The type of ability to retrieve</typeparam>
         /// <returns>The ability</returns>
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-        private T AbilityTo<T>()
+        private T AbilityTo<T>() => (T)AbilityTo(typeof(T));
+
+        private object AbilityTo(Type abilityType)
         {
             object ability;
-            if (!_abilities.TryGetValue(typeof(T), out ability))
+            if (!Abilities.TryGetValue(abilityType, out ability))
             {
-                throw new InvalidOperationException($"The ability {typeof(T).Name} was requested but the actor {Name} does not have it.");
+                throw new InvalidOperationException($"The ability {abilityType.Name} was requested but the actor {Name} does not have it.");
             }
-            return (T)_abilities[typeof(T)];
+            return Abilities[abilityType];
         }
 
         /// <summary>
@@ -82,9 +108,10 @@ namespace Tranquire
         public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            return _innerActor.AttemptsTo(command);
+            return CreateWhenActor().Execute(command.AsAction());
         }
 
+       
         /// <summary>
         /// Execute the action in the Given context with an ability
         /// </summary>
@@ -93,8 +120,8 @@ namespace Tranquire
         /// <param name="command">The command to execute</param>
         public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> command)
         {
-            Guard.ForNull(command, nameof(command));
-            return _innerActor.WasAbleTo(command);
+            Guard.ForNull(command, nameof(command));            
+            return CreateGivenActor().Execute(command.AsAction());
         }
 
         /// <summary>
@@ -105,7 +132,7 @@ namespace Tranquire
         public TResult AttemptsTo<TResult>(IWhenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            return _innerActor.AttemptsTo(command);
+            return CreateWhenActor().Execute(command.AsAction());
         }
 
         /// <summary>
@@ -116,8 +143,25 @@ namespace Tranquire
         public TResult WasAbleTo<TResult>(IGivenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
-            var actor = new GivenActor(_innerActor, Abilities);
-            return _innerActor.WasAbleTo(command);
+            var actor = CreateGivenActor();
+            var commandAction = command.AsAction();
+            return actor.Execute(commandAction);
+        }
+
+        private IActor CreateGivenActor()
+        {
+            var givenActor = new GivenInnerActor(Name, AbilityTo);
+            var actor = InnerActorBuilder(givenActor);
+            givenActor.Actor = actor;
+            return actor;
+        }
+
+        private IActor CreateWhenActor()
+        {
+            var whenActor = new WhenInnerActor(Name, AbilityTo);
+            var actor = InnerActorBuilder(whenActor);
+            whenActor.Actor = actor;
+            return actor;
         }
 
         /// <summary>
@@ -129,7 +173,9 @@ namespace Tranquire
         public IActorFacade Can<T>(T doSomething) where T : class
         {
             Guard.ForNull(doSomething, nameof(doSomething));
-            return _innerActor.Can(doSomething);
+            var abilities = Abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
+                                      .ToDictionary(k => k.Key, k => k.Value);
+            return new Actor(Name, abilities, InnerActorBuilder);
         }
 
         /// <summary>
@@ -141,7 +187,7 @@ namespace Tranquire
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
             Guard.ForNull(question, nameof(question));
-            return _innerActor.AsksFor(question);
+            return CreateWhenActor().AsksFor(question);
         }
 
         /// <summary>
@@ -154,183 +200,55 @@ namespace Tranquire
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             Guard.ForNull(question, nameof(question));
-            return _innerActor.AsksFor(question);
+            return CreateWhenActor().AsksFor(question);
         }
 
-        /// <summary>
-        /// Execute an action with an ability
-        /// </summary>
-        /// <typeparam name="TGiven">The ability required for the Given context</typeparam>
-        /// <typeparam name="TWhen">The ability required for the When context</typeparam>
-        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-        /// <param name="action">The action to execute</param>
-        public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        private class WhenInnerActor : InnerActor
         {
-            Guard.ForNull(action, nameof(action));
-            return _innerActor.Execute(action);
-        }
-
-        /// <summary>
-        /// Execute an action
-        /// </summary>
-        /// <param name="action">The action to execute</param>
-        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-        public TResult Execute<TResult>(IAction<TResult> action)
-        {
-            Guard.ForNull(action, nameof(action));
-            return action.ExecuteWhenAs(this);
-        }
-
-        private class GivenActor : IActor
-        {
-            private readonly IActorFacade _innerActor;
-
-            /// <summary>
-            /// Returns the abilities for this actor
-            /// </summary>
-            public IReadOnlyDictionary<Type, object> Abilities { get; }
-
-            public string Name => _innerActor.Name;
-
-            public GivenActor(IActorFacade innerActor, IReadOnlyDictionary<Type, object> abilities)
+            public WhenInnerActor(string name, Func<Type, object> getAbility) : base(name, getAbility)
             {
-                _innerActor = innerActor;
-                Abilities = abilities;
             }
+
+            public override TResult Execute<TResult>(IAction<TResult> action) => action.ExecuteWhenAs(Actor);
+            public override TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteWhenAs(Actor, (TWhen)GetAbility(typeof(TWhen)));
+        }
+
+        private class GivenInnerActor : InnerActor
+        {
+            public GivenInnerActor(string name, Func<Type, object> getAbility) : base(name, getAbility)
+            {
+            }
+
+            public override TResult Execute<TResult>(IAction<TResult> action) => action.ExecuteGivenAs(Actor);
+            public override TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteGivenAs(Actor, (TGiven)GetAbility(typeof(TGiven)));
+        }
+
+        private abstract class InnerActor : IActor
+        {
+            public InnerActor(
+                string name, 
+                Func<Type, object> getAbility)
+            {
+                Name = name;
+                GetAbility = getAbility;
+            }            
+
+            public IActor Actor { get; set; }
+            public string Name { get; }
+            public Func<Type, object> GetAbility { get; }
 
             public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
             {
-                return _innerActor.AsksFor(question);
+                return question.AnsweredBy(Actor);
             }
 
             public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
             {
-                return _innerActor.AsksFor(question);
-            }
-        
-            public TResult Execute<TResult>(IAction<TResult> action)
-            {
-                return action.ExecuteGivenAs(this);
+                return question.AnsweredBy(Actor, (TAbility)GetAbility(typeof(TAbility)));
             }
 
-            public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
-            {
-                return action.ExecuteGivenAs(this, AbilityTo<TGiven>());
-            }
-
-            /// <summary>
-            /// Retrieve an actor's ability
-            /// </summary>
-            /// <typeparam name="T">The type of ability to retrieve</typeparam>
-            /// <returns>The ability</returns>
-            /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-            private T AbilityTo<T>()
-            {
-                object ability;
-                if (!Abilities.TryGetValue(typeof(T), out ability))
-                {
-                    throw new InvalidOperationException($"The ability {typeof(T).Name} was requested but the actor {_innerActor.Name} does not have it.");
-                }
-                return (T)Abilities[typeof(T)];
-            }
-        }
-
-        private class DefaultActor : IActorFacade
-        {
-            private readonly IReadOnlyDictionary<Type, object> _abilities;
-            private readonly IActorFacade _callbackActor;
-            private readonly Func<IActorFacade, IActorFacade> _actorBuilder;
-            public string Name => _callbackActor.Name;
-
-            /// <summary>
-            /// Returns the abilities for this actor
-            /// </summary>
-            public IReadOnlyDictionary<Type, object> Abilities => _abilities;
-
-            public DefaultActor(
-                IReadOnlyDictionary<Type, object> abilities,
-                IActorFacade callbackActor,
-                Func<IActorFacade, IActorFacade> actorBuilder)
-            {
-                _abilities = abilities;
-                _callbackActor = callbackActor;
-                _actorBuilder = actorBuilder;
-            }
-
-            /// <summary>
-            /// Retrieve an actor's ability
-            /// </summary>
-            /// <typeparam name="T">The type of ability to retrieve</typeparam>
-            /// <returns>The ability</returns>
-            /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-            private T AbilityTo<T>()
-            {
-                object ability;
-                if (!_abilities.TryGetValue(typeof(T), out ability))
-                {
-                    throw new InvalidOperationException($"The ability {typeof(T).Name} was requested but the actor {((Actor)_callbackActor).Name} does not have it.");
-                }
-                return (T)_abilities[typeof(T)];
-            }
-
-
-            public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
-            {
-                Guard.ForNull(question, nameof(question));
-                return question.AnsweredBy(_callbackActor);
-            }
-
-            public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
-            {
-                Guard.ForNull(question, nameof(question));
-                return question.AnsweredBy(_callbackActor, AbilityTo<TAbility>());
-            }
-
-            public TResult AttemptsTo<TResult>(IWhenCommand<TResult> performable)
-            {
-                Guard.ForNull(performable, nameof(performable));
-                return performable.ExecuteWhenAs(_callbackActor);
-            }
-
-            public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> performable)
-            {
-                Guard.ForNull(performable, nameof(performable));
-                return performable.ExecuteWhenAs(_callbackActor, AbilityTo<T>());
-            }
-
-            public IActorFacade Can<T>(T doSomething) where T : class
-            {
-                Guard.ForNull(doSomething, nameof(doSomething));
-                var abilities = _abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
-                                          .ToDictionary(k => k.Key, k => k.Value);
-                return new Actor(((Actor)_callbackActor).Name, abilities, _actorBuilder);
-            }
-
-            public TResult Execute<TResult>(IAction<TResult> action)
-            {
-                Guard.ForNull(action, nameof(action));
-                return action.ExecuteWhenAs(_callbackActor);
-            }
-
-            public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
-            {
-                Guard.ForNull(action, nameof(action));
-                return action.ExecuteWhenAs(_callbackActor, AbilityTo<TWhen>());
-            }
-
-            public TResult WasAbleTo<TResult>(IGivenCommand<TResult> performable)
-            {
-                Guard.ForNull(performable, nameof(performable));
-                var actor = new GivenActor((Actor)_callbackActor, Abilities);
-                return performable.ExecuteGivenAs(actor);
-            }
-
-            public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> performable)
-            {
-                Guard.ForNull(performable, nameof(performable));
-                var actor = new GivenActor((Actor)_callbackActor, Abilities);
-                return performable.ExecuteGivenAs(actor, AbilityTo<T>());
-            }
+            public abstract TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
+            public abstract TResult Execute<TResult>(IAction<TResult> action);
         }
     }
 }

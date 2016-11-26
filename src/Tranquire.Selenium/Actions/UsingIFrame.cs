@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Allow to switch to a frame and go back to the parent frame
     /// </summary>
-    public class UsingIFrame : ActionUnit<BrowseTheWeb>
+    public class UsingIFrame : Action<BrowseTheWeb, IDisposable>
     {
         private ITarget _target;
 
@@ -22,17 +22,6 @@ namespace Tranquire.Selenium.Actions
         {
             Guard.ForNull(target, "actor");
             _target = target;
-        }
-
-        /// <summary>
-        /// Define the actor to use when switching to the frame
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <returns>A <see cref="UsingIFrame"/> object that can be used to switch to a frame</returns>
-        public IDisposable ExecuteFor(IActor actor)
-        {
-            actor.Execute(this);            
-            return new Disposable(() => actor.Execute(new SwitchToParentIFrame()));
         }
 
         /// <summary>
@@ -50,11 +39,12 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override IDisposable ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             ability.SwitchTo().Frame(_target.ResolveFor(ability));
+            return new Disposable(() => actor.Execute(new SwitchToParentIFrame()));
         }
-
+        
         private class Disposable : IDisposable
         {
             private System.Action _action;
