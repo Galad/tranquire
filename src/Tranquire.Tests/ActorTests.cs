@@ -65,103 +65,7 @@ namespace Tranquire.Tests
             actual.Should().BeOfType<Actor>().Which.Abilities.Values.Should().Equal(expected);
         }
         #endregion
-
-        //#region Execute
-        //[Theory, DomainAutoData]
-        //public void Execute_ShouldCallExecuteWhen(
-        //   Actor sut,
-        //   Mock<IAction<object>> action,
-        //   object expected)
-        //{
-        //    //arrange
-        //    action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
-        //    //act            
-        //    var actual = sut.Execute(action.Object);
-        //    //assert
-        //    Assert.Equal(expected, actual);
-        //}
-
-        //[Theory, DomainAutoData]
-        //public void Execute_CalledAfterCallingAttempsTo_ShouldCallExecuteWhen(
-        //   Actor sut,
-        //   Mock<IAction<object>> action,
-        //   object expected)
-        //{
-        //    var secondAction = new Mock<IAction<object>>(MockBehavior.Loose);
-        //    secondAction.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
-        //    action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>()))
-        //          .Returns((IActor actor) => actor.Execute(secondAction.Object));
-        //    //act
-        //    var actual = sut.AttemptsTo(action.Object);
-        //    //assert
-        //    Assert.Equal(expected, actual);
-        //}
-
-        //[Theory, DomainAutoData]
-        //public void Execute_CalledAfterCallingWasAbleTo_ShouldCallExecuteGiven(
-        //   Actor sut,
-        //   Mock<IAction<object>> action,
-        //   object expected)
-        //{
-        //    var secondAction = new Mock<IAction<object>>(MockBehavior.Loose);
-        //    secondAction.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>())).Returns(expected);
-        //    action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>()))
-        //          .Returns((IActor actor) => actor.Execute(secondAction.Object));
-        //    //act
-        //    var actual = sut.WasAbleTo(action.Object);
-        //    //assert
-        //    Assert.Equal(expected, actual);
-        //}
-
-        //[Theory, DomainAutoData]
-        //public void ExecuteWithAbility_ShouldCallExecuteWhen(
-        //  [Greedy]Actor sut,
-        //  Mock<IAction<Ability1, Ability2, object>> action,
-        //  object expected)
-        //{
-        //    var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
-        //    action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
-        //    //act            
-        //    var actual = sut.Execute(action.Object);
-        //    //assert
-        //    Assert.Equal(expected, actual);
-        //}
-
-        //[Theory, DomainAutoData]
-        //public void ExecuteWithAbility_CalledAfterCallingAttempsTo_ShouldCallExecuteWhen(
-        //   [Greedy]Actor sut,
-        //   Mock<IAction<Ability1, Ability2, object>> action,
-        //   object expected)
-        //{
-        //    var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
-        //    var secondAction = new Mock<IAction<Ability1, Ability2, object>>(MockBehavior.Loose);
-        //    secondAction.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
-        //    action.Setup(p => p.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability2>()))
-        //          .Returns((IActor actor, Ability2 ability) => actor.Execute(secondAction.Object));
-        //    //act
-        //    var actual = sut.AttemptsTo(action.Object);
-        //    //assert
-        //    Assert.Equal(expected, actual);
-        //}
-
-        //[Theory, DomainAutoData]
-        //public void ExecuteWithAbility_CalledAfterCallingWasAbleTo_ShouldCallExecuteGiven(
-        //   [Greedy]Actor sut,
-        //   Mock<IAction<Ability1, Ability2, object>> action,
-        //   object expected)
-        //{
-        //    var expectedAbility = sut.Abilities.Values.OfType<Ability1>().First();
-        //    var secondAction = new Mock<IAction<Ability1, Ability2, object>>(MockBehavior.Loose);
-        //    secondAction.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
-        //    action.Setup(p => p.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>()))
-        //          .Returns((IActor actor, Ability1 ability) => actor.Execute(secondAction.Object));
-        //    //act
-        //    var actual = sut.WasAbleTo(action.Object);
-        //    //assert
-        //    Assert.Equal(expected, actual);
-        //}
-        //#endregion
-
+        
         #region AttemptsTo
         [Theory, DomainAutoData]
         public void AttemptsTo_ShouldCallExecuteWhen(
@@ -266,6 +170,62 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
         #endregion
+
+        [Theory, DomainAutoData]
+        public void Name_WhenCallingWasAbleTo_ShouldReturnTheCorrectValue(
+            [Greedy]Actor sut,
+            Mock<IGivenCommand<string>> command)
+        {
+            //arrange
+            var expected = sut.Name;
+            command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>())).Returns((IActor a) => a.Name);
+            //act
+            var actual = sut.WasAbleTo(command.Object);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void Name_WhenCallingAttemptsTo_ShouldReturnTheCorrectValue(
+            [Greedy]Actor sut,
+            Mock<IWhenCommand<string>> command)
+        {
+            //arrange
+            var expected = sut.Name;
+            command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns((IActor a) => a.Name);
+            //act
+            var actual = sut.AttemptsTo(command.Object);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void Name_WhenCallingWasAbleToWithAbility_ShouldReturnTheCorrectValue(
+            [Greedy]Actor sut,
+            Mock<IGivenCommand<Ability1, string>> command)
+        {
+            //arrange
+            var expected = sut.Name;
+            command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a) => a.Name);
+            //act
+            var actual = sut.WasAbleTo(command.Object);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void Name_WhenCallingAttemptsToWithAbility_ShouldReturnTheCorrectValue(
+            [Greedy]Actor sut,
+            Mock<IWhenCommand<Ability1, string>> command)
+        {
+            //arrange
+            var expected = sut.Name;
+            command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a) => a.Name);
+            //act
+            var actual = sut.AttemptsTo(command.Object);
+            //assert
+            Assert.Equal(expected, actual);
+        }
 
         public static IEnumerable<object[]> ActionsWithAbility
         {

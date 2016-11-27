@@ -78,17 +78,14 @@ namespace Tranquire
         public Actor(string name, Func<IActor, IActor> innerActorBuilder)
             :this(name, new Dictionary<Type, object>(), innerActorBuilder)
         {
-        }
-
+        }        
 
         /// <summary>
         /// Retrieve an actor's ability
         /// </summary>
-        /// <typeparam name="T">The type of ability to retrieve</typeparam>
+        /// <param name="abilityType">The type of ability to retrieve</param>        
         /// <returns>The ability</returns>
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
-        private T AbilityTo<T>() => (T)AbilityTo(typeof(T));
-
         private object AbilityTo(Type abilityType)
         {
             object ability;
