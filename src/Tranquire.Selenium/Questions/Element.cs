@@ -62,6 +62,10 @@ namespace Tranquire.Selenium.Questions
             return element;
         }
 
+        /// <summary>
+        /// Returns the action's name
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() => $"What is the element identified by {Target.ToString()} ?";
     }
 }

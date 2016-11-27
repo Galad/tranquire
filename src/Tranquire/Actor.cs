@@ -75,6 +75,7 @@ namespace Tranquire
         /// <see cref="IActionExecutor.WasAbleTo{TResult}(IGivenCommand{TResult})"/>, 
         /// <see cref="IActionExecutor.WasAbleTo{T, TResult}(IGivenCommand{T, TResult})"/>.
         /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        /// </param>
         public Actor(string name, Func<IActor, IActor> innerActorBuilder)
             :this(name, new Dictionary<Type, object>(), innerActorBuilder)
         {

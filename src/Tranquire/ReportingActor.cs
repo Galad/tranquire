@@ -6,19 +6,31 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Add reporting capabilities to an actor
+    /// </summary>
     public class ReportingActor : IActor
     {
         private readonly IActor _actor;
         private readonly IObserver<string> _observer;
         private Stack<object> _callStack = new Stack<object>();
+        /// <summary>
+        /// Gets the actor name
+        /// </summary>
         public string Name => _actor.Name;
 
+        /// <summary>
+        /// Create a new instance of <see cref="ReportingActor"/>
+        /// </summary>
+        /// <param name="observer">An <see cref="IObserver{T}"/> instance which is called when a notification occurs</param>
+        /// <param name="actor">The given actor</param>
         public ReportingActor(IObserver<string> observer, IActor actor)
         {
             _observer = observer;
             _actor = actor;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {            
             return ExecuteNotifyingQuestion(() => _actor.AsksFor(question), "Asking for question", question);
@@ -65,5 +77,6 @@ namespace Tranquire
         {
             _observer.OnNext(new string(Enumerable.Repeat('-', _callStack.Count * 3).ToArray()) + value);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

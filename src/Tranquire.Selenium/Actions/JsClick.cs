@@ -12,6 +12,9 @@ namespace Tranquire.Selenium.Actions
     /// </summary>
     public class JsClick : ActionUnit<BrowseTheWeb>, ITargeted
     {
+        /// <summary>
+        /// Gets the target which will be clicked
+        /// </summary>
         public ITarget Target { get; }
 
         /// <summary>

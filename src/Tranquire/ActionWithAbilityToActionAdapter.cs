@@ -49,9 +49,10 @@ namespace Tranquire
             return actor.Execute(Action);
         }
 
-        public override string ToString()
-        {
-            return Action.ToString();
-        }
+        /// <summary>
+        /// Returns the action's name
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => Action.ToString();
     }
 }

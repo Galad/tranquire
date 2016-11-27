@@ -73,6 +73,10 @@ namespace Tranquire.Selenium.Targets
         /// <returns></returns>
         protected abstract ISearchContext SearchContext(IWebDriver webDriver);
 
+        /// <summary>
+        /// Returns the action's name
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() => Name + $" ({By.ToString()})";
     }
 }
