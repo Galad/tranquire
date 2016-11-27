@@ -32,7 +32,7 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new ChromeDriver();
-            var screenshotName = ScenarioContext.Current.ScenarioInfo.Title;
+            var screenshotName = Context.ScenarioInfo.Title;
             int i = 0;
             var actor = new Actor("John", a => new HighlightTarget(new SlowSelenium(new TakeScreenshot(new ReportingActor(new InMemoryObserver(_reportingStringBuilder), a), () => NextScreenshotName(ref i, screenshotName))))).Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
