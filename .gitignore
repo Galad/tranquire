@@ -213,3 +213,4 @@ ModelManifest.xml
 nuget.exe
 *.ncrunchproject
 *.ncrunchsolution
+/src/OpenCover
