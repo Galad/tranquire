@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
+    <Compile Include="ActionUnit.cs" />
     <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
     <Compile Include="CommandAsAction.cs" />

@@ -98,7 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionTests.cs" />
-    <Compile Include="ActionWithAbilityTests.cs" />
+    <Compile Include="ActionUnitTests.cs" />
+    <Compile Include="ActionWithAbilityTest.cs" />
+    <Compile Include="ActionUnitWithAbilityTests.cs" />
     <Compile Include="ActionWithAbilityToActionAdapterTests.cs" />
     <Compile Include="ActorTests.cs" />
     <Compile Include="TaskTests.cs" />

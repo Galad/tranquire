@@ -3,123 +3,128 @@ using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
 using System;
-using Tranquire;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Tranquire.Tests
 {
     public class ActionTests
     {
-        public class ActionExecuteWhen : ActionUnit
+        public class ActionExecuteWhen : Action<object>
         {
             public IActor Actor;
-            private readonly IAction<Unit> _action;
-            public ActionExecuteWhen(IAction<Unit> action)
+            private readonly IAction<object> _action;
+            public ActionExecuteWhen(IAction<object> action)
             {
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActor actor)
+            protected override object ExecuteWhen(IActor actor)
             {
                 Actor = actor;
-                actor.Execute(_action);
+                return actor.Execute(_action);
             }
 
-            protected override void ExecuteGiven(IActor actor)
+            protected override object ExecuteGiven(IActor actor)
             {
+                return new object();
             }
         }
 
-        public class ActionExecuteGiven : ActionUnit
+        public class ActionExecuteGiven : Action<object>
         {
             public IActor Actor;
-            private readonly IAction<Unit> _action;
-            public ActionExecuteGiven(IAction<Unit> action)
+            private readonly IAction<object> _action;
+            public ActionExecuteGiven(IAction<object> action)
             {
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActor actor)
+            protected override object ExecuteWhen(IActor actor)
             {
+                return new object();
             }
 
-            protected override void ExecuteGiven(IActor actor)
+            protected override object ExecuteGiven(IActor actor)
             {
                 Actor = actor;
-                actor.Execute(_action);
+                return actor.Execute(_action);
             }
         }
 
-        public class ActionExecuteWhenAndGivenNotOverridden : ActionUnit
+        public class ActionExecuteWhenAndGivenNotOverridden : Action<object>
         {
-            private readonly IAction<Unit> _action;
-            public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
+            private readonly IAction<object> _action;
+            public ActionExecuteWhenAndGivenNotOverridden(IAction<object> action)
             {
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 _action = action;
             }
 
-            protected override void ExecuteWhen(IActor actor)
+            protected override object ExecuteWhen(IActor actor)
             {
-                actor.Execute(_action);
+                return actor.Execute(_action);
             }
         }
 
         [Theory, DomainAutoData]
         public void Sut_ShouldBeAction(Action<object> sut)
         {
-            Assert.IsAssignableFrom(typeof (IAction<object>), sut);
+            Assert.IsAssignableFrom(typeof(IAction<object>), sut);
         }
 
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof (ActionExecuteGiven).GetConstructors());
+            assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhen sut, Mock<IActor> actor)
+        public void ExecuteWhenAs_ShouldCallActorExecute(
+            [Frozen] IAction<object> action,
+            ActionExecuteWhen sut,
+            Mock<IActor> actor,
+            object expected)
         {
             //arrange
+            actor.Setup(a => a.Execute(action)).Returns(expected);
             //act
-            sut.ExecuteWhenAs(actor.Object);
+            var actual = sut.ExecuteWhenAs(actor.Object);
             //assert
-            actor.Verify(a => a.Execute(expected));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteGiven sut, Mock<IActor> actor)
+        public void ExecuteGivenAs_ShouldCallActorExecute(
+            [Frozen] IAction<object> action,
+            ActionExecuteGiven sut,
+            Mock<IActor> actor,
+            object expected)
         {
             //arrange
+            actor.Setup(a => a.Execute(action)).Returns(expected);
             //act
-            sut.ExecuteGivenAs(actor.Object);
+            var actual = sut.ExecuteGivenAs(actor.Object);
             //assert
-            actor.Verify(a => a.Execute(expected));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor)
+        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute(
+            [Frozen] IAction<object> action,
+            ActionExecuteWhenAndGivenNotOverridden sut,
+            Mock<IActor> actor,
+            object expected)
         {
             //arrange
+            actor.Setup(a => a.Execute(action)).Returns(expected);
             //act
-            sut.ExecuteGivenAs(actor.Object);
+            var actual = sut.ExecuteGivenAs(actor.Object);
             //assert
-            actor.Verify(a => a.Execute(expected));
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
@@ -145,3 +150,4 @@ namespace Tranquire.Tests
         }
     }
 }
+

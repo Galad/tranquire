@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {
-    public class WhenCommandAsAction<TResult> : IAction<TResult>
+    internal class WhenCommandAsAction<TResult> : IAction<TResult>
     {
         public IWhenCommand<TResult> Command { get; }
 
@@ -27,7 +27,7 @@ namespace Tranquire
         }
     }
 
-    public class WhenCommandAsAction<TWhen, TResult> : IAction<Unit, TWhen, TResult>
+    internal class WhenCommandAsAction<TWhen, TResult> : IAction<Unit, TWhen, TResult>
     {
         public IWhenCommand<TWhen, TResult> Command { get; }
 
@@ -48,7 +48,7 @@ namespace Tranquire
         }
     }
 
-    public class GivenCommandAsAction<TResult> : IAction<TResult>
+    internal class GivenCommandAsAction<TResult> : IAction<TResult>
     {
         public IGivenCommand<TResult> Command { get; }
 
@@ -69,7 +69,7 @@ namespace Tranquire
         }
     }
 
-    public class GivenCommandAsAction<TGiven, TResult> : IAction<TGiven, Unit, TResult>
+    internal class GivenCommandAsAction<TGiven, TResult> : IAction<TGiven, Unit, TResult>
     {
         public IGivenCommand<TGiven, TResult> Command { get; }
 
@@ -90,7 +90,7 @@ namespace Tranquire
         }
     }
 
-    public static class CommandExtensions
+    internal static class CommandExtensions
     {
         public static IAction<TResult> AsAction<TResult>(this IWhenCommand<TResult> command) => new WhenCommandAsAction<TResult>(command);
         public static IAction<Unit, TWhen, TResult> AsAction<TWhen, TResult>(this IWhenCommand<TWhen, TResult> command) => new WhenCommandAsAction<TWhen, TResult>(command);
