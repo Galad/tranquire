@@ -206,7 +206,7 @@ namespace Tranquire.Tests
         {
             //arrange
             var expected = sut.Name;
-            command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a) => a.Name);
+            command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a, Ability1 _) => a.Name);
             //act
             var actual = sut.WasAbleTo(command.Object);
             //assert
@@ -220,7 +220,7 @@ namespace Tranquire.Tests
         {
             //arrange
             var expected = sut.Name;
-            command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a) => a.Name);
+            command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a, Ability1 _) => a.Name);
             //act
             var actual = sut.AttemptsTo(command.Object);
             //assert
