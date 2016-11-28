@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Threading;
-using Tranquire;
-using Tranquire.Selenium;
 
-namespace ToDoList.Specifications
+namespace Tranquire.Selenium
 {
-    internal class SlowSelenium : IActor
-    {
-        private const int WaitTime = 500;
+    public class SlowSelenium : IActor
+    {        
         private IActor _actor;
+        private TimeSpan _delay;
+        private int DelayMilliseconds => (int)_delay.TotalMilliseconds;
 
-        public SlowSelenium(IActor actor)
+        public SlowSelenium(IActor actor, TimeSpan delay)
         {
             this._actor = actor;
+            _delay = delay;
         }
 
         public string Name => _actor.Name;
@@ -26,12 +26,12 @@ namespace ToDoList.Specifications
         {
             if (typeof(TAbility) == typeof(BrowseTheWeb))
             {
-                Thread.Sleep(WaitTime);
+                Thread.Sleep(DelayMilliseconds);
             }
             var value = _actor.AsksFor(question);
             if (typeof(TAbility) == typeof(BrowseTheWeb))
             {
-                Thread.Sleep(WaitTime);
+                Thread.Sleep(DelayMilliseconds);
             }
             return value;
         }
@@ -47,31 +47,33 @@ namespace ToDoList.Specifications
             {
                 return _actor.Execute(action);
             }
-            return _actor.Execute(new SlowSeleniumAction<TGiven,TWhen, TResult>(action));
+            return _actor.Execute(new SlowSeleniumAction<TGiven,TWhen, TResult>(action, DelayMilliseconds));
         }
         
         private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
         {
             private IAction<TGiven, TWhen, TResult> action;
+            private int _delay;
 
-            public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action)
+            public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action, int delay)
             {
                 this.action = action;
+                _delay = delay;
             }
 
             public TResult ExecuteGivenAs(IActor actor, TGiven ability)
             {
-                Thread.Sleep(WaitTime);
+                Thread.Sleep(_delay);
                 var value = action.ExecuteGivenAs(actor, ability);
-                Thread.Sleep(WaitTime);
+                Thread.Sleep(_delay);
                 return value;
             }
 
             public TResult ExecuteWhenAs(IActor actor, TWhen ability)
             {
-                Thread.Sleep(WaitTime);
+                Thread.Sleep(_delay);
                 var value = action.ExecuteWhenAs(actor, ability);
-                Thread.Sleep(WaitTime);
+                Thread.Sleep(_delay);
                 return value;
             }
         }

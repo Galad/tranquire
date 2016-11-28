@@ -1,9 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System;
-using Tranquire;
-using Tranquire.Selenium;
 
-namespace ToDoList.Specifications
+namespace Tranquire.Selenium
 {
     public class HighlightTarget : IActor
     {

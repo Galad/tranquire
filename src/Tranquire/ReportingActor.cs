@@ -19,7 +19,7 @@ namespace Tranquire
         /// Gets the observer used to send the notifications
         /// </summary>
         public IObserver<string> Observer { get; }
-        private Stack<object> _callStack = new Stack<object>();
+        private int _depth = 0;
         /// <summary>
         /// Gets the actor name
         /// </summary>
@@ -63,17 +63,17 @@ namespace Tranquire
         {
             Guard.ForNull(action, nameof(action));
             var actionName = prefix + " : " + action.ToString();
-            _callStack.Push(action);
+            _depth++;
             Notifiy(actionName);
             var result = executeAction();
             //Notifiy("(Completed) " + actionName);
-            _callStack.Pop();
+            _depth--;
             return result;
         }
 
         private void Notifiy(string value)
         {
-            Observer.OnNext(new string(Enumerable.Repeat('-', _callStack.Count * 3).ToArray()) + value);
+            Observer.OnNext(new string(Enumerable.Repeat('-', _depth * 3).ToArray()) + value);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }

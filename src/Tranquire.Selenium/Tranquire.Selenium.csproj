@@ -85,6 +85,7 @@
     <Compile Include="Actions\Enters\EnterValue.cs" />
     <Compile Include="Actions\Hit.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HighlightTarget.cs" />
     <Compile Include="ITarget.cs" />
     <Compile Include="ITargeted.cs" />
     <Compile Include="Questions\Classes.cs" />
@@ -112,6 +113,8 @@
     <Compile Include="Questions\Text.cs" />
     <Compile Include="Questions\ConversionExtensions\TextStateExtensions.cs" />
     <Compile Include="Questions\UIState.cs" />
+    <Compile Include="SlowSelenium.cs" />
+    <Compile Include="TakeScreenshot.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="ITargetWithParameters.cs" />
     <Compile Include="Targets\TargetBuilder.cs" />

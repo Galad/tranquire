@@ -1,15 +1,9 @@
 ﻿using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire;
-using Tranquire.Selenium;
 
-namespace ToDoList.Specifications
+namespace Tranquire.Selenium
 {
     public class TakeScreenshot : IActor
     {

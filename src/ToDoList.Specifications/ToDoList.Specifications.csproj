@@ -119,7 +119,6 @@
       <DependentUpon>AddToDoItems.feature</DependentUpon>
     </Compile>
     <Compile Include="AddToDoItemsSteps.cs" />
-    <Compile Include="HighlightTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemainingCount.feature.cs">
       <AutoGen>True</AutoGen>
@@ -128,8 +127,6 @@
     </Compile>
     <Compile Include="RemainingCountSteps.cs" />
     <Compile Include="Setup.cs" />
-    <Compile Include="SlowSelenium.cs" />
-    <Compile Include="TakeScreenshot.cs" />
     <Compile Include="ToDoListSteps.cs" />
     <Compile Include="XUnitObserver.cs" />
   </ItemGroup>
