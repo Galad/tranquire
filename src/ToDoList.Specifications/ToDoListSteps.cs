@@ -36,16 +36,16 @@ namespace ToDoList.Specifications
             int i = 0;
             var actor = new Actor(
                 "John",
-                a => new HighlightTarget(
-                        new SlowSelenium(
+                a => new SlowSelenium(
+                        new HighlightTarget(
                             new TakeScreenshot(
                                 new ReportingActor(
                                     new InMemoryObserver(_reportingStringBuilder),
                                     a),
                                 () => NextScreenshotName(ref i, screenshotName)
-                                ),
-                            TimeSpan.FromMilliseconds(1)
-                            )
+                                )
+                            ),
+                        TimeSpan.FromMilliseconds(1000)
                         )
                      ).Can(BrowseTheWeb.With(driver));
             Context.Set(actor);

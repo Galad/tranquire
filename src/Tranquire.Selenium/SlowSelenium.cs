@@ -4,7 +4,7 @@ using System.Threading;
 namespace Tranquire.Selenium
 {
     public class SlowSelenium : IActor
-    {        
+    {
         private IActor _actor;
         private TimeSpan _delay;
         private int DelayMilliseconds => (int)_delay.TotalMilliseconds;
@@ -24,16 +24,37 @@ namespace Tranquire.Selenium
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            if (typeof(TAbility) == typeof(BrowseTheWeb))
+            var browseTheWebQuestion = question as IQuestion<TAnswer, BrowseTheWeb>;
+            var targeted = question as ITargeted;
+            if (browseTheWebQuestion != null && targeted != null)
             {
-                Thread.Sleep(DelayMilliseconds);
+                return _actor.AsksFor(new SlowSeleniumQuestion<TAnswer, BrowseTheWeb>(browseTheWebQuestion, DelayMilliseconds, targeted));
             }
-            var value = _actor.AsksFor(question);
-            if (typeof(TAbility) == typeof(BrowseTheWeb))
+            return _actor.AsksFor(question);
+        }
+
+        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : IQuestion<TAnswer, BrowseTheWeb>, ITargeted
+        {
+            private int _delay;
+            private readonly IQuestion<TAnswer, BrowseTheWeb> _question;
+            private readonly ITargeted _targeted;
+
+            public SlowSeleniumQuestion(IQuestion<TAnswer, BrowseTheWeb> question, int delay, ITargeted targeted)
             {
-                Thread.Sleep(DelayMilliseconds);
+                _question = question;
+                _delay = delay;
+                _targeted = targeted;
             }
-            return value;
+
+            public ITarget Target => _targeted.Target;
+
+            public TAnswer AnsweredBy(IActor actor, BrowseTheWeb ability)
+            {
+                Thread.Sleep(_delay);
+                var value = _question.AnsweredBy(actor, ability);
+                Thread.Sleep(_delay);
+                return value;
+            }
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
@@ -43,23 +64,28 @@ namespace Tranquire.Selenium
 
         public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            if (typeof(TGiven) != typeof(BrowseTheWeb) && typeof(TWhen) != typeof(BrowseTheWeb))
+            var targeted = action as ITargeted;
+            if (typeof(TGiven) != typeof(BrowseTheWeb) && typeof(TWhen) != typeof(BrowseTheWeb) || targeted == null)
             {
                 return _actor.Execute(action);
             }
-            return _actor.Execute(new SlowSeleniumAction<TGiven,TWhen, TResult>(action, DelayMilliseconds));
+            return _actor.Execute(new SlowSeleniumAction<TGiven, TWhen, TResult>(action, DelayMilliseconds, targeted));
         }
-        
-        private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
+
+        private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>, ITargeted
         {
             private IAction<TGiven, TWhen, TResult> action;
             private int _delay;
+            private readonly ITargeted _targeted;
 
-            public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action, int delay)
+            public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action, int delay, ITargeted targeted)
             {
                 this.action = action;
                 _delay = delay;
+                _targeted = targeted;
             }
+
+            public ITarget Target => _targeted.Target;
 
             public TResult ExecuteGivenAs(IActor actor, TGiven ability)
             {

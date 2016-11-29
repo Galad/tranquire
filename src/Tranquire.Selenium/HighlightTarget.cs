@@ -1,17 +1,66 @@
 ﻿using OpenQA.Selenium;
 using System;
+using System.Drawing;
 
 namespace Tranquire.Selenium
 {
+    /// <summary>
+    /// Highlight a target when an action occurs on it. Actions implementing <see cref="ITargeted"/> are identified as actions using a target, which will be higlighted.
+    /// </summary>
     public class HighlightTarget : IActor
     {
         private IActor _actor;
 
-        public HighlightTarget(IActor actor)
+        private class HighlighActions
         {
-            this._actor = actor;
+            public string BeginHighlightJsAction { get; }
+            public string EndHighlighJsAction { get; }
+
+            public HighlighActions(
+                string beginHighlightJsAction,
+                string endHighlighJsAction)
+            {
+                BeginHighlightJsAction = beginHighlightJsAction;
+                EndHighlighJsAction = endHighlighJsAction;
+            }
         }
 
+        private HighlighActions _highlightActions;
+
+        /// <summary>
+        /// Create a new instance of 
+        /// </summary>
+        /// <param name="actor"></param>
+        public HighlightTarget(
+            IActor actor,
+            string beginHighlightJsAction,
+            string endHighlighJsAction)
+        {
+            this._actor = actor;
+            _highlightActions = new HighlighActions(beginHighlightJsAction, endHighlighJsAction);
+        }
+
+        public HighlightTarget(
+            IActor actor,
+            Color beginHighlighColor,
+            Color endHighlighColor) : this(
+                actor,
+                SetBorderJsAction(beginHighlighColor),
+                SetBorderJsAction(endHighlighColor))
+        {
+        }
+
+        public HighlightTarget(IActor actor) : this(actor, Color.Purple, Color.LightGreen)
+        {
+        }
+
+        private static string SetBorderJsAction(Color color)
+        {
+            var htmlColor = ColorTranslator.ToHtml(color);
+            return $"arguments[0].style.border = 'thick solid {htmlColor}';";
+        }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public string Name => _actor.Name;
 
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question) => _actor.AsksFor(question);
@@ -20,7 +69,7 @@ namespace Tranquire.Selenium
         {
             if (typeof(TAbility) == typeof(BrowseTheWeb) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
             {
-                return _actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, BrowseTheWeb>)question));
+                return _actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, BrowseTheWeb>)question, _highlightActions));
             }
             return _actor.AsksFor(question);
         }
@@ -28,19 +77,22 @@ namespace Tranquire.Selenium
         private sealed class HighlightedQuestion<TAnswer> : IQuestion<TAnswer, BrowseTheWeb>
         {
             private IQuestion<TAnswer, BrowseTheWeb> question;
+            private HighlighActions _highlightActions;
+
             private ITargeted Targeted => (ITargeted)question;
 
-            public HighlightedQuestion(IQuestion<TAnswer, BrowseTheWeb> question)
+            public HighlightedQuestion(IQuestion<TAnswer, BrowseTheWeb> question, HighlighActions highlightActions)
             {
                 this.question = question;
+                _highlightActions = highlightActions;
             }
 
             public TAnswer AnsweredBy(IActor actor, BrowseTheWeb ability)
             {
-                return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability));
+                return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability), _highlightActions);
             }
         }
-        
+
         public TResult Execute<TResult>(IAction<TResult> action)
         {
             return _actor.Execute(action);
@@ -50,7 +102,7 @@ namespace Tranquire.Selenium
         {
             if ((typeof(TGiven) == typeof(BrowseTheWeb) || typeof(TWhen) == typeof(BrowseTheWeb)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
             {
-                return _actor.Execute(new HighlightedAction<TGiven, TWhen, TResult>(action));
+                return _actor.Execute(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
             }
             return _actor.Execute(action);
         }
@@ -59,10 +111,12 @@ namespace Tranquire.Selenium
         {
             private IAction<TGiven, TWhen, TResult> _action;
             private ITargeted Targeted => (ITargeted)_action;
+            private HighlighActions _highlightActions;
 
-            public HighlightedAction(IAction<TGiven, TWhen, TResult> action)
+            public HighlightedAction(IAction<TGiven, TWhen, TResult> action, HighlighActions highlightActions)
             {
                 _action = action;
+                _highlightActions = highlightActions;
             }
 
             public TResult ExecuteGivenAs(IActor actor, TGiven ability)
@@ -70,7 +124,7 @@ namespace Tranquire.Selenium
                 if (IsBrowseTheWeb<TGiven>())
                 {
                     var a = ability as BrowseTheWeb;
-                    return Execute(a, Targeted, () => _action.ExecuteGivenAs(actor, ability));
+                    return Execute(a, Targeted, () => _action.ExecuteGivenAs(actor, ability), _highlightActions);
                 }
                 return _action.ExecuteGivenAs(actor, ability);
             }
@@ -85,31 +139,28 @@ namespace Tranquire.Selenium
                 if (IsBrowseTheWeb<TGiven>())
                 {
                     var a = ability as BrowseTheWeb;
-                    return Execute(a, Targeted, () => _action.ExecuteWhenAs(actor, ability));
+                    return Execute(a, Targeted, () => _action.ExecuteWhenAs(actor, ability), _highlightActions);
                 }
                 return _action.ExecuteWhenAs(actor, ability);
             }
         }
 
-        public static TResult Execute<TResult>(BrowseTheWeb browseTheWeb, ITargeted targeted, Func<TResult> execute)
+        private static TResult Execute<TResult>(BrowseTheWeb browseTheWeb, ITargeted targeted, Func<TResult> execute, HighlighActions actions)
+        {
+            Highlight(browseTheWeb, targeted, actions.BeginHighlightJsAction);
+            var result = execute();
+            Highlight(browseTheWeb, targeted, actions.EndHighlighJsAction);
+            return result;
+        }
+
+        private static void Highlight(BrowseTheWeb browseTheWeb, ITargeted targeted, string action)
         {
             var webElements = targeted.Target.ResoveAllFor(browseTheWeb);
             foreach (var el in webElements)
             {
-                ((IJavaScriptExecutor)browseTheWeb.Driver).ExecuteScript($"arguments[0].style.border = 'thick solid #FFF467';", el);
-            }
-            try
-            {
-                return execute();
-            }
-            finally
-            {
-                var webElements2 = targeted.Target.ResoveAllFor(browseTheWeb);
-                foreach (var el in webElements2)
-                {
-                    ((IJavaScriptExecutor)browseTheWeb.Driver).ExecuteScript($"arguments[0].style.border = 'thick solid #ACD372';", el);
-                }
+                ((IJavaScriptExecutor)browseTheWeb.Driver).ExecuteScript(action, el);
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
