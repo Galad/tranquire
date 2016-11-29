@@ -28,9 +28,11 @@ namespace Tranquire.Selenium
         private HighlighActions _highlightActions;
 
         /// <summary>
-        /// Create a new instance of 
+        /// Creates a new instance of <see cref="HighlightTarget"/>
         /// </summary>
-        /// <param name="actor"></param>
+        /// <param name="actor">The decorated actor</param>
+        /// <param name="beginHighlightJsAction">The js action executed before the action or question starts. The targeted element is passed in parameter on the js script.</param>
+        /// <param name="endHighlighJsAction">The js action executed after the action or question ends. The targeted element is passed in parameter on the js script.</param>
         public HighlightTarget(
             IActor actor,
             string beginHighlightJsAction,
@@ -40,6 +42,12 @@ namespace Tranquire.Selenium
             _highlightActions = new HighlighActions(beginHighlightJsAction, endHighlighJsAction);
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="HighlightTarget"/>
+        /// </summary>
+        /// <param name="actor">The decorated actor</param>
+        /// <param name="beginHighlighColor">The color applied to the targeted element before the action or question starts</param>
+        /// <param name="endHighlighColor">The color applied to the targeted element after the action or question ends</param>
         public HighlightTarget(
             IActor actor,
             Color beginHighlighColor,
@@ -50,6 +58,9 @@ namespace Tranquire.Selenium
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="HighlightTarget"/>
+        /// </summary>
         public HighlightTarget(IActor actor) : this(actor, Color.Purple, Color.LightGreen)
         {
         }

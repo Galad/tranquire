@@ -11,10 +11,10 @@
   <Import Project="..\packages\Microsoft.ApiDesignGuidelines.Analyzers.1.2.0-beta2\build\Microsoft.ApiDesignGuidelines.Analyzers.props" Condition="Exists('..\packages\Microsoft.ApiDesignGuidelines.Analyzers.1.2.0-beta2\build\Microsoft.ApiDesignGuidelines.Analyzers.props')" />
   <Import Project="..\packages\Desktop.Analyzers.1.2.0-beta2\build\Desktop.Analyzers.props" Condition="Exists('..\packages\Desktop.Analyzers.1.2.0-beta2\build\Desktop.Analyzers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-		<Features>ioperation</Features>
+  <PropertyGroup>		
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>    
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<Features>IOperation</Features>
     <ProjectGuid>{27F058B2-39B8-4074-A833-5072BC844F7D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>

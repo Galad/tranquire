@@ -3,18 +3,27 @@ using System.Threading;
 
 namespace Tranquire.Selenium
 {
+    /// <summary>
+    /// Slow actions and questions that requires Selenium. Can be used in combination of <see cref="HighlightTarget"/>
+    /// </summary>
     public class SlowSelenium : IActor
     {
         private IActor _actor;
         private TimeSpan _delay;
         private int DelayMilliseconds => (int)_delay.TotalMilliseconds;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="SlowSelenium"/>
+        /// </summary>
+        /// <param name="actor">The decorated actor</param>
+        /// <param name="delay">The wait time. A delay is observerd before and after the action is performed.</param>
         public SlowSelenium(IActor actor, TimeSpan delay)
         {
             this._actor = actor;
             _delay = delay;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public string Name => _actor.Name;
 
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
@@ -103,5 +112,6 @@ namespace Tranquire.Selenium
                 return value;
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

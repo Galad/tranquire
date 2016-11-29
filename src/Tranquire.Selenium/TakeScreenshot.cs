@@ -5,10 +5,16 @@ using System.IO;
 
 namespace Tranquire.Selenium
 {
+    /// <summary>
+    /// Take a screenshot of the web browser after the action or the question ends
+    /// </summary>
     public class TakeScreenshot : IActor
-    {
-        public IActor Actor { get; }
-        
+    {        
+        /// <summary>
+        /// Creates a new instance of <see cref="TakeScreenshot"/>
+        /// </summary>
+        /// <param name="actor">The decorated actor</param>
+        /// <param name="nextScreenshotName">A function returning the name of the next screenshot. Each name should be different.</param>
         public TakeScreenshot(IActor actor, Func<string> nextScreenshotName)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
@@ -17,6 +23,8 @@ namespace Tranquire.Selenium
             NextScreenshotName = nextScreenshotName;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public IActor Actor { get; }
         public string Name => Actor.Name;
         public Func<string> NextScreenshotName { get; }
 
@@ -103,4 +111,5 @@ namespace Tranquire.Selenium
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

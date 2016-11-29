@@ -16,10 +16,19 @@ namespace Tranquire.Selenium.Questions
     /// </summary>
     public class Presence : SingleUIState<bool, Presence>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="Presence"/>
+        /// </summary>
+        /// <param name="target"> </param>
         public Presence(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Presence"/>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="culture"></param>
         public Presence(ITarget target, CultureInfo culture) : base(target, culture)
         {
         }
