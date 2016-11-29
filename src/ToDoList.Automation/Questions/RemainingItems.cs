@@ -10,7 +10,7 @@ namespace ToDoList.Automation.Questions
     {
         public int AnsweredBy(IActor actor)
         {
-            return actor.AsksFor(Text.Of(ToDoPage.ToDoItemsLeftCounter).AsInteger());
+            return actor.AsksFor(TextContent.Of(ToDoPage.ToDoItemsLeftCounter).AsInteger());
         }
     }
 }

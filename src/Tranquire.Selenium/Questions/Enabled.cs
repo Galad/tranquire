@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Questions
         /// Creates a new instance of <see cref="Enabled"/>
         /// </summary>
         /// <param name="target"></param>
-        public Enabled(ITarget target) : base(target)
+        public Enabled(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 

@@ -7,22 +7,22 @@ namespace Tranquire.Selenium.Questions
     /// <summary>
     /// Allow to ask questions about the text of the given target
     /// </summary>
-    public class Text : SingleUIState<string, Text>
+    public class TextContent : SingleUIState<string, TextContent>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="Text"/>
+        /// Creates a new instance of <see cref="TextContent"/>
         /// </summary>
         /// <param name="target"></param>
-        public Text(ITarget target): base (target)
+        public TextContent(ITarget target): this (target, CultureInfo.CurrentCulture)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="Text"/> with a culture
+        /// Creates a new instance of <see cref="TextContent"/> with a culture
         /// </summary>
         /// <param name="target"></param>
         /// <param name="culture"></param>
-        public Text(ITarget target, CultureInfo culture) : base(target, culture)
+        public TextContent(ITarget target, CultureInfo culture) : base(target, culture)
         {
         }
 
@@ -31,20 +31,20 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static Text Of(ITarget target)
+        public static TextContent Of(ITarget target)
         {
-            return new Text(target);
+            return new TextContent(target);
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="Text"/>
+        /// Creates a new instance of <see cref="TextContent"/>
         /// </summary>
         /// <param name="target"></param>
         /// <param name="culture"></param>
         /// <returns></returns>
-        protected override Text CreateState(ITarget target, CultureInfo culture)
+        protected override TextContent CreateState(ITarget target, CultureInfo culture)
         {
-            return new Text(target, culture);
+            return new TextContent(target, culture);
         }
 
         /// <summary>

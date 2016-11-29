@@ -14,7 +14,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<Features>IOperation</Features>
+    <Features>IOperation</Features>
     <ProjectGuid>{ED646B23-0272-4516-9E30-7F07A34B3528}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -35,6 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Tranquire.Selenium.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Tranquire.Selenium.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -103,6 +105,7 @@
     <Compile Include="Questions\Converters\StringToEnumConverter.cs" />
     <Compile Include="Questions\CssValue.cs" />
     <Compile Include="Questions\Enabled.cs" />
+    <Compile Include="Questions\Builders\HtmlAttributeBuilder.cs" />
     <Compile Include="Questions\Page.cs" />
     <Compile Include="Questions\PageTitle.cs" />
     <Compile Include="Questions\PageUrl.cs" />
@@ -138,6 +141,7 @@
   <ItemGroup>
     <Compile Include="BrowseTheWeb.WebDriver.cs" />
     <None Include="packages.config" />
+    <None Include="Tranquire.Selenium.ruleset" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tranquire\Tranquire.csproj">

@@ -11,7 +11,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Creates click actions
     /// </summary>
-    public class Click
+    public static class Click
     {
         /// <summary>
         /// Returns a click action on the given target

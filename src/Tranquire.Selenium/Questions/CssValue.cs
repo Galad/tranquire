@@ -23,10 +23,8 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="propertyName">The CSS property to look for</param>
         /// <param name="target">The target on which the CSS property should be looked for</param>
-        public CssValue(string propertyName, ITarget target) : base(target)
+        public CssValue(string propertyName, ITarget target) : this(propertyName, target, CultureInfo.CurrentCulture)
         {
-            Guard.ForNullOrEmpty(propertyName, nameof(propertyName));
-            PropertyName = propertyName;
         }
 
         /// <summary>
@@ -38,6 +36,7 @@ namespace Tranquire.Selenium.Questions
         public CssValue(string propertyName, ITarget target, CultureInfo culture) : base(target, culture)
         {
             Guard.ForNullOrEmpty(propertyName, nameof(propertyName));
+            PropertyName = propertyName;
         }
 
         /// <summary>

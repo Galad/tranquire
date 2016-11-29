@@ -17,7 +17,9 @@ namespace Tranquire.Selenium
         public string PageSource => Driver.PageSource;
         public string Title => Driver.Title;
 
+#pragma warning disable CA1056 // Implementation of IWebDriver
         public string Url
+#pragma warning restore CA1056
         {
             get { return Driver.Url; }
             set { Driver.Url = value; }

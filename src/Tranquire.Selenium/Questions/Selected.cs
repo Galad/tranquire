@@ -26,7 +26,7 @@ namespace Tranquire.Selenium.Questions
         /// Creates a new instance of <see cref="Selected"/>
         /// </summary>
         /// <param name="target"></param>
-        public Selected(ITarget target) : base(target)
+        public Selected(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 

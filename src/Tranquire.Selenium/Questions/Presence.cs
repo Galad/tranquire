@@ -16,11 +16,11 @@ namespace Tranquire.Selenium.Questions
     /// </summary>
     public class Presence : SingleUIState<bool, Presence>
     {
-        private Presence(ITarget target) : base(target)
+        public Presence(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 
-        private Presence(ITarget target, CultureInfo culture) : base(target, culture)
+        public Presence(ITarget target, CultureInfo culture) : base(target, culture)
         {
         }
 

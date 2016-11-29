@@ -13,14 +13,6 @@ namespace Tranquire.Selenium.Questions
     public abstract class SingleUIState<T, TState> : UIState<T> where TState : SingleUIState<T, TState>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SingleUIState{T, TState}"/>
-        /// </summary>
-        /// <param name="target"></param>
-        public SingleUIState(ITarget target): this (target, CultureInfo.CurrentCulture)
-        {
-        }
-
-        /// <summary>
         /// Creates a new instance of <see cref="SingleUIState{T, TState}"/> with a culture
         /// </summary>
         /// <param name="target"></param>

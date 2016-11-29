@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using OpenQA.Selenium;
+using Tranquire.Selenium.Questions.Builders;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -23,10 +19,8 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="target"></param>
         /// <param name="attributeName"></param>
-        public HtmlAttribute(ITarget target, string attributeName) : base(target)
+        public HtmlAttribute(ITarget target, string attributeName) : this(target, attributeName, CultureInfo.CurrentCulture)
         {
-            Guard.ForNullOrEmpty(attributeName, nameof(attributeName));
-            AttributeName = attributeName;
         }
 
         /// <summary>
@@ -70,33 +64,6 @@ namespace Tranquire.Selenium.Questions
         protected override string ResolveFor(IWebElement element)
         {
             return element.GetAttribute(AttributeName);
-        }
-
-        /// <summary>
-        /// Build a <see cref="HtmlAttribute "/> object
-        /// </summary>
-        public class HtmlAttributeBuilder
-        {
-            private readonly ITarget _target;
-
-            /// <summary>
-            /// Creates a new instance of <see cref="HtmlAttributeBuilder"/>
-            /// </summary>
-            /// <param name="target"></param>
-            public HtmlAttributeBuilder(ITarget target)
-            {
-                _target = target;
-            }
-
-            /// <summary>
-            /// Returns a <see cref="HtmlAttribute"/> object with the given attribute name
-            /// </summary>
-            /// <param name="attributeName"></param>
-            /// <returns></returns>
-            public HtmlAttribute Named(string attributeName)
-            {
-                return new HtmlAttribute(_target, attributeName);
-            }
-        }
+        }        
     }
 }

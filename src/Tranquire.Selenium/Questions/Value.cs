@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Questions
         /// Creates a new instance of <see cref="Value"/>
         /// </summary>
         /// <param name="target"></param>
-        public Value(ITarget target) : base(target)
+        public Value(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 

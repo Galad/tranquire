@@ -3,7 +3,7 @@
     /// <summary>
     /// Allow to ask question about the page state
     /// </summary>
-    public class Page
+    public static class Page
     {
         /// <summary>
         /// Returns a question about the page title

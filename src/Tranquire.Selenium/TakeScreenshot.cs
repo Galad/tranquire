@@ -26,7 +26,7 @@ namespace Tranquire.Selenium
             Func<string> nextScreenshotName)
         {
             try
-            {
+            {                
                 return execute();
             }
             finally
@@ -38,7 +38,8 @@ namespace Tranquire.Selenium
                     {
                         Directory.CreateDirectory("Screenshots");
                     }
-                    ((ITakesScreenshot)browseTheWeb.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{nextScreenshotName()}.jpg", ImageFormat.Jpeg);
+                    var name = nextScreenshotName();
+                    ((ITakesScreenshot)browseTheWeb.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{name}.jpg", ImageFormat.Jpeg);
                 }
             }
         }

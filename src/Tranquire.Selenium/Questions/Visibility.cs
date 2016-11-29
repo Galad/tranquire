@@ -26,7 +26,7 @@ namespace Tranquire.Selenium.Questions
         /// Creates a new instance of <see cref="Visibility"/> with a culture
         /// </summary>
         /// <param name="target"></param>        
-        public Visibility(ITarget target) : base(target)
+        public Visibility(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 

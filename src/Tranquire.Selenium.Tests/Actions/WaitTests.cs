@@ -65,7 +65,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
             ChangeText(expected);
-            var question = Text.Of(target).Value;
+            var question = TextContent.Of(target).Value;
             //act
             Fixture.Actor.AttemptsTo(Wait.UntilQuestionIsAnswered(question, t => t == expected));
             //arrange
@@ -79,7 +79,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
             ChangeText(expected);
-            var question = Text.Of(target).Value;
+            var question = TextContent.Of(target).Value;
             //act
             Assert.Throws<TimeoutException>(() =>
             Fixture.Actor.AttemptsTo(Wait.UntilQuestionIsAnswered(question, t => t == expected)
