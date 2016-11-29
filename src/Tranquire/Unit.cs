@@ -11,7 +11,7 @@ namespace Tranquire
     /// </summary>
     public struct Unit : IEquatable<Unit>
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1591,CA1801
         public static Unit Default { get; } = default(Unit);
         public bool Equals(Unit other) => true;
         public override bool Equals(object obj) => obj is Unit;
@@ -19,6 +19,6 @@ namespace Tranquire
         public static bool operator !=(Unit left, Unit right) => false;
         public override int GetHashCode() => 0;
         public override string ToString() => "unit";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore CS1591,CA1801
     }
 }

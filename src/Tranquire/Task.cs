@@ -23,7 +23,7 @@ namespace Tranquire
         public Task(IEnumerable<IAction<Unit>> actions)
         {
             Guard.ForNull(actions, nameof(actions));
-            Actions = actions;
+            Actions = actions;            
         }
 
         /// <summary>
@@ -38,11 +38,11 @@ namespace Tranquire
         /// Creates a new instance of task using a builder
         /// </summary>
         /// <param name="taskBuilder">A function taking an empty task and returning a task containing the actions to execute</param>
-        public Task(Func<Task, Task> taskBuilder) : this(GetActions(taskBuilder))
+        public Task(Func<Task, Task> taskBuilder) : this(GetActionsFromTaskBuilder(taskBuilder))
         {
         }
 
-        private static IEnumerable<IAction<Unit>> GetActions(Func<Task, Task> taskBuilder)
+        private static IEnumerable<IAction<Unit>> GetActionsFromTaskBuilder(Func<Task, Task> taskBuilder)
         {
             Guard.ForNull(taskBuilder, nameof(taskBuilder));
             return taskBuilder(new Task()).Actions;
