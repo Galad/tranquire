@@ -17,12 +17,12 @@ namespace Tranquire.Tests
 {
     public class ActorTests
     {
-        public class AbilityTest : IAbility
+        public class AbilityTest
         {
             public AbilityTest AsActor(IActor actor) => this;
         }
 
-        public class AbilityTest2 : IAbility
+        public class AbilityTest2
         {
             public AbilityTest2 AsActor(IActor actor) => this;
         }
