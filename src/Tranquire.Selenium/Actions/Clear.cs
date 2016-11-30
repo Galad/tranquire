@@ -17,6 +17,11 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         public ITarget Target { get; }
         /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => "Click on " + Target.Name;
+
+        /// <summary>
         /// Creates a new instance of <see cref="Clear"/>
         /// </summary>
         /// <param name="target">The target to clear the value from</param>

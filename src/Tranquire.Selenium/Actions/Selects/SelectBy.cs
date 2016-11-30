@@ -16,6 +16,10 @@ namespace Tranquire.Selenium.Actions.Selects
         private readonly TValue _value;
         private readonly ITarget _target;
         private readonly ISelectStrategy<TValue> _selectStrategy;
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => $"Select value on {_target.Name}";
 
         /// <summary>
         /// Creates a new instance of <see cref="SelectByMany{TValue}"/>

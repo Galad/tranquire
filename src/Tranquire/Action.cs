@@ -47,6 +47,16 @@
         {
             return ExecuteWhen(actor, ability);
         }
+
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public abstract string Name { get; }
+        /// <summary>
+        /// Returns the action's <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => Name;
     }
 
     /// <summary>
@@ -89,5 +99,15 @@
         {
             return ExecuteWhen(actor);
         }
+
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public abstract string Name { get; }
+        /// <summary>
+        /// Returns the action's <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => Name;
     }
 }

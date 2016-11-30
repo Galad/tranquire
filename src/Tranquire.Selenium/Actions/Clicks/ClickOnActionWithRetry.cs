@@ -21,6 +21,10 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// Gets the duration during which the action will be retried
         /// </summary>
         public TimeSpan Timeout { get; }
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => $"[Retry during {Timeout}] " + InnerAction.Name;
 
         /// <summary>
         /// Creates a new instance of <see cref="ClickOnActionWithRetry{T}"/>

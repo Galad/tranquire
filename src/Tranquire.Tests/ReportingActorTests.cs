@@ -120,7 +120,7 @@ namespace Tranquire.Tests
             public object ExecuteGivenAs(IActor actor, Ability1 ability) => new object();
             public object ExecuteWhenAs(IActor actor) => new object();
             public object ExecuteWhenAs(IActor actor, Ability2 ability) => new object();
-
+            public string Name => "";
             public override string ToString() => ToStringValue;
         }
 

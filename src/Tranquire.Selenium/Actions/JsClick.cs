@@ -16,6 +16,10 @@ namespace Tranquire.Selenium.Actions
         /// Gets the target which will be clicked
         /// </summary>
         public ITarget Target { get; }
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => "Click on " + Target.Name + " in javascript";
 
         /// <summary>
         /// Creates a new instance of <see cref="JsClick"/>
@@ -36,7 +40,7 @@ namespace Tranquire.Selenium.Actions
         {
             return new JsClick(target);
         }
-        
+
         /// <summary>
         /// Click on the target
         /// </summary>
@@ -45,7 +49,7 @@ namespace Tranquire.Selenium.Actions
         protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             var element = Target.ResolveFor(ability);
-            ((IJavaScriptExecutor)ability.Driver).ExecuteScript("arguments[0].click();", element);            
+            ((IJavaScriptExecutor)ability.Driver).ExecuteScript("arguments[0].click();", element);
         }
     }
 }

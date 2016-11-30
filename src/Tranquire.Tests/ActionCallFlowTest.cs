@@ -18,6 +18,8 @@ namespace ToDoList.Specifications
             _notify = notify;
         }
 
+        public override string Name => "";
+
         protected override void ExecuteWhen(IActor actor)
         {
             _notify(ActionCallFlowTest.ExecuteWhen);
@@ -33,6 +35,8 @@ namespace ToDoList.Specifications
         {
             _notify = notify;
         }
+
+        public override string Name => "";
 
         protected override void ExecuteGiven(IActor actor)
         {
@@ -56,6 +60,8 @@ namespace ToDoList.Specifications
         {
             _notify = notify;
         }
+
+        public override string Name => "";
 
         protected override void ExecuteWhen(IActor actor)
         {

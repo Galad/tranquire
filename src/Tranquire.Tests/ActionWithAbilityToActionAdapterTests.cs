@@ -28,7 +28,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyConstructorInitialization(ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(typeof(ActionWithAbilityToActionAdapter<object, object, Unit>));
+            assertion.Verify(typeof(ActionWithAbilityToActionAdapter<object, object, Unit>).GetConstructors());
         }
 
         [Theory, DomainAutoData]

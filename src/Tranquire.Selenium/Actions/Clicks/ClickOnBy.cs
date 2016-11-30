@@ -9,6 +9,10 @@ namespace Tranquire.Selenium.Actions.Clicks
     public class ClickOnAction : TargetedAction
     {
         /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => $"Click on {Target.Name}";
+        /// <summary>
         /// Creates a new instance of <see cref="ClickOnAction"/>
         /// </summary>
         /// <param name="target">The target to click on</param>

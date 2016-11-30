@@ -18,7 +18,9 @@ namespace Tranquire.Tests
             public IActor Actor;
             private readonly IAction<Unit> _action;
             public TestAbility Ability;
-            public ActionExecuteWhen(IAction<Unit> action)
+            public override string Name { get; }
+
+            public ActionExecuteWhen(IAction<Unit> action, string name)
             {
                 if (action == null)
                 {
@@ -26,6 +28,7 @@ namespace Tranquire.Tests
                 }
 
                 _action = action;
+                Name = name;
             }
 
             protected override void ExecuteWhen(IActor actor, TestAbility ability)
@@ -45,6 +48,8 @@ namespace Tranquire.Tests
             public IActor Actor;
             private readonly IAction<Unit> _action;
             public TestAbility Ability;
+            public override string Name => "";
+
             public ActionExecuteGiven(IAction<Unit> action)
             {
                 if (action == null)
@@ -70,6 +75,8 @@ namespace Tranquire.Tests
         public class ActionExecuteWhenAndGivenNotOverridden : ActionUnit<TestAbility>
         {
             private readonly IAction<Unit> _action;
+            public override string Name => "";
+
             public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
             {
                 if (action == null)
@@ -89,14 +96,14 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_ShouldBeAction(Action<TestAbility, object> sut)
         {
-            Assert.IsAssignableFrom(typeof (IAction<TestAbility, TestAbility, object>), sut);
+            Assert.IsAssignableFrom(typeof(IAction<TestAbility, TestAbility, object>), sut);
         }
 
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof (ActionExecuteGiven).GetConstructors());
+            assertion.Verify(typeof(ActionExecuteGiven).GetConstructors());
         }
 
         [Theory, DomainAutoData]
@@ -169,6 +176,16 @@ namespace Tranquire.Tests
             sut.ExecuteGivenAs(actor.Object, expected);
             //assert
             Assert.Equal(expected, sut.Ability);
+        }
+
+        [Theory, DomainAutoData]
+        public void ToString_ShouldReturnCorrectValue(ActionExecuteWhen sut)
+        {
+            //arrange
+            //act
+            var actual = sut.ToString();
+            //assert
+            Assert.Equal(sut.Name, actual);
         }
     }
 }

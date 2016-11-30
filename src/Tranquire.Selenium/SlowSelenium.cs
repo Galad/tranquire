@@ -55,6 +55,8 @@ namespace Tranquire.Selenium
                 _targeted = targeted;
             }
 
+            public string Name => $"[Delayed of {_delay}ms] " + _question.Name;
+
             public ITarget Target => _targeted.Target;
 
             public TAnswer AnsweredBy(IActor actor, BrowseTheWeb ability)
@@ -64,6 +66,8 @@ namespace Tranquire.Selenium
                 Thread.Sleep(_delay);
                 return value;
             }
+
+            public override string ToString() => Name;
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
@@ -86,6 +90,7 @@ namespace Tranquire.Selenium
             private IAction<TGiven, TWhen, TResult> action;
             private int _delay;
             private readonly ITargeted _targeted;
+            public string Name => $"[Delayed of {_delay}ms] " + action.Name;
 
             public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action, int delay, ITargeted targeted)
             {
@@ -111,6 +116,8 @@ namespace Tranquire.Selenium
                 Thread.Sleep(_delay);
                 return value;
             }
+
+            public override string ToString() => Name;
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }

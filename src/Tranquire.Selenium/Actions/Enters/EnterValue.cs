@@ -13,6 +13,10 @@ namespace Tranquire.Selenium.Actions.Enters
         /// Gets the value to enter
         /// </summary>
         public string Value { get; }
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => $"Enter the value '{Value}' into '{Target.Name}'";
 
         /// <summary>
         /// Creates a new instance of <see cref="EnterValue"/>

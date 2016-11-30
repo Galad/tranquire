@@ -77,6 +77,11 @@ namespace Tranquire.Selenium
             {
                 return ExecuteTakeScreenshot(ability, () => _question.AnsweredBy(actor, ability), _nextScreenshotName);
             }
+
+            /// <summary>
+            /// Gets the action's name
+            /// </summary>
+            public string Name => "[Take screenshot] " + _question.Name;
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
@@ -109,6 +114,11 @@ namespace Tranquire.Selenium
             {
                 return ExecuteTakeScreenshot(ability, () => _action.ExecuteWhenAs(actor, ability), _nextScreenshotName);
             }
+
+            /// <summary>
+            /// Gets the action's name
+            /// </summary>
+            public string Name => "[Take screenshot] " + _action.Name;
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

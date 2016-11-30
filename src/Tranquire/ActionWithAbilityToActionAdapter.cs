@@ -18,6 +18,10 @@ namespace Tranquire
         /// Return the adapted action
         /// </summary>
         public IAction<TGiven, TWhen, TResult> Action { get; }
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public string Name => Action.Name;
 
         /// <summary>
         /// Creates a new instance of <see cref="ActionWithAbilityToActionAdapter{TGiven, TWhen, TResult}"/>

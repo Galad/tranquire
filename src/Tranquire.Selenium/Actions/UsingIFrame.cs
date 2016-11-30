@@ -13,6 +13,10 @@ namespace Tranquire.Selenium.Actions
     public class UsingIFrame : Action<BrowseTheWeb, IDisposable>
     {
         private ITarget _target;
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => $"Use iframe {_target.Name}";
 
         /// <summary>
         /// Creates a new instance of <see cref="UsingIFrame"/>
@@ -71,6 +75,11 @@ namespace Tranquire.Selenium.Actions
             {
                 ability.SwitchTo().ParentFrame();
             }
+
+            /// <summary>
+            /// Gets the action's name
+            /// </summary>
+            public override string Name => $"Switch to parent iframe";
         }
     }
 }

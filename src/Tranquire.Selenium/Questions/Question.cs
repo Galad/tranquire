@@ -17,6 +17,7 @@ namespace Tranquire.Selenium.Questions
         public ITarget Target { get; }
         public IConverter<TSource, TConverted> Converter { get; }
         public CultureInfo Culture { get; }
+        public abstract string Name { get; }
 
         public Question(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
         {

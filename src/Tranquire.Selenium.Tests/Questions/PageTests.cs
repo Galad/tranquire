@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Moq;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var expected = Guid.NewGuid().ToString();
-            var action = new Task()
+            var action = new Mock<Task>().Object
                 .And(Enter.TheValue(expected).Into(Target.The("page title").LocatedBy(By.Id("PageTitle"))))
                 .And(Click.On(Target.The("change title button").LocatedBy(By.Id("ChangeTitle"))));
             Fixture.Actor.WasAbleTo(action);

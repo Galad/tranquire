@@ -83,7 +83,10 @@ namespace Tranquire.Selenium.Questions
                 return Convert(value);
             }
 
-            public override string ToString() => $"What is the state of the element identified by {Target.ToString()} ?";
+            /// <summary>
+            /// Gets the question's name
+            /// </summary>
+            public override string Name => $"What is the state of the element identified by {Target.ToString()} ?";
         }
 
         /// <summary>

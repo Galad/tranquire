@@ -39,9 +39,9 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static EnterNewValue TheNewValue(string value)
+        public static EnterNewValueBuilder TheNewValue(string value)
         {
-            return new EnterNewValue(value);
+            return new EnterNewValueBuilder(value);
         }
     }
 }

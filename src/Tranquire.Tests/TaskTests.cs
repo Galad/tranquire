@@ -41,9 +41,9 @@ namespace Tranquire.Tests
         public void Sut_VerifyConstructorWithParams(IAction<Unit>[] expected)
         {
             //act            
-            var sut = new Task(expected);
+            var sut = new Mock<Task>(expected);
             //assert
-            sut.Actions.Should().Equal(expected);
+            sut.Object.Actions.Should().Equal(expected);
         }
 
         [Theory, DomainAutoData]
@@ -95,12 +95,13 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void And_WithAbility_ShouldWrapAction(           
-           [FavorEnumerables]Task sut,
+           IFixture fixture,
            Mock<IActor> actor,
            IAction<object, object, Unit> expected
            )
         {
             //arrange
+            var sut = new Mock<Task>(fixture.CreateMany<IAction<Unit>>()).Object;
             var existingActions = sut.Actions.ToArray();
             //act
             var actual = sut.And(expected);
@@ -116,12 +117,13 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void And_WithAbility_ShouldContainExistingAbility(
-          [FavorEnumerables]Task sut,
+          IFixture fixture,
           Mock<IActor> actor,
           IAction<object, object, Unit> action
           )
         {
             //arrange
+            var sut = new Mock<Task>(fixture.CreateMany<IAction<Unit>>()).Object;
             var existingActions = sut.Actions.ToArray();
             //act
             var actual = sut.And(action);
@@ -136,9 +138,27 @@ namespace Tranquire.Tests
         {
             //arrange
             //act
-            var sut = new Task(t => expected.Aggregate(t, (tresult, tt) => tresult.And(tt)));
+            var sut = new Mock<Task>(new Func<Task, Task>(t => expected.Aggregate(t, (tresult, tt) => tresult.And(tt))));
             //assert            
-            sut.Actions.Should().Equal(expected);
+            sut.Object.Actions.Should().Equal(expected);
+        }
+
+        public class ToStringTask : Task
+        {
+            public ToStringTask(string name)
+            {
+                Name = name;
+            }
+            public override string Name { get; }
+        }
+
+        [Theory, DomainAutoData]
+        public void ToString_ShouldReturnCorrectValue(ToStringTask sut, string expected)
+        {
+            //act
+            var actual = sut.ToString();
+            //assert
+            Assert.Equal(sut.Name, actual);
         }
     }
 }

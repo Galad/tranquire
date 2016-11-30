@@ -9,28 +9,45 @@ namespace Tranquire
     /// <summary>
     /// Represent a <see cref="IAction{TResult}"/> composed of several <see cref="IAction{TResult}"/>
     /// </summary>    
-    public class Task : IAction<Unit>
+    public abstract class Task : IAction<Unit>
     {
+        private class EmptyTask : Task
+        {
+            public override string Name => "Empty task";
+        }
+
+        private class CompositeTask : Task
+        {
+            public override string Name => "Multiple tasks";
+            public CompositeTask(IEnumerable<IAction<Unit>> actions) : base(actions)
+            {
+            }
+        }
+
         /// <summary>
         /// Gets the actions executed by this task
         /// </summary>
         public IEnumerable<IAction<Unit>> Actions { get; }
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public abstract string Name { get; }
 
         /// <summary>
         /// Creates a new instance of task
         /// </summary>
         /// <param name="actions">The actions executed by this task</param>
-        public Task(IEnumerable<IAction<Unit>> actions)
+        protected Task(IEnumerable<IAction<Unit>> actions)
         {
             Guard.ForNull(actions, nameof(actions));
-            Actions = actions;            
+            Actions = actions;
         }
 
         /// <summary>
         /// Creates a new instance of task
         /// </summary>
         /// <param name="actions">The actions executed by this task</param>
-        public Task(params IAction<Unit>[] actions) : this(actions as IEnumerable<IAction<Unit>>)
+        protected Task(params IAction<Unit>[] actions) : this(actions as IEnumerable<IAction<Unit>>)
         {
         }
 
@@ -38,14 +55,14 @@ namespace Tranquire
         /// Creates a new instance of task using a builder
         /// </summary>
         /// <param name="taskBuilder">A function taking an empty task and returning a task containing the actions to execute</param>
-        public Task(Func<Task, Task> taskBuilder) : this(GetActionsFromTaskBuilder(taskBuilder))
+        protected Task(Func<Task, Task> taskBuilder) : this(GetActionsFromTaskBuilder(taskBuilder))
         {
         }
 
         private static IEnumerable<IAction<Unit>> GetActionsFromTaskBuilder(Func<Task, Task> taskBuilder)
         {
             Guard.ForNull(taskBuilder, nameof(taskBuilder));
-            return taskBuilder(new Task()).Actions;
+            return taskBuilder(new EmptyTask()).Actions;
         }
 
         /// <summary>
@@ -56,7 +73,7 @@ namespace Tranquire
         {
             return ExecuteActions(actor);
         }
-       
+
         /// <summary>
         /// Execute all the actions
         /// </summary>
@@ -84,7 +101,7 @@ namespace Tranquire
         public Task And(IAction<Unit> action)
         {
             Guard.ForNull(action, nameof(action));
-            return new Task(Actions.Concat(new[] { action }));
+            return new CompositeTask(Actions.Concat(new[] { action }));
         }
 
         /// <summary>
@@ -95,7 +112,13 @@ namespace Tranquire
         public Task And<TGiven, TWhen>(IAction<TGiven, TWhen, Unit> action)
         {
             Guard.ForNull(action, nameof(action));
-            return new Task(Actions.Concat(new[] { new ActionWithAbilityToActionAdapter<TGiven, TWhen, Unit>(action) }));
+            return new CompositeTask(Actions.Concat(new[] { new ActionWithAbilityToActionAdapter<TGiven, TWhen, Unit>(action) }));
         }
+
+        /// <summary>
+        /// Returns the task's name
+        /// </summary>
+        /// <returns>Returns the task's name</returns>
+        public override string ToString() => Name;
     }
 }

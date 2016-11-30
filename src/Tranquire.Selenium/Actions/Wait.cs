@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,10 @@ namespace Tranquire.Selenium.Actions
     {
         private readonly TimeSpan _timeout;
         private readonly ITarget _target;
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public override string Name => $"Wait until the target {_target.Name} is present during {_timeout.ToString("c", CultureInfo.CurrentCulture)}";
 
         /// <summary>
         /// Creates a new instance of <see cref="Wait"/>

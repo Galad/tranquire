@@ -75,7 +75,10 @@ namespace Tranquire.Selenium.Questions
                                   .ToImmutableArray();
             }
 
-            public override string ToString() => $"What are the state of the elements identified by {Target.ToString()} ?";
+            /// <summary>
+            /// Gets the question's name
+            /// </summary>
+            public override string Name => $"What are the state of the elements identified by {Target.ToString()} ?";            
         }
 
         /// <summary>

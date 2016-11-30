@@ -27,9 +27,6 @@ namespace ToDoList.Automation.Actions
             ability.Navigate().GoToUrl(_url);
         }
 
-        public override string ToString()
-        {
-            return "Navigate to " + _url;
-        }
+        public override string Name=> "Navigate to " + _url;
     }
 }

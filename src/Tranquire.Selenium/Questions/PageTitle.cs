@@ -15,5 +15,10 @@
         {
             return ability.Driver.Title;
         }
+
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public string Name => "Page title";
     }
 }

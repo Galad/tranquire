@@ -89,8 +89,8 @@ namespace Tranquire.Selenium
         {
             private IQuestion<TAnswer, BrowseTheWeb> question;
             private HighlighActions _highlightActions;
-
             private ITargeted Targeted => (ITargeted)question;
+            public string Name => "[Highlighted] " + question.Name;
 
             public HighlightedQuestion(IQuestion<TAnswer, BrowseTheWeb> question, HighlighActions highlightActions)
             {
@@ -102,6 +102,8 @@ namespace Tranquire.Selenium
             {
                 return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability), _highlightActions);
             }
+
+            public override string ToString() => Name;
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
@@ -123,6 +125,7 @@ namespace Tranquire.Selenium
             private IAction<TGiven, TWhen, TResult> _action;
             private ITargeted Targeted => (ITargeted)_action;
             private HighlighActions _highlightActions;
+            public string Name => "[Highlighted] " + _action.Name;
 
             public HighlightedAction(IAction<TGiven, TWhen, TResult> action, HighlighActions highlightActions)
             {
@@ -154,6 +157,8 @@ namespace Tranquire.Selenium
                 }
                 return _action.ExecuteWhenAs(actor, ability);
             }
+
+            public override string ToString() => Name;
         }
 
         private static TResult Execute<TResult>(BrowseTheWeb browseTheWeb, ITargeted targeted, Func<TResult> execute, HighlighActions actions)

@@ -18,9 +18,12 @@ namespace Tranquire.Tests
             public IActor Actor;
             private readonly IAction<object> _action;
             public TestAbility Ability;
-            public ActionExecuteWhen(IAction<object> action)
+            public override string Name { get; }
+
+            public ActionExecuteWhen(IAction<object> action, string name)
             {
                 _action = action;
+                Name = name;
             }
 
             protected override object ExecuteWhen(IActor actor, TestAbility ability)
@@ -41,6 +44,8 @@ namespace Tranquire.Tests
             public IActor Actor;
             private readonly IAction<object> _action;
             public TestAbility Ability;
+            public override string Name => "";
+
             public ActionExecuteGiven(IAction<object> action)
             {
                 _action = action;
@@ -62,6 +67,8 @@ namespace Tranquire.Tests
         public class ActionExecuteWhenAndGivenNotOverridden : Action<TestAbility, object>
         {
             private readonly IAction<object> _action;
+            public override string Name => "";
+
             public ActionExecuteWhenAndGivenNotOverridden(IAction<object> action)
             {
                 _action = action;
@@ -177,6 +184,16 @@ namespace Tranquire.Tests
             sut.ExecuteGivenAs(actor.Object, expected);
             //assert
             Assert.Equal(expected, sut.Ability);
+        }
+
+        [Theory, DomainAutoData]
+        public void ToString_ShouldReturnCorrectValue(ActionExecuteWhen sut)
+        {
+            //arrange
+            //act
+            var actual = sut.ToString();
+            //assert
+            Assert.Equal(sut.Name, actual);
         }
     }
 }

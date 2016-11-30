@@ -12,5 +12,7 @@ namespace ToDoList.Automation.Questions
         {
             return actor.AsksFor(TextContent.Of(ToDoPage.ToDoItemsLeftCounter).AsInteger());
         }
+
+        public string Name => "Remaining items";
     }
 }

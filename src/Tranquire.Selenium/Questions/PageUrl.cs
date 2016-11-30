@@ -21,5 +21,10 @@ namespace Tranquire.Selenium.Questions
         {
             return ability.Driver.Url;
         }
+
+        /// <summary>
+        /// Gets the action's name
+        /// </summary>
+        public string Name => "Page URL";
     }
 }

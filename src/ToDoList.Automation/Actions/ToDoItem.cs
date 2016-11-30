@@ -33,12 +33,18 @@ namespace ToDoList.Automation.Actions
 
         public static IAction<Unit> AddToDoItems(ImmutableArray<string> items)
         {
-            return new Tranquire.Task(items.Select(i => new ToDoItem(i)).ToArray());
+            return new AddToDoItemsAction(items.Select(i => new ToDoItem(i)).ToArray());
         }
 
-        public override string ToString()
+        private class AddToDoItemsAction : Tranquire.Task
         {
-            return "Add item '" + Title + "'";
+            public AddToDoItemsAction(ToDoItem[] actions) : base(actions)
+            {
+            }
+
+            public override string Name => "Add to do items";
         }
+
+        public override string Name => "Add item '" + Title + "'";
     }
 }
