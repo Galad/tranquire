@@ -19,7 +19,9 @@ namespace Tranquire.Selenium.Actions.Enters
     /// <summary>
     /// Clears the target value and enter a new value 
     /// </summary>
+#pragma warning disable CA1710
     public class EnterNewValue : Task
+#pragma warning restore CA1710
     {
         /// <summary>
         /// Gets the target

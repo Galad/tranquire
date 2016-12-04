@@ -10,7 +10,9 @@ namespace Tranquire
     /// <summary>
     /// Represent a <see cref="IAction{TResult}"/> composed of several <see cref="IAction{TResult}"/>
     /// </summary>    
+    #pragma warning disable CA1710
     public abstract class Task : IAction<Unit>, IEnumerable<IAction<Unit>>
+#pragma warning restore CA1710
     {
         private class EmptyTask : Task
         {
