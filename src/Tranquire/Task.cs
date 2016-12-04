@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Tranquire
     /// <summary>
     /// Represent a <see cref="IAction{TResult}"/> composed of several <see cref="IAction{TResult}"/>
     /// </summary>    
-    public abstract class Task : IAction<Unit>
+    public abstract class Task : IAction<Unit>, IEnumerable<IAction<Unit>>
     {
         private class EmptyTask : Task
         {
@@ -120,5 +121,12 @@ namespace Tranquire
         /// </summary>
         /// <returns>Returns the task's name</returns>
         public override string ToString() => Name;
+
+        /// <summary>
+        /// Gets the enumerator for the <see cref="Actions"/>
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<IAction<Unit>> GetEnumerator() => Actions.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Actions.GetEnumerator();
     }
 }

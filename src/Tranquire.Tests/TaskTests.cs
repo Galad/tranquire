@@ -160,5 +160,22 @@ namespace Tranquire.Tests
             //assert
             Assert.Equal(sut.Name, actual);
         }
+
+        public class EnumeratorTask : Task
+        {
+            public EnumeratorTask(IAction<Unit>[] actions):base(actions)
+            {
+            }
+
+            public override string Name => "";
+        }
+
+        [Theory, DomainAutoData]
+        public void GetEnumerator_ShouldReturnCorrectValue(EnumeratorTask sut)
+        {
+            //act            
+            //assert
+            Assert.Equal(sut.Actions, sut);
+        }
     }
 }
