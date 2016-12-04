@@ -91,6 +91,7 @@
     <Compile Include="Actions\UsingIFrame.cs" />
     <Compile Include="Actions\Wait.cs" />
     <Compile Include="Actions\Waiters\WaitUntilQuestionIsAnswered.cs" />
+    <Compile Include="ActorExtensions.cs" />
     <Compile Include="BrowseTheWeb.cs" />
     <Compile Include="Actions\Click.cs" />
     <Compile Include="Actions\Clicks\ClickOnBy.cs" />

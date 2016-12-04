@@ -25,7 +25,7 @@ namespace Tranquire
         /// Gets the function used to decorate an actor
         /// </summary>
         public Func<IActor, IActor> InnerActorBuilder { get; }
-
+        
         /// <summary>
         /// Create a new instance of <see cref="Actor"/>
         /// </summary>

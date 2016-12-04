@@ -34,20 +34,17 @@ namespace ToDoList.Specifications
             var driver = new ChromeDriver();
             var screenshotName = Context.ScenarioInfo.Title;
             int i = 0;
-            var actor = new Actor(
-                "John",
-                a => new SlowSelenium(
-                        new HighlightTarget(
-                            new TakeScreenshot(
-                                new ReportingActor(
-                                    new InMemoryObserver(_reportingStringBuilder),
-                                    a),
-                                () => NextScreenshotName(ref i, screenshotName)
-                                )
-                            ),
-                        TimeSpan.FromMilliseconds(1000)
-                        )
-                     ).Can(BrowseTheWeb.With(driver));
+#if DEBUG
+            var delay = TimeSpan.FromSeconds(1);
+#else
+            var delay = TimeSpan.Zero;
+#endif
+            var actor = new Actor("John")
+                            .WithReporting(new InMemoryObserver(_reportingStringBuilder))
+                            .TakeScreenshots(() => NextScreenshotName(ref i, screenshotName))                             
+                            .HighlightTargets()
+                            .SlowSelenium(delay)
+                            .Can(BrowseTheWeb.With(driver));
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));

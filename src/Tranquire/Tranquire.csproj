@@ -64,6 +64,7 @@
     <Compile Include="ActionUnit.cs" />
     <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
+    <Compile Include="ActorExtensions.cs" />
     <Compile Include="CommandAsAction.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IActionExecutor.cs" />

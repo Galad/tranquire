@@ -9,7 +9,10 @@ namespace Tranquire.Selenium
     /// </summary>
     public class HighlightTarget : IActor
     {
-        private IActor _actor;
+        /// <summary>
+        /// Gets the actor
+        /// </summary>
+        public IActor Actor { get; }
 
         private class HighlighActions
         {
@@ -38,7 +41,7 @@ namespace Tranquire.Selenium
             string beginHighlightJsAction,
             string endHighlighJsAction)
         {
-            this._actor = actor;
+            this.Actor = actor;
             _highlightActions = new HighlighActions(beginHighlightJsAction, endHighlighJsAction);
         }
 
@@ -72,17 +75,17 @@ namespace Tranquire.Selenium
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public string Name => _actor.Name;
+        public string Name => Actor.Name;
 
-        public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question) => _actor.AsksFor(question);
+        public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question) => Actor.AsksFor(question);
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             if (typeof(TAbility) == typeof(BrowseTheWeb) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
             {
-                return _actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, BrowseTheWeb>)question, _highlightActions));
+                return Actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, BrowseTheWeb>)question, _highlightActions));
             }
-            return _actor.AsksFor(question);
+            return Actor.AsksFor(question);
         }
 
         private sealed class HighlightedQuestion<TAnswer> : IQuestion<TAnswer, BrowseTheWeb>
@@ -108,16 +111,16 @@ namespace Tranquire.Selenium
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {
-            return _actor.Execute(action);
+            return Actor.Execute(action);
         }
 
         public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             if ((typeof(TGiven) == typeof(BrowseTheWeb) || typeof(TWhen) == typeof(BrowseTheWeb)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
             {
-                return _actor.Execute(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
+                return Actor.Execute(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
             }
-            return _actor.Execute(action);
+            return Actor.Execute(action);
         }
 
         private sealed class HighlightedAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
