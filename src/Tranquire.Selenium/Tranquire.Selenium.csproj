@@ -14,7 +14,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<Features>IOperation</Features>
+    <Features>IOperation</Features>
     <ProjectGuid>{ED646B23-0272-4516-9E30-7F07A34B3528}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -153,6 +153,8 @@
     <Analyzer Include="..\packages\Desktop.Analyzers.1.2.0-beta2\analyzers\dotnet\cs\Analyzer.Utilities.dll" />
     <Analyzer Include="..\packages\Desktop.Analyzers.1.2.0-beta2\analyzers\dotnet\cs\Desktop.Analyzers.dll" />
     <Analyzer Include="..\packages\Desktop.Analyzers.1.2.0-beta2\analyzers\dotnet\cs\Desktop.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.0.1\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.Common.dll" />
+    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.0.1\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.CSharp.dll" />
     <Analyzer Include="..\packages\Microsoft.ApiDesignGuidelines.Analyzers.1.2.0-beta2\analyzers\dotnet\cs\Microsoft.ApiDesignGuidelines.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.ApiDesignGuidelines.Analyzers.1.2.0-beta2\analyzers\dotnet\cs\Microsoft.ApiDesignGuidelines.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.Maintainability.Analyzers.1.2.0-beta2\analyzers\dotnet\cs\Microsoft.Maintainability.Analyzers.dll" />
