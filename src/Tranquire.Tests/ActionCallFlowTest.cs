@@ -82,7 +82,7 @@ namespace ToDoList.Specifications
             var actual = new List<string>();
             System.Action<string> notify = (s) => actual.Add(s);
             //act
-            actor.AttemptsTo(new Action1(notify));
+            actor.When(new Action1(notify));
             //assert
             var expected = new[]
             {
@@ -101,7 +101,7 @@ namespace ToDoList.Specifications
             var actual = new List<string>();
             System.Action<string> notify = (s) => actual.Add(s);
             //act
-            actor.WasAbleTo(new Action1(notify));
+            actor.Given(new Action1(notify));
             //assert
             var expected = new[]
             {

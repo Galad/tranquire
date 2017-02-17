@@ -18,15 +18,15 @@ namespace Tranquire.Selenium.Tests.Actions
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WhenAttemptingTo_ShouldWait(string expected)
+        public void Execute_When_ShouldWait(string expected)
         {
-            TestExecute(expected, a => Fixture.Actor.AttemptsTo(a));
+            TestExecute(expected, a => Fixture.Actor.When(a));
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WhenWasAbleTo_ShouldWait(string expected)
+        public void Execute_Given_ShouldWait(string expected)
         {
-            TestExecute(expected, a => Fixture.Actor.WasAbleTo(a));
+            TestExecute(expected, a => Fixture.Actor.Given(a));
         }
 
         private void TestExecute(string expected, System.Action<Tranquire.IAction<BrowseTheWeb, BrowseTheWeb, Unit>> execute)
@@ -49,7 +49,7 @@ namespace Tranquire.Selenium.Tests.Actions
             RemoveOverlay(expected, 1500);
             //act and assert           
             Assert.ThrowsAny<Exception>(() =>
-                Fixture.Actor.AttemptsTo(Click.On(target).AllowRetry().During(TimeSpan.FromMilliseconds(500)))
+                Fixture.Actor.When(Click.On(target).AllowRetry().During(TimeSpan.FromMilliseconds(500)))
              );
         }
 

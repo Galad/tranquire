@@ -24,7 +24,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var target = Target.The("new value").LocatedBy(By.Id("EnterNewValue"));
             var action = Enter.TheNewValue(expected).Into(target);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(Value.Of(target).Value);
             //assert
             Assert.Equal(expected, actual);

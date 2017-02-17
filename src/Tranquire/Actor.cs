@@ -31,10 +31,10 @@ namespace Tranquire
         /// </summary>
         /// <param name="name">The actor's name</param>
         /// <param name="abilities">A dictionary containing the abilities for the actor</param>
-        /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.AttemptsTo{TResult}(IWhenCommand{TResult})"/>, 
-        /// <see cref="IActionExecutor.AttemptsTo{T, TResult}(IWhenCommand{T, TResult})"/>, 
-        /// <see cref="IActionExecutor.WasAbleTo{TResult}(IGivenCommand{TResult})"/>, 
-        /// <see cref="IActionExecutor.WasAbleTo{T, TResult}(IGivenCommand{T, TResult})"/>.
+        /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.When{TResult}(IWhenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.When{T, TResult}(IWhenCommand{T, TResult})"/>, 
+        /// <see cref="IActionExecutor.Given{TResult}(IGivenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.Given{T, TResult}(IGivenCommand{T, TResult})"/>.
         /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
         /// </param>
         public Actor(
@@ -70,10 +70,10 @@ namespace Tranquire
         /// Create a new instance of <see cref="Actor"/> without abilities
         /// </summary>
         /// <param name="name">The actor's name</param>
-        /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.AttemptsTo{TResult}(IWhenCommand{TResult})"/>, 
-        /// <see cref="IActionExecutor.AttemptsTo{T, TResult}(IWhenCommand{T, TResult})"/>, 
-        /// <see cref="IActionExecutor.WasAbleTo{TResult}(IGivenCommand{TResult})"/>, 
-        /// <see cref="IActionExecutor.WasAbleTo{T, TResult}(IGivenCommand{T, TResult})"/>.
+        /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.When{TResult}(IWhenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.When{T, TResult}(IWhenCommand{T, TResult})"/>, 
+        /// <see cref="IActionExecutor.Given{TResult}(IGivenCommand{TResult})"/>, 
+        /// <see cref="IActionExecutor.Given{T, TResult}(IGivenCommand{T, TResult})"/>.
         /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
         /// </param>
         public Actor(string name, Func<IActor, IActor> innerActorBuilder)
@@ -103,7 +103,7 @@ namespace Tranquire
         /// <typeparam name="T">Type of the required ability</typeparam>
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name="command">The command to execute</param>
-        public TResult AttemptsTo<T, TResult>(IWhenCommand<T, TResult> command)
+        public TResult When<T, TResult>(IWhenCommand<T, TResult> command)
         {
             Guard.ForNull(command, nameof(command));
             return CreateWhenActor().Execute(command.AsAction());
@@ -116,7 +116,7 @@ namespace Tranquire
         /// <typeparam name="T">Type of the required ability</typeparam>
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name="command">The command to execute</param>
-        public TResult WasAbleTo<T, TResult>(IGivenCommand<T, TResult> command)
+        public TResult Given<T, TResult>(IGivenCommand<T, TResult> command)
         {
             Guard.ForNull(command, nameof(command));            
             return CreateGivenActor().Execute(command.AsAction());
@@ -127,7 +127,7 @@ namespace Tranquire
         /// </summary>
         /// <param name="command">The command to execute</param>
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-        public TResult AttemptsTo<TResult>(IWhenCommand<TResult> command)
+        public TResult When<TResult>(IWhenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
             return CreateWhenActor().Execute(command.AsAction());
@@ -138,7 +138,7 @@ namespace Tranquire
         /// </summary>
         /// <param name="command"></param>
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-        public TResult WasAbleTo<TResult>(IGivenCommand<TResult> command)
+        public TResult Given<TResult>(IGivenCommand<TResult> command)
         {
             Guard.ForNull(command, nameof(command));
             var actor = CreateGivenActor();

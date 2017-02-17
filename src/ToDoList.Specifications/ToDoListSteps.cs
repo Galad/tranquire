@@ -48,7 +48,7 @@ namespace ToDoList.Specifications
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
-            actor.WasAbleTo(Open.TheApplication());
+            actor.Given(Open.TheApplication());
         }
 
         private string NextScreenshotName(ref int i, string screenshotName)
@@ -72,25 +72,25 @@ namespace ToDoList.Specifications
         [Given(@"I add the item ""(.*)""")]
         public void GivenIAddTheItem(string item)
         {
-            Context.Actor().WasAbleTo(ToDoItem.AddAToDoItem(item));
+            Context.Actor().Given(ToDoItem.AddAToDoItem(item));
         }
 
         [When(@"I add the item ""(.*)""")]
         public void WhenIAddTheItem(string item)
         {
-            Context.Actor().AttemptsTo(ToDoItem.AddAToDoItem(item));
+            Context.Actor().When(ToDoItem.AddAToDoItem(item));
         }
 
         [Given(@"I have a list with the items ""(.*)""")]
         public void GivenIHaveAListWithTheItems(ImmutableArray<string> items)
         {
-            Context.Actor().WasAbleTo(ToDoItem.AddToDoItems(items));
+            Context.Actor().Given(ToDoItem.AddToDoItems(items));
         }
 
         [When(@"I remove the item ""(.*)""")]
         public void WhenIRemoveTheItem(string item)
         {
-            Context.Actor().AttemptsTo(ToDoItem.RemoveAToDoItem(item));
+            Context.Actor().When(ToDoItem.RemoveAToDoItem(item));
         }
     }
 }

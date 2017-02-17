@@ -22,8 +22,8 @@ namespace Sandbox
             //{                
             //    IActor actor = new Actor("John");
             //    actor.Can(BrowseTheWeb.With(webDriver))
-            //         .WasAbleTo(Open.TheApplication())
-            //         .AttemptsTo(ToDoItem.AddAToDoItem("buy some milk"));
+            //         .Given(Open.TheApplication())
+            //         .When(ToDoItem.AddAToDoItem("buy some milk"));
 
             //    actor.AsksFor(TheItems.Displayed()).Should().Contain("buy some milk");
             //}

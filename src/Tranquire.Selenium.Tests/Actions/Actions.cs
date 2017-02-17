@@ -43,9 +43,9 @@ namespace Tranquire.Selenium.Tests.Actions
             var clickTarget = Target.The("click target").LocatedBy(By.Id(buttonId));
             var expectedClickContent = Target.The("expected click content").LocatedBy(By.Id("ClickExpectedContent"));
             var expected = Guid.NewGuid().ToString();
-            Fixture.Actor.WasAbleTo(Enter.TheValue(expected).Into(inputTarget));
+            Fixture.Actor.Given(Enter.TheValue(expected).Into(inputTarget));
             //act            
-            Fixture.Actor.AttemptsTo(click(clickTarget));
+            Fixture.Actor.When(click(clickTarget));
             //assert
             var actual = Answer(TextContent.Of(expectedClickContent).Value);
             Assert.Equal(expected, actual);
@@ -61,7 +61,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.WebDriver.Navigate().Refresh();
             var action = Select.TheValue(expected).Into(SelectElementTarget);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
@@ -78,7 +78,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.WebDriver.Navigate().Refresh();
             var action = Select.TheValues(expected).Into(SelectManyElementTarget);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
@@ -94,7 +94,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.WebDriver.Navigate().Refresh();
             var action = Select.TheIndex(index).Into(SelectElementTarget);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
@@ -111,7 +111,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.WebDriver.Navigate().Refresh();
             var action = Select.TheIndexes(indexes).Into(SelectManyElementTarget);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
@@ -127,7 +127,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.WebDriver.Navigate().Refresh();
             var action = Select.TheText(text).Into(SelectElementTarget);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
@@ -144,7 +144,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.WebDriver.Navigate().Refresh();
             var action = Select.TheTexts(texts).Into(SelectManyElementTarget);
             //act
-            Fixture.Actor.AttemptsTo(action);
+            Fixture.Actor.When(action);
             var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
             //assert
             Assert.Equal(expected, actual);
@@ -159,9 +159,9 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             Fixture.WebDriver.Navigate().Refresh();
             var target = Target.The("input to clear").LocatedBy(By.Id("InputToClear"));
-            Fixture.Actor.AttemptsTo(Enter.TheValue(inputValue).Into(target));
+            Fixture.Actor.When(Enter.TheValue(inputValue).Into(target));
             //act
-            Fixture.Actor.AttemptsTo(Clear.TheValueOf(target));
+            Fixture.Actor.When(Clear.TheValueOf(target));
             //assert
             var actual = Answer(Value.Of(target).Value);
             Assert.Equal(string.Empty, actual);

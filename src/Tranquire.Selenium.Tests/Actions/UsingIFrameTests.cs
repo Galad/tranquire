@@ -22,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
             var expectedElement = Target.The("element in iframe").LocatedBy(By.Id("ElementInIFrame"));
             //act
-            using (Fixture.Actor.AttemptsTo(UsingIFrame.LocatedBy(iframe)))
+            using (Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)))
             {
                 var element = expectedElement.ResolveFor(Fixture.WebDriver);
                 //assert
@@ -37,7 +37,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
             var expectedElement = Target.The("element outside iframe").LocatedBy(By.Id("ElementOutsideIFrame"));
             //act
-            Fixture.Actor.AttemptsTo(UsingIFrame.LocatedBy(iframe)).Dispose();
+            Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)).Dispose();
             var element = expectedElement.ResolveFor(Fixture.WebDriver);
             //assert
             Assert.NotNull(element);

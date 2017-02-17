@@ -66,22 +66,22 @@ namespace Tranquire.Tests
         }
         #endregion
         
-        #region AttemptsTo
+        #region When
         [Theory, DomainAutoData]
-        public void AttemptsTo_ShouldCallExecuteWhen(
+        public void When_ShouldCallExecuteWhen(
           Actor sut,
           Mock<IAction<object>> action,
           object expected)
         {
             action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns(expected);
             //act
-            var actual = sut.AttemptsTo(action.Object);
+            var actual = sut.When(action.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void AttemptsToWithAbility_ShouldCallExecuteWhen(
+        public void WhenWithAbility_ShouldCallExecuteWhen(
          [Greedy]Actor sut,
          Mock<IAction<Ability1, Ability2, object>> action,
          object expected)
@@ -90,13 +90,13 @@ namespace Tranquire.Tests
             var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
             action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
             //act
-            var actual = sut.AttemptsTo(action.Object);
+            var actual = sut.When(action.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void WasAbleTo_ShouldCallExecuteGiven(
+        public void Given_ShouldCallExecuteGiven(
          Actor sut,
          Mock<IAction<object>> action,
          object expected)
@@ -104,13 +104,13 @@ namespace Tranquire.Tests
             //arrange
             action.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>())).Returns(expected);
             //act
-            var actual = sut.WasAbleTo(action.Object);
+            var actual = sut.Given(action.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void WasAbleToWithAbility_ShouldCallExecuteGiven(
+        public void GivenWithAbility_ShouldCallExecuteGiven(
           [Greedy]Actor sut,
           Mock<IAction<Ability1, Ability2, object>> action,
           object expected)
@@ -119,7 +119,7 @@ namespace Tranquire.Tests
             var expectedAbility = sut.Abilities.Values.OfType<Ability1>().First();
             action.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
             //act
-            var actual = sut.WasAbleTo(action.Object);
+            var actual = sut.Given(action.Object);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -140,7 +140,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void AsksFor_AfterCallingWasAbleTo_ShouldReturnCorrectValue(
+        public void AsksFor_AfterCallingGiven_ShouldReturnCorrectValue(
           [Greedy]Actor actor,
           Mock<IQuestion<object>> question,
           Mock<IGivenCommand<object>> givenCommand,
@@ -150,7 +150,7 @@ namespace Tranquire.Tests
             givenCommand.Setup(g => g.ExecuteGivenAs(It.IsAny<IActor>()))
                         .Returns((IActor a) => a.AsksFor(question.Object));            
             //act
-            var actual = actor.WasAbleTo(givenCommand.Object); 
+            var actual = actor.Given(givenCommand.Object); 
             //assert
             Assert.Equal(expected, actual);
         }
@@ -172,7 +172,7 @@ namespace Tranquire.Tests
         #endregion
 
         [Theory, DomainAutoData]
-        public void Name_WhenCallingWasAbleTo_ShouldReturnTheCorrectValue(
+        public void Name_WhenCallingGiven_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
             Mock<IGivenCommand<string>> command)
         {
@@ -180,13 +180,13 @@ namespace Tranquire.Tests
             var expected = sut.Name;
             command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>())).Returns((IActor a) => a.Name);
             //act
-            var actual = sut.WasAbleTo(command.Object);
+            var actual = sut.Given(command.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void Name_WhenCallingAttemptsTo_ShouldReturnTheCorrectValue(
+        public void Name_WhenCallingWhen_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
             Mock<IWhenCommand<string>> command)
         {
@@ -194,13 +194,13 @@ namespace Tranquire.Tests
             var expected = sut.Name;
             command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>())).Returns((IActor a) => a.Name);
             //act
-            var actual = sut.AttemptsTo(command.Object);
+            var actual = sut.When(command.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void Name_WhenCallingWasAbleToWithAbility_ShouldReturnTheCorrectValue(
+        public void Name_WhenCallingGivenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
             Mock<IGivenCommand<Ability1, string>> command)
         {
@@ -208,13 +208,13 @@ namespace Tranquire.Tests
             var expected = sut.Name;
             command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a, Ability1 _) => a.Name);
             //act
-            var actual = sut.WasAbleTo(command.Object);
+            var actual = sut.Given(command.Object);
             //assert
             Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void Name_WhenCallingAttemptsToWithAbility_ShouldReturnTheCorrectValue(
+        public void Name_WhenCallingWhenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
             Mock<IWhenCommand<Ability1, string>> command)
         {
@@ -222,7 +222,7 @@ namespace Tranquire.Tests
             var expected = sut.Name;
             command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a, Ability1 _) => a.Name);
             //act
-            var actual = sut.AttemptsTo(command.Object);
+            var actual = sut.When(command.Object);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -234,8 +234,8 @@ namespace Tranquire.Tests
                 return new System.Action<Actor, IFixture>[]
                 {
                     (sut, fixture) => sut.AsksFor(fixture.Create<IQuestion<string, AbilityTest>>()),
-                    (sut, fixture) => sut.AttemptsTo(fixture.Create<IWhenCommand<AbilityTest, object>>()),
-                    (sut, fixture) => sut.WasAbleTo(fixture.Create<IGivenCommand<AbilityTest, object>>()),
+                    (sut, fixture) => sut.When(fixture.Create<IWhenCommand<AbilityTest, object>>()),
+                    (sut, fixture) => sut.Given(fixture.Create<IGivenCommand<AbilityTest, object>>()),
                     //(sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest, object>>()),
                 }
                 .Select(a => new object[] { a });
