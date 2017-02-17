@@ -1,21 +1,18 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
+using FluentAssertions;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tranquire.Tests
 {
-    public class TaskTests
+    public class CompositeActionTests
     {
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Task sut)
+        public void Sut_ShouldBeAction(CompositeAction sut)
         {
             sut.Should().BeAssignableTo<IAction<Unit>>();
         }
@@ -23,16 +20,16 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
         {
-            assertion.Verify(typeof(Task));
+            assertion.Verify(typeof(CompositeAction));
         }
 
         [Theory, DomainAutoData]
         public void Sut_VerifyConstructorParameters(ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(typeof(Task).GetConstructors()
+            assertion.Verify(typeof(CompositeAction).GetConstructors()
                                          .Where(c => !c.GetParameters()
                                                        .Select(pi => pi.ParameterType)
-                                                       .SequenceEqual(new[] { typeof(Func<Task, Task>) })
+                                                       .SequenceEqual(new[] { typeof(Func<CompositeAction, CompositeAction>) })
                                                 )
                             );
         }
@@ -41,14 +38,14 @@ namespace Tranquire.Tests
         public void Sut_VerifyConstructorWithParams(IAction<Unit>[] expected)
         {
             //act            
-            var sut = new Mock<Task>(expected);
+            var sut = new Mock<CompositeAction>(expected);
             //assert
             sut.Object.Actions.Should().Equal(expected);
         }
 
         [Theory, DomainAutoData]
         public void ExecuteGivenAs_ShouldCallActorExecute(
-            Task sut,
+            CompositeAction sut,
             Mock<IActor> actor
             )
         {
@@ -64,7 +61,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void ExecuteWhenAs_ShouldCallActorExecute(
-            Task sut,
+            CompositeAction sut,
             Mock<IActor> actor
             )
         {
@@ -80,7 +77,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void And_ShouldAddAction(
-           Task sut,
+           CompositeAction sut,
            Mock<IActor> actor,
            IAction<Unit> expected
            )
@@ -101,7 +98,7 @@ namespace Tranquire.Tests
            )
         {
             //arrange
-            var sut = new Mock<Task>(fixture.CreateMany<IAction<Unit>>()).Object;
+            var sut = new Mock<CompositeAction>(fixture.CreateMany<IAction<Unit>>().ToImmutableArray()).Object;
             var existingActions = sut.Actions.ToArray();
             //act
             var actual = sut.And(expected);
@@ -123,7 +120,7 @@ namespace Tranquire.Tests
           )
         {
             //arrange
-            var sut = new Mock<Task>(fixture.CreateMany<IAction<Unit>>()).Object;
+            var sut = new Mock<CompositeAction>(fixture.CreateMany<IAction<Unit>>().ToImmutableArray()).Object;
             var existingActions = sut.Actions.ToArray();
             //act
             var actual = sut.And(action);
@@ -132,20 +129,20 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_WithTaskBuilder_ShouldHaveCorrectTasks(
+        public void Sut_WithCompositeActionBuilder_ShouldHaveCorrectCompositeActions(
            IAction<Unit>[] expected
            )
         {
             //arrange
             //act
-            var sut = new Mock<Task>(new Func<Task, Task>(t => expected.Aggregate(t, (tresult, tt) => tresult.And(tt))));
+            var sut = new Mock<CompositeAction>(new Func<CompositeAction, CompositeAction>(t => expected.Aggregate(t, (tresult, tt) => tresult.And(tt))));
             //assert            
             sut.Object.Actions.Should().Equal(expected);
         }
 
-        public class ToStringTask : Task
+        public class ToStringCompositeAction : CompositeAction
         {
-            public ToStringTask(string name)
+            public ToStringCompositeAction(string name)
             {
                 Name = name;
             }
@@ -153,7 +150,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ToString_ShouldReturnCorrectValue(ToStringTask sut, string expected)
+        public void ToString_ShouldReturnCorrectValue(ToStringCompositeAction sut, string expected)
         {
             //act
             var actual = sut.ToString();
@@ -161,9 +158,9 @@ namespace Tranquire.Tests
             Assert.Equal(sut.Name, actual);
         }
 
-        public class EnumeratorTask : Task
+        public class EnumeratorCompositeAction : CompositeAction
         {
-            public EnumeratorTask(IAction<Unit>[] actions):base(actions)
+            public EnumeratorCompositeAction(IAction<Unit>[] actions):base(actions)
             {
             }
 
@@ -171,7 +168,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void GetEnumerator_ShouldReturnCorrectValue(EnumeratorTask sut)
+        public void GetEnumerator_ShouldReturnCorrectValue(EnumeratorCompositeAction sut)
         {
             //act            
             //assert

@@ -63,7 +63,7 @@
     <Compile Include="ICanHaveAbility.cs" />
     <Compile Include="INamed.cs" />
     <Compile Include="ReportingActor.cs" />
-    <Compile Include="Task.cs" />
+    <Compile Include="CompositeAction.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IAction.cs" />
     <Compile Include="IActor.cs" />

@@ -38,7 +38,7 @@
         protected abstract void ExecuteWhen(IActor actor, T ability);
 
         /// <summary>
-        /// Executes the action when the method when the execution is in a Given context.
+        /// Executes the action when the method when the execution is in a Given context. Overrides this method without calling base.ExecuteGiven to execute a different action in the Given context.
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>

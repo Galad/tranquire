@@ -135,6 +135,9 @@
     <Compile Include="..\Tranquire.Tests\DomainAutoDataAttribute.cs">
       <Link>DomainAutoDataAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\Tranquire.Tests\ImmutableCollectionsCustomization.cs">
+      <Link>ImmutableCollectionsCustomization.cs</Link>
+    </Compile>
     <Compile Include="Actions\Actions.cs" />
     <Compile Include="Actions\EnterTests.cs" />
     <Compile Include="ActorDecoratorExtensionAssertion.cs" />

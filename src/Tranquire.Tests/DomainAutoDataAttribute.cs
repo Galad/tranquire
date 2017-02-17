@@ -23,6 +23,7 @@ namespace Tranquire.Tests
     {
         public DomainCustomization()
             :base(
+                 new ImmutableCollectionCustomization(),
                  new ActorCustomization(),
                  new AutoConfiguredMoqCustomization())
         {

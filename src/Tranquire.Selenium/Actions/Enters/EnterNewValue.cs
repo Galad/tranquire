@@ -5,7 +5,7 @@ namespace Tranquire.Selenium.Actions.Enters
     /// <summary>
     /// Clears the target value and enter a new value 
     /// </summary>
-    public class EnterNewValueBuilder : TargetableAction<Task>
+    public class EnterNewValueBuilder : TargetableAction<CompositeAction>
     {
         /// <summary>
         /// Creates a new instance of <see cref="EnterNewValueBuilder"/>
@@ -20,7 +20,7 @@ namespace Tranquire.Selenium.Actions.Enters
     /// Clears the target value and enter a new value 
     /// </summary>
 #pragma warning disable CA1710
-    public class EnterNewValue : Task
+    public class EnterNewValue : CompositeAction
 #pragma warning restore CA1710
     {
         /// <summary>

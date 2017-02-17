@@ -22,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var expected = Guid.NewGuid().ToString();
-            var action = new Mock<Task>().Object
+            var action = new Mock<CompositeAction>().Object
                 .And(Enter.TheValue(expected).Into(Target.The("page title").LocatedBy(By.Id("PageTitle"))))
                 .And(Click.On(Target.The("change title button").LocatedBy(By.Id("ChangeTitle"))));
             Fixture.Actor.WasAbleTo(action);

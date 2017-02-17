@@ -10,7 +10,7 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class ToDoItem : Tranquire.Task
+    public class ToDoItem : Tranquire.CompositeAction
     {
         public string Title { get; }
 
@@ -36,7 +36,7 @@ namespace ToDoList.Automation.Actions
             return new AddToDoItemsAction(items.Select(i => new ToDoItem(i)).ToArray());
         }
 
-        private class AddToDoItemsAction : Tranquire.Task
+        private class AddToDoItemsAction : Tranquire.CompositeAction
         {
             public AddToDoItemsAction(ToDoItem[] actions) : base(actions)
             {
