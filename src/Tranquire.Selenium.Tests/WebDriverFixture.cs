@@ -28,7 +28,7 @@ namespace Tranquire.Selenium.Tests
             _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
             WebDriver = new ChromeDriver();
-            Actor = (Actor)(new Actor("James").Can(BrowseTheWeb.With(WebDriver)));
+            Actor = (Actor)(new Actor("James").CanUse(BrowseTheWeb.With(WebDriver)));
         }
 
         public string RootUrl => "http://localhost:" + _port.ToString();

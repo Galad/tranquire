@@ -39,28 +39,28 @@ namespace Tranquire.Tests
             sut.Abilities.Should().BeEmpty();
         }
 
-        #region Can
+        #region CanUse
         [Theory, DomainAutoData]
-        public void Can_ShouldReturnCorrectValue(
+        public void CanUse_ShouldReturnCorrectValue(
         [Modest]Actor sut,
         AbilityTest ability)
         {
             var expected = new[] { ability };
             //act
-            var actual = sut.Can(ability);
+            var actual = sut.CanUse(ability);
             //assert
             actual.Should().BeOfType<Actor>().Which.Abilities.Values.Should().Equal(expected);
         }
 
         [Theory, DomainAutoData]
-        public void Can_WhenActorHasAbilities_ShouldReturnCorrectValue(
+        public void CanUse_WhenActorHasAbilities_ShouldReturnCorrectValue(
            Actor sut,
            AbilityTest ability)
         {
             //
             var expected = sut.Abilities.Values.Concat(new[] { ability }).ToArray();
             //act
-            var actual = sut.Can(ability);
+            var actual = sut.CanUse(ability);
             //assert
             actual.Should().BeOfType<Actor>().Which.Abilities.Values.Should().Equal(expected);
         }
