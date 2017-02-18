@@ -17,14 +17,13 @@ using System.Diagnostics;
 
 namespace ToDoList.Specifications
 {
-    public class ToDoListSteps
+    [Binding]
+    public class ToDoListSteps : StepsBase
     {
         private readonly StringBuilder _reportingStringBuilder;
-        public ScenarioContext Context { get; }
 
-        public ToDoListSteps(ScenarioContext context)
+        public ToDoListSteps(ScenarioContext context) : base(context)
         {
-            Context = context;
             _reportingStringBuilder = new StringBuilder();
         }
 
@@ -41,7 +40,7 @@ namespace ToDoList.Specifications
 #endif
             var actor = new Actor("John")
                             .WithReporting(new InMemoryObserver(_reportingStringBuilder))
-                            .TakeScreenshots(() => NextScreenshotName(ref i, screenshotName))                             
+                            .TakeScreenshots(() => NextScreenshotName(ref i, screenshotName))
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(BrowseTheWeb.With(driver));

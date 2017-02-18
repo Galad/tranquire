@@ -3,7 +3,6 @@
 	As a user
 	I want to add to-do items
 
-@mytag
 Scenario: Add an item
 	Given I have an empty to-do list
 	When I add the item "buy some milk"

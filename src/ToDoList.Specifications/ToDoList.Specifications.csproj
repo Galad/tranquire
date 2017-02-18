@@ -127,6 +127,7 @@
     </Compile>
     <Compile Include="RemainingCountSteps.cs" />
     <Compile Include="Setup.cs" />
+    <Compile Include="StepsBase.cs" />
     <Compile Include="ToDoListSteps.cs" />
     <Compile Include="XUnitObserver.cs" />
   </ItemGroup>

@@ -74,18 +74,16 @@ namespace ToDoList.Specifications
         [Xunit.FactAttribute(DisplayName="Add an item")]
         [Xunit.TraitAttribute("FeatureTitle", "AddToDoItems")]
         [Xunit.TraitAttribute("Description", "Add an item")]
-        [Xunit.TraitAttribute("Category", "mytag")]
         public virtual void AddAnItem()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add an item", new string[] {
-                        "mytag"});
-#line 7
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add an item", ((string[])(null)));
+#line 6
 this.ScenarioSetup(scenarioInfo);
-#line 8
+#line 7
  testRunner.Given("I have an empty to-do list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 9
+#line 8
  testRunner.When("I add the item \"buy some milk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 10
+#line 9
  testRunner.Then("the to-do items list should contain \"buy some milk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -97,13 +95,13 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void RemoveAnItem()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Remove an item", ((string[])(null)));
-#line 12
+#line 11
 this.ScenarioSetup(scenarioInfo);
-#line 13
+#line 12
  testRunner.Given("I have a list with the items \"buy some milk,feed the dog,prepare the lunch\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 14
+#line 13
  testRunner.When("I remove the item \"buy some milk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 15
+#line 14
  testRunner.Then("the to-do items list should not contain \"buy some milk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -115,13 +113,13 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AddSameItemTwice()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add same item twice", ((string[])(null)));
-#line 17
+#line 16
 this.ScenarioSetup(scenarioInfo);
-#line 18
+#line 17
  testRunner.Given("I have a list with the items \"buy some milk,feed the dog,prepare the lunch\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 19
+#line 18
  testRunner.When("I add the item \"buy some milk\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 20
+#line 19
  testRunner.Then("the to-do items list should contain \"buy some milk\" 2 times", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

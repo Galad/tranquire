@@ -6,8 +6,7 @@ using ToDoList.Automation.Questions;
 namespace ToDoList.Specifications
 {
     [Binding]
-    [Scope(Feature = "RemainingCount")]
-    public class RemainingCountSteps : ToDoListSteps
+    public class RemainingCountSteps : StepsBase
     {
         public RemainingCountSteps(ScenarioContext context) : base(context)
         {

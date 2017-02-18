@@ -14,7 +14,7 @@ namespace ToDoList.Specifications
 {
     [Binding]
     [Scope(Feature = "AddToDoItems")]
-    public class AddToDoItemsSteps : ToDoListSteps
+    public class AddToDoItemsSteps : StepsBase
     {
         public AddToDoItemsSteps(ScenarioContext context) : base(context)
         {
@@ -24,7 +24,7 @@ namespace ToDoList.Specifications
         public void ThenTheTo_DoItemsListShouldContain(string item)
         {
             Context.Actor().AsksFor(TheItems.Displayed()).Should().Contain(i => i.Name == item);
-        }        
+        }
 
         [Then(@"the to-do items list should not contain ""(.*)""")]
         public void ThenTheTo_DoItemsListShouldNotContain(string item)
@@ -39,7 +39,7 @@ namespace ToDoList.Specifications
                            .Where(i => i.Name == item)
                            .Should()
                            .HaveCount(times, "Expected to have {0} items in collection", times);
-        }       
+        }
     }
 
     public static class SpecContext

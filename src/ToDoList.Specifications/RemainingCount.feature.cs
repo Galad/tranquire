@@ -75,16 +75,14 @@ namespace ToDoList.Specifications
         [Xunit.FactAttribute(DisplayName="Remaining count when having items")]
         [Xunit.TraitAttribute("FeatureTitle", "RemainingCount")]
         [Xunit.TraitAttribute("Description", "Remaining count when having items")]
-        [Xunit.TraitAttribute("Category", "mytag")]
         public virtual void RemainingCountWhenHavingItems()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Remaining count when having items", new string[] {
-                        "mytag"});
-#line 7
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Remaining count when having items", ((string[])(null)));
+#line 6
 this.ScenarioSetup(scenarioInfo);
-#line 8
+#line 7
  testRunner.Given("I have a list with the items \"buy some milk,feed the dog,prepare the lunch\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 9
+#line 8
  testRunner.Then("I should have 3 items remaining", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -96,13 +94,13 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void RemainingCountWhenAddingAnItem()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Remaining count when adding an item", ((string[])(null)));
-#line 11
+#line 10
 this.ScenarioSetup(scenarioInfo);
-#line 12
+#line 11
  testRunner.Given("I have a list with the items \"buy some milk,feed the dog,prepare the lunch\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 13
+#line 12
  testRunner.When("I add the item \"wash the dishes\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 14
+#line 13
  testRunner.Then("I should have 4 items remaining", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
