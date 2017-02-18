@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
+    <Compile Include="Reporting\ActionNotification.cs" />
+    <Compile Include="Reporting\ActionNotificationContentType.cs" />
     <Compile Include="ActionUnit.cs" />
     <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
@@ -58,11 +60,17 @@
     <Compile Include="CommandAsAction.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IActionExecutor.cs" />
+    <Compile Include="Reporting\AfterActionNotificationContent.cs" />
+    <Compile Include="Reporting\BeforeActionNotificationContent.cs" />
+    <Compile Include="Reporting\ExecutionErrorNotificationContent.cs" />
+    <Compile Include="Reporting\IActionNotificationContent.cs" />
     <Compile Include="IActorFacade.cs" />
     <Compile Include="IAsksQuestions.cs" />
     <Compile Include="ICanHaveAbility.cs" />
     <Compile Include="INamed.cs" />
-    <Compile Include="ReportingActor.cs" />
+    <Compile Include="Reporting\IMeasureTime.cs" />
+    <Compile Include="Reporting\RenderedReportingObserver.cs" />
+    <Compile Include="Reporting\ReportingActor.cs" />
     <Compile Include="CompositeAction.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IAction.cs" />
@@ -88,6 +96,7 @@
     <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.Analyzers.dll" />
     <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

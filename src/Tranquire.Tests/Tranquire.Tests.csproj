@@ -108,11 +108,13 @@
     <Compile Include="ActorExtensionsTests.cs" />
     <Compile Include="ActorTests.cs" />
     <Compile Include="ImmutableCollectionsCustomization.cs" />
-    <Compile Include="ReportingActorTests.cs" />
+    <Compile Include="Reporting\ReportingActorTests.cs" />
     <Compile Include="CompositeActionTests.cs" />
     <Compile Include="DomainAutoDataAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ActionCallFlowTest.cs" />
+    <Compile Include="Reporting\DefaultMeasureDurationTests.cs" />
+    <Compile Include="TestObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
