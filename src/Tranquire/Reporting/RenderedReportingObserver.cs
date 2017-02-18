@@ -27,8 +27,10 @@ namespace Tranquire.Reporting
             IObserver<string> observer,
             Func<ActionNotification, string> renderer)
         {
-            Observer = observer ?? throw new ArgumentNullException(nameof(observer));
-            _renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+            Guard.ForNull(observer, nameof(observer));
+            Guard.ForNull(renderer, nameof(renderer));
+            Observer = observer;
+            _renderer = renderer;
         }
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member        
         public void OnCompleted()

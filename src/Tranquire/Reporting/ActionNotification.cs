@@ -27,10 +27,12 @@ namespace Tranquire.Reporting
         /// <param name="depth"></param>
         /// <param name="content"></param>
         public ActionNotification(INamed action, int depth, IActionNotificationContent content)
-        {            
-            Action = action ?? throw new ArgumentNullException(nameof(action));
+        {
+            Guard.ForNull(action, nameof(action));
+            Guard.ForNull(content, nameof(content));
+            Action = action;
             Depth = depth;
-            Content = content ?? throw new ArgumentNullException(nameof(content));
+            Content = content;
         }
     }
 }
