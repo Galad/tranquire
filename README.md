@@ -19,13 +19,13 @@ So let's create the actor named John
 Right now, John cannot do anything, so let's giving him the ability to browse the web with Firefox through Selenium.
 
     var driver = new FirefoxDriver();
->>    //do some config on the web driver
+    //do some config on the web driver
     driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
     //an Actor is immutable
     john = john.CanUse(BrowseTheWeb.With(driver));
     
 Now that John can browse the web, he can perform Actions. Actions are represented in Tranquire by the interfaces `IAction<TGiven, TWhen, TResult>` and `IAction<TResult>`, depending of wether the actor requires a particular ability.
->
+
 In Tranquire, Actions are executed in one of the 2 contexts : Given and When. The goal is to allow different implementations of a particular action in different context. For instance, an action can use the web browser in the When context and use an API in the Given context. This approach allows to faster actions in the Given context.
 
 So let's perform an action. First, John needs to open the application
