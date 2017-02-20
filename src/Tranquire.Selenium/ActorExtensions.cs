@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Tranquire.Selenium
@@ -40,11 +41,17 @@ namespace Tranquire.Selenium
         /// <param name="actor">The actor</param>
         /// <param name="screenshotName">A function that generate a new name of the screenshot</param>
         /// <returns>An new actor taking screenshots</returns>
-        public static Actor TakeScreenshots(this Actor actor, Func<string> screenshotName)
+        public static Actor TakeScreenshots(this Actor actor, string screenshotName)
         {
             Guard.ForNull(actor, nameof(actor));
-            Guard.ForNull(screenshotName, nameof(screenshotName));            
-            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), screenshotName));
+            Guard.ForNull(screenshotName, nameof(screenshotName));
+            var id = 0;
+            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), () => NextScreenshotName(ref id, screenshotName)));
+        }
+        
+        private static string NextScreenshotName(ref int i, string screenshotName)
+        {
+            return $"{screenshotName}_{Interlocked.Increment(ref i)}.jpg";
         }
     }
 }

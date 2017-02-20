@@ -24,13 +24,28 @@ namespace Tranquire.Selenium.Tests
         public void TakeScreenshots_ShouldDecorateActor(
             ActorDecoratorExtensionAssertion assertion,
             [Modest]Actor actor,
-            TakeScreenshot expected)
+            TakeScreenshot expected,
+            string name)
         {
             //arrange
             //act
-            var actual = ActorExtensions.TakeScreenshots(actor, expected.NextScreenshotName).InnerActorBuilder(expected.Actor);
+            var actual = ActorExtensions.TakeScreenshots(actor, name).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected);
+            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));            
+        }
+
+        [Theory, DomainAutoData]
+        public void TakeScreenshots_NextScreenshotName_ShouldReturnCorrectValue(
+            ActorDecoratorExtensionAssertion assertion,
+            [Modest]Actor actor,
+            TakeScreenshot expected,
+            string expectedName)
+        {
+            //arrange
+            //act
+            var actual = ActorExtensions.TakeScreenshots(actor, expectedName).InnerActorBuilder(expected.Actor);
+            //assert
+            actual.Should().BeOfType<TakeScreenshot>().Which.NextScreenshotName().Should().Contain(expectedName);
         }
 
         [Theory, DomainAutoData]

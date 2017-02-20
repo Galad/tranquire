@@ -40,7 +40,7 @@ namespace ToDoList.Specifications
 #endif
             var actor = new Actor("John")
                             .WithReporting(new InMemoryObserver(_reportingStringBuilder))
-                            .TakeScreenshots(() => NextScreenshotName(ref i, screenshotName))
+                            .TakeScreenshots(screenshotName)
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(BrowseTheWeb.With(driver));
@@ -48,11 +48,6 @@ namespace ToDoList.Specifications
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
             actor.Given(Open.TheApplication());
-        }
-
-        private string NextScreenshotName(ref int i, string screenshotName)
-        {
-            return $"{screenshotName}_{Interlocked.Increment(ref i)}.jpg";
         }
 
         [AfterScenario]
