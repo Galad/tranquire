@@ -31,8 +31,7 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new ChromeDriver();
-            var screenshotName = Context.ScenarioInfo.Title;
-            int i = 0;
+            var screenshotName = Context.ScenarioInfo.Title;            
 #if DEBUG
             var delay = TimeSpan.FromSeconds(1);
 #else
