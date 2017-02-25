@@ -19,10 +19,18 @@ namespace Tranquire.Tests
         }
     }
 
+    public class DomainInlineAutoDataAttribute : CompositeDataAttribute
+    {
+        public DomainInlineAutoDataAttribute(params object[] args)
+            : base(new InlineAutoDataAttribute(args), new AutoDataAttribute(new Fixture().Customize(new DomainCustomization())))
+        {
+        }
+    }
+
     public class DomainCustomization : CompositeCustomization
     {
         public DomainCustomization()
-            :base(
+            : base(
                  new ImmutableCollectionCustomization(),
                  new ActorCustomization(),
                  new AutoConfiguredMoqCustomization())
