@@ -8,14 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using FluentAssertions;
 
 namespace Tranquire.Tests
 {
-    public class ActionTests
+    public class ActionTests : ActionTestsBase<ActionTests.ActionExecuteGiven, ActionTests.ActionExecuteWhen, ActionTests.ActionExecuteWhenAndGivenNotOverridden>
     {
-        public class ActionExecuteWhen : Action<object>
+        public class ActionExecuteWhen : Action<object>, IWithActor
         {
-            public IActor Actor;
+            public IActor Actor { get; private set; }
             private readonly IAction<object> _action;
             public override string Name { get; }
 
@@ -37,14 +38,15 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteGiven : Action<object>
+        public class ActionExecuteGiven : Action<object>, IWithActor
         {
-            public IActor Actor;
+            public IActor Actor { get; private set; }
             private readonly IAction<object> _action;
             public override string Name => "";
 
             public ActionExecuteGiven(IAction<object> action)
             {
+                if (action == null) throw new ArgumentNullException(nameof(action));
                 _action = action;
             }
 
@@ -74,96 +76,6 @@ namespace Tranquire.Tests
             {
                 return actor.Execute(_action);
             }
-        }
-
-        [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Action<object> sut)
-        {
-            Assert.IsAssignableFrom(typeof(IAction<object>), sut);
-        }
-
-        [Theory, DomainAutoData]
-        public void Sut_VerifyGuardClauses(IFixture fixture)
-        {
-            var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldCallActorExecute(
-            [Frozen] IAction<object> action,
-            ActionExecuteWhen sut,
-            Mock<IActor> actor,
-            object expected)
-        {
-            //arrange
-            actor.Setup(a => a.Execute(action)).Returns(expected);
-            //act
-            var actual = sut.ExecuteWhenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorExecute(
-            [Frozen] IAction<object> action,
-            ActionExecuteGiven sut,
-            Mock<IActor> actor,
-            object expected)
-        {
-            //arrange
-            actor.Setup(a => a.Execute(action)).Returns(expected);
-            //act
-            var actual = sut.ExecuteGivenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute(
-            [Frozen] IAction<object> action,
-            ActionExecuteWhenAndGivenNotOverridden sut,
-            Mock<IActor> actor,
-            object expected)
-        {
-            //arrange
-            actor.Setup(a => a.Execute(action)).Returns(expected);
-            //act
-            var actual = sut.ExecuteGivenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldUseCorrectActor(ActionExecuteWhen sut, Mock<IActor> actor)
-        {
-            //arrange
-            var expected = actor.Object;
-            //act
-            sut.ExecuteWhenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, sut.Actor);
-        }
-
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldUseCorrectActor(ActionExecuteGiven sut, Mock<IActor> actor)
-        {
-            //arrange
-            var expected = actor.Object;
-            //act
-            sut.ExecuteGivenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, sut.Actor);
-        }
-
-        [Theory, DomainAutoData]
-        public void ToString_ShouldReturnCorrectValue(ActionExecuteWhen sut)
-        {
-            //arrange
-            //act
-            var actual = sut.ToString();
-            //assert
-            Assert.Equal(sut.Name, actual);
         }
     }
 }
