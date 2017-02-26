@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Reporting
 {
-
     /// <summary>
     /// Add reporting capabilities to an actor
     /// </summary>

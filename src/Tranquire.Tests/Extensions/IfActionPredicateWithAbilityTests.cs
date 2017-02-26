@@ -96,6 +96,5 @@ namespace Tranquire.Tests.Extensions
             //assert
             actual.Should().Be(expected);
         }
-
     }
 }

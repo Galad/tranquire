@@ -103,7 +103,6 @@ namespace Tranquire.Selenium.Questions
                     return ImmutableArray<IWebElement>.Empty;
                 }
             }
-
             
         }
 

@@ -37,5 +37,4 @@ namespace Tranquire.Reporting
             return Tuple.Create(sw.Elapsed, value);
         }
     }
-
 }

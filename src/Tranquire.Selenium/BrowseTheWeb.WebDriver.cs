@@ -12,7 +12,6 @@ namespace Tranquire.Selenium
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
     public partial class BrowseTheWeb : IWebDriver
     {
-
         public string CurrentWindowHandle => Driver.CurrentWindowHandle;
         public string PageSource => Driver.PageSource;
         public string Title => Driver.Title;

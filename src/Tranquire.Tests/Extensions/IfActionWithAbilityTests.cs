@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Tranquire.Tests.Extensions
 {
-
     public class IfActionWithAbilityTests : IfActionTestsBase<IfActionWithAbility<Ability, object>, IAction<object>, IAction<Ability, Ability, object>>
     {
         [Theory]

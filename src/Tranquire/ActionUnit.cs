@@ -1,6 +1,5 @@
 ﻿namespace Tranquire
 {
-
     /// <summary>
     /// Represent an action on the system returning no value
     /// </summary>

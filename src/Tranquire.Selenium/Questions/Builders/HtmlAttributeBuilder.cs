@@ -1,6 +1,5 @@
 ﻿namespace Tranquire.Selenium.Questions.Builders
 {
-
     /// <summary>
     /// Build a <see cref="HtmlAttribute "/> object
     /// </summary>
