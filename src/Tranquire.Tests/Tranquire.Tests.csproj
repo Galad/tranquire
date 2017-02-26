@@ -98,6 +98,7 @@
       <Link>ActorDecoratorExtensionAssertion.cs</Link>
     </Compile>
     <Compile Include="ActionExtensionsTests.cs" />
+    <Compile Include="ActionsTests.cs" />
     <Compile Include="ActionTests.cs" />
     <Compile Include="ActionTestsBase.cs" />
     <Compile Include="ActionUnitTests.cs" />
