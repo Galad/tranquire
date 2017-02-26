@@ -31,6 +31,7 @@ namespace Tranquire.Tests.Extensions
             actual.ShouldBeEquivalentTo(expected);
         }
 
+        #region If
         [Fact]
         public void If_ShouldReturnCorrectValue() => TestIf((IAction<object> a, Func<bool> p, object v) => ActionExtensions.If(a, p, v));
 
@@ -59,6 +60,17 @@ namespace Tranquire.Tests.Extensions
         public void If_ActionAndPredicateAbility_Unit_ShouldReturnCorrectValue()
         {
             TestIf((IAction<AbilityAction, AbilityAction, Unit> a, Func<Ability, bool> p, Unit v) => ActionExtensions.If(a, p));
+        } 
+        #endregion
+
+        [Theory, DomainAutoData]
+        public void AsActionUnit_ShouldReturnCorrectValue(IAction<Ability, Ability2, object> sut)
+        {
+            //act
+            var actual = ActionExtensions.AsActionWithoutAbility(sut);
+            //assert
+            var expected = new ActionWithAbilityToActionAdapter<Ability, Ability2, object>(sut);
+            actual.ShouldBeEquivalentTo(expected);
         }
     }
 }

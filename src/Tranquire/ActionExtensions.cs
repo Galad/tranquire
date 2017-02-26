@@ -12,6 +12,7 @@ namespace Tranquire
     /// </summary>
     public static class ActionExtensions
     {
+        #region If
         /// <summary>
         /// Execute the current action only if the given predicate is true
         /// </summary>
@@ -119,6 +120,20 @@ namespace Tranquire
             Func<TPredicateAbility, bool> predicate)
         {
             return action.If(predicate, Unit.Default);
+        }
+        #endregion
+
+        /// <summary>
+        /// Transform an action with requiring an ability to an action that does not requires an ability
+        /// </summary>
+        /// <typeparam name="TGivenAbility">Given ability</typeparam>
+        /// <typeparam name="TWhenAbility">When abiltiy</typeparam>
+        /// <typeparam name="TResult">The action's result</typeparam>
+        /// <param name="action">The action to transform</param>
+        /// <returns>A <see cref="IAction{TResult}"/> instance that hides the <paramref name="action"/></returns>
+        public static IAction<TResult> AsActionWithoutAbility<TGivenAbility, TWhenAbility, TResult>(this IAction<TGivenAbility, TWhenAbility, TResult> action)
+        {
+            return new ActionWithAbilityToActionAdapter<TGivenAbility, TWhenAbility, TResult>(action);
         }
     }
 }
