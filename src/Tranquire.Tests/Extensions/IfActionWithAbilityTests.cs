@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Tranquire.Tests.Extensions
 {
-    public class IfActionWithAbilityTests : IfActionTestsBase<IfActionWithAbility<Ability, object>, IAction<object>, IAction<Ability, Ability, object>>
+    public class IfActionWithAbilityTests : IfActionTestsBase<IfActionWithAbility<Ability1, Ability2, object>, IAction<object>, IAction<Ability1, Ability2, object>>
     {
         [Theory]
         [DomainAutoData]
@@ -21,7 +21,7 @@ namespace Tranquire.Tests.Extensions
             //arrange
             Func<bool> func = () => true;
             fixture.Inject(func);
-            var sut = fixture.Create<IfActionWithAbility<Ability, object>>();
+            var sut = fixture.Create<IfActionWithAbility<Ability1, Ability2, object>>();
             actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
             //act
             var actual = sut.ExecuteWhenAs(actor.Object);
@@ -39,7 +39,7 @@ namespace Tranquire.Tests.Extensions
             Func<bool> func = () => false;
             fixture.Inject(func);
             var expected = fixture.Freeze<object>();
-            var sut = fixture.Create<IfActionWithAbility<Ability, object>>();
+            var sut = fixture.Create<IfActionWithAbility<Ability1, Ability2, object>>();
             //act
             var actual = sut.ExecuteWhenAs(actor.Object);
             //assert
@@ -56,7 +56,7 @@ namespace Tranquire.Tests.Extensions
             //arrange
             Func<bool> func = () => true;
             fixture.Inject(func);
-            var sut = fixture.Create<IfActionWithAbility<Ability, object>>();
+            var sut = fixture.Create<IfActionWithAbility<Ability1, Ability2, object>>();
             actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
             //act
             var actual = sut.ExecuteGivenAs(actor.Object);
@@ -74,7 +74,7 @@ namespace Tranquire.Tests.Extensions
             Func<bool> func = () => false;
             fixture.Inject(func);
             var expected = fixture.Freeze<object>();
-            var sut = fixture.Create<IfActionWithAbility<Ability, object>>();
+            var sut = fixture.Create<IfActionWithAbility<Ability1, Ability2, object>>();
             //act
             var actual = sut.ExecuteGivenAs(actor.Object);
             //assert

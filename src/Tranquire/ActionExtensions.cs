@@ -67,24 +67,26 @@ namespace Tranquire
         /// Execute the current action only if the given predicate is true
         /// </summary>
         /// <typeparam name="T">The type returned by the action</typeparam>
-        /// <typeparam name="TActionAbility">The action's ability type</typeparam>
+        /// <typeparam name="TGivenAbility">The action's Given ability type</typeparam>
+        /// <typeparam name="TWhenAbility">The action's When ability type</typeparam>
         /// <param name="predicate">The predicate</param>
         /// <param name="action">The action to execute if the predicate is true</param>
         /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
-        /// <returns>Returns a instance of <see cref="IfActionWithAbility{TAbility, T}"/></returns>        
-        public static IfActionWithAbility<TActionAbility, T> If<T, TActionAbility>(this IAction<TActionAbility, TActionAbility, T> action, Func<bool> predicate, T defaultValue)
+        /// <returns>Returns a instance of <see cref="IfActionWithAbility{TGivenAbility, TWhenAbility, T}"/></returns>        
+        public static IfActionWithAbility<TGivenAbility, TWhenAbility, T> If<T, TGivenAbility, TWhenAbility>(this IAction<TGivenAbility, TWhenAbility, T> action, Func<bool> predicate, T defaultValue)
         {
-            return new IfActionWithAbility<TActionAbility, T>(predicate, action, defaultValue);
+            return new IfActionWithAbility<TGivenAbility, TWhenAbility, T>(predicate, action, defaultValue);
         }
 
         /// <summary>
         /// Execute the current action only if the given predicate is true
         /// </summary>        
-        /// <typeparam name="TActionAbility">The action's ability type</typeparam>
+        /// <typeparam name="TGivenAbility">The action's Given ability type</typeparam>
+        /// <typeparam name="TWhenAbility">The action's When ability type</typeparam>
         /// <param name="predicate">The predicate</param>
         /// <param name="action">The action to execute if the predicate is true</param>        
-        /// <returns>Returns a instance of <see cref="IfActionWithAbility{TAbility, T}"/></returns>
-        public static IfActionWithAbility<TActionAbility, Unit> If<TActionAbility>(this IAction<TActionAbility, TActionAbility, Unit> action, Func<bool> predicate)
+        /// <returns>Returns a instance of <see cref="IfActionWithAbility{TGivenAbility, TWhenAbility, T}"/></returns>
+        public static IfActionWithAbility<TGivenAbility, TWhenAbility, Unit> If<TGivenAbility, TWhenAbility>(this IAction<TGivenAbility, TWhenAbility, Unit> action, Func<bool> predicate)
         {
             return action.If(predicate, Unit.Default);
         }
@@ -93,30 +95,32 @@ namespace Tranquire
         /// Execute the current action only if the given predicate is true
         /// </summary>
         /// <typeparam name="T">The type returned by the action</typeparam>
-        /// <typeparam name="TActionAbility">The action's ability type</typeparam>
+        /// <typeparam name="TGivenAbility">The action's Given ability type</typeparam>
+        /// <typeparam name="TWhenAbility">The action's When ability type</typeparam>
         /// <typeparam name="TPredicateAbility">The predicates's ability type</typeparam>
         /// <param name="predicate">The predicate</param>
         /// <param name="action">The action to execute if the predicate is true</param>
         /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
         /// <returns>Returns a instance of <see cref="IfActionWithAbility{TPredicateAbility, TAbility, T}"/></returns>      
-        public static IfActionWithAbility<TPredicateAbility, TActionAbility, T> If<T, TActionAbility, TPredicateAbility>(
-            this IAction<TActionAbility, TActionAbility, T> action,
+        public static IfActionWithAbility<TPredicateAbility, TGivenAbility, TWhenAbility, T> If<T, TGivenAbility, TWhenAbility, TPredicateAbility>(
+            this IAction<TGivenAbility, TWhenAbility, T> action,
             Func<TPredicateAbility, bool> predicate,
             T defaultValue)
         {
-            return new IfActionWithAbility<TPredicateAbility, TActionAbility, T>(predicate, action, defaultValue);
+            return new IfActionWithAbility<TPredicateAbility, TGivenAbility, TWhenAbility, T>(predicate, action, defaultValue);
         }
 
         /// <summary>
         /// Execute the current action only if the given predicate is true
         /// </summary>        
-        /// <typeparam name="TActionAbility">The action's ability type</typeparam>
+        /// <typeparam name="TGivenAbility">The action's Given ability type</typeparam>
+        /// <typeparam name="TWhenAbility">The action's When ability type</typeparam>
         /// <typeparam name="TPredicateAbility">The predicates's ability type</typeparam>
         /// <param name="predicate">The predicate</param>
         /// <param name="action">The action to execute if the predicate is true</param>        
         /// <returns>Returns a instance of <see cref="IfActionWithAbility{TPredicateAbility, TAbility, T}"/></returns>
-        public static IfActionWithAbility<TPredicateAbility, TActionAbility, Unit> If<TActionAbility, TPredicateAbility>(
-            this IAction<TActionAbility, TActionAbility, Unit> action,
+        public static IfActionWithAbility<TPredicateAbility, TGivenAbility, TWhenAbility, Unit> If<TGivenAbility, TWhenAbility, TPredicateAbility>(
+            this IAction<TGivenAbility, TWhenAbility, Unit> action,
             Func<TPredicateAbility, bool> predicate)
         {
             return action.If(predicate, Unit.Default);

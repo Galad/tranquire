@@ -6,13 +6,14 @@ namespace Tranquire.Extensions
     /// Allows to execute an action only if the result of the predicate is true
     /// </summary>
     /// <typeparam name="T">The return type of the action</typeparam>
-    /// <typeparam name="TAbility">The action ability type</typeparam>
-    public sealed class IfActionWithAbility<TAbility, T> : Action<T>
+    /// <typeparam name="TGivenAbility">The action's Given ability type</typeparam>
+    /// <typeparam name="TWhenAbility">The action's When ability type</typeparam>
+    public sealed class IfActionWithAbility<TGivenAbility, TWhenAbility, T> : Action<T>
     {
         /// <summary>
         /// Gets the action to execute if the predicate is true
         /// </summary>
-        public IAction<TAbility, TAbility, T> Action { get; }
+        public IAction<TGivenAbility, TWhenAbility, T> Action { get; }
         /// <summary>
         /// Gets the predicate
         /// </summary>
@@ -23,12 +24,12 @@ namespace Tranquire.Extensions
         public T DefaultValue { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="IfActionWithAbility{TAbility, T}"/>
+        /// Creates a new instance of <see cref="IfActionWithAbility{TGivenAbility, TWhenAbility, T}"/>
         /// </summary>
         /// <param name="predicate">The predicate</param>
         /// <param name="action">The action to execute if the predicate is true</param>
         /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
-        public IfActionWithAbility(Func<bool> predicate, IAction<TAbility, TAbility, T> action, T defaultValue)
+        public IfActionWithAbility(Func<bool> predicate, IAction<TGivenAbility, TWhenAbility, T> action, T defaultValue)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (action == null) throw new ArgumentNullException(nameof(action));
@@ -49,8 +50,7 @@ namespace Tranquire.Extensions
         /// <param name="actor"></param>
         /// <returns></returns>
         protected override T ExecuteWhen(IActor actor)
-        {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
+        {            
             if (Predicate())
             {
                 return actor.Execute(Action);
@@ -63,14 +63,15 @@ namespace Tranquire.Extensions
     /// Allows to execute an action only if the result of the predicate is true
     /// </summary>    
     /// <typeparam name="T">The return type of the action</typeparam>
-    /// <typeparam name="TAbility">The action ability type</typeparam>
+    /// <typeparam name="TGivenAbility">The action's Given ability type</typeparam>
+    /// <typeparam name="TWhenAbility">The action's When ability type</typeparam>
     /// <typeparam name="TPredicateAbility">The predicate ability type</typeparam>
-    public sealed class IfActionWithAbility<TPredicateAbility, TAbility, T> : Action<TPredicateAbility, T>
+    public sealed class IfActionWithAbility<TPredicateAbility, TGivenAbility, TWhenAbility, T> : Tranquire.Action<TPredicateAbility, T>
     {
         /// <summary>
         /// Gets the action to execute if the predicate is true
         /// </summary>
-        public IAction<TAbility, TAbility, T> Action { get; }
+        public IAction<TGivenAbility, TWhenAbility, T> Action { get; }
         /// <summary>
         /// Gets the predicate
         /// </summary>
@@ -86,12 +87,12 @@ namespace Tranquire.Extensions
         public override string Name => "[If] " + Action.Name;
 
         /// <summary>
-        /// Creates a new instance of <see cref="IfActionWithAbility{TPredicateAbility, TAbility, T}"/>
+        /// Creates a new instance of <see cref="IfActionWithAbility{TPredicateAbility, TGivenAbility, TWhenAbility, T}"/>
         /// </summary>
         /// <param name="predicate">The predicate</param>
         /// <param name="action">The action to execute if the predicate is true</param>
         /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
-        public IfActionWithAbility(Func<TPredicateAbility, bool> predicate, IAction<TAbility, TAbility, T> action, T defaultValue)
+        public IfActionWithAbility(Func<TPredicateAbility, bool> predicate, IAction<TGivenAbility, TWhenAbility, T> action, T defaultValue)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (action == null) throw new ArgumentNullException(nameof(action));
@@ -108,9 +109,7 @@ namespace Tranquire.Extensions
         /// <param name="ability"></param>
         /// <returns></returns>
         protected override T ExecuteWhen(IActor actor, TPredicateAbility ability)
-        {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
-            if (ability == null) throw new ArgumentNullException(nameof(ability));
+        {            
             if (Predicate(ability))
             {
                 return actor.Execute(Action);

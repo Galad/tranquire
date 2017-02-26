@@ -45,10 +45,10 @@ namespace Tranquire.Tests.Extensions
         public void If_PredicateAbility_Unit_ShouldReturnCorrectValue() => TestIf((IAction<Unit> a, Func<Ability, bool> p, Unit v) => ActionExtensions.If(a, p));
 
         [Fact]
-        public void If_ActionAbility_ShouldReturnCorrectValue() => TestIf((IAction<Ability, Ability, object> a, Func<bool> p, object v) => ActionExtensions.If(a, p, v));
+        public void If_ActionAbility_ShouldReturnCorrectValue() => TestIf((IAction<Ability1, Ability2, object> a, Func<bool> p, object v) => ActionExtensions.If(a, p, v));
 
         [Fact]
-        public void If_ActionAbility_Unit_ShouldReturnCorrectValue() => TestIf((IAction<Ability, Ability, Unit> a, Func<bool> p, Unit v) => ActionExtensions.If(a, p));
+        public void If_ActionAbility_Unit_ShouldReturnCorrectValue() => TestIf((IAction<Ability1, Ability2, Unit> a, Func<bool> p, Unit v) => ActionExtensions.If(a, p));
 
         [Fact]
         public void If_ActionAndPredicateAbility_ShouldReturnCorrectValue()
@@ -60,12 +60,12 @@ namespace Tranquire.Tests.Extensions
         public void If_ActionAndPredicateAbility_Unit_ShouldReturnCorrectValue()
         {
             TestIf((IAction<AbilityAction, AbilityAction, Unit> a, Func<Ability, bool> p, Unit v) => ActionExtensions.If(a, p));
-        } 
+        }
         #endregion
 
         [Theory, DomainAutoData]
         public void AsActionUnit_ShouldReturnCorrectValue(IAction<Ability, Ability2, object> sut)
-        {
+        {            
             //act
             var actual = ActionExtensions.AsActionWithoutAbility(sut);
             //assert

@@ -52,8 +52,7 @@ namespace Tranquire.Extensions
         /// <param name="actor"></param>
         /// <returns></returns>
         protected override T ExecuteWhen(IActor actor)
-        {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
+        {            
             if (Predicate())
             {
                 return actor.Execute(Action);
@@ -110,9 +109,7 @@ namespace Tranquire.Extensions
         /// <param name="ability"></param>
         /// <returns></returns>
         protected override T ExecuteWhen(IActor actor, TAbility ability)
-        {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
-            if (ability == null) throw new ArgumentNullException(nameof(ability));
+        {            
             if (Predicate(ability))
             {
                 return actor.Execute(Action);
