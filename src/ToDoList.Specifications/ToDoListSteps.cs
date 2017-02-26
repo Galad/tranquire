@@ -45,7 +45,7 @@ namespace ToDoList.Specifications
                             .CanUse(BrowseTheWeb.With(driver));
             Context.Set(actor);
             Context.Set(driver);
-            driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             actor.Given(Open.TheApplication());
         }
 

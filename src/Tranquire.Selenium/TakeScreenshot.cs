@@ -47,7 +47,7 @@ namespace Tranquire.Selenium
                         Directory.CreateDirectory("Screenshots");
                     }
                     var name = nextScreenshotName();
-                    ((ITakesScreenshot)browseTheWeb.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{name}.jpg", ImageFormat.Jpeg);
+                    ((ITakesScreenshot)browseTheWeb.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{name}.jpg", ScreenshotImageFormat.Jpeg);
                 }
             }
         }
