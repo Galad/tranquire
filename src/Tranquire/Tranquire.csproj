@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
+    <Compile Include="ActionExtensions.cs" />
+    <Compile Include="Extensions\IfAction.cs" />
+    <Compile Include="Extensions\IfActionWithAbility.cs" />
     <Compile Include="Reporting\ActionNotification.cs" />
     <Compile Include="Reporting\ActionNotificationContentType.cs" />
     <Compile Include="ActionUnit.cs" />
