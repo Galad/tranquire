@@ -11,6 +11,19 @@ namespace Tranquire
     /// </summary>
     public static class Actions
     {
+        /// <summary>
+        /// An empty action that does nothing
+        /// </summary>
+        public static readonly IAction<Unit> Empty = new EmptyAction();
+
+        private class EmptyAction : IAction<Unit>
+        {
+            public string Name => "Empty action";
+            public Unit ExecuteGivenAs(IActor actor) => Unit.Default;
+            public Unit ExecuteWhenAs(IActor actor) => Unit.Default;
+            public override string ToString() => Name;
+        }
+
         private class ResultAction<T> : IAction<T>
         {
             private readonly T _result;
