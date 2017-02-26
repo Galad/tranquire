@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Galad/tranquire</projectUrl>    
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Implementation of the screenplay pattern in .NET.</description>    
-    <copyright>Copyright 2016</copyright>
+    <copyright>Copyright 2017 Lucas Loegel</copyright>
     <tags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</tags>	
 	<dependencies>
 	  <dependency id="System.Collections" version="4.0.10" />

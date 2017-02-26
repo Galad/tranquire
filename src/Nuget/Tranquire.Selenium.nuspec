@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Galad/tranquire</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Write maintainable UI tests with Selenium using the screenplay pattern.</description>
-    <copyright>Copyright 2016</copyright>
+    <copyright>Copyright 2017 Lucas Loegel</copyright>
     <tags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</tags>
 	<dependencies>
 	  <dependency id="Tranquire" version="$version$" />
