@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace Tranquire
     /// <summary>
     /// Represent a type with a single value. It is used to represent void methods.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public struct Unit : IEquatable<Unit>
     {
 #pragma warning disable CS1591,CA1801
