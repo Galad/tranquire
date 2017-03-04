@@ -51,11 +51,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
+    <Compile Include="ActionBuilder.cs" />
+    <Compile Include="ActionBuilders\ActionBuilder.cs" />
+    <Compile Include="ActionBuilders\ActionBuilderWithPreviousResult.cs" />
+    <Compile Include="ActionBuilders\ActionResult.cs" />
+    <Compile Include="ActionBuilders\CompositeActionForBuilder.cs" />
+    <Compile Include="ActionBuilders\IActionContainer.cs" />
+    <Compile Include="ActionBuilders\IActionFactoryContainer.cs" />
     <Compile Include="ActionExtensions.cs" />
     <Compile Include="Actions.cs" />
     <Compile Include="CommandExtensions.cs" />
     <Compile Include="Extensions\IfAction.cs" />
     <Compile Include="Extensions\IfActionWithAbility.cs" />
+    <Compile Include="ActionBuilders\IActionBuilder.cs" />
     <Compile Include="Reporting\ActionNotification.cs" />
     <Compile Include="Reporting\ActionNotificationContentType.cs" />
     <Compile Include="ActionUnit.cs" />

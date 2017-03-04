@@ -97,6 +97,7 @@
     <Compile Include="..\Tranquire.Selenium.Tests\ActorDecoratorExtensionAssertion.cs">
       <Link>ActorDecoratorExtensionAssertion.cs</Link>
     </Compile>
+    <Compile Include="ActionBuilderTests.cs" />
     <Compile Include="ActionExtensionsTests.cs" />
     <Compile Include="ActionsTests.cs" />
     <Compile Include="ActionTests.cs" />
@@ -114,7 +115,9 @@
     <Compile Include="Extensions\IfActionTests.cs" />
     <Compile Include="Extensions\IfActionTestsBase.cs" />
     <Compile Include="Extensions\IfActionWithAbilityTests.cs" />
+    <Compile Include="Extensions\IFunc.cs" />
     <Compile Include="ImmutableCollectionsCustomization.cs" />
+    <Compile Include="MockActorExtensions.cs" />
     <Compile Include="Reporting\ReportingActorTests.cs" />
     <Compile Include="CompositeActionTests.cs" />
     <Compile Include="DomainAutoDataAttribute.cs" />

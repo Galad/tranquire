@@ -10,11 +10,6 @@ namespace Tranquire.Tests.Extensions
 {
     public class IfActionPredicateAndActionWithAbilityTests : IfActionTestsBase<IfActionWithAbility<Ability, Ability1, Ability2, object>, IAction<Ability, Ability, object>, IAction<Ability1, Ability2, object>>
     {
-        public interface IFunc
-        {
-            T Func<T1, T>(T1 value);
-        }
-
         [Theory]
         [DomainAutoData]
         public void ExecuteWhen_WhenPredicateIsTrue_ShouldReturnCorrectValue(
