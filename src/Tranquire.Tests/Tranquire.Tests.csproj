@@ -100,15 +100,12 @@
     <Compile Include="ActionExtensionsTests.cs" />
     <Compile Include="ActionsTests.cs" />
     <Compile Include="ActionTests.cs" />
-    <Compile Include="ActionTestsBase.cs" />
     <Compile Include="ActionUnitTests.cs" />
     <Compile Include="ActionWithAbilityTest.cs" />
     <Compile Include="ActionUnitWithAbilityTests.cs" />
     <Compile Include="ActionWithAbilityToActionAdapterTests.cs" />
     <Compile Include="ActorExtensionsTests.cs" />
     <Compile Include="ActorTests.cs" />
-    <Compile Include="ChainedActionTests.cs" />
-    <Compile Include="ChainedActionUnitTests.cs" />
     <Compile Include="Extensions\Ability.cs" />
     <Compile Include="Extensions\AbilityAction.cs" />
     <Compile Include="Extensions\ActionExtensionsTests.cs" />
@@ -118,7 +115,6 @@
     <Compile Include="Extensions\IfActionTestsBase.cs" />
     <Compile Include="Extensions\IfActionWithAbilityTests.cs" />
     <Compile Include="ImmutableCollectionsCustomization.cs" />
-    <Compile Include="IWithActor.cs" />
     <Compile Include="Reporting\ReportingActorTests.cs" />
     <Compile Include="CompositeActionTests.cs" />
     <Compile Include="DomainAutoDataAttribute.cs" />

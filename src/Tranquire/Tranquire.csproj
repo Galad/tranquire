@@ -53,7 +53,6 @@
     <Compile Include="Action.cs" />
     <Compile Include="ActionExtensions.cs" />
     <Compile Include="Actions.cs" />
-    <Compile Include="ChainedAction.cs" />
     <Compile Include="CommandExtensions.cs" />
     <Compile Include="Extensions\IfAction.cs" />
     <Compile Include="Extensions\IfActionWithAbility.cs" />
