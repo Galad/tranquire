@@ -139,5 +139,46 @@ namespace Tranquire
         {
             return new ActionWithAbilityToActionAdapter<TGivenAbility, TWhenAbility, TResult>(action);
         }
+        
+        /// <summary>
+        /// Transform the given action to a action returning <see cref="Unit"/> that execute the action and discards its result
+        /// </summary>
+        /// <typeparam name="TResult">The action result type</typeparam>
+        /// <param name="action">The action to transform</param>
+        /// <returns>A new action</returns>
+        public static IAction<Unit> AsActionUnit<TResult>(this IAction<TResult> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            return new DiscardActionResult<TResult>(action);
+        }
+
+        private sealed class DiscardActionResult<TResult> : ActionUnit
+        {
+            private readonly IAction<TResult> _action;
+
+            public DiscardActionResult(IAction<TResult> action)
+            {
+                _action = action;
+            }
+
+            public override string Name => _action.Name;
+
+            protected override void ExecuteWhen(IActor actor) => _action.ExecuteWhenAs(actor);
+            protected override void ExecuteGiven(IActor actor) => _action.ExecuteGivenAs(actor);
+        }
+
+        /// <summary>
+        /// Transform the given action to a action returning <see cref="Unit"/> that execute the action and discards its result
+        /// </summary>
+        /// <typeparam name="TGivenAbility">The Given ability</typeparam>
+        /// <typeparam name="TWhenAbility">The When ability</typeparam>
+        /// <typeparam name="TResult">The action result type</typeparam>
+        /// <param name="action">The action to transform</param>
+        /// <returns>A new action</returns>
+        public static IAction<Unit> AsActionUnit<TGivenAbility, TWhenAbility, TResult>(this IAction<TGivenAbility, TWhenAbility, TResult> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            return action.AsActionWithoutAbility().AsActionUnit();
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
@@ -64,13 +65,80 @@ namespace Tranquire.Tests.Extensions
         #endregion
 
         [Theory, DomainAutoData]
-        public void AsActionUnit_ShouldReturnCorrectValue(IAction<Ability, Ability2, object> sut)
+        public void AsActionWithoutAbility_ShouldReturnCorrectValue(IAction<Ability, Ability2, object> sut)
         {            
             //act
             var actual = ActionExtensions.AsActionWithoutAbility(sut);
             //assert
             var expected = new ActionWithAbilityToActionAdapter<Ability, Ability2, object>(sut);
             actual.ShouldBeEquivalentTo(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void AsActionUnit_ExecuteWhen_ShouldCallExecuteWhenOnSourceAction(Mock<IAction<object>> action, IActor actor)
+        {
+            //act
+            var actual = ActionExtensions.AsActionUnit(action.Object);
+            actual.ExecuteWhenAs(actor);
+            //assert            
+            action.Verify(a => a.ExecuteWhenAs(actor));
+        }
+
+        [Theory, DomainAutoData]
+        public void AsActionUnit_ExecuteGiven_ShouldCallExecuteGivenOnSourceAction(Mock<IAction<object>> action, IActor actor)
+        {
+            //act
+            var actual = ActionExtensions.AsActionUnit(action.Object);
+            actual.ExecuteGivenAs(actor);
+            //assert            
+            action.Verify(a => a.ExecuteGivenAs(actor));
+        }
+        
+        [Theory, DomainAutoData]
+        public void AsActionUnit_ShouldReturnCorrectValue(Mock<IAction<object>> action)
+        {
+            //act
+            var actual = ActionExtensions.AsActionUnit(action.Object);            
+            //assert
+            actual.Should().BeAssignableTo<IAction<Unit>>();
+            actual.Name.Should().Be(action.Object.Name);
+        }
+
+        [Theory, DomainAutoData]
+        public void AsActionUnit_WithAbilities_ExecuteWhen_ShouldCallExecuteWhenOnSourceAction(
+            Mock<IAction<Ability1, Ability2, object>> action,
+            Mock<IActor> actor,
+            Ability2 ability)
+        {
+            //act
+            var actual = ActionExtensions.AsActionUnit(action.Object);
+            actual.ExecuteWhenAs(actor.Object);
+            //assert            
+            actor.Verify(a => a.Execute(action.Object));
+        }
+
+        [Theory, DomainAutoData]
+        public void AsActionUnit_WithAbilities_ExecuteGiven_ShouldCallExecuteGivenOnSourceAction(
+            Mock<IAction<Ability1, Ability2, object>> action, 
+            Mock<IActor> actor,
+            Ability1 ability)
+        {
+            //arrange            
+            //act
+            var actual = ActionExtensions.AsActionUnit(action.Object);
+            actual.ExecuteGivenAs(actor.Object);
+            //assert            
+            actor.Verify(a => a.Execute(action.Object));
+        }
+
+        [Theory, DomainAutoData]
+        public void AsActionUnit_WithAbilities_ShouldReturnCorrectValue(Mock<IAction<Ability1, Ability2, object>> action)
+        {
+            //act
+            var actual = ActionExtensions.AsActionUnit(action.Object);
+            //assert
+            actual.Should().BeAssignableTo<IAction<Unit>>();
+            actual.Name.Should().Be(action.Object.Name);
         }
     }
 }
