@@ -56,7 +56,7 @@ namespace Tranquire.ActionBuilders
                 return string.Join(", Then ", _executableAction.Select(a => a.Name)) + ", Then " + Action.Name;
             }
         }
-        
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TResult ExecuteGivenAs(IActor actor)
         {
@@ -70,14 +70,14 @@ namespace Tranquire.ActionBuilders
             return actor.Execute(Action);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
-        IActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult> IActionBuilder<TAction, TResult>.Then<TNextAction, TNextResult>(Func<ActionResult<TAction, TResult>, TNextAction> nextAction)            
+        
+        IActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult> IActionBuilderWithCurrentAction<TAction, TResult>.Then<TNextAction, TNextResult>(Func<ActionResult<TAction, TResult>, TNextAction> nextAction)
         {
             return new ActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult>(
-                _ => Action, 
+                _ => Action,
                 _executableAction,
-                nextAction, 
+                nextAction,
                 Name);
-        }        
+        }
     }
 }

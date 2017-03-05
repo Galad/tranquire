@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Action.cs" />
     <Compile Include="ActionBuilder.cs" />
+    <Compile Include="ActionBuilderExtensions.cs" />
     <Compile Include="ActionBuilders\ActionBuilder.cs" />
     <Compile Include="ActionBuilders\ActionBuilderWithPreviousResult.cs" />
     <Compile Include="ActionBuilders\ActionResult.cs" />

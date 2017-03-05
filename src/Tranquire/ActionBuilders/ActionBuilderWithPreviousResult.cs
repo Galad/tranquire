@@ -32,13 +32,14 @@ namespace Tranquire.ActionBuilders
         /// Gets the previous action name
         /// </summary>
         public string PreviousActionName { get; }
-
+                
         private readonly CompositeAction _executableAction;
 
         /// <summary>
         /// Creates a new instance of <see cref="ActionBuilderWithPreviousResult{TAction, TResult, TPreviousAction, TPReviousResult}"/>
         /// </summary>
         /// <param name="previousAction">A function that returns the previous action</param>
+        /// <param name="executableAction">The previous executable action</param>
         /// <param name="actionFactory">The action factory</param>
         /// <param name="previousActionName">The previous action name</param>
         public ActionBuilderWithPreviousResult(
@@ -84,11 +85,11 @@ namespace Tranquire.ActionBuilders
             return ActionFactory(actionResult);
         }
 
-        IActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult> IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult>.Then<TNextAction, TNextResult>(Func<ActionResult<TAction, TResult>, TNextAction> nextAction)
+        IActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult> IActionBuilderWithCurrentAction<TAction, TResult>.Then<TNextAction, TNextResult>(Func<ActionResult<TAction, TResult>, TNextAction> nextAction)
         {
             return new ActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult>(GetPreviousAction, _executableAction, nextAction, Name);
         }
-
+        
         IActionBuilder<TNextAction, TNextResult> IActionBuilder.Then<TNextAction, TNextResult>(TNextAction nextAction)
         {
             return new ActionBuilder<TNextAction, TNextResult>(

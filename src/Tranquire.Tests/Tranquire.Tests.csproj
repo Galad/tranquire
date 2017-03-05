@@ -97,6 +97,7 @@
     <Compile Include="..\Tranquire.Selenium.Tests\ActorDecoratorExtensionAssertion.cs">
       <Link>ActorDecoratorExtensionAssertion.cs</Link>
     </Compile>
+    <Compile Include="ActionBuilderExtensionsTests.cs" />
     <Compile Include="ActionBuilderTests.cs" />
     <Compile Include="ActionExtensionsTests.cs" />
     <Compile Include="ActionsTests.cs" />
