@@ -12,7 +12,7 @@ namespace Tranquire
     /// <typeparam name="TGiven">The ability required for the Given context</typeparam>
     /// <typeparam name="TWhen">The ability required for the When context</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-    public interface IAction<TGiven, TWhen, out TResult> : IGivenCommand<TGiven, TResult>, IWhenCommand<TWhen, TResult>, INamed
+    public interface IAction<TGiven, TWhen, out TResult> : IGivenCommand<TGiven, TResult>, IWhenCommand<TWhen, TResult>
     {
     }
 
@@ -20,7 +20,7 @@ namespace Tranquire
     /// Represent an executable action
     /// </summary>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-    public interface IAction<out TResult> : IGivenCommand<TResult>, IWhenCommand<TResult>, INamed
+    public interface IAction<out TResult> : IGivenCommand<TResult>, IWhenCommand<TResult>
     {
     }
 

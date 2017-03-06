@@ -60,14 +60,28 @@ namespace Tranquire.ActionBuilders
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TResult ExecuteGivenAs(IActor actor)
         {
-            _executableAction.ExecuteGivenAs(actor);
-            return actor.Execute(Action);
+            if (_executableAction.Actions.IsEmpty)
+            {
+                return Action.ExecuteGivenAs(actor);
+            }
+            else
+            {                
+                _executableAction.ExecuteGivenAs(actor);
+                return actor.Execute(Action);
+            }
         }
 
         public TResult ExecuteWhenAs(IActor actor)
         {
-            _executableAction.ExecuteWhenAs(actor);
-            return actor.Execute(Action);
+            if (_executableAction.Actions.IsEmpty)
+            {
+                return Action.ExecuteWhenAs(actor);
+            }
+            else
+            {
+                _executableAction.ExecuteWhenAs(actor);
+                return actor.Execute(Action);
+            }
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         

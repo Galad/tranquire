@@ -10,7 +10,7 @@ namespace Tranquire
     {
         public IWhenCommand<TResult> Command { get; }
 
-        public string Name => Command.ToString();
+        public string Name => Command.Name;
 
         public WhenCommandAsAction(IWhenCommand<TResult> command)
         {
@@ -32,7 +32,7 @@ namespace Tranquire
     internal class WhenCommandAsAction<TWhen, TResult> : IAction<Unit, TWhen, TResult>
     {
         public IWhenCommand<TWhen, TResult> Command { get; }
-        public string Name => Command.ToString();
+        public string Name => Command.Name;
 
         public WhenCommandAsAction(IWhenCommand<TWhen, TResult> command)
         {
@@ -54,7 +54,7 @@ namespace Tranquire
     internal class GivenCommandAsAction<TResult> : IAction<TResult>
     {
         public IGivenCommand<TResult> Command { get; }
-        public string Name => Command.ToString();
+        public string Name => Command.Name;
 
         public GivenCommandAsAction(IGivenCommand<TResult> command)
         {
@@ -76,7 +76,7 @@ namespace Tranquire
     internal class GivenCommandAsAction<TGiven, TResult> : IAction<TGiven, Unit, TResult>
     {
         public IGivenCommand<TGiven, TResult> Command { get; }
-        public string Name => Command.ToString();
+        public string Name => Command.Name;
 
         public GivenCommandAsAction(IGivenCommand<TGiven, TResult> command)
         {
