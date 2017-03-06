@@ -110,10 +110,25 @@ namespace Tranquire.Tests.Reporting
         {
             get
             {
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action));
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object, Ability1>)action), action => a => a.AsksFor((IQuestion<object, Ability1>)action));
+                return QuestionsTestCases.Concat(ActionTestCases);
+            }
+        }
+
+        public static IEnumerable<object[]> ActionTestCases
+        {
+            get
+            {                
                 yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action));
                 yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<Ability1, Ability2, object>)action), action => a => a.Execute((IAction<Ability1, Ability2, object>)action));
+            }
+        }
+
+        public static IEnumerable<object[]> QuestionsTestCases
+        {
+            get
+            {
+                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action));
+                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object, Ability1>)action), action => a => a.AsksFor((IQuestion<object, Ability1>)action));                
             }
         }
 
@@ -283,6 +298,25 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception))
             };
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+        }
+
+        [Fact]
+        public void Sut_AllMethods_WhenActionIsAdapterToActionUnit_ShouldNotCallOnNext()
+        {
+            //arrange                  
+            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            var observer = new TestObserver<ActionNotification>();
+            fixture.Inject((IObserver<ActionNotification>)observer);                        
+            var sut = fixture.Create<ReportingActor>();
+            var action = fixture.Create<MockToString>();
+            var adaptedAction = action.AsActionWithoutAbility();            
+            var expected = fixture.Create<object>();
+            Mock.Get(sut.Actor).Setup(a => a.Execute(adaptedAction)).Returns(expected);
+            //act
+            var actual = sut.Execute(adaptedAction);
+            //assert            
+            observer.Values.Should().BeEmpty();
+            actual.Should().Be(expected);
         }
     }
 }

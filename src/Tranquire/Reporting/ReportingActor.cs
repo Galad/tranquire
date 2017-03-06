@@ -58,27 +58,42 @@ namespace Tranquire.Reporting
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
+            Guard.ForNull(question, nameof(question));
             return ExecuteNotifyingAction(() => Actor.AsksFor(question), question);
         }
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
+            Guard.ForNull(question, nameof(question));
             return ExecuteNotifyingAction(() => Actor.AsksFor(question), question);
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {
+            Guard.ForNull(action, nameof(action));
+            if (!CanNotify(action))
+            {
+                return Actor.Execute(action);
+            }
             return ExecuteNotifyingAction(() => Actor.Execute(action), action);
+        }
+
+        private bool CanNotify<TResult>(IAction<TResult> action)
+        {
+            var type = action.GetType();
+            return !type.IsGenericType ||
+                   type.IsGenericType &&
+                   type.GetGenericTypeDefinition() != typeof(ActionWithAbilityToActionAdapter<,,>);
         }
 
         public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
+            Guard.ForNull(action, nameof(action));
             return ExecuteNotifyingAction(() => Actor.Execute(action), action);
         }
 
         private TResult ExecuteNotifyingAction<TResult>(Func<TResult> executeAction, INamed action)
-        {
-            Guard.ForNull(action, nameof(action));            
+        {            
             _depth++;
             Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent()));
             try
