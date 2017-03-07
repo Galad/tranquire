@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Tranquire.Tests
 {
-    internal class TestObserver<T> : IObserver<T>
+    public class TestObserver<T> : IObserver<T>
     {
         public TestObserver()
         {

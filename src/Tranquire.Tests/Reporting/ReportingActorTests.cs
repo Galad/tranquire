@@ -17,9 +17,26 @@ namespace Tranquire.Tests.Reporting
 {
     public class ReportingActorTests
     {
+        public class ReportingActorCustomization : ICustomization
+        {               
+            public void Customize(IFixture fixture)
+            {
+                fixture.Register<ICanNotify>(() => new Mock<CanNotify>() { CallBase = true }.Object);
+            }
+        }
+
+        public class ReportingActorAutoDataAttribute : AutoDataAttribute
+        {
+            public ReportingActorAutoDataAttribute() : base(CreateFixture())
+            {
+            }
+        }
+
         private static IFixture CreateFixture()
         {
-            return new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            return new Fixture().Customize(new DomainCustomization())
+                                .Customize(new ReportingActorCustomization())
+                                .Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
         }
 
         [Theory, DomainAutoData]
@@ -69,7 +86,7 @@ namespace Tranquire.Tests.Reporting
             Func<INamed, Expression<Func<IActor, object>>> expression)
         {
             //arrange                  
-            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));            
+            var fixture = CreateFixture();            
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var duration = fixture.Create<TimeSpan>();
             var sut = fixture.Create<ReportingActor>();
@@ -146,7 +163,7 @@ namespace Tranquire.Tests.Reporting
             Func<INamed, Expression<Func<IActor, object>>> dummy)
         {
             //arrange                  
-            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
@@ -170,7 +187,7 @@ namespace Tranquire.Tests.Reporting
             Func<INamed, Expression<Func<IActor, object>>> expression)
         {
             //arrange 
-            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
@@ -237,7 +254,7 @@ namespace Tranquire.Tests.Reporting
            Func<INamed, Expression<Func<IActor, object>>> dummy)
         {
             //arrange                  
-            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();            
@@ -265,7 +282,7 @@ namespace Tranquire.Tests.Reporting
             Func<INamed, Expression<Func<IActor, object>>> expression)
         {
             //arrange 
-            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
@@ -304,7 +321,7 @@ namespace Tranquire.Tests.Reporting
         public void Sut_AllMethods_WhenActionIsAdapterToActionUnit_ShouldNotCallOnNext()
         {
             //arrange                  
-            var fixture = new Fixture().Customize(new DomainCustomization()).Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+            var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);                        
             var sut = fixture.Create<ReportingActor>();
@@ -317,6 +334,66 @@ namespace Tranquire.Tests.Reporting
             //assert            
             observer.Values.Should().BeEmpty();
             actual.Should().Be(expected);
+        }
+
+        [Theory, ReportingActorAutoDataAttribute]
+        public void Execute_WhenCanNotifyReturnsFalse_ShouldNotNotify(
+            [Frozen]TestObserver<ActionNotification> observer,
+            [Frozen]ICanNotify canNotify,
+            ReportingActor sut,
+            IAction<object> action)
+        {
+            //arrange                                          
+            Mock.Get(canNotify).Setup(c => c.Action(action)).Returns(false);
+            //act
+            sut.Execute(action);
+            //assert
+            observer.Values.Should().BeEmpty();
+        }
+        
+        [Theory, ReportingActorAutoDataAttribute]
+        public void ExecuteWithAbility_WhenCanNotifyReturnsFalse_ShouldNotNotify(
+            [Frozen]TestObserver<ActionNotification> observer,
+            [Frozen]ICanNotify canNotify,
+            ReportingActor sut,
+            IAction<Ability1, Ability2, object> action)
+        {
+            //arrange                                          
+            Mock.Get(canNotify).Setup(c => c.Action(action)).Returns(false);
+            //act
+            sut.Execute(action);
+            //assert
+            observer.Values.Should().BeEmpty();
+        }
+
+        [Theory, ReportingActorAutoData]
+        public void AsksFor_WhenCanNotifyReturnsFalse_ShouldNotNotify(
+            [Frozen]TestObserver<ActionNotification> observer,
+            [Frozen]ICanNotify canNotify,
+            ReportingActor sut,
+            IQuestion<object> question)
+        {
+            //arrange                                          
+            Mock.Get(canNotify).Setup(c => c.Question(question)).Returns(false);
+            //act
+            sut.AsksFor(question);
+            //assert
+            observer.Values.Should().BeEmpty();
+        }
+
+        [Theory, ReportingActorAutoData]
+        public void AsksFor_WithAbility_WhenCanNotifyReturnsFalse_ShouldNotNotify(
+            [Frozen]TestObserver<ActionNotification> observer,
+            [Frozen]ICanNotify canNotify,
+            ReportingActor sut,
+            IQuestion<object, Ability1> question)
+        {
+            //arrange                                          
+            Mock.Get(canNotify).Setup(c => c.Question(question)).Returns(false);
+            //act
+            sut.AsksFor(question);
+            //assert
+            observer.Values.Should().BeEmpty();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Reporting
 {
+
     /// <summary>
     /// Add reporting capabilities to an actor
     /// </summary>
@@ -26,9 +27,13 @@ namespace Tranquire.Reporting
         public string Name => Actor.Name;
 
         /// <summary>
-        /// Gets the <see cref="IMeasureDuration"/> instance passed in the constructor
+        /// Gets the <see cref="IMeasureDuration"/> instance passed to the constructor
         /// </summary>
         public IMeasureDuration MeasureTime { get; }
+        /// <summary>
+        /// Gets the <see cref="ICanNotify"/> instance passed to the constructor
+        /// </summary>
+        public ICanNotify CanNotify { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="ReportingActor"/>
@@ -36,22 +41,30 @@ namespace Tranquire.Reporting
         /// <param name="observer">An <see cref="IObserver{T}"/> instance which is called when a notification occurs</param>
         /// <param name="actor">The given actor</param>
         /// <param name="measureTime">A <see cref="IMeasureDuration"/> instance used to measure the execution time of a function</param>
-        public ReportingActor(IObserver<ActionNotification> observer, IActor actor, IMeasureDuration measureTime)
+        /// <param name="canNotify"></param>
+        public ReportingActor(
+            IObserver<ActionNotification> observer,
+            IActor actor,
+            IMeasureDuration measureTime,
+            ICanNotify canNotify)
         {
             Guard.ForNull(observer, nameof(observer));
             Guard.ForNull(actor, nameof(actor));
             Guard.ForNull(measureTime, nameof(measureTime));
+            Guard.ForNull(canNotify, nameof(canNotify));
             Observer = observer;
             Actor = actor;
             MeasureTime = measureTime;
+            CanNotify = new CompositeCanNotify(canNotify, new CannotNotifyActionAdapter());
         }
 
+        private class CanAlwaysNotify : CanNotify { }
         /// <summary>
         /// Create a new instance of <see cref="ReportingActor"/>
         /// </summary>
         /// <param name="observer">An <see cref="IObserver{T}"/> instance which is called when a notification occurs</param>
         /// <param name="actor">The given actor</param>
-        public ReportingActor(IObserver<ActionNotification> observer, IActor actor):this(observer, actor, new DefaultMeasureDuration())
+        public ReportingActor(IObserver<ActionNotification> observer, IActor actor) : this(observer, actor, new DefaultMeasureDuration(), new CanAlwaysNotify())
         {
         }
 
@@ -59,41 +72,37 @@ namespace Tranquire.Reporting
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
             Guard.ForNull(question, nameof(question));
-            return ExecuteNotifyingAction(() => Actor.AsksFor(question), question);
+            return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksFor(question), question);
         }
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             Guard.ForNull(question, nameof(question));
-            return ExecuteNotifyingAction(() => Actor.AsksFor(question), question);
+            return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksFor(question), question);
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {
             Guard.ForNull(action, nameof(action));
-            if (!CanNotify(action))
+            if (!CanNotify.Action(action))
             {
                 return Actor.Execute(action);
             }
-            return ExecuteNotifyingAction(() => Actor.Execute(action), action);
-        }
-
-        private bool CanNotify<TResult>(IAction<TResult> action)
-        {
-            var type = action.GetType();
-            return !type.IsGenericType ||
-                   type.IsGenericType &&
-                   type.GetGenericTypeDefinition() != typeof(ActionWithAbilityToActionAdapter<,,>);
+            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action);
         }
 
         public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             Guard.ForNull(action, nameof(action));
-            return ExecuteNotifyingAction(() => Actor.Execute(action), action);
+            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action);
         }
 
-        private TResult ExecuteNotifyingAction<TResult>(Func<TResult> executeAction, INamed action)
-        {            
+        private TResult ExecuteNotifyingAction<TResult>(Func<bool> canNotify, Func<TResult> executeAction, INamed action)
+        {
+            if (!canNotify())
+            {
+                return executeAction();
+            }
             _depth++;
             Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent()));
             try

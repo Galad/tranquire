@@ -76,12 +76,16 @@
     <Compile Include="IActionExecutor.cs" />
     <Compile Include="Reporting\AfterActionNotificationContent.cs" />
     <Compile Include="Reporting\BeforeActionNotificationContent.cs" />
+    <Compile Include="Reporting\CanNotify.cs" />
+    <Compile Include="Reporting\CannotNotifyActionAdapter.cs" />
+    <Compile Include="Reporting\CompositeCanNotify.cs" />
     <Compile Include="Reporting\ExecutionErrorNotificationContent.cs" />
     <Compile Include="Reporting\IActionNotificationContent.cs" />
     <Compile Include="IActorFacade.cs" />
     <Compile Include="IAsksQuestions.cs" />
     <Compile Include="ICanHaveAbility.cs" />
     <Compile Include="INamed.cs" />
+    <Compile Include="Reporting\ICanNotify.cs" />
     <Compile Include="Reporting\IMeasureTime.cs" />
     <Compile Include="Reporting\RenderedReportingObserver.cs" />
     <Compile Include="Reporting\ReportingActor.cs" />
