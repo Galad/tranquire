@@ -41,7 +41,7 @@ namespace Tranquire.Reporting
         /// <param name="observer">An <see cref="IObserver{T}"/> instance which is called when a notification occurs</param>
         /// <param name="actor">The given actor</param>
         /// <param name="measureTime">A <see cref="IMeasureDuration"/> instance used to measure the execution time of a function</param>
-        /// <param name="canNotify"></param>
+        /// <param name="canNotify">A <see cref="ICanNotify"/> instance that is used to filter actions that should not send a notification</param>
         public ReportingActor(
             IObserver<ActionNotification> observer,
             IActor actor,
