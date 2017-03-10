@@ -31,22 +31,32 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_VerifyGuardClause(GuardClauseAssertion assertion)
+        public void Sut_VerifyGuardClause_Constructor(GuardClauseAssertion assertion)
         {
             //test method guard clauses by hand because AutoFixture throws an error when testing a generic method having constraints
             assertion.Verify(typeof(ActionBuilder<TestAction, Unit>).GetConstructors());
         }
 
         [Theory, DomainAutoData]
-        public void Then_VerifyGuardClause(ActionBuilder<TestAction, Unit> sut)
+        public void Sut_VerifyGuardClause_ActionBuilder2(ActionBuilder<TestAction, Unit> sut)
         {
-            Assert.Throws<ArgumentNullException>(() => ((IActionBuilder<TestAction, Unit>)sut).Then<IAction<Unit>, Unit>(default(IAction<Unit>)));
+            new Action(() => ((IActionBuilder<TestAction, Unit>)sut).Then<IAction<Unit>, Unit>(default(IAction<Unit>))).ShouldThrowExactly<ArgumentNullException>("Then");
+            new Action(() => sut.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
+            new Action(() => sut.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
         }
 
         [Theory, DomainAutoData]
-        public void Then_VerifyGuardClause(ActionBuilder sut)
+        public void Sut_VerifyGuardClause_ActionBuilder(ActionBuilder sut)
         {
             Assert.Throws<ArgumentNullException>(() => sut.Then<IAction<Unit>, Unit>(default(IAction<Unit>)));
+        }
+
+        [Theory, DomainAutoData]
+        public void Sut_VerifyGuardClause_ActionBuilder4(ActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit> sut)
+        {
+            new Action(() => sut.Then(default(TestAction), Unit.Default)).ShouldThrowExactly<ArgumentNullException>("Then");
+            new Action(() => sut.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
+            new Action(() => sut.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
         }
 
         [Theory, DomainAutoData]
@@ -395,14 +405,14 @@ namespace Tranquire.Tests
             IAction<object> action1,
             IAction<object> action2,
             IAction<string> action3,
-            Mock<IFunc> funcs,            
+            Mock<IFunc> funcs,
             object result2,
             string expected,
             IActor actor)
         {
             //arrange 
             Mock.Get(actor).SetupExecuteWhen<object>();
-            Mock.Get(actor).SetupExecuteWhen<string>();            
+            Mock.Get(actor).SetupExecuteWhen<string>();
             funcs.Setup(f => f.Func<ActionResult<IAction<object>, object>, IAction<string>>(It.Is<ActionResult<IAction<object>, object>>(r => r.Action == action2 && r.Result == result2)))
                  .Returns(action3);
             Mock.Get(action2).Setup(a => a.ExecuteWhenAs(actor)).Returns(result2);
@@ -490,6 +500,110 @@ namespace Tranquire.Tests
             var name3 = typeof(IAction<object>).Name;
             var expected = $"{name1}, Then {name2}, Then {name3}, Then {name4}";
             actual.Should().Be(expected);
+        }
+        #endregion
+
+        #region Name
+        [Theory, DomainAutoData]
+        public void Named_ShouldReturnCorrectResult(
+            ActionBuilder sut,
+            IAction<object> action1,
+            string expected)
+        {
+            //arrange            
+            //act
+            var name = sut.Then<IAction<object>, object>(action1).Named(expected).Name;
+            //assert
+            name.Should().Be(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void Named_ShouldReturnSameActionBuilder(
+            ActionBuilder sut,
+            IAction<object> action1,
+            string name)
+        {
+            //arrange  
+            var expected = sut.Then<IAction<object>, object>(action1);
+            //act
+            var actual = expected.Named(name);
+            //assert
+            actual.ShouldBeEquivalentTo(expected, o => o.Excluding(b => b.Name));
+        }
+
+        [Theory, DomainAutoData]
+        public void Named_ChainingResults_ShouldReturnCorrectResult(
+            ActionBuilder sut,
+            IAction<object> action1,
+            IAction<object> action2,
+            string expected)
+        {
+            //arrange            
+            //act
+            var name = sut.Then<IAction<object>, object>(action1)
+                          .Then<IAction<object>, object>(_ => action2)
+                          .Named(expected)
+                          .Name;
+            //assert
+            name.Should().Be(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void Named_ChainingResults_ShouldReturnSameActionBuilder(
+            ActionBuilder sut,
+            IAction<object> action1,
+            IAction<object> action2,
+            string name)
+        {
+            //arrange  
+            var expected = sut.Then<IAction<object>, object>(action1)
+                              .Then<IAction<object>, object>(_ => action2);
+            //act
+            var actual = expected.Named(name);
+            //assert
+            actual.ShouldBeEquivalentTo(expected, o => o.Excluding(b => b.Name));
+        }
+
+        [Theory, DomainAutoData]
+        public void Named_ThenChainingAction_ShouldReturnCorrectResult(
+            ActionBuilder sut,
+            IAction<object> action1,
+            IAction<object> action2,
+            string name1,
+            string name2)
+        {
+            //arrange   
+            Mock.Get(action2).Setup(a => a.Name).Returns(name2);
+            //act
+            var name = sut.Then<IAction<object>, object>(action1)                          
+                          .Named(name1)
+                          .Then<IAction<object>, object>(action2)
+                          .Name;
+            //assert
+            var expected = $"{name1}, Then {name2}";
+            name.Should().Be(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void Named_ChainingResultsThenChainingAction_ShouldReturnCorrectResult(
+          ActionBuilder sut,
+          IAction<object> action1,
+          IAction<object> action2,
+          IAction<object> action3,
+          string name1,
+          string name2)
+        {
+            //arrange   
+            Mock.Get(action3).Setup(a => a.Name).Returns(name2);
+            //act
+            var name = sut.Then<IAction<object>, object>(action1)
+                          .Then<IAction<object>, object>(_ => action2)
+                          .Named(name1)
+                          .Then<IAction<object>, object>(action3)
+                          .Name;
+            //assert
+            var expected = $"{name1}, Then {name2}";
+            name.Should().Be(expected);
         }
         #endregion
     }

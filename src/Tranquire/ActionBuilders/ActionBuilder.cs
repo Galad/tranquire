@@ -13,21 +13,22 @@ namespace Tranquire.ActionBuilders
         where TAction : class, IAction<TResult>
     {
         private readonly CompositeAction _executableAction;
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="ActionBuilder{TAction, TResult}"/>
         /// </summary>
         /// <param name="action">The current action</param>
-        public ActionBuilder(TAction action) : this(action, new CompositeActionForBuilder(ImmutableArray<IAction<Unit>>.Empty))
+        public ActionBuilder(TAction action) : this(action, new CompositeActionForBuilder(ImmutableArray<IAction<Unit>>.Empty), action?.Name)
         {
         }
 
-        internal ActionBuilder(TAction currentAction, CompositeAction executableAction)
+        internal ActionBuilder(TAction currentAction, CompositeAction executableAction, string name)
         {
             if (currentAction == null) throw new ArgumentNullException(nameof(currentAction));
             if (executableAction == null) throw new ArgumentNullException(nameof(executableAction));
             Action = currentAction;
             _executableAction = executableAction;
+            Name = name;
         }
 
         /// <summary>
@@ -39,23 +40,14 @@ namespace Tranquire.ActionBuilders
         {
             if (nextAction == null) throw new ArgumentNullException(nameof(nextAction));
             var actions = new CompositeActionForBuilder(_executableAction.Actions.Add(Action.AsActionUnit()));
-            return new ActionBuilder<TNextAction, TNextResult>(nextAction, actions);
+            var name = Name + ", Then " + nextAction.Name;
+            return new ActionBuilder<TNextAction, TNextResult>(nextAction, actions, name);
         }
 
         /// <summary>
         /// Gets the action name
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                if (_executableAction.Actions.IsEmpty)
-                {
-                    return Action.Name;
-                }
-                return string.Join(", Then ", _executableAction.Select(a => a.Name)) + ", Then " + Action.Name;
-            }
-        }
+        public string Name { get; }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TResult ExecuteGivenAs(IActor actor)
@@ -92,6 +84,12 @@ namespace Tranquire.ActionBuilders
                 _executableAction,
                 nextAction,
                 Name);
+        }
+
+        public IActionBuilder<TAction, TResult> Named(string name)
+        {
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            return new ActionBuilder<TAction, TResult>(Action, _executableAction, name);
         }
     }
 }

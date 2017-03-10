@@ -52,6 +52,12 @@ namespace Tranquire.ActionBuilders
           IActionBuilderWithCurrentAction<TAction, TResult>
         where TAction : class, IAction<TResult>
     {
+        /// <summary>
+        /// Assign a new name to the current action
+        /// </summary>
+        /// <param name="name">The new name</param>
+        /// <returns>An new action builder having the name of the <paramref name="name"/> parameter</returns>
+        IActionBuilder<TAction, TResult> Named(string name);
     }
 
     /// <summary>
@@ -69,5 +75,11 @@ namespace Tranquire.ActionBuilders
         where TAction : class, IAction<TResult>
         where TPreviousAction : class, IAction<TPreviousResult>
     {
+        /// <summary>
+        /// Assign a new name to the current action
+        /// </summary>
+        /// <param name="name">The new name</param>
+        /// <returns>An new action builder having the name of the <paramref name="name"/> parameter</returns>
+        IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult> Named(string name);
     }
 }

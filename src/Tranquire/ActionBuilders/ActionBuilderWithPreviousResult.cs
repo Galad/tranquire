@@ -26,14 +26,25 @@ namespace Tranquire.ActionBuilders
         /// <summary>
         /// Gets the current action name
         /// </summary>
-        public string Name => PreviousActionName + ", Then " + typeof(TAction).Name;
+        public string Name
+        {
+            get
+            {
+                if (_name != "")
+                {
+                    return _name;
+                }
+                return PreviousActionName + ", Then " + typeof(TAction).Name;
+            }
+        }
 
         /// <summary>
         /// Gets the previous action name
         /// </summary>
         public string PreviousActionName { get; }
-                
+
         private readonly CompositeAction _executableAction;
+        private readonly string _name;
 
         /// <summary>
         /// Creates a new instance of <see cref="ActionBuilderWithPreviousResult{TAction, TResult, TPreviousAction, TPReviousResult}"/>
@@ -46,7 +57,16 @@ namespace Tranquire.ActionBuilders
             Func<IActor, TPreviousAction> previousAction,
             CompositeAction executableAction,
             Func<ActionResult<TPreviousAction, TPReviousResult>, TAction> actionFactory,
-            string previousActionName)
+            string previousActionName) : this(previousAction, executableAction, actionFactory, previousActionName, "")
+        {
+        }
+
+        private ActionBuilderWithPreviousResult(
+            Func<IActor, TPreviousAction> previousAction,
+            CompositeAction executableAction,
+            Func<ActionResult<TPreviousAction, TPReviousResult>, TAction> actionFactory,
+            string previousActionName,
+            string name)
         {
             if (actionFactory == null) throw new ArgumentNullException(nameof(actionFactory));
             if (previousAction == null) throw new ArgumentNullException(nameof(previousAction));
@@ -56,6 +76,7 @@ namespace Tranquire.ActionBuilders
             PreviousAction = previousAction;
             PreviousActionName = previousActionName;
             _executableAction = executableAction;
+            _name = name;
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -78,7 +99,7 @@ namespace Tranquire.ActionBuilders
         }
 
         private TAction GetPreviousAction(IActor actor)
-        {            
+        {
             var previousAction = PreviousAction(actor);
             var result = actor.Execute(previousAction);
             var actionResult = new ActionResult<TPreviousAction, TPReviousResult>(previousAction, result);
@@ -89,12 +110,24 @@ namespace Tranquire.ActionBuilders
         {
             return new ActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult>(GetPreviousAction, _executableAction, nextAction, Name);
         }
-        
+
         IActionBuilder<TNextAction, TNextResult> IActionBuilder.Then<TNextAction, TNextResult>(TNextAction nextAction)
         {
             return new ActionBuilder<TNextAction, TNextResult>(
                 nextAction,
-                new CompositeActionForBuilder(_executableAction.Actions.Add(new LazyAction<TAction, TResult>(GetPreviousAction, Name).AsActionUnit())));
+                new CompositeActionForBuilder(_executableAction.Actions.Add(new LazyAction<TAction, TResult>(GetPreviousAction, Name).AsActionUnit())),
+                Name + ", Then " + nextAction.Name);
+        }
+
+        public IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult> Named(string name)
+        {
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            return new ActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult>(
+                PreviousAction,
+                _executableAction,
+                ActionFactory,
+                PreviousActionName,
+                name);
         }
 
         private class LazyAction<TLazyAction, TLazyResult> : IAction<TLazyResult> where TLazyAction : class, IAction<TLazyResult>
