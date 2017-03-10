@@ -74,6 +74,7 @@ namespace Tranquire.Tests.Extensions
             actual.ShouldBeEquivalentTo(expected);
         }
 
+        #region AsActionUnit
         [Theory, DomainAutoData]
         public void AsActionUnit_ExecuteWhen_ShouldCallExecuteWhenOnSourceAction(Mock<IAction<object>> action, IActor actor)
         {
@@ -93,12 +94,12 @@ namespace Tranquire.Tests.Extensions
             //assert            
             action.Verify(a => a.ExecuteGivenAs(actor));
         }
-        
+
         [Theory, DomainAutoData]
         public void AsActionUnit_ShouldReturnCorrectValue(Mock<IAction<object>> action)
         {
             //act
-            var actual = ActionExtensions.AsActionUnit(action.Object);            
+            var actual = ActionExtensions.AsActionUnit(action.Object);
             //assert
             actual.Should().BeAssignableTo<IAction<Unit>>();
             actual.Name.Should().Be(action.Object.Name);
@@ -119,7 +120,7 @@ namespace Tranquire.Tests.Extensions
 
         [Theory, DomainAutoData]
         public void AsActionUnit_WithAbilities_ExecuteGiven_ShouldCallExecuteGivenOnSourceAction(
-            Mock<IAction<Ability1, Ability2, object>> action, 
+            Mock<IAction<Ability1, Ability2, object>> action,
             Mock<IActor> actor,
             Ability1 ability)
         {
@@ -139,6 +140,7 @@ namespace Tranquire.Tests.Extensions
             //assert
             actual.Should().BeAssignableTo<IAction<Unit>>();
             actual.Name.Should().Be(action.Object.Name);
-        }
+        } 
+        #endregion
     }
 }

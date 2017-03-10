@@ -139,7 +139,8 @@ namespace Tranquire
         {
             return new ActionWithAbilityToActionAdapter<TGivenAbility, TWhenAbility, TResult>(action);
         }
-        
+
+        #region AsActionUnit
         /// <summary>
         /// Transform the given action to a action returning <see cref="Unit"/> that execute the action and discards its result
         /// </summary>
@@ -179,6 +180,7 @@ namespace Tranquire
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
             return action.AsActionWithoutAbility().AsActionUnit();
-        }
+        } 
+        #endregion
     }
 }
