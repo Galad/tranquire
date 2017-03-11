@@ -74,7 +74,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<string>, WebBrowser> AsText(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<string>> AsText(this ManyUIState<IWebElement> state)
         {
             return state.As(TextConverter);
         }
@@ -84,7 +84,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<int>, WebBrowser> AsInteger(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<int>> AsInteger(this ManyUIState<IWebElement> state)
         {
             return state.As(IntegerConverter);
         }
@@ -94,7 +94,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<bool>, WebBrowser> AsBoolean(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<bool>> AsBoolean(this ManyUIState<IWebElement> state)
         {
             return state.As(BooleanConverter);
         }
@@ -104,7 +104,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<DateTime>, WebBrowser> AsDateTime(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<DateTime>> AsDateTime(this ManyUIState<IWebElement> state)
         {
             return state.As(DateTimeConverter);
         }

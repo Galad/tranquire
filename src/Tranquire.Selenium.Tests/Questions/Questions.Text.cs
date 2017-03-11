@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Tests.Questions
             TestQuestion(id, t => t.AsEnum<TextContent, TestEnum>(), expected);
         }
 
-        private void TestQuestionMany<T>(string id, Func<TextContent, IQuestion<ImmutableArray<T>, WebBrowser>> getQuestion, IEnumerable<T> expected)
+        private void TestQuestionMany<T>(string id, Func<TextContent, IQuestion<ImmutableArray<T>>> getQuestion, IEnumerable<T> expected)
         {
             //arrange
             var targetSource = Target.The("many container").LocatedBy(By.Id("many"));

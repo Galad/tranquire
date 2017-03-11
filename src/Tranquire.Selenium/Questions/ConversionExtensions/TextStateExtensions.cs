@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<string>, WebBrowser> AsText(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<string>> AsText(this ManyUIState<string> state)
         {
             return state.As(TextConverter);
         }
@@ -96,7 +96,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<int>, WebBrowser> AsInteger(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<int>> AsInteger(this ManyUIState<string> state)
         {
             return state.As(IntegerConverter);
         }
@@ -106,7 +106,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<bool>, WebBrowser> AsBoolean(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<bool>> AsBoolean(this ManyUIState<string> state)
         {
             return state.As(BooleanConverter);
         }
@@ -116,7 +116,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<DateTime>, WebBrowser> AsDateTime(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<DateTime>> AsDateTime(this ManyUIState<string> state)
         {
             return state.As(DateTimeConverter);
         }
@@ -127,7 +127,7 @@ namespace Tranquire.Selenium.Questions
         /// <param name="state">The source state</param>
         /// <typeparam name="T">The type of the enum</typeparam>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<T>, WebBrowser> AsEnum<T>(this ManyUIState<string> state) where T : struct
+        public static IQuestion<ImmutableArray<T>> AsEnum<T>(this ManyUIState<string> state) where T : struct
         {
             return state.As(new StringToEnumConverter<T>());
         }
