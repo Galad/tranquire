@@ -57,6 +57,7 @@ namespace Tranquire.Selenium
             return Actor.AsksFor(question);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             return Actor.AsksFor(new TakeScreenshotQuestion<TAnswer, TAbility>(question, NextScreenshotName));
@@ -83,6 +84,7 @@ namespace Tranquire.Selenium
             /// </summary>
             public override string Name => "[Take screenshot] " + _question.Name;
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {

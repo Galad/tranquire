@@ -83,6 +83,7 @@ namespace Tranquire.Selenium
         {
             if (typeof(TAbility) == typeof(WebBrowser) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 return Actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
             }
             return Actor.AsksFor(question);
@@ -106,7 +107,7 @@ namespace Tranquire.Selenium
                 return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability), _highlightActions);
             }
         }
-
+#pragma warning restore CS0618 // Type or member is obsolete
         public TResult Execute<TResult>(IAction<TResult> action)
         {
             return Actor.Execute(action);

@@ -37,6 +37,7 @@ namespace Tranquire.Selenium
             return Actor.AsksFor(question);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             var webBrowserQuestion = question as IQuestion<TAnswer, WebBrowser>;
@@ -73,6 +74,7 @@ namespace Tranquire.Selenium
                 return value;
             }
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {
