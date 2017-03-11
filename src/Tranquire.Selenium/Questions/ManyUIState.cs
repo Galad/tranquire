@@ -58,7 +58,7 @@ namespace Tranquire.Selenium.Questions
             return Resolve(element);
         }
 
-        private class ManyQuestion<TSource, TConverted> : Question<TSource, TConverted, ImmutableArray<TConverted>>
+        private class ManyQuestion<TSource, TConverted> : WebBrowserQuestion<TSource, TConverted, ImmutableArray<TConverted>>
         {
             public ManyQuestion(ITarget target,
                                 Func<IWebElement, TSource> webElementResolver,

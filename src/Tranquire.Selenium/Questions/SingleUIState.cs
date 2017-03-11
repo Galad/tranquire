@@ -69,7 +69,7 @@ namespace Tranquire.Selenium.Questions
         /// <returns></returns>
         protected abstract TState CreateState(ITarget target, CultureInfo culture);
 
-        private class SingleQuestion<TSource, TConverted> : Question<TSource, TConverted, TConverted>
+        private class SingleQuestion<TSource, TConverted> : WebBrowserQuestion<TSource, TConverted, TConverted>
         {
             public SingleQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
                 : base (target, webElementResolver, converter, culture)
