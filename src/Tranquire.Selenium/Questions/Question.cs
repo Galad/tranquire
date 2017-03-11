@@ -11,13 +11,12 @@ namespace Tranquire.Selenium.Questions
     /// <typeparam name="TSource">The type of the value in the web page</typeparam>
     /// <typeparam name="TConverted">The converterd type of the value</typeparam>
     /// <typeparam name="TAnswer">The final type of the answer</typeparam>
-    internal abstract class WebBrowserQuestion<TSource, TConverted, TAnswer> : IQuestion<TAnswer, WebBrowser>, ITargeted
+    internal abstract class WebBrowserQuestion<TSource, TConverted, TAnswer> : Question<TAnswer, WebBrowser>, ITargeted
     {
         public Func<IWebElement, TSource> WebElementResolver { get; }
         public ITarget Target { get; }
         public IConverter<TSource, TConverted> Converter { get; }
         public CultureInfo Culture { get; }
-        public abstract string Name { get; }
 
         public WebBrowserQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
         {
@@ -29,9 +28,7 @@ namespace Tranquire.Selenium.Questions
             WebElementResolver = webElementResolver;
             Converter = converter;
             Culture = culture;
-        }
-
-        public abstract TAnswer AnsweredBy(IActor actor, WebBrowser ability);
+        }        
 
         protected TConverted Convert(TSource value)
         {

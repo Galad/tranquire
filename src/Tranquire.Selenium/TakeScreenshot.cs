@@ -62,7 +62,7 @@ namespace Tranquire.Selenium
             return Actor.AsksFor(new TakeScreenshotQuestion<TAnswer, TAbility>(question, NextScreenshotName));
         }
 
-        private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : IQuestion<TAnswer, TAbility>
+        private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : Question<TAnswer, TAbility>
         {
             private readonly IQuestion<TAnswer, TAbility> _question;
             private readonly Func<string> _nextScreenshotName;
@@ -73,7 +73,7 @@ namespace Tranquire.Selenium
                 _nextScreenshotName = nextScreenshotName;
             }
 
-            public TAnswer AnsweredBy(IActor actor, TAbility ability)
+            protected override TAnswer Answer(IActor actor, TAbility ability)
             {
                 return ExecuteTakeScreenshot(ability, () => _question.AnsweredBy(actor, ability), _nextScreenshotName);
             }
@@ -81,7 +81,7 @@ namespace Tranquire.Selenium
             /// <summary>
             /// Gets the action's name
             /// </summary>
-            public string Name => "[Take screenshot] " + _question.Name;
+            public override string Name => "[Take screenshot] " + _question.Name;
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)

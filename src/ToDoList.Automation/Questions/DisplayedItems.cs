@@ -8,13 +8,13 @@ using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.Questions
 {
-    public class DisplayedItems : IQuestion<ImmutableArray<Model.ToDoItem>, WebBrowser>
+    public class DisplayedItems : Question<ImmutableArray<Model.ToDoItem>, WebBrowser>
     {
-        public ImmutableArray<Model.ToDoItem> AnsweredBy(IActor actor, WebBrowser ability)
+        protected override ImmutableArray<Model.ToDoItem> Answer(IActor actor, WebBrowser ability)
         {
             return actor.AsksFor(Element.Of(ToDoPage.ToDoItem).Many().As(new WebElementToToDoItemConverter(actor, ability.Driver)));
         }
 
-        public string Name => "Displayed items";
+        public override string Name => "Displayed items";
     }
 }

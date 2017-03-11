@@ -25,7 +25,7 @@ namespace Tranquire
     /// </summary>
     /// <typeparam name="TAnswer">The answer's type</typeparam>
     /// <typeparam name="TAbility">The type of the ability required to answer this question</typeparam>
-    public interface IQuestion<TAnswer, TAbility> : INamed
+    public interface IQuestion<TAnswer, TAbility> : INamed, IQuestion<TAnswer>
     {
         /// <summary>
         /// Answers the question

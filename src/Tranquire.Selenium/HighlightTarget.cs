@@ -88,12 +88,12 @@ namespace Tranquire.Selenium
             return Actor.AsksFor(question);
         }
 
-        private sealed class HighlightedQuestion<TAnswer> : IQuestion<TAnswer, WebBrowser>
+        private sealed class HighlightedQuestion<TAnswer> : Question<TAnswer, WebBrowser>
         {
             private IQuestion<TAnswer, WebBrowser> question;
             private HighlighActions _highlightActions;
             private ITargeted Targeted => (ITargeted)question;
-            public string Name => "[Highlighted] " + question.Name;
+            public override string Name => "[Highlighted] " + question.Name;
 
             public HighlightedQuestion(IQuestion<TAnswer, WebBrowser> question, HighlighActions highlightActions)
             {
@@ -101,12 +101,10 @@ namespace Tranquire.Selenium
                 _highlightActions = highlightActions;
             }
 
-            public TAnswer AnsweredBy(IActor actor, WebBrowser ability)
+            protected override TAnswer Answer(IActor actor, WebBrowser ability)
             {
                 return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability), _highlightActions);
             }
-
-            public override string ToString() => Name;
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)

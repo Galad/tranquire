@@ -117,6 +117,8 @@
     <Compile Include="Extensions\IFunc.cs" />
     <Compile Include="ImmutableCollectionsCustomization.cs" />
     <Compile Include="MockActorExtensions.cs" />
+    <Compile Include="QuestionTests.cs" />
+    <Compile Include="QuestionWithAbilityTests.cs" />
     <Compile Include="Reporting\ReportingActorTests.cs" />
     <Compile Include="CompositeActionTests.cs" />
     <Compile Include="DomainAutoDataAttribute.cs" />

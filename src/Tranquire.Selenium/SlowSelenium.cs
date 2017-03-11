@@ -48,7 +48,7 @@ namespace Tranquire.Selenium
             return Actor.AsksFor(question);
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : IQuestion<TAnswer, WebBrowser>, ITargeted
+        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : Question<TAnswer, WebBrowser>, ITargeted
         {
             private int _delay;
             private readonly IQuestion<TAnswer, WebBrowser> _question;
@@ -61,19 +61,17 @@ namespace Tranquire.Selenium
                 _targeted = targeted;
             }
 
-            public string Name => $"[Delayed of {_delay}ms] " + _question.Name;
+            public override string Name => $"[Delayed of {_delay}ms] " + _question.Name;
 
             public ITarget Target => _targeted.Target;
 
-            public TAnswer AnsweredBy(IActor actor, WebBrowser ability)
+            protected override TAnswer Answer(IActor actor, WebBrowser ability)
             {
                 Thread.Sleep(_delay);
                 var value = _question.AnsweredBy(actor, ability);
                 Thread.Sleep(_delay);
                 return value;
             }
-
-            public override string ToString() => Name;
         }
 
         public TResult Execute<TResult>(IAction<TResult> action)
@@ -123,8 +121,6 @@ namespace Tranquire.Selenium
                 Thread.Sleep(_delay);
                 return value;
             }
-
-            public override string ToString() => Name;
         }
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

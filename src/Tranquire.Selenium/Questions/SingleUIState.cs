@@ -76,9 +76,9 @@ namespace Tranquire.Selenium.Questions
             {
             }
 
-            public override TConverted AnsweredBy(IActor actor, WebBrowser webDriver)
+            protected override TConverted Answer(IActor actor, WebBrowser ability)
             {
-                var webElement = Target.ResolveFor(webDriver);
+                var webElement = Target.ResolveFor(ability);
                 var value = WebElementResolver(webElement);
                 return Convert(value);
             }
