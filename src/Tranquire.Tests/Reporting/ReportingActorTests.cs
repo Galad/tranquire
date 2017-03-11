@@ -101,8 +101,11 @@ namespace Tranquire.Tests.Reporting
             Assert.Equal(expected, actual);
         }
 
+
         //Moq does not mock ToString if it is not overridden in the class
+#pragma warning disable CS0618 // Type or member is obsolete
         public class MockToString : IQuestion<object>, IQuestion<object, Ability1>, IAction<object>, IAction<Ability1, Ability2, object>
+#pragma warning restore CS0618 // Type or member is obsolete
         {
             public string ToStringValue { get; }
             public object Result { get; }
@@ -127,15 +130,30 @@ namespace Tranquire.Tests.Reporting
         {
             get
             {
-                return QuestionsTestCases.Concat(ActionTestCases);
+                return NotifyingTestCases.Concat(NotNotifyingActionTestCases);
             }
         }
 
-        public static IEnumerable<object[]> ActionTestCases
+        public static IEnumerable<object[]> NotifyingTestCases
+        {
+            get
+            {
+                return QuestionsTestCases.Concat(NotifyingActionTestCases);
+            }
+        }
+
+        public static IEnumerable<object[]> NotifyingActionTestCases
+        {
+            get
+            {
+                yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action));
+            }
+        }
+
+        public static IEnumerable<object[]> NotNotifyingActionTestCases
         {
             get
             {                
-                yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action));
 #pragma warning disable CS0618 // Type or member is obsolete
                 yield return ExecutionTestCasesValues((sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action), action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action));
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -159,7 +177,7 @@ namespace Tranquire.Tests.Reporting
             return new object[] { action, expression };
         }
 
-        [Theory, MemberData("ExecutionTestCases")]
+        [Theory, MemberData("NotifyingTestCases")]
         public void Sut_AllMethods_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> dummy)
@@ -183,7 +201,7 @@ namespace Tranquire.Tests.Reporting
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
-        [Theory, MemberData("ExecutionTestCases")]
+        [Theory, MemberData("NotifyingTestCases")]
         public void Sut_AllMethods_Recursive_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression)
@@ -234,23 +252,23 @@ namespace Tranquire.Tests.Reporting
         [Theory, MemberData("ExecutionTestCases")]
         public void Sut_AllMethods_WhenErrorOccurs_ShouldThrow(
           Func<ReportingActor, INamed, object> executeAction,
-          Func<INamed, Expression<Func<IActor, object>>> dummy)
+          Func<INamed, Expression<Func<IActor, object>>> expression)
         {
             //arrange   
             var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
+            fixture.Inject<IMeasureDuration>(new DefaultMeasureDuration());
             var sut = fixture.Create<ReportingActor>();
             var action = fixture.Create<MockToString>();
             var expected = fixture.Create<Exception>();
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Throws(expected);
+            Mock.Get(sut.Actor).Setup(expression(action)).Throws(expected);            
             //act and assert
             var actual = Assert.Throws<Exception>(() => executeAction(sut, action));
             Assert.Equal(expected, actual);
         }
 
-        [Theory, MemberData("ExecutionTestCases")]
+        [Theory, MemberData("NotifyingTestCases")]
         public void Sut_AllMethods_WhenErrorOccurs_ShouldCallOnNext(
            Func<ReportingActor, INamed, object> executeAction,
            Func<INamed, Expression<Func<IActor, object>>> dummy)
@@ -278,7 +296,7 @@ namespace Tranquire.Tests.Reporting
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
-        [Theory, MemberData("ExecutionTestCases")]
+        [Theory, MemberData("NotifyingTestCases")]
         public void Sut_AllMethods_Recursive_WhenErrorOccurs_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression)
@@ -319,6 +337,22 @@ namespace Tranquire.Tests.Reporting
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
         
+        [Theory, ReportingActorAutoData]
+        public void ExecuteWithAbility_ShouldNotNotify(
+            [Frozen]TestObserver<ActionNotification> observer,
+            [Frozen]ICanNotify canNotify,
+            ReportingActor sut,
+#pragma warning disable CS0618 // Type or member is obsolete
+            IAction<Ability1, Ability2, object> action)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            //arrange                                                      
+            //act
+            sut.ExecuteWithAbility(action);
+            //assert
+            observer.Values.Should().BeEmpty();
+        }
+
         [Theory, ReportingActorAutoDataAttribute]
         public void Execute_WhenCanNotifyReturnsFalse_ShouldNotNotify(
             [Frozen]TestObserver<ActionNotification> observer,
@@ -332,22 +366,7 @@ namespace Tranquire.Tests.Reporting
             sut.Execute(action);
             //assert
             observer.Values.Should().BeEmpty();
-        }
-        
-        [Theory, ReportingActorAutoDataAttribute]
-        public void ExecuteWithAbility_WhenCanNotifyReturnsFalse_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            [Frozen]ICanNotify canNotify,
-            ReportingActor sut,
-            IAction<Ability1, Ability2, object> action)
-        {
-            //arrange                                          
-            Mock.Get(canNotify).Setup(c => c.Action(action)).Returns(false);
-            //act
-            sut.ExecuteWithAbility(action);
-            //assert
-            observer.Values.Should().BeEmpty();
-        }
+        }        
 
         [Theory, ReportingActorAutoData]
         public void AsksFor_WhenCanNotifyReturnsFalse_ShouldNotNotify(

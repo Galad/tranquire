@@ -20,9 +20,6 @@ namespace Tranquire.Reporting
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS0618 // Type or member is obsolete
-        public bool Action<TGivenAbility, TWhenAbility, TResult>(IAction<TGivenAbility, TWhenAbility, TResult> action) => _innerCanNotify.All(c => c.Action(action));
-#pragma warning restore CS0618 // Type or member is obsolete
         public bool Action<TResult>(IAction<TResult> action) => _innerCanNotify.All(c => c.Action(action));
         public bool Question<TAbility, TResult>(IQuestion<TAbility, TResult> question) => _innerCanNotify.All(c => c.Question(question));
         public bool Question<TResult>(IQuestion<TResult> question) => _innerCanNotify.All(c => c.Question(question));

@@ -12,19 +12,7 @@
         /// <param name="action">The action to check</param>
         /// <returns>True if the action can send a notification, otherwise fase</returns>
         bool Action<TResult>(IAction<TResult> action);
-
-        /// <summary>
-        /// Indicates wether an action can send a notification
-        /// </summary>
-        /// <typeparam name="TGivenAbility"></typeparam>
-        /// <typeparam name="TWhenAbility"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="action">The action to check</param>
-        /// <returns>True if the action can send a notification, otherwise fase</returns>
-#pragma warning disable CS0618 // Type or member is obsolete
-        bool Action<TGivenAbility, TWhenAbility, TResult>(IAction<TGivenAbility, TWhenAbility, TResult> action);
-#pragma warning restore CS0618 // Type or member is obsolete
-
+        
         /// <summary>
         /// Indicates wether an question can send a notification
         /// </summary>

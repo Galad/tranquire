@@ -97,7 +97,7 @@ namespace Tranquire.Reporting
         {
             Guard.ForNull(action, nameof(action));
 #pragma warning disable CS0618 // Type or member is obsolete
-            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.ExecuteWithAbility(action), action);
+            return Actor.ExecuteWithAbility(action);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
