@@ -103,6 +103,7 @@
     <Compile Include="ActionsTests.cs" />
     <Compile Include="ActionTests.cs" />
     <Compile Include="ActionUnitTests.cs" />
+    <Compile Include="ActionWithAbility2Test.cs" />
     <Compile Include="ActionWithAbilityTest.cs" />
     <Compile Include="ActionUnitWithAbilityTests.cs" />
     <Compile Include="ActionWithAbilityToActionAdapterTests.cs" />
