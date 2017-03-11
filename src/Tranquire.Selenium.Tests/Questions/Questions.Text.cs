@@ -32,7 +32,7 @@ namespace Tranquire.Selenium.Tests.Questions
             return Target.The("element").LocatedBy(By.Id(id));
         }
 
-        private void TestQuestion<T>(string id, Func<TextContent, IQuestion<T, BrowseTheWeb>> getQuestion, T expected)
+        private void TestQuestion<T>(string id, Func<TextContent, IQuestion<T, WebBrowser>> getQuestion, T expected)
         {
             //arrange
             var question = getQuestion(TextContent.Of(CreateTarget(id)).WithCulture(DefaultCulture));
@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Tests.Questions
             TestQuestion(id, t => t.AsEnum<TextContent, TestEnum>(), expected);
         }
 
-        private void TestQuestionMany<T>(string id, Func<TextContent, IQuestion<ImmutableArray<T>, BrowseTheWeb>> getQuestion, IEnumerable<T> expected)
+        private void TestQuestionMany<T>(string id, Func<TextContent, IQuestion<ImmutableArray<T>, WebBrowser>> getQuestion, IEnumerable<T> expected)
         {
             //arrange
             var targetSource = Target.The("many container").LocatedBy(By.Id("many"));

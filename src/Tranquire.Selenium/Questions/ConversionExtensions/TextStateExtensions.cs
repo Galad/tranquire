@@ -27,7 +27,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState">The type of the state</typeparam>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<string, BrowseTheWeb> AsText<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
+        public static IQuestion<string, WebBrowser> AsText<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
         {
             return state.As(TextConverter);
         }
@@ -38,7 +38,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState">The type of the state</typeparam>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<int, BrowseTheWeb> AsInteger<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
+        public static IQuestion<int, WebBrowser> AsInteger<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
         {
             return state.As(IntegerConverter);
         }
@@ -49,7 +49,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState">The type of the state</typeparam>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<bool, BrowseTheWeb> AsBoolean<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
+        public static IQuestion<bool, WebBrowser> AsBoolean<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
         {
             return state.As(BooleanConverter);
         }
@@ -60,7 +60,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState">The type of the state</typeparam>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<DateTime, BrowseTheWeb> AsDateTime<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
+        public static IQuestion<DateTime, WebBrowser> AsDateTime<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
         {
             return state.As(DateTimeConverter);
         }
@@ -72,7 +72,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="T">The type of the enum</typeparam>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<T, BrowseTheWeb> AsEnum<TState, T>(this SingleUIState<string, TState> state) 
+        public static IQuestion<T, WebBrowser> AsEnum<TState, T>(this SingleUIState<string, TState> state) 
             where TState : SingleUIState<string, TState> 
             where T : struct
         {
@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<string>, BrowseTheWeb> AsText(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<string>, WebBrowser> AsText(this ManyUIState<string> state)
         {
             return state.As(TextConverter);
         }
@@ -96,7 +96,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<int>, BrowseTheWeb> AsInteger(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<int>, WebBrowser> AsInteger(this ManyUIState<string> state)
         {
             return state.As(IntegerConverter);
         }
@@ -106,7 +106,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<bool>, BrowseTheWeb> AsBoolean(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<bool>, WebBrowser> AsBoolean(this ManyUIState<string> state)
         {
             return state.As(BooleanConverter);
         }
@@ -116,7 +116,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<DateTime>, BrowseTheWeb> AsDateTime(this ManyUIState<string> state)
+        public static IQuestion<ImmutableArray<DateTime>, WebBrowser> AsDateTime(this ManyUIState<string> state)
         {
             return state.As(DateTimeConverter);
         }
@@ -127,7 +127,7 @@ namespace Tranquire.Selenium.Questions
         /// <param name="state">The source state</param>
         /// <typeparam name="T">The type of the enum</typeparam>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<T>, BrowseTheWeb> AsEnum<T>(this ManyUIState<string> state) where T : struct
+        public static IQuestion<ImmutableArray<T>, WebBrowser> AsEnum<T>(this ManyUIState<string> state) where T : struct
         {
             return state.As(new StringToEnumConverter<T>());
         }

@@ -81,27 +81,27 @@ namespace Tranquire.Selenium
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            if (typeof(TAbility) == typeof(BrowseTheWeb) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
+            if (typeof(TAbility) == typeof(WebBrowser) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
             {
-                return Actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, BrowseTheWeb>)question, _highlightActions));
+                return Actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
             }
             return Actor.AsksFor(question);
         }
 
-        private sealed class HighlightedQuestion<TAnswer> : IQuestion<TAnswer, BrowseTheWeb>
+        private sealed class HighlightedQuestion<TAnswer> : IQuestion<TAnswer, WebBrowser>
         {
-            private IQuestion<TAnswer, BrowseTheWeb> question;
+            private IQuestion<TAnswer, WebBrowser> question;
             private HighlighActions _highlightActions;
             private ITargeted Targeted => (ITargeted)question;
             public string Name => "[Highlighted] " + question.Name;
 
-            public HighlightedQuestion(IQuestion<TAnswer, BrowseTheWeb> question, HighlighActions highlightActions)
+            public HighlightedQuestion(IQuestion<TAnswer, WebBrowser> question, HighlighActions highlightActions)
             {
                 this.question = question;
                 _highlightActions = highlightActions;
             }
 
-            public TAnswer AnsweredBy(IActor actor, BrowseTheWeb ability)
+            public TAnswer AnsweredBy(IActor actor, WebBrowser ability)
             {
                 return Execute(ability, Targeted, () => question.AnsweredBy(actor, ability), _highlightActions);
             }
@@ -117,7 +117,7 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            if ((typeof(TGiven) == typeof(BrowseTheWeb) || typeof(TWhen) == typeof(BrowseTheWeb)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
+            if ((typeof(TGiven) == typeof(WebBrowser) || typeof(TWhen) == typeof(WebBrowser)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
             {
                 return Actor.ExecuteWithAbility(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
             }
@@ -139,24 +139,24 @@ namespace Tranquire.Selenium
 
             protected override TResult ExecuteGiven(IActor actor, TGiven ability)
             {
-                if (IsBrowseTheWeb<TGiven>())
+                if (IsWebBrowser<TGiven>())
                 {
-                    var a = ability as BrowseTheWeb;
+                    var a = ability as WebBrowser;
                     return Execute(a, Targeted, () => _action.ExecuteGivenAs(actor, ability), _highlightActions);
                 }
                 return _action.ExecuteGivenAs(actor, ability);
             }
 
-            private static bool IsBrowseTheWeb<T>()
+            private static bool IsWebBrowser<T>()
             {
-                return typeof(T) == typeof(BrowseTheWeb);
+                return typeof(T) == typeof(WebBrowser);
             }
 
             protected override TResult ExecuteWhen(IActor actor, TWhen ability)
             {
-                if (IsBrowseTheWeb<TGiven>())
+                if (IsWebBrowser<TGiven>())
                 {
-                    var a = ability as BrowseTheWeb;
+                    var a = ability as WebBrowser;
                     return Execute(a, Targeted, () => _action.ExecuteWhenAs(actor, ability), _highlightActions);
                 }
                 return _action.ExecuteWhenAs(actor, ability);
@@ -166,20 +166,20 @@ namespace Tranquire.Selenium
         }
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        private static TResult Execute<TResult>(BrowseTheWeb browseTheWeb, ITargeted targeted, Func<TResult> execute, HighlighActions actions)
+        private static TResult Execute<TResult>(WebBrowser webBrowser, ITargeted targeted, Func<TResult> execute, HighlighActions actions)
         {
-            Highlight(browseTheWeb, targeted, actions.BeginHighlightJsAction);
+            Highlight(webBrowser, targeted, actions.BeginHighlightJsAction);
             var result = execute();
-            Highlight(browseTheWeb, targeted, actions.EndHighlighJsAction);
+            Highlight(webBrowser, targeted, actions.EndHighlighJsAction);
             return result;
         }
 
-        private static void Highlight(BrowseTheWeb browseTheWeb, ITargeted targeted, string action)
+        private static void Highlight(WebBrowser webBrowser, ITargeted targeted, string action)
         {
-            var webElements = targeted.Target.ResoveAllFor(browseTheWeb);
+            var webElements = targeted.Target.ResoveAllFor(webBrowser);
             foreach (var el in webElements)
             {
-                ((IJavaScriptExecutor)browseTheWeb.Driver).ExecuteScript(action, el);
+                ((IJavaScriptExecutor)webBrowser.Driver).ExecuteScript(action, el);
             }
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -3,7 +3,7 @@
     /// <summary>
     /// A question returning the page title
     /// </summary>
-    public class PageTitle : IQuestion<string, BrowseTheWeb>
+    public class PageTitle : IQuestion<string, WebBrowser>
     {
         /// <summary>
         /// Returns the page title
@@ -11,7 +11,7 @@
         /// <param name="actor"></param>
         /// <param name="ability"></param>
         /// <returns></returns>
-        public string AnsweredBy(IActor actor, BrowseTheWeb ability)
+        public string AnsweredBy(IActor actor, WebBrowser ability)
         {
             return ability.Driver.Title;
         }

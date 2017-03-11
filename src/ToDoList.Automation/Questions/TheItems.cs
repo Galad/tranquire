@@ -7,7 +7,7 @@ namespace ToDoList.Automation.Questions
 {
     public class TheItems
     {
-        public static IQuestion<ImmutableArray<Model.ToDoItem>, BrowseTheWeb> Displayed()
+        public static IQuestion<ImmutableArray<Model.ToDoItem>, WebBrowser> Displayed()
         {
             return new DisplayedItems();
         }

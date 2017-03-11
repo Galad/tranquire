@@ -42,7 +42,7 @@ namespace ToDoList.Specifications
                             .TakeScreenshots(screenshotName)
                             .HighlightTargets()
                             .SlowSelenium(delay)
-                            .CanUse(BrowseTheWeb.With(driver));
+                            .CanUse(WebBrowser.With(driver));
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);

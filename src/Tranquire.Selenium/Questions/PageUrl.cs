@@ -9,7 +9,7 @@ namespace Tranquire.Selenium.Questions
     /// <summary>
     /// A question returning the page URL
     /// </summary>
-    public class PageUrl : IQuestion<string, BrowseTheWeb>
+    public class PageUrl : IQuestion<string, WebBrowser>
     {
         /// <summary>
         ///  Returns the page URL
@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Questions
         /// <param name="actor"></param>
         /// <param name="ability"></param>
         /// <returns></returns>
-        public string AnsweredBy(IActor actor, BrowseTheWeb ability)
+        public string AnsweredBy(IActor actor, WebBrowser ability)
         {
             return ability.Driver.Url;
         }

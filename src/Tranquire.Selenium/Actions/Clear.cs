@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Clear the value of an element
     /// </summary>
-    public sealed class Clear : ActionUnit<BrowseTheWeb>
+    public sealed class Clear : ActionUnit<WebBrowser>
     {
         /// <summary>
         /// Gets the target to clear the value from
@@ -45,7 +45,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var element = Target.ResolveFor(ability);
             element.SendKeys(Keys.LeftShift + Keys.Home);

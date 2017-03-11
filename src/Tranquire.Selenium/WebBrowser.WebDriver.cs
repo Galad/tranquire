@@ -10,7 +10,7 @@ namespace Tranquire.Selenium
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
-    public partial class BrowseTheWeb : IWebDriver
+    public partial class WebBrowser : IWebDriver
     {
         public string CurrentWindowHandle => Driver.CurrentWindowHandle;
         public string PageSource => Driver.PageSource;

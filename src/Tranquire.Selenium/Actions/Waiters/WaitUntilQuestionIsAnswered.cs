@@ -14,10 +14,10 @@ namespace Tranquire.Selenium.Actions.Waiters
     /// Wait until a question is answered
     /// </summary>
     /// <typeparam name="TAnswer">The type of the answer</typeparam>
-    public class WaitUntilQuestionIsAnswered<TAnswer> : ActionUnit<BrowseTheWeb>
+    public class WaitUntilQuestionIsAnswered<TAnswer> : ActionUnit<WebBrowser>
     {
         private Predicate<TAnswer> _isAnswered;
-        private IQuestion<TAnswer, BrowseTheWeb> _question;
+        private IQuestion<TAnswer, WebBrowser> _question;
         private readonly TimeSpan _timeout;
         /// <summary>
         /// Gets the question's name
@@ -31,7 +31,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>
         /// <param name="timeout">The duration during which the question must be asked</param>
         public WaitUntilQuestionIsAnswered(
-            IQuestion<TAnswer, BrowseTheWeb> question,
+            IQuestion<TAnswer, WebBrowser> question,
             Predicate<TAnswer> isAnswered,
             TimeSpan timeout)
         {
@@ -48,7 +48,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// <param name="question">The question to answer</param>
         /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>        
         public WaitUntilQuestionIsAnswered(
-            IQuestion<TAnswer, BrowseTheWeb> question,
+            IQuestion<TAnswer, WebBrowser> question,
             Predicate<TAnswer> isAnswered)
             :this(question, isAnswered, TimeSpan.FromSeconds(5))
         {
@@ -59,7 +59,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var wait = new WebDriverWait(ability.Driver, _timeout);
             try

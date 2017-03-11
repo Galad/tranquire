@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<string, BrowseTheWeb> AsText<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<string, WebBrowser> AsText<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(TextConverter);
         }
@@ -40,7 +40,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<int, BrowseTheWeb> AsInteger<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<int, WebBrowser> AsInteger<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(IntegerConverter);
         }
@@ -51,7 +51,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<bool, BrowseTheWeb> AsBoolean<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<bool, WebBrowser> AsBoolean<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(BooleanConverter);
         }
@@ -62,7 +62,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<DateTime, BrowseTheWeb> AsDateTime<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<DateTime, WebBrowser> AsDateTime<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(DateTimeConverter);
         }
@@ -74,7 +74,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<string>, BrowseTheWeb> AsText(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<string>, WebBrowser> AsText(this ManyUIState<IWebElement> state)
         {
             return state.As(TextConverter);
         }
@@ -84,7 +84,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<int>, BrowseTheWeb> AsInteger(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<int>, WebBrowser> AsInteger(this ManyUIState<IWebElement> state)
         {
             return state.As(IntegerConverter);
         }
@@ -94,7 +94,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<bool>, BrowseTheWeb> AsBoolean(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<bool>, WebBrowser> AsBoolean(this ManyUIState<IWebElement> state)
         {
             return state.As(BooleanConverter);
         }
@@ -104,7 +104,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<ImmutableArray<DateTime>, BrowseTheWeb> AsDateTime(this ManyUIState<IWebElement> state)
+        public static IQuestion<ImmutableArray<DateTime>, WebBrowser> AsDateTime(this ManyUIState<IWebElement> state)
         {
             return state.As(DateTimeConverter);
         }

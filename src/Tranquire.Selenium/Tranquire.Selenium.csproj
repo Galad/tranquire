@@ -81,7 +81,6 @@
     <Compile Include="Actions\Wait.cs" />
     <Compile Include="Actions\Waiters\WaitUntilQuestionIsAnswered.cs" />
     <Compile Include="ActorExtensions.cs" />
-    <Compile Include="BrowseTheWeb.cs" />
     <Compile Include="Actions\Click.cs" />
     <Compile Include="Actions\Clicks\ClickOnBy.cs" />
     <Compile Include="Actions\Enter.cs" />
@@ -127,9 +126,10 @@
     <Compile Include="Targets\TargetByParameterizable.cs" />
     <Compile Include="Targets\TargetByRelative.cs" />
     <Compile Include="Targets\TargetByWebElement.cs" />
+    <Compile Include="WebBrowser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrowseTheWeb.WebDriver.cs" />
+    <Compile Include="WebBrowser.WebDriver.cs" />
     <None Include="packages.config" />
     <None Include="Tranquire.Selenium.ruleset" />
   </ItemGroup>

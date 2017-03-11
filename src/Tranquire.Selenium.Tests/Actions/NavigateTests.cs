@@ -39,7 +39,7 @@ namespace Tranquire.Selenium.Tests.Actions
         public void ExecuteGivenAs_ShouldReturnCorrectValue(            
             Navigate sut,
             [Frozen]IWebDriver webDriver,
-            BrowseTheWeb ability,
+            WebBrowser ability,
             Mock<INavigation> navigation,
             IActor actor)
         {
@@ -55,7 +55,7 @@ namespace Tranquire.Selenium.Tests.Actions
         public void ExecuteWhenAs_ShouldReturnCorrectValue(
             Navigate sut,
             [Frozen]IWebDriver webDriver,
-            BrowseTheWeb ability,
+            WebBrowser ability,
             Mock<INavigation> navigation,
             IActor actor)
         {

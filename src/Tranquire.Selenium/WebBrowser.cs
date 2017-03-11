@@ -10,7 +10,7 @@ namespace Tranquire.Selenium
     /// <summary>
     /// Represent the ability to use a web browser with selenium
     /// </summary>
-    public sealed partial class BrowseTheWeb
+    public sealed partial class WebBrowser
     {
         /// <summary>
         /// Gets the Selenium <see cref="IWebDriver"/>
@@ -18,22 +18,22 @@ namespace Tranquire.Selenium
         public IWebDriver Driver { get; }
         
         /// <summary>
-        /// Creates a new instance of <see cref="BrowseTheWeb"/>
+        /// Creates a new instance of <see cref="WebBrowser"/>
         /// </summary>
         /// <param name="driver">The driver to use to browse the web</param>        
-        public BrowseTheWeb(IWebDriver driver)
+        public WebBrowser(IWebDriver driver)
         {
             Driver = driver;
         }
 
         /// <summary>
-        /// Returns a new <see cref="BrowseTheWeb"/> instance
+        /// Returns a new <see cref="WebBrowser"/> instance
         /// </summary>
         /// <param name="driver">The driver to use</param>
         /// <returns></returns>
-        public static BrowseTheWeb With(IWebDriver driver)
+        public static WebBrowser With(IWebDriver driver)
         {
-            return new BrowseTheWeb(driver);
+            return new WebBrowser(driver);
         }
     }
 }

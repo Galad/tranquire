@@ -13,7 +13,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// An action used to wait for a condition
     /// </summary>
-    public class Wait : ActionUnit<BrowseTheWeb>
+    public class Wait : ActionUnit<WebBrowser>
     {
         private readonly TimeSpan _timeout;
         private readonly ITarget _target;
@@ -55,7 +55,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var wait = new WebDriverWait(ability.Driver, _timeout);
             try
@@ -85,7 +85,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="question">The question to answer</param>
         /// <param name="isAnswered">A predicate returning wether the answer is satisfying</param>
         /// <returns>An action waiting until the question is answered</returns>
-        public static WaitUntilQuestionIsAnswered<TAnswer> UntilQuestionIsAnswered<TAnswer>(IQuestion<TAnswer, BrowseTheWeb> question, Predicate<TAnswer> isAnswered)
+        public static WaitUntilQuestionIsAnswered<TAnswer> UntilQuestionIsAnswered<TAnswer>(IQuestion<TAnswer, WebBrowser> question, Predicate<TAnswer> isAnswered)
         {
             return new WaitUntilQuestionIsAnswered<TAnswer>(question, isAnswered);
         }

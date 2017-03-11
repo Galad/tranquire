@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Base class for actions performed on a target
     /// </summary>
-    public abstract class TargetedAction : ActionUnit<BrowseTheWeb>, ITargeted
+    public abstract class TargetedAction : ActionUnit<WebBrowser>, ITargeted
     {
         /// <summary>
         /// Gets the target into which the action is executed
@@ -32,7 +32,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var element = Target.ResolveFor(ability.Driver);
             ExecuteAction(actor, element);

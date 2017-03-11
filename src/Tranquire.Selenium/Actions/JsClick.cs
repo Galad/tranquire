@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Represent a click on a target with javascript
     /// </summary>
-    public class JsClick : ActionUnit<BrowseTheWeb>, ITargeted
+    public class JsClick : ActionUnit<WebBrowser>, ITargeted
     {
         /// <summary>
         /// Gets the target which will be clicked
@@ -46,7 +46,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var element = Target.ResolveFor(ability);
             ((IJavaScriptExecutor)ability.Driver).ExecuteScript("arguments[0].click();", element);

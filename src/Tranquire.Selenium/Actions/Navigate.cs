@@ -9,7 +9,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Navigate to an url
     /// </summary>
-    public sealed class Navigate : ActionUnit<BrowseTheWeb>
+    public sealed class Navigate : ActionUnit<WebBrowser>
     {
         /// <summary>
         /// Gets the Uri to navigate to 
@@ -30,7 +30,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="uri">The Uri to navigate to</param>
         /// <returns>A new action that navigate to the Uri</returns>
-        public static IAction<BrowseTheWeb, BrowseTheWeb, Unit> To(Uri uri)
+        public static IAction<WebBrowser, WebBrowser, Unit> To(Uri uri)
         {
             return new Navigate(uri);
         }
@@ -40,7 +40,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, BrowseTheWeb ability)
+        protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             if (ability == null) throw new ArgumentNullException(nameof(ability));
             ability.Navigate().GoToUrl(Uri);

@@ -21,7 +21,7 @@ namespace Sandbox
             //using (var webDriver = new FirefoxDriver())
             //{                
             //    IActor actor = new Actor("John");
-            //    actor.Can(BrowseTheWeb.With(webDriver))
+            //    actor.Can(WebBrowser.With(webDriver))
             //         .Given(Open.TheApplication())
             //         .When(ToDoItem.AddAToDoItem("buy some milk"));
 

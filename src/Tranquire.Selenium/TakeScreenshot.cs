@@ -39,15 +39,15 @@ namespace Tranquire.Selenium
             }
             finally
             {
-                var browseTheWeb = ability as BrowseTheWeb;
-                if (browseTheWeb != null)
+                var webBrowser = ability as WebBrowser;
+                if (webBrowser != null)
                 {
                     if (!Directory.Exists("Screenshots"))
                     {
                         Directory.CreateDirectory("Screenshots");
                     }
                     var name = nextScreenshotName();
-                    ((ITakesScreenshot)browseTheWeb.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{name}.jpg", ScreenshotImageFormat.Jpeg);
+                    ((ITakesScreenshot)webBrowser.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{name}.jpg", ScreenshotImageFormat.Jpeg);
                 }
             }
         }

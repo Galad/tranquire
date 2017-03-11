@@ -22,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Actions
         [Theory, DomainAutoData]
         public void Sut_IsAction(Wait sut)
         {
-            Assert.IsAssignableFrom<ActionUnit<BrowseTheWeb>>(sut);
+            Assert.IsAssignableFrom<ActionUnit<WebBrowser>>(sut);
         }
         
         [Theory, DomainAutoData]

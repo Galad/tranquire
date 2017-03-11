@@ -39,22 +39,22 @@ namespace Tranquire.Selenium
 
         public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            var browseTheWebQuestion = question as IQuestion<TAnswer, BrowseTheWeb>;
+            var webBrowserQuestion = question as IQuestion<TAnswer, WebBrowser>;
             var targeted = question as ITargeted;
-            if (browseTheWebQuestion != null && targeted != null)
+            if (webBrowserQuestion != null && targeted != null)
             {
-                return Actor.AsksFor(new SlowSeleniumQuestion<TAnswer, BrowseTheWeb>(browseTheWebQuestion, DelayMilliseconds, targeted));
+                return Actor.AsksFor(new SlowSeleniumQuestion<TAnswer, WebBrowser>(webBrowserQuestion, DelayMilliseconds, targeted));
             }
             return Actor.AsksFor(question);
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : IQuestion<TAnswer, BrowseTheWeb>, ITargeted
+        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : IQuestion<TAnswer, WebBrowser>, ITargeted
         {
             private int _delay;
-            private readonly IQuestion<TAnswer, BrowseTheWeb> _question;
+            private readonly IQuestion<TAnswer, WebBrowser> _question;
             private readonly ITargeted _targeted;
 
-            public SlowSeleniumQuestion(IQuestion<TAnswer, BrowseTheWeb> question, int delay, ITargeted targeted)
+            public SlowSeleniumQuestion(IQuestion<TAnswer, WebBrowser> question, int delay, ITargeted targeted)
             {
                 _question = question;
                 _delay = delay;
@@ -65,7 +65,7 @@ namespace Tranquire.Selenium
 
             public ITarget Target => _targeted.Target;
 
-            public TAnswer AnsweredBy(IActor actor, BrowseTheWeb ability)
+            public TAnswer AnsweredBy(IActor actor, WebBrowser ability)
             {
                 Thread.Sleep(_delay);
                 var value = _question.AnsweredBy(actor, ability);
@@ -85,7 +85,7 @@ namespace Tranquire.Selenium
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             var targeted = action as ITargeted;
-            if (typeof(TGiven) != typeof(BrowseTheWeb) && typeof(TWhen) != typeof(BrowseTheWeb) || targeted == null)
+            if (typeof(TGiven) != typeof(WebBrowser) && typeof(TWhen) != typeof(WebBrowser) || targeted == null)
             {
                 return Actor.ExecuteWithAbility(action);
             }
