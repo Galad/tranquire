@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Tests
             Fixture = fixture;
         }
 
-        protected T Answer<T, TAbility>(IQuestion<T, TAbility> question)
+        protected T Answer<T>(IQuestion<T> question)
         {
             return Fixture.Actor.AsksFor(question);
         }

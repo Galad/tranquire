@@ -32,7 +32,7 @@ namespace Tranquire.Selenium.Tests.Questions
             return Target.The("element").LocatedBy(By.Id(id));
         }
 
-        private void TestQuestion<T>(string id, Func<TextContent, IQuestion<T, WebBrowser>> getQuestion, T expected)
+        private void TestQuestion<T>(string id, Func<TextContent, IQuestion<T>> getQuestion, T expected)
         {
             //arrange
             var question = getQuestion(TextContent.Of(CreateTarget(id)).WithCulture(DefaultCulture));

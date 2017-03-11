@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<string, WebBrowser> AsText<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<string> AsText<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(TextConverter);
         }
@@ -40,7 +40,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<int, WebBrowser> AsInteger<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<int> AsInteger<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(IntegerConverter);
         }
@@ -51,7 +51,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<bool, WebBrowser> AsBoolean<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<bool> AsBoolean<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(BooleanConverter);
         }
@@ -62,7 +62,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="TState"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static IQuestion<DateTime, WebBrowser> AsDateTime<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
+        public static IQuestion<DateTime> AsDateTime<TState>(this SingleUIState<IWebElement, TState> state) where TState : SingleUIState<IWebElement, TState>
         {
             return state.As(DateTimeConverter);
         }
