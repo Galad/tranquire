@@ -9,7 +9,7 @@
         /// Returns a question about the page title
         /// </summary>
         /// <returns>A question returning the page title</returns>
-        public static IQuestion<string, WebBrowser> Title()
+        public static IQuestion<string> Title()
         {
             return new PageTitle();
         }
@@ -18,7 +18,7 @@
         /// Returns a question about the current URL
         /// </summary>
         /// <returns>A question returning the current URL</returns>
-        public static IQuestion<string, WebBrowser> Url()
+        public static IQuestion<string> Url()
         {
             return new PageUrl();
         }

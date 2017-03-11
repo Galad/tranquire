@@ -11,7 +11,9 @@ namespace Tranquire
     /// </summary>
     /// <typeparam name="TAnswer">The answer type</typeparam>
     /// <typeparam name="TAbility">The ability type</typeparam>
+#pragma warning disable CS0618 // Type or member is obsolete
     public abstract class Question<TAnswer, TAbility> : IQuestion<TAnswer, TAbility>
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
         /// Gets the question name
@@ -37,7 +39,9 @@ namespace Tranquire
         public TAnswer AnsweredBy(IActor actor)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.AsksFor(this);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
