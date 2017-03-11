@@ -136,7 +136,9 @@ namespace Tranquire.Tests.Reporting
             get
             {                
                 yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action));
+#pragma warning disable CS0618 // Type or member is obsolete
                 yield return ExecutionTestCasesValues((sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action), action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action));
+#pragma warning restore CS0618 // Type or member is obsolete
             }
         }
 

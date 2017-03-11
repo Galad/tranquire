@@ -11,12 +11,12 @@ namespace Tranquire.Selenium.Actions.Clicks
     /// <summary>
     /// Click on a target. If the click fails, it will be retried every 500ms until the timout expires
     /// </summary>
-    public sealed class ClickOnActionWithRetry<T> : ActionUnit<T>
+    public sealed class ClickOnActionWithRetry : ActionUnit
     {
         /// <summary>
         /// Gets the action used to click on the target
         /// </summary>
-        public IAction<T, T, Unit> InnerAction { get; }
+        public IAction<Unit> InnerAction { get; }
         /// <summary>
         /// Gets the duration during which the action will be retried
         /// </summary>
@@ -27,11 +27,11 @@ namespace Tranquire.Selenium.Actions.Clicks
         public override string Name => $"[Retry during {Timeout}] " + InnerAction.Name;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ClickOnActionWithRetry{T}"/>
+        /// Creates a new instance of <see cref="ClickOnActionWithRetry"/>
         /// </summary>
         /// <param name="innerAction">The action used to click on the target</param>
         /// <param name="timeout">The duration during which the action will be retried</param>
-        public ClickOnActionWithRetry(IAction<T, T, Unit> innerAction, TimeSpan timeout)
+        public ClickOnActionWithRetry(IAction<Unit> innerAction, TimeSpan timeout)
         {
             Guard.ForNull(innerAction, nameof(innerAction));
             InnerAction = innerAction;
@@ -39,10 +39,10 @@ namespace Tranquire.Selenium.Actions.Clicks
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ClickOnActionWithRetry{T}"/> with a default timeout of 5 seconds
+        /// Creates a new instance of <see cref="ClickOnActionWithRetry"/> with a default timeout of 5 seconds
         /// </summary>
         /// <param name="innerAction">The action used to click on the target</param>
-        public ClickOnActionWithRetry(IAction<T, T, Unit> innerAction) : this(innerAction, TimeSpan.FromSeconds(5))
+        public ClickOnActionWithRetry(IAction<Unit> innerAction) : this(innerAction, TimeSpan.FromSeconds(5))
         {
         }
 
@@ -50,33 +50,31 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// Changes the timeout value
         /// </summary>
         /// <param name="time">The duration during which the action will be retried</param>
-        /// <returns>A new instance of <see cref="ClickOnActionWithRetry{T}"/> with the new timeout</returns>
-        public ClickOnActionWithRetry<T> During(TimeSpan time)
+        /// <returns>A new instance of <see cref="ClickOnActionWithRetry"/> with the new timeout</returns>
+        public ClickOnActionWithRetry During(TimeSpan time)
         {
-            return new ClickOnActionWithRetry<T>(InnerAction, time);
+            return new ClickOnActionWithRetry(InnerAction, time);
+        }
+
+        /// <summary>
+        /// Execute the action
+        /// </summary>
+        /// <param name="actor"></param>        
+        protected override void ExecuteGiven(IActor actor)
+        {
+            Execute(actor);
         }
 
         /// <summary>
         /// Execute the action
         /// </summary>
         /// <param name="actor"></param>
-        /// <param name="ability"></param>
-        protected override void ExecuteGiven(IActor actor, T ability)
+        protected override void ExecuteWhen(IActor actor)
         {
-            Execute(actor, ability);
+            Execute(actor);
         }
 
-        /// <summary>
-        /// Execute the action
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="ability"></param>
-        protected override void ExecuteWhen(IActor actor, T ability)
-        {
-            Execute(actor, ability);
-        }
-
-        private void Execute(IActor actor, T ability)
+        private void Execute(IActor actor)
         {
             var startTime = DateTimeOffset.Now;
             bool hasSucceeded = false;   
@@ -84,7 +82,7 @@ namespace Tranquire.Selenium.Actions.Clicks
             {
                 try
                 {
-                    InnerAction.ExecuteWhenAs(actor, ability);
+                    InnerAction.ExecuteWhenAs(actor);
                     hasSucceeded = true;
                 }
                 catch (WebDriverException)

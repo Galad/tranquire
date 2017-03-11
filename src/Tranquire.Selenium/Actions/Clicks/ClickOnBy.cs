@@ -33,10 +33,10 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// <summary>
         /// Allow the click action to be retried if it fails
         /// </summary>
-        /// <returns>A new instance of <see cref="ClickOnActionWithRetry{T}"/></returns>
-        public ClickOnActionWithRetry<BrowseTheWeb> AllowRetry()
+        /// <returns>A new instance of <see cref="ClickOnActionWithRetry"/></returns>
+        public ClickOnActionWithRetry AllowRetry()
         {
-            return new ClickOnActionWithRetry<BrowseTheWeb>(this);
+            return new ClickOnActionWithRetry(this);
         }
     }
 }

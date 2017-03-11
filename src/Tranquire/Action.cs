@@ -7,7 +7,9 @@ namespace Tranquire
     /// </summary>
     /// <typeparam name="T">The ability required for the contexts</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+#pragma warning disable CS0618 // Type or member is obsolete
     public abstract class Action<T, TResult> : IAction<T, T, TResult>
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
         /// Executes the action
@@ -68,7 +70,9 @@ namespace Tranquire
         public TResult ExecuteGivenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<T, T, TResult>);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
@@ -79,7 +83,9 @@ namespace Tranquire
         public TResult ExecuteWhenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<T, T, TResult>);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 
@@ -89,7 +95,10 @@ namespace Tranquire
     /// <typeparam name="TGiven">The ability required for the Given context</typeparam>
     /// <typeparam name="TWhen">The ability required for the When context</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+#pragma warning disable CS0618 // Type or member is obsolete
     public abstract class Action<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
+#pragma warning restore CS0618 // Type or member is obsolete
+
     {
         /// <summary>
         /// Executes the action
@@ -147,7 +156,9 @@ namespace Tranquire
         public TResult ExecuteGivenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<TGiven, TWhen, TResult>);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
@@ -158,7 +169,9 @@ namespace Tranquire
         public TResult ExecuteWhenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<TGiven, TWhen, TResult>);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 
@@ -166,7 +179,9 @@ namespace Tranquire
     /// Represent an action on the system
     /// </summary>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
+#pragma warning disable CS0618 // Type or member is obsolete
     public abstract class Action<TResult> : IAction<TResult>
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
         /// Executes the action

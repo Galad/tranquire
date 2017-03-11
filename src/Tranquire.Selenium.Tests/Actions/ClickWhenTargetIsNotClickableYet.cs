@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Tests.Actions
             TestExecute(expected, a => Fixture.Actor.Given(a));
         }
 
-        private void TestExecute(string expected, System.Action<Tranquire.IAction<BrowseTheWeb, BrowseTheWeb, Unit>> execute)
+        private void TestExecute(string expected, System.Action<Tranquire.IAction<Unit>> execute)
         {
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ClickableElement"));

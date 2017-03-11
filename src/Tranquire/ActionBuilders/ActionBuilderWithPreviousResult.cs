@@ -9,15 +9,15 @@ namespace Tranquire.ActionBuilders
     /// <typeparam name="TAction">The action type</typeparam>
     /// <typeparam name="TResult">The action result type</typeparam>
     /// <typeparam name="TPreviousAction">The previous action type</typeparam>
-    /// <typeparam name="TPReviousResult">The previous action result type</typeparam>
-    public sealed class ActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult> : IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult>
+    /// <typeparam name="TPreviousResult">The previous action result type</typeparam>
+    public sealed class ActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult> : IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult>
         where TAction : class, IAction<TResult>
-        where TPreviousAction : class, IAction<TPReviousResult>
+        where TPreviousAction : class, IAction<TPreviousResult>
     {
         /// <summary>
         /// Gets the action factory
         /// </summary>
-        public Func<ActionResult<TPreviousAction, TPReviousResult>, TAction> ActionFactory { get; }
+        public Func<ActionResult<TPreviousAction, TPreviousResult>, TAction> ActionFactory { get; }
         /// <summary>
         /// Gets the previous action
         /// </summary>
@@ -56,7 +56,7 @@ namespace Tranquire.ActionBuilders
         public ActionBuilderWithPreviousResult(
             Func<IActor, TPreviousAction> previousAction,
             CompositeAction executableAction,
-            Func<ActionResult<TPreviousAction, TPReviousResult>, TAction> actionFactory,
+            Func<ActionResult<TPreviousAction, TPreviousResult>, TAction> actionFactory,
             string previousActionName) : this(previousAction, executableAction, actionFactory, previousActionName, "")
         {
         }
@@ -64,7 +64,7 @@ namespace Tranquire.ActionBuilders
         private ActionBuilderWithPreviousResult(
             Func<IActor, TPreviousAction> previousAction,
             CompositeAction executableAction,
-            Func<ActionResult<TPreviousAction, TPReviousResult>, TAction> actionFactory,
+            Func<ActionResult<TPreviousAction, TPreviousResult>, TAction> actionFactory,
             string previousActionName,
             string name)
         {
@@ -102,7 +102,7 @@ namespace Tranquire.ActionBuilders
         {
             var previousAction = PreviousAction(actor);
             var result = actor.Execute(previousAction);
-            var actionResult = new ActionResult<TPreviousAction, TPReviousResult>(previousAction, result);
+            var actionResult = new ActionResult<TPreviousAction, TPreviousResult>(previousAction, result);
             return ActionFactory(actionResult);
         }
 
@@ -119,10 +119,10 @@ namespace Tranquire.ActionBuilders
                 Name + ", Then " + nextAction.Name);
         }
 
-        public IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult> Named(string name)
+        IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult> IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult>.Named(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            return new ActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPReviousResult>(
+            return new ActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult>(
                 PreviousAction,
                 _executableAction,
                 ActionFactory,

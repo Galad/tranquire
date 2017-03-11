@@ -111,11 +111,9 @@
     <Compile Include="Extensions\Ability.cs" />
     <Compile Include="Extensions\AbilityAction.cs" />
     <Compile Include="Extensions\ActionExtensionsTests.cs" />
-    <Compile Include="Extensions\IfActionPredicateAndActionWithAbilityTests.cs" />
     <Compile Include="Extensions\IfActionPredicateWithAbilityTests.cs" />
     <Compile Include="Extensions\IfActionTests.cs" />
     <Compile Include="Extensions\IfActionTestsBase.cs" />
-    <Compile Include="Extensions\IfActionWithAbilityTests.cs" />
     <Compile Include="Extensions\IFunc.cs" />
     <Compile Include="ImmutableCollectionsCustomization.cs" />
     <Compile Include="MockActorExtensions.cs" />

@@ -2,10 +2,13 @@
 
 namespace Tranquire
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     /// <summary>
     /// Represent an action on the system returning no value
     /// </summary>
+    /// <typeparam name="T">The ability type. It used for both When and Given contexts</typeparam>
     public abstract class ActionUnit<T> : IAction<T, T, Unit>
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
         /// Executes the action
@@ -66,7 +69,9 @@ namespace Tranquire
         public Unit ExecuteGivenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<T, T, Unit>);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
@@ -77,7 +82,9 @@ namespace Tranquire
         public Unit ExecuteWhenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
+#pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<T, T, Unit>);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 

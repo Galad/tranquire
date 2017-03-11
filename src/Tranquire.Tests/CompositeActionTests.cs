@@ -89,23 +89,7 @@ namespace Tranquire.Tests
             //assert            
             actual.Actions.Except(existingActions).Single().Should().Be(expected);
         }
-        
-        [Theory, DomainAutoData]
-        public void And_WithAbility_ShouldContainExistingAbility(
-          IFixture fixture,
-          Mock<IActor> actor,
-          IAction<object, object, Unit> action
-          )
-        {
-            //arrange
-            var sut = new Mock<CompositeAction>(fixture.CreateMany<IAction<Unit>>().ToImmutableArray()).Object;
-            var existingActions = sut.Actions.ToArray();
-            //act
-            var actual = sut.And(action);
-            //assert                        
-            actual.Actions.Should().Contain(existingActions);
-        }
-
+                
         [Theory, DomainAutoData]
         public void Sut_WithCompositeActionBuilder_ShouldHaveCorrectCompositeActions(
            IAction<Unit>[] expected

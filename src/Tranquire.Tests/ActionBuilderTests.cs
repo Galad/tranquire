@@ -40,9 +40,10 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause_ActionBuilder2(ActionBuilder<TestAction, Unit> sut)
         {
-            new Action(() => ((IActionBuilder<TestAction, Unit>)sut).Then<IAction<Unit>, Unit>(default(IAction<Unit>))).ShouldThrowExactly<ArgumentNullException>("Then");
-            new Action(() => sut.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
-            new Action(() => sut.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
+            var sutAsInterface = (IActionBuilder<TestAction, Unit>)sut;
+            new Action(() => sutAsInterface.Then<IAction<Unit>, Unit>(default(IAction<Unit>))).ShouldThrowExactly<ArgumentNullException>("Then");
+            new Action(() => sutAsInterface.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
+            new Action(() => sutAsInterface.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
         }
 
         [Theory, DomainAutoData]
@@ -54,9 +55,10 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause_ActionBuilder4(ActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit> sut)
         {
-            new Action(() => sut.Then(default(TestAction), Unit.Default)).ShouldThrowExactly<ArgumentNullException>("Then");
-            new Action(() => sut.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
-            new Action(() => sut.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
+            var sutAsInterface = (IActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit>)sut;
+            new Action(() => sutAsInterface.Then(default(TestAction), Unit.Default)).ShouldThrowExactly<ArgumentNullException>("Then");
+            new Action(() => sutAsInterface.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
+            new Action(() => sutAsInterface.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
         }
 
         [Theory, DomainAutoData]

@@ -46,7 +46,7 @@ namespace Tranquire.Selenium.Actions
         protected override IDisposable ExecuteWhen(IActor actor, BrowseTheWeb ability)
         {
             ability.SwitchTo().Frame(_target.ResolveFor(ability));
-            return new Disposable(() => actor.ExecuteWithAbility(new SwitchToParentIFrame()));
+            return new Disposable(() => actor.Execute(new SwitchToParentIFrame()));
         }
         
         private class Disposable : IDisposable

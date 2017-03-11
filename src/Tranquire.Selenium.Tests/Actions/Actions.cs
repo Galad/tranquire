@@ -35,7 +35,7 @@ namespace Tranquire.Selenium.Tests.Actions
             TestClick(buttonId, JsClick.On);
         }
 
-        private void TestClick(string buttonId, Func<ITarget, IAction<BrowseTheWeb, BrowseTheWeb, Unit>> click)
+        private void TestClick(string buttonId, Func<ITarget, IAction<Unit>> click)
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();

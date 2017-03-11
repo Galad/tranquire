@@ -86,7 +86,7 @@ namespace Tranquire.ActionBuilders
                 Name);
         }
 
-        public IActionBuilder<TAction, TResult> Named(string name)
+        IActionBuilder<TAction, TResult> IActionBuilder<TAction, TResult>.Named(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
             return new ActionBuilder<TAction, TResult>(Action, _executableAction, name);

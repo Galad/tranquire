@@ -81,6 +81,7 @@ namespace Tranquire.Selenium
             return Actor.Execute(action);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             var targeted = action as ITargeted;
@@ -125,6 +126,7 @@ namespace Tranquire.Selenium
 
             public override string ToString() => Name;
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -89,6 +89,7 @@ namespace Tranquire.Selenium
             return Actor.Execute(action);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             return Actor.ExecuteWithAbility(new TakeScreenshotAction<TGiven, TWhen, TResult>(action, NextScreenshotName));
@@ -120,6 +121,7 @@ namespace Tranquire.Selenium
             /// </summary>
             public override string Name => "[Take screenshot] " + _action.Name;
         }
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

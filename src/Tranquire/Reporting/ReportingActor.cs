@@ -91,10 +91,14 @@ namespace Tranquire.Reporting
             return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+#pragma warning restore CS0618 // Type or member is obsolete
         {
             Guard.ForNull(action, nameof(action));
+#pragma warning disable CS0618 // Type or member is obsolete
             return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.ExecuteWithAbility(action), action);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         private TResult ExecuteNotifyingAction<TResult>(Func<bool> canNotify, Func<TResult> executeAction, INamed action)

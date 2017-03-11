@@ -63,7 +63,6 @@
     <Compile Include="Actions.cs" />
     <Compile Include="CommandExtensions.cs" />
     <Compile Include="Extensions\IfAction.cs" />
-    <Compile Include="Extensions\IfActionWithAbility.cs" />
     <Compile Include="ActionBuilders\IActionBuilder.cs" />
     <Compile Include="Reporting\ActionNotification.cs" />
     <Compile Include="Reporting\ActionNotificationContentType.cs" />

@@ -114,6 +114,7 @@ namespace Tranquire.Selenium
             return Actor.Execute(action);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             if ((typeof(TGiven) == typeof(BrowseTheWeb) || typeof(TWhen) == typeof(BrowseTheWeb)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
@@ -163,6 +164,7 @@ namespace Tranquire.Selenium
 
             public override string ToString() => Name;
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         private static TResult Execute<TResult>(BrowseTheWeb browseTheWeb, ITargeted targeted, Func<TResult> execute, HighlighActions actions)
         {
