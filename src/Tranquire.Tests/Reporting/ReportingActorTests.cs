@@ -316,26 +316,7 @@ namespace Tranquire.Tests.Reporting
             };
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
-
-        [Fact]
-        public void Sut_AllMethods_WhenActionIsAdapterToActionUnit_ShouldNotCallOnNext()
-        {
-            //arrange                  
-            var fixture = CreateFixture();
-            var observer = new TestObserver<ActionNotification>();
-            fixture.Inject((IObserver<ActionNotification>)observer);                        
-            var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();
-            var adaptedAction = action.AsActionWithoutAbility();            
-            var expected = fixture.Create<object>();
-            Mock.Get(sut.Actor).Setup(a => a.Execute(adaptedAction)).Returns(expected);
-            //act
-            var actual = sut.Execute(adaptedAction);
-            //assert            
-            observer.Values.Should().BeEmpty();
-            actual.Should().Be(expected);
-        }
-
+        
         [Theory, ReportingActorAutoDataAttribute]
         public void Execute_WhenCanNotifyReturnsFalse_ShouldNotNotify(
             [Frozen]TestObserver<ActionNotification> observer,

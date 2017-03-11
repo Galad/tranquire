@@ -68,7 +68,6 @@
     <Compile Include="Reporting\ActionNotification.cs" />
     <Compile Include="Reporting\ActionNotificationContentType.cs" />
     <Compile Include="ActionUnit.cs" />
-    <Compile Include="ActionWithAbilityToActionAdapter.cs" />
     <Compile Include="Actor.cs" />
     <Compile Include="ActorExtensions.cs" />
     <Compile Include="CommandAsAction.cs" />
@@ -77,7 +76,6 @@
     <Compile Include="Reporting\AfterActionNotificationContent.cs" />
     <Compile Include="Reporting\BeforeActionNotificationContent.cs" />
     <Compile Include="Reporting\CanNotify.cs" />
-    <Compile Include="Reporting\CannotNotifyActionAdapter.cs" />
     <Compile Include="Reporting\CompositeCanNotify.cs" />
     <Compile Include="Reporting\ExecutionErrorNotificationContent.cs" />
     <Compile Include="Reporting\IActionNotificationContent.cs" />

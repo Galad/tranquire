@@ -107,17 +107,6 @@ namespace Tranquire
         }
 
         /// <summary>
-        /// Returns a new <see cref="CompositeAction"/> with the given action using an ability appended to its action list
-        /// </summary>
-        /// <param name="action">The action to add</param>
-        /// <returns>A new instance of <see cref="CompositeAction"/> containing <paramref name="action"/></returns>
-        public CompositeAction And<TGiven, TWhen>(IAction<TGiven, TWhen, Unit> action)
-        {
-            Guard.ForNull(action, nameof(action));
-            return new AnonymousCompositeAction(Actions.Add(new ActionWithAbilityToActionAdapter<TGiven, TWhen, Unit>(action)));
-        }
-
-        /// <summary>
         /// Returns the action's name
         /// </summary>
         /// <returns>Returns the action's name</returns>

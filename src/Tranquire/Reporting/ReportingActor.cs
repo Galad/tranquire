@@ -55,7 +55,7 @@ namespace Tranquire.Reporting
             Observer = observer;
             Actor = actor;
             MeasureTime = measureTime;
-            CanNotify = new CompositeCanNotify(canNotify, new CannotNotifyActionAdapter());
+            CanNotify = canNotify;
         }
 
         private class CanAlwaysNotify : CanNotify { }

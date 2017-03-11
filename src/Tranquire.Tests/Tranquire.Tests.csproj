@@ -106,7 +106,6 @@
     <Compile Include="ActionWithAbility2Test.cs" />
     <Compile Include="ActionWithAbilityTest.cs" />
     <Compile Include="ActionUnitWithAbilityTests.cs" />
-    <Compile Include="ActionWithAbilityToActionAdapterTests.cs" />
     <Compile Include="ActorExtensionsTests.cs" />
     <Compile Include="ActorTests.cs" />
     <Compile Include="Extensions\Ability.cs" />
