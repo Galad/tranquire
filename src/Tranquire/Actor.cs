@@ -35,7 +35,7 @@ namespace Tranquire
         /// <see cref="IActionExecutor.When{T, TResult}(IWhenCommand{T, TResult})"/>, 
         /// <see cref="IActionExecutor.Given{TResult}(IGivenCommand{TResult})"/>, 
         /// <see cref="IActionExecutor.Given{T, TResult}(IGivenCommand{T, TResult})"/>.
-        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
         /// </param>
         public Actor(
             string name, 
@@ -74,7 +74,7 @@ namespace Tranquire
         /// <see cref="IActionExecutor.When{T, TResult}(IWhenCommand{T, TResult})"/>, 
         /// <see cref="IActionExecutor.Given{TResult}(IGivenCommand{TResult})"/>, 
         /// <see cref="IActionExecutor.Given{T, TResult}(IGivenCommand{T, TResult})"/>.
-        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.Execute{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
         /// </param>
         public Actor(string name, Func<IActor, IActor> innerActorBuilder)
             :this(name, new Dictionary<Type, object>(), innerActorBuilder)
@@ -95,32 +95,7 @@ namespace Tranquire
                 throw new InvalidOperationException($"The ability {abilityType.Name} was requested but the actor {Name} does not have it.");
             }
             return Abilities[abilityType];
-        }
-
-        /// <summary>
-        /// Execute the action in the When context with an ability
-        /// </summary>
-        /// <typeparam name="T">Type of the required ability</typeparam>
-        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-        /// <param name="command">The command to execute</param>
-        public TResult When<T, TResult>(IWhenCommand<T, TResult> command)
-        {
-            Guard.ForNull(command, nameof(command));
-            return CreateWhenActor().Execute(command.AsAction());
-        }
-
-       
-        /// <summary>
-        /// Execute the action in the Given context with an ability
-        /// </summary>
-        /// <typeparam name="T">Type of the required ability</typeparam>
-        /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-        /// <param name="command">The command to execute</param>
-        public TResult Given<T, TResult>(IGivenCommand<T, TResult> command)
-        {
-            Guard.ForNull(command, nameof(command));            
-            return CreateGivenActor().Execute(command.AsAction());
-        }
+        }        
 
         /// <summary>
         /// Execute the action in the When context
@@ -208,7 +183,7 @@ namespace Tranquire
             }
 
             public override TResult Execute<TResult>(IAction<TResult> action) => action.ExecuteWhenAs(Actor);
-            public override TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteWhenAs(Actor, (TWhen)GetAbility(typeof(TWhen)));
+            public override TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteWhenAs(Actor, (TWhen)GetAbility(typeof(TWhen)));
         }
 
         private class GivenInnerActor : InnerActor
@@ -218,7 +193,7 @@ namespace Tranquire
             }
 
             public override TResult Execute<TResult>(IAction<TResult> action) => action.ExecuteGivenAs(Actor);
-            public override TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteGivenAs(Actor, (TGiven)GetAbility(typeof(TGiven)));
+            public override TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteGivenAs(Actor, (TGiven)GetAbility(typeof(TGiven)));
         }
 
         private abstract class InnerActor : IActor
@@ -245,7 +220,7 @@ namespace Tranquire
                 return question.AnsweredBy(Actor, (TAbility)GetAbility(typeof(TAbility)));
             }
 
-            public abstract TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
+            public abstract TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
             public abstract TResult Execute<TResult>(IAction<TResult> action);
         }
     }

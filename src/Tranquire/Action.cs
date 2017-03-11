@@ -1,4 +1,6 @@
-﻿namespace Tranquire
+﻿using System;
+
+namespace Tranquire
 {
     /// <summary>
     /// Represent an action on the system
@@ -57,6 +59,28 @@
         /// </summary>
         /// <returns></returns>
         public override string ToString() => Name;
+
+        /// <summary>
+        /// Execute the action in the Given context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        public TResult ExecuteGivenAs(IActor actor)
+        {
+            Guard.ForNull(actor, nameof(actor));
+            return actor.ExecuteWithAbility(this as IAction<T, T, TResult>);
+        }
+
+        /// <summary>
+        /// Execute the action in the When context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        public TResult ExecuteWhenAs(IActor actor)
+        {
+            Guard.ForNull(actor, nameof(actor));
+            return actor.ExecuteWithAbility(this as IAction<T, T, TResult>);
+        }
     }
 
     /// <summary>
@@ -114,6 +138,28 @@
         /// </summary>
         /// <returns></returns>
         public override string ToString() => Name;
+
+        /// <summary>
+        /// Execute the action in the Given context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        public TResult ExecuteGivenAs(IActor actor)
+        {
+            Guard.ForNull(actor, nameof(actor));
+            return actor.ExecuteWithAbility(this as IAction<TGiven, TWhen, TResult>);
+        }
+
+        /// <summary>
+        /// Execute the action in the When context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        public TResult ExecuteWhenAs(IActor actor)
+        {
+            Guard.ForNull(actor, nameof(actor));
+            return actor.ExecuteWithAbility(this as IAction<TGiven, TWhen, TResult>);
+        }
     }
 
     /// <summary>

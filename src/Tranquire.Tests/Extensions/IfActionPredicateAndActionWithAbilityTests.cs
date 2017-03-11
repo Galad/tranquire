@@ -24,7 +24,7 @@ namespace Tranquire.Tests.Extensions
             Func<Ability, bool> func = funcMock.Object.Func<Ability, bool>;
             fixture.Inject(func);
             var sut = fixture.Create<IfActionWithAbility<Ability, Ability1, Ability2, object>>();
-            actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
+            actor.Setup(a => a.ExecuteWithAbility(sut.Action)).Returns(expected);
             //act
             var actual = sut.ExecuteWhenAs(actor.Object, ability);
             //assert
@@ -65,7 +65,7 @@ namespace Tranquire.Tests.Extensions
             Func<Ability, bool> func = funcMock.Object.Func<Ability, bool>;
             fixture.Inject(func);
             var sut = fixture.Create<IfActionWithAbility<Ability, Ability1, Ability2, object>>();
-            actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
+            actor.Setup(a => a.ExecuteWithAbility(sut.Action)).Returns(expected);
             //act
             var actual = sut.ExecuteGivenAs(actor.Object, ability);
             //assert

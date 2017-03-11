@@ -115,7 +115,7 @@ namespace Tranquire.Tests.Extensions
             var actual = ActionExtensions.AsActionUnit(action.Object);
             actual.ExecuteWhenAs(actor.Object);
             //assert            
-            actor.Verify(a => a.Execute(action.Object));
+            actor.Verify(a => a.ExecuteWithAbility(action.Object));
         }
 
         [Theory, DomainAutoData]
@@ -129,7 +129,7 @@ namespace Tranquire.Tests.Extensions
             var actual = ActionExtensions.AsActionUnit(action.Object);
             actual.ExecuteGivenAs(actor.Object);
             //assert            
-            actor.Verify(a => a.Execute(action.Object));
+            actor.Verify(a => a.ExecuteWithAbility(action.Object));
         }
 
         [Theory, DomainAutoData]

@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Reflection;
+using Moq.Protected;
 
 namespace Tranquire.Tests
 {
@@ -65,7 +66,7 @@ namespace Tranquire.Tests
             actual.Should().BeOfType<Actor>().Which.Abilities.Values.Should().Equal(expected);
         }
         #endregion
-        
+
         #region When
         [Theory, DomainAutoData]
         public void When_ShouldCallExecuteWhen(
@@ -83,12 +84,14 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void WhenWithAbility_ShouldCallExecuteWhen(
          [Greedy]Actor sut,
-         Mock<IAction<Ability1, Ability2, object>> action,
+         Mock<Action<Ability1, Ability2, object>> action,
          object expected)
         {
             //arrange
             var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
-            action.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
+            action.Protected()
+                   .Setup<object>("ExecuteWhen", ItExpr.IsAny<IActor>(), expectedAbility)
+                   .Returns(expected);            
             //act
             var actual = sut.When(action.Object);
             //assert
@@ -112,12 +115,14 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void GivenWithAbility_ShouldCallExecuteGiven(
           [Greedy]Actor sut,
-          Mock<IAction<Ability1, Ability2, object>> action,
+          Mock<Action<Ability1, Ability2, object>> action,
           object expected)
         {
             //arrange
             var expectedAbility = sut.Abilities.Values.OfType<Ability1>().First();
-            action.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), expectedAbility)).Returns(expected);
+            action.Protected()
+                  .Setup<object>("ExecuteGiven", ItExpr.IsAny<IActor>(), expectedAbility)
+                  .Returns(expected);
             //act
             var actual = sut.Given(action.Object);
             //assert
@@ -145,12 +150,12 @@ namespace Tranquire.Tests
           Mock<IQuestion<object>> question,
           Mock<IGivenCommand<object>> givenCommand,
           object expected)
-        {            
+        {
             question.Setup(q => q.AnsweredBy(It.IsAny<IActor>())).Returns(expected);
             givenCommand.Setup(g => g.ExecuteGivenAs(It.IsAny<IActor>()))
-                        .Returns((IActor a) => a.AsksFor(question.Object));            
+                        .Returns((IActor a) => a.AsksFor(question.Object));
             //act
-            var actual = actor.Given(givenCommand.Object); 
+            var actual = actor.Given(givenCommand.Object);
             //assert
             Assert.Equal(expected, actual);
         }
@@ -202,11 +207,13 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Name_WhenCallingGivenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
-            Mock<IGivenCommand<Ability1, string>> command)
+            Mock<Action<Ability1, Ability1, string>> command)
         {
             //arrange
             var expected = sut.Name;
-            command.Setup(a => a.ExecuteGivenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a, Ability1 _) => a.Name);
+            command.Protected()
+                   .Setup<string>("ExecuteGiven", ItExpr.IsAny<IActor>(), ItExpr.IsAny<Ability1>())
+                   .Returns((IActor a, Ability1 _) => a.Name);
             //act
             var actual = sut.Given(command.Object);
             //assert
@@ -216,11 +223,13 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Name_WhenCallingWhenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
-            Mock<IWhenCommand<Ability1, string>> command)
+            Mock<Action<Ability1, Ability1, string>> command)
         {
             //arrange
             var expected = sut.Name;
-            command.Setup(a => a.ExecuteWhenAs(It.IsAny<IActor>(), It.IsAny<Ability1>())).Returns((IActor a, Ability1 _) => a.Name);
+            command.Protected()
+                   .Setup<string>("ExecuteWhen", ItExpr.IsAny<IActor>(), ItExpr.IsAny<Ability1>())
+                   .Returns((IActor a, Ability1 _) => a.Name);
             //act
             var actual = sut.When(command.Object);
             //assert
@@ -234,8 +243,8 @@ namespace Tranquire.Tests
                 return new System.Action<Actor, IFixture>[]
                 {
                     (sut, fixture) => sut.AsksFor(fixture.Create<IQuestion<string, AbilityTest>>()),
-                    (sut, fixture) => sut.When(fixture.Create<IWhenCommand<AbilityTest, object>>()),
-                    (sut, fixture) => sut.Given(fixture.Create<IGivenCommand<AbilityTest, object>>()),
+                    (sut, fixture) => sut.When(fixture.Create<Action<AbilityTest, AbilityTest, object>>()),
+                    (sut, fixture) => sut.Given(fixture.Create<Action<AbilityTest, AbilityTest, object>>()),
                     //(sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest, object>>()),
                 }
                 .Select(a => new object[] { a });

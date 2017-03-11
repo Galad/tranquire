@@ -1,4 +1,6 @@
-﻿namespace Tranquire
+﻿using System;
+
+namespace Tranquire
 {
     /// <summary>
     /// Represent an action on the system returning no value
@@ -55,6 +57,28 @@
         /// </summary>
         /// <returns></returns>
         public override string ToString() => Name;
+
+        /// <summary>
+        /// Execute the action in the Given context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        public Unit ExecuteGivenAs(IActor actor)
+        {
+            Guard.ForNull(actor, nameof(actor));
+            return actor.ExecuteWithAbility(this as IAction<T, T, Unit>);
+        }
+
+        /// <summary>
+        /// Execute the action in the When context
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        public Unit ExecuteWhenAs(IActor actor)
+        {
+            Guard.ForNull(actor, nameof(actor));
+            return actor.ExecuteWithAbility(this as IAction<T, T, Unit>);
+        }
     }
 
     /// <summary>

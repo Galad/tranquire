@@ -114,21 +114,21 @@ namespace Tranquire.Selenium
             return Actor.Execute(action);
         }
 
-        public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             if ((typeof(TGiven) == typeof(BrowseTheWeb) || typeof(TWhen) == typeof(BrowseTheWeb)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
             {
-                return Actor.Execute(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
+                return Actor.ExecuteWithAbility(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
             }
-            return Actor.Execute(action);
+            return Actor.ExecuteWithAbility(action);
         }
 
-        private sealed class HighlightedAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
+        private sealed class HighlightedAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>
         {
             private IAction<TGiven, TWhen, TResult> _action;
             private ITargeted Targeted => (ITargeted)_action;
             private HighlighActions _highlightActions;
-            public string Name => "[Highlighted] " + _action.Name;
+            public override string Name => "[Highlighted] " + _action.Name;
 
             public HighlightedAction(IAction<TGiven, TWhen, TResult> action, HighlighActions highlightActions)
             {
@@ -136,7 +136,7 @@ namespace Tranquire.Selenium
                 _highlightActions = highlightActions;
             }
 
-            public TResult ExecuteGivenAs(IActor actor, TGiven ability)
+            protected override TResult ExecuteGiven(IActor actor, TGiven ability)
             {
                 if (IsBrowseTheWeb<TGiven>())
                 {
@@ -151,7 +151,7 @@ namespace Tranquire.Selenium
                 return typeof(T) == typeof(BrowseTheWeb);
             }
 
-            public TResult ExecuteWhenAs(IActor actor, TWhen ability)
+            protected override TResult ExecuteWhen(IActor actor, TWhen ability)
             {
                 if (IsBrowseTheWeb<TGiven>())
                 {

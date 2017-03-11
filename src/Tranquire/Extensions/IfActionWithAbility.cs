@@ -53,7 +53,7 @@ namespace Tranquire.Extensions
         {            
             if (Predicate())
             {
-                return actor.Execute(Action);
+                return actor.ExecuteWithAbility(Action);
             }
             return DefaultValue;
         }
@@ -112,7 +112,7 @@ namespace Tranquire.Extensions
         {            
             if (Predicate(ability))
             {
-                return actor.Execute(Action);
+                return actor.ExecuteWithAbility(Action);
             }
             return DefaultValue;
         }

@@ -91,10 +91,10 @@ namespace Tranquire.Reporting
             return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action);
         }
 
-        public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             Guard.ForNull(action, nameof(action));
-            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action);
+            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.ExecuteWithAbility(action), action);
         }
 
         private TResult ExecuteNotifyingAction<TResult>(Func<bool> canNotify, Func<TResult> executeAction, INamed action)

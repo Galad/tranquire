@@ -29,25 +29,25 @@ namespace Tranquire
         }
     }
 
-    internal class WhenCommandAsAction<TWhen, TResult> : IAction<Unit, TWhen, TResult>
+    internal class WhenCommandAsAction<TWhen, TResult> : Action<Unit, TWhen, TResult>
     {
         public IWhenCommand<TWhen, TResult> Command { get; }
-        public string Name => Command.Name;
+        public override string Name => Command.Name;
 
         public WhenCommandAsAction(IWhenCommand<TWhen, TResult> command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             Command = command;
         }
-
-        public TResult ExecuteGivenAs(IActor actor, Unit ability)
-        {
-            throw new InvalidOperationException("Cannot call ExecuteGivenAs with a WhenCommand when");
-        }
-
-        public TResult ExecuteWhenAs(IActor actor, TWhen ability)
+        
+        protected override TResult ExecuteWhen(IActor actor, TWhen ability)
         {
             return Command.ExecuteWhenAs(actor, ability);
+        }
+
+        protected override TResult ExecuteGiven(IActor actor, Unit ability)
+        {
+            throw new InvalidOperationException("Cannot call ExecuteGivenAs with a WhenCommand when");
         }
     }
 
@@ -73,25 +73,25 @@ namespace Tranquire
         }
     }
 
-    internal class GivenCommandAsAction<TGiven, TResult> : IAction<TGiven, Unit, TResult>
+    internal class GivenCommandAsAction<TGiven, TResult> : Action<TGiven, Unit, TResult>
     {
         public IGivenCommand<TGiven, TResult> Command { get; }
-        public string Name => Command.Name;
+        public override string Name => Command.Name;
 
         public GivenCommandAsAction(IGivenCommand<TGiven, TResult> command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             Command = command;
         }
-
-        public TResult ExecuteGivenAs(IActor actor, TGiven ability)
-        {
-            return Command.ExecuteGivenAs(actor, ability);
-        }
-
-        public TResult ExecuteWhenAs(IActor actor, Unit ability)
+        
+        protected override TResult ExecuteWhen(IActor actor, Unit ability)
         {
             throw new InvalidOperationException("Cannot call ExecuteWhenAs with a GivenCommand when");
+        }
+
+        protected override TResult ExecuteGiven(IActor actor, TGiven ability)
+        {
+            return Command.ExecuteGivenAs(actor, ability);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Tranquire.Tests.Extensions
             Func<bool> func = () => true;
             fixture.Inject(func);
             var sut = fixture.Create<IfActionWithAbility<Ability1, Ability2, object>>();
-            actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
+            actor.Setup(a => a.ExecuteWithAbility(sut.Action)).Returns(expected);
             //act
             var actual = sut.ExecuteWhenAs(actor.Object);
             //assert
@@ -57,7 +57,7 @@ namespace Tranquire.Tests.Extensions
             Func<bool> func = () => true;
             fixture.Inject(func);
             var sut = fixture.Create<IfActionWithAbility<Ability1, Ability2, object>>();
-            actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
+            actor.Setup(a => a.ExecuteWithAbility(sut.Action)).Returns(expected);
             //act
             var actual = sut.ExecuteGivenAs(actor.Object);
             //assert

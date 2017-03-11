@@ -81,22 +81,22 @@ namespace Tranquire.Selenium
             return Actor.Execute(action);
         }
 
-        public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
             var targeted = action as ITargeted;
             if (typeof(TGiven) != typeof(BrowseTheWeb) && typeof(TWhen) != typeof(BrowseTheWeb) || targeted == null)
             {
-                return Actor.Execute(action);
+                return Actor.ExecuteWithAbility(action);
             }
-            return Actor.Execute(new SlowSeleniumAction<TGiven, TWhen, TResult>(action, DelayMilliseconds, targeted));
+            return Actor.ExecuteWithAbility(new SlowSeleniumAction<TGiven, TWhen, TResult>(action, DelayMilliseconds, targeted));
         }
 
-        private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>, ITargeted
+        private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>, ITargeted
         {
             private IAction<TGiven, TWhen, TResult> action;
             private int _delay;
             private readonly ITargeted _targeted;
-            public string Name => $"[Delayed of {_delay}ms] " + action.Name;
+            public override string Name => $"[Delayed of {_delay}ms] " + action.Name;
 
             public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action, int delay, ITargeted targeted)
             {
@@ -107,7 +107,7 @@ namespace Tranquire.Selenium
 
             public ITarget Target => _targeted.Target;
 
-            public TResult ExecuteGivenAs(IActor actor, TGiven ability)
+            protected override TResult ExecuteGiven(IActor actor, TGiven ability)
             {
                 Thread.Sleep(_delay);
                 var value = action.ExecuteGivenAs(actor, ability);
@@ -115,7 +115,7 @@ namespace Tranquire.Selenium
                 return value;
             }
 
-            public TResult ExecuteWhenAs(IActor actor, TWhen ability)
+            protected override TResult ExecuteWhen(IActor actor, TWhen ability)
             {
                 Thread.Sleep(_delay);
                 var value = action.ExecuteWhenAs(actor, ability);

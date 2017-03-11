@@ -39,7 +39,7 @@ namespace Tranquire.Tests
             //act
             sut.ExecuteGivenAs(actor.Object);
             //arrange
-            actor.Verify(a => a.Execute(sut.Action));
+            actor.Verify(a => a.ExecuteWithAbility(sut.Action));
         }
         
         [Theory, DomainAutoData]
@@ -50,7 +50,7 @@ namespace Tranquire.Tests
             //act
             sut.ExecuteWhenAs(actor.Object);
             //arrange
-            actor.Verify(a => a.Execute(sut.Action));
+            actor.Verify(a => a.ExecuteWithAbility(sut.Action));
         }
     }
 }

@@ -89,12 +89,12 @@ namespace Tranquire.Selenium
             return Actor.Execute(action);
         }
 
-        public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            return Actor.Execute(new TakeScreenshotAction<TGiven, TWhen, TResult>(action, NextScreenshotName));
+            return Actor.ExecuteWithAbility(new TakeScreenshotAction<TGiven, TWhen, TResult>(action, NextScreenshotName));
         }
 
-        private sealed class TakeScreenshotAction<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
+        private sealed class TakeScreenshotAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>
         {
             private readonly IAction<TGiven, TWhen, TResult> _action;
             private readonly Func<string> _nextScreenshotName;
@@ -105,12 +105,12 @@ namespace Tranquire.Selenium
                 _nextScreenshotName = nextScreenshotName;
             }
 
-            public TResult ExecuteGivenAs(IActor actor, TGiven ability)
+            protected override TResult ExecuteGiven(IActor actor, TGiven ability)
             {
                 return ExecuteTakeScreenshot(ability, () => _action.ExecuteGivenAs(actor, ability), _nextScreenshotName);
             }
 
-            public TResult ExecuteWhenAs(IActor actor, TWhen ability)
+            protected override TResult ExecuteWhen(IActor actor, TWhen ability)
             {
                 return ExecuteTakeScreenshot(ability, () => _action.ExecuteWhenAs(actor, ability), _nextScreenshotName);
             }
@@ -118,7 +118,7 @@ namespace Tranquire.Selenium
             /// <summary>
             /// Gets the action's name
             /// </summary>
-            public string Name => "[Take screenshot] " + _action.Name;
+            public override string Name => "[Take screenshot] " + _action.Name;
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

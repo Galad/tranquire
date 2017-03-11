@@ -40,7 +40,7 @@ namespace Tranquire
         public TResult ExecuteGivenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
-            return actor.Execute(Action);
+            return actor.ExecuteWithAbility(Action);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Tranquire
         public TResult ExecuteWhenAs(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
-            return actor.Execute(Action);
+            return actor.ExecuteWithAbility(Action);
         }
 
         /// <summary>

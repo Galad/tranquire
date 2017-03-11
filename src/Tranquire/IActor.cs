@@ -12,7 +12,7 @@
         /// <typeparam name = "TWhen">The ability required for the When context</typeparam>
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name = "action">The action to execute</param>
-        TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
+        TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
         /// <summary>
         /// Execute an action
         /// </summary>

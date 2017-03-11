@@ -95,7 +95,7 @@ namespace Tranquire.Tests
                 return default(TAnswer);
             }
 
-            public TResult Execute<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+            public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
             {
                 Invocations++;
                 return default(TResult);

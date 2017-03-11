@@ -15,7 +15,7 @@ namespace ToDoList.Automation.Actions
 
         protected override void ExecuteWhen(IActor actor)
         {
-            actor.Execute(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));            
+            actor.Execute(JsClick.On(ToDoPage.RemoveToDoItemButton.Of(item)));           
         }
 
         public override string Name => "Remove an item '" + item + "'";
