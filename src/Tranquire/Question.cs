@@ -40,7 +40,7 @@ namespace Tranquire
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
 #pragma warning disable CS0618 // Type or member is obsolete
-            return actor.AsksFor(this);
+            return actor.AsksForWithAbility(this);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

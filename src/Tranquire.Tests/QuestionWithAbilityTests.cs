@@ -48,8 +48,10 @@ namespace Tranquire.Tests
             object expected)
         {
             //arrange
-            Mock.Get(actor).Setup(a => a.AsksFor(sut)).Returns(expected);
-            //act
+#pragma warning disable CS0618 // Type or member is obsolete
+            Mock.Get(actor).Setup(a => a.AsksForWithAbility(sut)).Returns(expected);
+#pragma warning restore CS0618 // Type or member is obsolete
+                              //act
             var actual = sut.AnsweredBy(actor);
             //assert
             actual.Should().Be(expected);
@@ -74,8 +76,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void ToString_ShouldReturnCorrectValue(
-            TestQuestion sut,
-            string expected)
+            TestQuestion sut)
         {
             //act
             var actual = sut.ToString();

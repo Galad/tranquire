@@ -76,10 +76,10 @@ namespace Tranquire.Reporting
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             Guard.ForNull(question, nameof(question));
-            return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksFor(question), question);
+            return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksForWithAbility(question), question);
         }
 #pragma warning restore CS0618 // Type or member is obsolete
 

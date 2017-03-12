@@ -158,20 +158,7 @@ namespace Tranquire
             Guard.ForNull(question, nameof(question));
             return CreateWhenActor().AsksFor(question);
         }
-
-        /// <summary>
-        /// Ask a question about the current state of the system with an ability
-        /// </summary>
-        /// <typeparam name="TAnswer">Type answer's type</typeparam>
-        /// <typeparam name="TAbility">Type of the required ability</typeparam>
-        /// <param name="question">A <see cref="IQuestion{TAnswer}"/> instance representing the question to ask</param>
-        /// <returns>The answer to the question.</returns>
-        public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
-        {
-            Guard.ForNull(question, nameof(question));
-            return CreateWhenActor().AsksFor(question);
-        }
-
+        
         private class WhenInnerActor : InnerActor
         {
             public WhenInnerActor(string name, Func<Type, object> getAbility) : base(name, getAbility)
@@ -215,7 +202,9 @@ namespace Tranquire
                 return question.AnsweredBy(Actor);
             }
 
-            public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+#pragma warning disable CS0618 // Type or member is obsolete
+            public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+#pragma warning restore CS0618 // Type or member is obsolete
             {
                 return question.AnsweredBy(Actor, (TAbility)GetAbility(typeof(TAbility)));
             }

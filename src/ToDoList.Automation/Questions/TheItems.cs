@@ -5,9 +5,9 @@ using Tranquire.Selenium;
 
 namespace ToDoList.Automation.Questions
 {
-    public class TheItems
+    public static class TheItems
     {
-        public static IQuestion<ImmutableArray<Model.ToDoItem>, WebBrowser> Displayed()
+        public static IQuestion<ImmutableArray<Model.ToDoItem>> Displayed()
         {
             return new DisplayedItems();
         }

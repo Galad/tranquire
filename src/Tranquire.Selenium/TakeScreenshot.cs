@@ -58,9 +58,9 @@ namespace Tranquire.Selenium
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            return Actor.AsksFor(new TakeScreenshotQuestion<TAnswer, TAbility>(question, NextScreenshotName));
+            return Actor.AsksForWithAbility(new TakeScreenshotQuestion<TAnswer, TAbility>(question, NextScreenshotName));
         }
 
         private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : Question<TAnswer, TAbility>

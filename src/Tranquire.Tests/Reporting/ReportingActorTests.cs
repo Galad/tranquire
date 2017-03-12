@@ -165,7 +165,7 @@ namespace Tranquire.Tests.Reporting
             get
             {
                 yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action));
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object, Ability1>)action), action => a => a.AsksFor((IQuestion<object, Ability1>)action));                
+                yield return ExecutionTestCasesValues((sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action), action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action));                
             }
         }
 
@@ -393,7 +393,7 @@ namespace Tranquire.Tests.Reporting
             //arrange                                          
             Mock.Get(canNotify).Setup(c => c.Question(question)).Returns(false);
             //act
-            sut.AsksFor(question);
+            sut.AsksForWithAbility(question);
             //assert
             observer.Values.Should().BeEmpty();
         }

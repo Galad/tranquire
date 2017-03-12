@@ -90,7 +90,7 @@ namespace Tranquire.Tests
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+            public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
                 Invocations++;

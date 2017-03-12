@@ -80,13 +80,13 @@ namespace Tranquire.Selenium
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question) => Actor.AsksFor(question);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksFor<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
             if (typeof(TAbility) == typeof(WebBrowser) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
             {
-                return Actor.AsksFor(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
+                return Actor.AsksForWithAbility(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
             }
-            return Actor.AsksFor(question);
+            return Actor.AsksForWithAbility(question);
         }
 
         private sealed class HighlightedQuestion<TAnswer> : Question<TAnswer, WebBrowser>
