@@ -138,14 +138,7 @@ namespace Tranquire.Tests.Reporting
         {
             get
             {
-                return QuestionsTestCases.Concat(NotifyingActionTestCases);
-            }
-        }
-
-        public static IEnumerable<object[]> NotifyingActionTestCases
-        {
-            get
-            {
+                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action));
                 yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action));
             }
         }
@@ -156,16 +149,8 @@ namespace Tranquire.Tests.Reporting
             {                
 #pragma warning disable CS0618 // Type or member is obsolete
                 yield return ExecutionTestCasesValues((sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action), action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action));
+                yield return ExecutionTestCasesValues((sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action), action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action));
 #pragma warning restore CS0618 // Type or member is obsolete
-            }
-        }
-
-        public static IEnumerable<object[]> QuestionsTestCases
-        {
-            get
-            {
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action));
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action), action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action));                
             }
         }
 
@@ -339,8 +324,7 @@ namespace Tranquire.Tests.Reporting
         
         [Theory, ReportingActorAutoData]
         public void ExecuteWithAbility_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            [Frozen]ICanNotify canNotify,
+            [Frozen]TestObserver<ActionNotification> observer,            
             ReportingActor sut,
 #pragma warning disable CS0618 // Type or member is obsolete
             IAction<Ability1, Ability2, object> action)
@@ -349,6 +333,21 @@ namespace Tranquire.Tests.Reporting
             //arrange                                                      
             //act
             sut.ExecuteWithAbility(action);
+            //assert
+            observer.Values.Should().BeEmpty();
+        }
+
+        [Theory, ReportingActorAutoData]
+        public void AsksFor_WithAbility_ShouldNotNotify(
+            [Frozen]TestObserver<ActionNotification> observer,            
+            ReportingActor sut,
+#pragma warning disable CS0618 // Type or member is obsolete
+            IQuestion<object, Ability1> question)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            //arrange                                                      
+            //act
+            sut.AsksForWithAbility(question);
             //assert
             observer.Values.Should().BeEmpty();
         }
@@ -381,21 +380,6 @@ namespace Tranquire.Tests.Reporting
             sut.AsksFor(question);
             //assert
             observer.Values.Should().BeEmpty();
-        }
-
-        [Theory, ReportingActorAutoData]
-        public void AsksFor_WithAbility_WhenCanNotifyReturnsFalse_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            [Frozen]ICanNotify canNotify,
-            ReportingActor sut,
-            IQuestion<object, Ability1> question)
-        {
-            //arrange                                          
-            Mock.Get(canNotify).Setup(c => c.Question(question)).Returns(false);
-            //act
-            sut.AsksForWithAbility(question);
-            //assert
-            observer.Values.Should().BeEmpty();
-        }
+        }        
     }
 }
