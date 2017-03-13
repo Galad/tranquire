@@ -168,7 +168,9 @@ namespace Tranquire.Tests
         {
             //arrange
             var ability = sut.Abilities.Values.OfType<Ability1>().First();
-            question.Setup(q => q.AnsweredBy(It.IsAny<IActor>(), ability)).Returns(expected);
+            question.Protected()
+                    .Setup<object>("Answer", ItExpr.IsAny<IActor>(), ability)
+                    .Returns(expected);            
             //act
             var actual = sut.AsksFor(question.Object);
             //assert
