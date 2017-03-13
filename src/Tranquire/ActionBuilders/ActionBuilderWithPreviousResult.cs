@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tranquire.ActionBuilders
 {
@@ -140,6 +141,8 @@ namespace Tranquire.ActionBuilders
                 Name = name;
             }
 
+            //Not used
+            [ExcludeFromCodeCoverage]
             public string Name { get; }
 
             public TLazyResult ExecuteGivenAs(IActor actor)
