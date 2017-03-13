@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tranquire.ActionBuilders
 {
@@ -12,6 +13,7 @@ namespace Tranquire.ActionBuilders
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public override string Name => string.Empty;
     }
 }

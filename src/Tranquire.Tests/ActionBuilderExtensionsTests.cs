@@ -13,6 +13,27 @@ namespace Tranquire.Tests
 {
     public class ActionBuilderExtensionsTests
     {
+        /// <summary>
+        /// Act as a relay to call the <see cref="ActionBuilderExtensions"/> methods, as AutoFixture is not able to generate a generic type with constraints properly
+        /// </summary>
+        public static class ActionBuilderExtensionsRelay
+        {
+            public static object Then(IActionBuilder source, IAction<Unit> nextAction) => ActionBuilderExtensions.Then(source, nextAction);
+            public static object Then(
+                IActionBuilderWithCurrentAction<IAction<object>, object> source,
+                Func<ActionResult<IAction<object>, object>, IAction<Unit>> nextAction) => ActionBuilderExtensions.Then(source, nextAction);
+            public static object Then(IActionBuilder source, IAction<int> nextAction) => ActionBuilderExtensions.Then(source, nextAction, 0);
+            public static object Then(
+                IActionBuilderWithCurrentAction<IAction<object>, object> source,
+                Func<ActionResult<IAction<object>, object>, IAction<int>> nextAction) => ActionBuilderExtensions.Then(source, nextAction, 0);
+        }
+
+        [Theory, DomainAutoData]
+        public void Sut_VerifyGuardClause(GuardClauseAssertion assertion)
+        {
+            assertion.Verify(typeof(ActionBuilderExtensionsRelay));
+        }
+
         [Theory, DomainAutoData]
         public void Then_WithActionUnit_ShouldReturnCorrectValue(
             Mock<IActionBuilder> source,
