@@ -18,14 +18,13 @@ namespace Tranquire.ActionBuilders
         /// Creates a new instance of <see cref="ActionBuilder{TAction, TResult}"/>
         /// </summary>
         /// <param name="action">The current action</param>
-        public ActionBuilder(TAction action) : this(action, new CompositeActionForBuilder(ImmutableArray<IAction<Unit>>.Empty), action?.Name)
+        public ActionBuilder(TAction action) : this(action, new CompositeActionForBuilder(ImmutableArray<IAction<Unit>>.Empty), action?.Name ?? "") 
         {
         }
 
         internal ActionBuilder(TAction currentAction, CompositeAction executableAction, string name)
         {
-            if (currentAction == null) throw new ArgumentNullException(nameof(currentAction));
-            if (executableAction == null) throw new ArgumentNullException(nameof(executableAction));
+            if (currentAction == null) throw new ArgumentNullException(nameof(currentAction));            
             Action = currentAction;
             _executableAction = executableAction;
             Name = name;

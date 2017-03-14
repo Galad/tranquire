@@ -38,6 +38,12 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
+        public void ActionBuilderWithPreviousResultTests_VerifyGuardClause_Constructor(GuardClauseAssertion assertion)
+        {            
+            assertion.Verify(typeof(ActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit>).GetConstructors());
+        }
+
+        [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause_ActionBuilder2(ActionBuilder<TestAction, Unit> sut)
         {
             var sutAsInterface = (IActionBuilder<TestAction, Unit>)sut;
@@ -608,5 +614,20 @@ namespace Tranquire.Tests
             name.Should().Be(expected);
         }
         #endregion
+    }
+
+    public class ActionResultTests
+    {
+        [Theory, DomainAutoData]
+        public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
+        {
+            assertion.Verify(typeof(ActionResult<IAction<Unit>, Unit>));
+        }
+
+        [Theory, DomainAutoData]
+        public void Sut_VerifyGuardClauses(ConstructorInitializedMemberAssertion assertion)
+        {
+            assertion.Verify(typeof(ActionResult<IAction<Unit>, Unit>));
+        }
     }
 }

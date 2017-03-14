@@ -72,6 +72,7 @@ namespace Tranquire.ActionBuilders
             if (actionFactory == null) throw new ArgumentNullException(nameof(actionFactory));
             if (previousAction == null) throw new ArgumentNullException(nameof(previousAction));
             if (executableAction == null) throw new ArgumentNullException(nameof(executableAction));
+            if (previousActionName == null) throw new ArgumentNullException(nameof(previousActionName));
 
             ActionFactory = actionFactory;
             PreviousAction = previousAction;

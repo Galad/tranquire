@@ -189,5 +189,30 @@ namespace Tranquire.Tests
             //assert
             Assert.Equal(sut.Name, actual);
         }
+
+        [Theory, DomainAutoData]
+        public void ExecuteWhenAs_WhenSutIsActionUnit_ShouldCallActorExecute(ActionExecuteWhen sut, Mock<IActor> actor)
+        {
+            //arrange
+            //act
+            sut.ExecuteWhenAs(actor.Object);
+            //assert
+#pragma warning disable CS0618 // Type or member is obsolete
+            actor.Verify(a => a.ExecuteWithAbility(sut));
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Theory, DomainAutoData]
+        public void ExecuteGivenAs_WhenSutIsActionUnit_ShouldCallActorExecute(ActionExecuteGiven sut, Mock<IActor> actor)
+        {
+            //arrange
+            //act
+            sut.ExecuteGivenAs(actor.Object);
+            //assert
+#pragma warning disable CS0618 // Type or member is obsolete
+            actor.Verify(a => a.ExecuteWithAbility(sut));
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
     }
 }
