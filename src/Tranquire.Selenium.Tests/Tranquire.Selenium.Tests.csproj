@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="Actions\Actions.cs" />
     <Compile Include="Actions\EnterTests.cs" />
+    <Compile Include="Actions\NavigateTests.cs" />
     <Compile Include="ActorDecoratorExtensionAssertion.cs" />
     <Compile Include="ActorExtensionsTests.cs" />
     <Compile Include="Converters\StringToEnumConverterTests.cs" />
