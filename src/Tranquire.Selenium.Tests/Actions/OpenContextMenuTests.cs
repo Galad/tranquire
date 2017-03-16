@@ -18,7 +18,7 @@ namespace Tranquire.Selenium.Tests.Actions
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WhenTimeoutExpires_ShouldThrow(string expected)
+        public void Execute_ShouldOpenContextMenu(string expected)
         {
             //arrange
             var js = $"setupTest('{expected}');";
