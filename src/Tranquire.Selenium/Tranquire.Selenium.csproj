@@ -68,6 +68,7 @@
     <Compile Include="Actions\ITargetableAction.cs" />
     <Compile Include="Actions\JsClick.cs" />
     <Compile Include="Actions\Navigate.cs" />
+    <Compile Include="Actions\OpenContextMenu.cs" />
     <Compile Include="Actions\Select.cs" />
     <Compile Include="Actions\Selects\SelectBuilder.cs" />
     <Compile Include="Actions\Selects\SelectBuilderMany.cs" />

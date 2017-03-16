@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>   
+    <input id="ExpectedValue" />
+    <a id="ClickableElement" href="#">Element</a>    
+
+    <script type="text/javascript">
+        function setupTest(expected) {
+            document.getElementById('ClickableElement').oncontextmenu = function () {
+                document.getElementById('ExpectedValue').value = expected;
+            };
+        };
+    </script>
+</body>
+</html>
