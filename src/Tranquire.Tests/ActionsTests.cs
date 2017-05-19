@@ -76,7 +76,7 @@ namespace Tranquire.Tests
             actual.Should().Be(expected);
         }
         #endregion
-        
+
         #region Empty
         public class InvocationCountActor : IActor
         {
@@ -116,7 +116,7 @@ namespace Tranquire.Tests
         public void Empty_WhenExecutingWhen_ShouldNotCallActor(InvocationCountActor actor)
         {
             //arrange
-            var sut = Actions.Empty;            
+            var sut = Actions.Empty;
             //act
             sut.ExecuteWhenAs(actor);
             //assert
@@ -154,6 +154,252 @@ namespace Tranquire.Tests
             var actual = sut.ToString();
             //assert
             actual.Should().Be(sut.Name);
+        }
+        #endregion
+
+        #region Create without ability
+        [Theory, DomainAutoData]
+        public void Create_ShouldReturnActionWithCorrectName(
+            string expectedName,
+            System.Action<IActor> action
+            )
+        {
+            //arrange
+            //act
+            var actual = Actions.Create(expectedName, action);
+            //assert
+            Assert.Equal(expectedName, actual.Name);
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_ShouldNotCallAction(
+            string name,
+            IActor actor            
+            )
+        {
+            //arrange
+            var action = new Mock<System.Action<IActor>>();            
+            //act
+            var actual = Actions.Create(name, action.Object);
+            //assert
+            action.Verify(a => a(It.IsAny<IActor>()), Times.Never());
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_ShouldReturnActionExecutingDelegateWhenCallingExecuteWhenAs(
+            string name,
+            IActor actor
+            )
+        {
+            //arrange
+            var action = new Mock<System.Action<IActor>>();
+            //act
+            var actual = Actions.Create(name, action.Object);
+            actual.ExecuteWhenAs(actor);
+            //assert
+            action.Verify(a => a(actor), Times.Once());
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_ShouldReturnActionExecutingDelegateWhenCallingExecuteGivenAs(
+            string name,
+            IActor actor
+            )
+        {
+            //arrange
+            var action = new Mock<System.Action<IActor>>();            
+            //act
+            var actual = Actions.Create(name, action.Object);
+            actual.ExecuteGivenAs(actor);
+            //assert
+            action.Verify(a => a(actor), Times.Once());
+        }
+        #endregion
+
+        #region Create with ability
+        [Theory, DomainAutoData]
+        public void Create_WithAbility_ShouldReturnActionWithCorrectName(
+            string expectedName,
+            System.Action<IActor, object> action
+            )
+        {
+            //arrange
+            //act
+            var actual = Actions.Create(expectedName, action);
+            //assert
+            Assert.Equal(expectedName, actual.Name);
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_WithAbility_ShouldNotCallAction(
+            string name,
+            IActor actor
+            )
+        {
+            //arrange
+            var action = new Mock<System.Action<IActor, object>>();
+            //act
+            var actual = Actions.Create<object>(name, action.Object);
+            //assert
+            action.Verify(a => a(It.IsAny<IActor>(), It.IsAny<object>()), Times.Never());
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_WithAbility_ShouldReturnActionExecutingDelegateWhenCallingExecuteWhenAs(
+            string name,
+            IActor actor,
+            object ability
+            )
+        {
+            //arrange
+            var action = new Mock<System.Action<IActor, object>>();
+            //act
+            var actual = Actions.Create<object>(name, action.Object);
+            actual.ExecuteWhenAs(actor, ability);
+            //assert
+            action.Verify(a => a(actor, ability), Times.Once());
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_WithAbility_ShouldReturnActionExecutingDelegateWhenCallingExecuteGivenAs(
+            string name,
+            IActor actor,
+            object ability
+            )
+        {
+            //arrange
+            var action = new Mock<System.Action<IActor, object>>();
+            //act
+            var actual = Actions.Create<object>(name, action.Object);
+            actual.ExecuteGivenAs(actor, ability);
+            //assert
+            action.Verify(a => a(actor, ability), Times.Once());
+        }
+        #endregion
+
+        #region Create returning value without ability
+        [Theory, DomainAutoData]
+        public void Create_ReturningValue_ShouldReturnActionWithCorrectName(
+            string expectedName,
+            System.Func<IActor, object> action
+            )
+        {
+            //arrange
+            //act
+            var actual = Actions.Create(expectedName, action);
+            //assert
+            Assert.Equal(expectedName, actual.Name);
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_ReturningValue_ShouldNotCallAction(
+            string name
+            )
+        {
+            //arrange
+            var actionFunc = new Mock<Func<IActor, object>>();
+            //act
+            var actual = Actions.Create(name, actionFunc.Object);
+            //assert
+            actionFunc.Verify(a => a(It.IsAny<IActor>()), Times.Never());
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_ReturningValue_ShouldReturnActionExecutingDelegateWhenCallingExecuteWhenAs(
+            string name,
+            IActor actor,
+            object expected
+            )
+        {
+            //arrange
+            var actionFunc = new Mock<Func<IActor, object>>();
+            actionFunc.Setup(a => a(actor)).Returns(expected);
+            //act
+            var actualAction = Actions.Create(name, actionFunc.Object);
+            var actual = actualAction.ExecuteWhenAs(actor);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_ReturningValue_ShouldReturnActionExecutingDelegateWhenCallingExecuteGivenAs(
+         string name,
+            IActor actor,
+            object expected
+            )
+        {
+            //arrange
+            var actionFunc = new Mock<Func<IActor, object>>();
+            actionFunc.Setup(a => a(actor)).Returns(expected);
+            //act
+            var actualAction = Actions.Create(name, actionFunc.Object);
+            var actual = actualAction.ExecuteGivenAs(actor);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region Create returning value with ability
+        [Theory, DomainAutoData]
+        public void Create_WithAbilityAndReturningValue_ShouldReturnActionWithCorrectName(
+            string expectedName,
+            System.Func<IActor, object, object> action
+            )
+        {
+            //arrange
+            //act
+            var actual = Actions.Create(expectedName, action);
+            //assert
+            Assert.Equal(expectedName, actual.Name);
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_WithAbilityAndReturningValue_ShouldNotCallAction(
+            string name
+            )
+        {
+            //arrange
+            var actionFunc = new Mock<Func<IActor, object, object>>();
+            //act
+            var actual = Actions.Create(name, actionFunc.Object);
+            //assert
+            actionFunc.Verify(a => a(It.IsAny<IActor>(), It.IsAny<object>()), Times.Never());
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_WithAbilityAndReturningValue_ShouldReturnActionExecutingDelegateWhenCallingExecuteWhenAs(
+            string name,
+            IActor actor,
+            object ability,
+            object expected           
+            )
+        {
+            //arrange
+            var actionFunc = new Mock<Func<IActor, object, object>>();
+            actionFunc.Setup(a => a(actor, ability)).Returns(expected);
+            //act
+            var actualAction = Actions.Create(name, actionFunc.Object);
+            var actual = actualAction.ExecuteWhenAs(actor, ability);
+            //assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void Create_WithAbilityAndReturningValue_ShouldReturnActionExecutingDelegateWhenCallingExecuteGivenAs(
+         string name,
+            IActor actor,
+            object ability,
+            object expected
+            )
+        {
+            //arrange
+            var actionFunc = new Mock<Func<IActor, object, object>>();
+            actionFunc.Setup(a => a(actor, ability)).Returns(expected);
+            //act
+            var actualAction = Actions.Create(name, actionFunc.Object);
+            var actual = actualAction.ExecuteGivenAs(actor, ability);
+            //assert
+            Assert.Equal(expected, actual);
         }
         #endregion
     }
