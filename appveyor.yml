@@ -1,45 +1,22 @@
-version: 1.0.{build}
+version: '{build}'
 branches:
   only:
   - master
 image: Visual Studio 2017
 configuration: Release
-install:
-- ps: >-
-    choco install gitversion.portable -pre -y
-
-    Write-Host -NoNewline "Installing NuGet 3.3.0..."
-
-
-    if (Test-Path 'C:\Tools\NuGet3') { $nugetDir = 'C:\Tools\NuGet3' } else { $nugetDir = 'C:\Tools\NuGet' }
-
-
-    (New-Object Net.WebClient).DownloadFile('https://dist.nuget.org/win-x86-commandline/v3.3.0/nuget.exe', "$nugetDir\NuGet.exe")
-
-
-    Write-Host "OK" -ForegroundColor Green
-assembly_info:
-  patch: false
 before_build:
-- cmd: nuget restore src
-- ps: gitversion /l console /output buildserver /updateAssemblyInfo
-build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  parallel: true
-  verbosity: minimal
+- |- # Restore TWICE. See https://github.com/AArnott/Nerdbank.GitVersioning/issues/113#issuecomment-285903085
+  msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore > nul
+  msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore
+build_script:
+- msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
 test:
   assemblies:
   - '**\*.Tests.dll'
   - '**\*.Specifications.dll'
-after_build:
-  - cmd: ECHO nuget pack src\Nuget\Tranquire.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\Nuget\Tranquire.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"  
-  - cmd: ECHO nuget pack src\Nuget\Tranquire.Selenium.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\Nuget\Tranquire.Selenium.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: appveyor PushArtifact "Tranquire.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "Tranquire.Selenium.%GitVersion_NuGetVersion%.nupkg"
-  
+artifacts:  
+  - path: Packages\$(configuration)\*.nupkg
+    
 deploy:
 - provider: NuGet
   api_key:

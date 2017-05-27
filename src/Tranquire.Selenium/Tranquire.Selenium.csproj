@@ -13,6 +13,7 @@
     <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageTags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</PackageTags>
     <IsPackable>true</IsPackable>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
