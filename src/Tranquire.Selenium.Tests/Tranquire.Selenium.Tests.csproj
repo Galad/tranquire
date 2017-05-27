@@ -1,217 +1,53 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{67BDB2C4-9D61-40F4-B3F2-7A819561D9BF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tranquire.Selenium.Tests</RootNamespace>
-    <AssemblyName>Tranquire.Selenium.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Diagnostics, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Diagnostics.3.0.1\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.FileSystems, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.FileSystems.3.0.1\lib\net45\Microsoft.Owin.FileSystems.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.StaticFiles, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Moq, Version=4.7.1.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.7.1\lib\net45\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ploeh.Albedo, Version=1.0.2.0, Culture=neutral, PublicKeyToken=179ef6dd03497bbd, processorArchitecture=MSIL">
-      <HintPath>..\packages\Albedo.1.0.2\lib\net35\Ploeh.Albedo.dll</HintPath>
-    </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.3.50.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.AutoMoq.3.50.2\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ploeh.AutoFixture.Idioms, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.Idioms.3.50.2\lib\net40\Ploeh.AutoFixture.Idioms.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ploeh.AutoFixture.Xunit2, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.Xunit2.3.50.2\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.WebDriver.3.3.0\lib\net40\WebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="WebDriver.Support, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.Support.3.3.0\lib\net40\WebDriver.Support.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.2.0\lib\netstandard1.1\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.2.0\lib\netstandard1.1\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.2.0\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
+    <None Remove="Actions.html" />
+    <None Remove="ClickWhenTargetIsNotClickableYet.html" />
+    <None Remove="IFrame.html" />
+    <None Remove="OpenContextMenu.html" />
+    <None Remove="Page.html" />
+    <None Remove="PageWithIFrame.html" />
+    <None Remove="Questions.html" />
+    <None Remove="Targets.html" />
+    <None Remove="Wait.html" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Tranquire.Tests\DomainAutoDataAttribute.cs">
-      <Link>DomainAutoDataAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\Tranquire.Tests\ImmutableCollectionsCustomization.cs">
-      <Link>ImmutableCollectionsCustomization.cs</Link>
-    </Compile>
-    <Compile Include="Actions\Actions.cs" />
-    <Compile Include="Actions\EnterTests.cs" />
-    <Compile Include="Actions\NavigateTests.cs" />
-    <Compile Include="Actions\OpenContextMenuTests.cs" />
-    <Compile Include="ActorDecoratorExtensionAssertion.cs" />
-    <Compile Include="ActorExtensionsTests.cs" />
-    <Compile Include="Converters\StringToEnumConverterTests.cs" />
-    <Compile Include="Questions\PageTests.cs" />
-    <Compile Include="Questions\SingleUIStateTests.cs" />
-    <Compile Include="Questions\Questions.Presence.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Questions\Questions.Attribute.cs" />
-    <Compile Include="Questions\Questions.Classes.cs" />
-    <Compile Include="Questions\Questions.CssValue.cs" />
-    <Compile Include="Questions\Questions.Enabled.cs" />
-    <Compile Include="Questions\Questions.Selected.cs" />
-    <Compile Include="Questions\Questions.Text.cs" />
-    <Compile Include="Targets\Targets.cs" />
-    <Compile Include="Actions\UsingIFrameTests.cs" />
-    <Compile Include="Actions\WaitTests.cs" />
-    <Compile Include="Actions\ClickWhenTargetIsNotClickableYet.cs" />
-    <Compile Include="WebDriverFixture.cs" />
-    <Compile Include="WebDriverTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tranquire.Selenium\Tranquire.Selenium.csproj">
-      <Project>{ed646b23-0272-4516-9e30-7f07a34b3528}</Project>
-      <Name>Tranquire.Selenium</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tranquire\Tranquire.csproj">
-      <Project>{27f058b2-39b8-4074-a833-5072bc844f7d}</Project>
-      <Name>Tranquire</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <Compile Include="Questions\Questions.Visible.cs" />
-    <Compile Include="Questions\Questions.Value.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Targets.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Questions.html" />
-  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Actions.html" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
+    <EmbeddedResource Include="IFrame.html" />
+    <EmbeddedResource Include="OpenContextMenu.html" />
     <EmbeddedResource Include="Page.html" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="PageWithIFrame.html" />
+    <EmbeddedResource Include="Questions.html" />
+    <EmbeddedResource Include="Targets.html" />
     <EmbeddedResource Include="Wait.html" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
+    <PackageReference Include="Albedo" Version="1.0.2" />
+    <PackageReference Include="AutoFixture.Xunit2" Version="3.50.2" />
+    <PackageReference Include="Microsoft.Owin.SelfHost" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="3.1.0" />
+    <PackageReference Include="AutoFixture" version="3.50.2" />
+    <PackageReference Include="AutoFixture.AutoMoq" version="3.50.2" />
+    <PackageReference Include="AutoFixture.Idioms" version="3.50.2" />
+    <PackageReference Include="Castle.Core" version="4.0.0" />
+    <PackageReference Include="FluentAssertions" version="4.19.2" />
+    <PackageReference Include="Moq" version="4.7.1" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="2.28.0" />
+    <PackageReference Include="System.Collections.Immutable" version="1.3.1" />
+    <PackageReference Include="Selenium.Support" version="3.3.0" />
+    <PackageReference Include="Selenium.WebDriver" version="3.3.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="IFrame.html" />
-    <EmbeddedResource Include="PageWithIFrame.html" />
+    <ProjectReference Include="..\Tranquire.Selenium\Tranquire.Selenium.csproj" />
+    <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OpenContextMenu.html" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.28.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.28.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.28.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.28.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

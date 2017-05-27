@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tranquire
 {    
-    [ExcludeFromCodeCoverage]
+    //[ExcludeFromCodeCoverage]
     internal static class Guard
     {
         public static void ForNull<T>(T value, string name)

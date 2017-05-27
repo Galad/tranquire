@@ -1,18 +1,4 @@
-﻿using FluentAssertions;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Firefox;
-using Tranquire;
-using Tranquire.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToDoList.Automation.Actions;
-using ToDoList.Automation.Questions;
-
-namespace Sandbox
+﻿namespace Sandbox
 {
     class Program
     {

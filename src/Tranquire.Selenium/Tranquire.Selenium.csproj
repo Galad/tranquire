@@ -1,163 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Features>IOperation</Features>
-    <ProjectGuid>{ED646B23-0272-4516-9E30-7F07A34B3528}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tranquire.Selenium</RootNamespace>
-    <AssemblyName>Tranquire.Selenium</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net45</TargetFramework>
+    <PackageId>Tranquire.Selenium</PackageId>
+    <Authors>Lucas Loegel</Authors>
+    <Company />
+    <Description>Write maintainable UI tests with Selenium using Tranquire</Description>
+    <Copyright>Copyright 2017 Lucas Loegel</Copyright>
+    <PackageIconUrl>https://github.com/Galad/tranquire</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageTags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</PackageTags>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Tranquire.Selenium.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Tranquire.Selenium.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.WebDriver.3.3.0\lib\net40\WebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="WebDriver.Support, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.Support.3.3.0\lib\net40\WebDriver.Support.dll</HintPath>
-    </Reference>
+    <Compile Include="..\Tranquire\Guard.cs" Link="Guard.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\Tranquire\Guard.cs">
-      <Link>Guard.cs</Link>
-    </Compile>
-    <Compile Include="Actions\Clear.cs" />
-    <Compile Include="Actions\Clicks\ClickOnActionWithRetry.cs" />
-    <Compile Include="Actions\Enters\EnterNewValue.cs" />
-    <Compile Include="Actions\ITargetableAction.cs" />
-    <Compile Include="Actions\JsClick.cs" />
-    <Compile Include="Actions\Navigate.cs" />
-    <Compile Include="Actions\OpenContextMenu.cs" />
-    <Compile Include="Actions\Select.cs" />
-    <Compile Include="Actions\Selects\SelectBuilder.cs" />
-    <Compile Include="Actions\Selects\SelectBuilderMany.cs" />
-    <Compile Include="Actions\Selects\ISelectStrategy.cs" />
-    <Compile Include="Actions\Selects\SelectByMany.cs" />
-    <Compile Include="Actions\Selects\SelectBy.cs" />
-    <Compile Include="Actions\Selects\SelectStrategies.cs" />
-    <Compile Include="Actions\TargetableAction.cs" />
-    <Compile Include="Actions\TargetedAction.cs" />
-    <Compile Include="Actions\UsingIFrame.cs" />
-    <Compile Include="Actions\Wait.cs" />
-    <Compile Include="Actions\Waiters\WaitUntilQuestionIsAnswered.cs" />
-    <Compile Include="ActorExtensions.cs" />
-    <Compile Include="Actions\Click.cs" />
-    <Compile Include="Actions\Clicks\ClickOnBy.cs" />
-    <Compile Include="Actions\Enter.cs" />
-    <Compile Include="Actions\Enters\EnterValue.cs" />
-    <Compile Include="Actions\Hit.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="HighlightTarget.cs" />
-    <Compile Include="ITarget.cs" />
-    <Compile Include="ITargeted.cs" />
-    <Compile Include="Questions\Classes.cs" />
-    <Compile Include="Questions\Converters\StringToEnumConverter.cs" />
-    <Compile Include="Questions\CssValue.cs" />
-    <Compile Include="Questions\Enabled.cs" />
-    <Compile Include="Questions\Builders\HtmlAttributeBuilder.cs" />
-    <Compile Include="Questions\Page.cs" />
-    <Compile Include="Questions\PageTitle.cs" />
-    <Compile Include="Questions\PageUrl.cs" />
-    <Compile Include="Questions\Presence.cs" />
-    <Compile Include="Questions\Selected.cs" />
-    <Compile Include="Questions\SelectedValues.cs" />
-    <Compile Include="Questions\SelectedValue.cs" />
-    <Compile Include="Questions\Value.cs" />
-    <Compile Include="Questions\Visibility.cs" />
-    <Compile Include="Questions\HtmlAttribute.cs" />
-    <Compile Include="Questions\Converters\GenericConverter.cs" />
-    <Compile Include="Questions\Converters\IConverter.cs" />
-    <Compile Include="Questions\Element.cs" />
-    <Compile Include="Questions\ConversionExtensions\ElementStateExtensions.cs" />
-    <Compile Include="Questions\ManyUIState.cs" />
-    <Compile Include="Questions\Question.cs" />
-    <Compile Include="Questions\SingleUIState.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Questions\Text.cs" />
-    <Compile Include="Questions\ConversionExtensions\TextStateExtensions.cs" />
-    <Compile Include="Questions\UIState.cs" />
-    <Compile Include="SlowSelenium.cs" />
-    <Compile Include="TakeScreenshot.cs" />
-    <Compile Include="Target.cs" />
-    <Compile Include="ITargetWithParameters.cs" />
-    <Compile Include="Targets\TargetBuilder.cs" />
-    <Compile Include="Targets\TargetBy.cs" />
-    <Compile Include="Targets\TargetByBase.cs" />
-    <Compile Include="Targets\TargetByParameterizable.cs" />
-    <Compile Include="Targets\TargetByRelative.cs" />
-    <Compile Include="Targets\TargetByWebElement.cs" />
-    <Compile Include="WebBrowser.cs" />
+    <PackageReference Include="Desktop.Analyzers" version="1.1.0" />
+    <PackageReference Include="Microsoft.AnalyzerPowerPack" version="1.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" version="1.1.0" />
+    <PackageReference Include="Selenium.Support" version="3.3.0" />
+    <PackageReference Include="Selenium.WebDriver" version="3.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="WebBrowser.WebDriver.cs" />
-    <None Include="packages.config" />
-    <None Include="Tranquire.Selenium.ruleset" />
+    <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tranquire\Tranquire.csproj">
-      <Project>{27f058b2-39b8-4074-a833-5072bc844f7d}</Project>
-      <Name>Tranquire</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Desktop.Analyzers.1.1.0\analyzers\dotnet\cs\Desktop.Analyzers.dll" />
-    <Analyzer Include="..\packages\Desktop.Analyzers.1.1.0\analyzers\dotnet\cs\Desktop.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.1.0\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.Common.dll" />
-    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.1.0\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.CSharp.dll" />
-    <Analyzer Include="..\packages\System.Runtime.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.InteropServices.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.InteropServices.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.InteropServices.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.InteropServices.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

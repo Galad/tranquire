@@ -13,7 +13,7 @@ namespace Tranquire.ActionBuilders
         {
         }
 
-        [ExcludeFromCodeCoverage]
+        //[ExcludeFromCodeCoverage]
         public override string Name => string.Empty;
     }
 }

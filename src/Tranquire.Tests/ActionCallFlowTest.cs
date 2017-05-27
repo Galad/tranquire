@@ -7,7 +7,7 @@ using Tranquire;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace ToDoList.Specifications
+namespace Tranquire.Tests
 {
     public class Action1 : Tranquire.ActionUnit
     {

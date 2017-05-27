@@ -143,7 +143,7 @@ namespace Tranquire.ActionBuilders
             }
 
             //Not used
-            [ExcludeFromCodeCoverage]
+            //[ExcludeFromCodeCoverage]
             public string Name { get; }
 
             public TLazyResult ExecuteGivenAs(IActor actor)

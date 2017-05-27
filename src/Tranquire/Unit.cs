@@ -10,7 +10,7 @@ namespace Tranquire
     /// <summary>
     /// Represent a type with a single value. It is used to represent void methods.
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    //[System.Diagnostics.CodeAnalysis.]
     public struct Unit : IEquatable<Unit>
     {
 #pragma warning disable CS1591,CA1801
