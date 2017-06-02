@@ -16,6 +16,10 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net45\Tranquire.Selenium.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\Tranquire\Guard.cs" Link="Guard.cs" />
   </ItemGroup>
