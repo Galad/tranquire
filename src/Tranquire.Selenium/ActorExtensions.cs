@@ -39,14 +39,16 @@ namespace Tranquire.Selenium
         /// Add the ability to take screenshot on each action
         /// </summary>
         /// <param name="actor">The actor</param>
+        /// <param name="directory">The directory where the screenshots will be saved</param>
         /// <param name="screenshotName">A function that generate a new name of the screenshot</param>
         /// <returns>An new actor taking screenshots</returns>
-        public static Actor TakeScreenshots(this Actor actor, string screenshotName)
+        public static Actor TakeScreenshots(this Actor actor, string directory, string screenshotName)
         {
             Guard.ForNull(actor, nameof(actor));
+            Guard.ForNull(directory, nameof(directory));
             Guard.ForNull(screenshotName, nameof(screenshotName));
             var id = 0;
-            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), () => NextScreenshotName(ref id, screenshotName)));
+            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), directory, () => NextScreenshotName(ref id, screenshotName)));
         }
         
         private static string NextScreenshotName(ref int i, string screenshotName)

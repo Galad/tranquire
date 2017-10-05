@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Tests
         {
             //arrange
             //act
-            var actual = ActorExtensions.TakeScreenshots(actor, name).InnerActorBuilder(expected.Actor);
+            var actual = ActorExtensions.TakeScreenshots(actor, expected.Directory, name).InnerActorBuilder(expected.Actor);
             //assert
             actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));            
         }
@@ -39,11 +39,12 @@ namespace Tranquire.Selenium.Tests
             ActorDecoratorExtensionAssertion assertion,
             [Modest]Actor actor,
             TakeScreenshot expected,
-            string expectedName)
+            string expectedName,
+            string directory)
         {
             //arrange
             //act
-            var actual = ActorExtensions.TakeScreenshots(actor, expectedName).InnerActorBuilder(expected.Actor);
+            var actual = ActorExtensions.TakeScreenshots(actor, directory, expectedName).InnerActorBuilder(expected.Actor);
             //assert
             actual.Should().BeOfType<TakeScreenshot>().Which.NextScreenshotName().Should().Contain(expectedName);
         }

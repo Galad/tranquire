@@ -39,7 +39,7 @@ namespace ToDoList.Specifications
 #endif
             var actor = new Actor("John")
                             .WithReporting(new InMemoryObserver(_reportingStringBuilder))
-                            .TakeScreenshots(screenshotName)
+                            .TakeScreenshots(@"C:\Enablon\Screenshots", screenshotName)
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(WebBrowser.With(driver));

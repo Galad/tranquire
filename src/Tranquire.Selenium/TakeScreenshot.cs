@@ -14,23 +14,28 @@ namespace Tranquire.Selenium
         /// Creates a new instance of <see cref="TakeScreenshot"/>
         /// </summary>
         /// <param name="actor">The decorated actor</param>
+        /// <param name="directory">The directory where the screenshots are saved</param>
         /// <param name="nextScreenshotName">A function returning the name of the next screenshot. Each name should be different.</param>
-        public TakeScreenshot(IActor actor, Func<string> nextScreenshotName)
+        public TakeScreenshot(IActor actor, string directory, Func<string> nextScreenshotName)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (nextScreenshotName == null) throw new ArgumentNullException(nameof(nextScreenshotName));
+            if (string.IsNullOrEmpty(directory)) throw new ArgumentNullException(nameof(directory));
             Actor = actor;
             NextScreenshotName = nextScreenshotName;
+            Directory = directory;
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public IActor Actor { get; }
         public string Name => Actor.Name;
         public Func<string> NextScreenshotName { get; }
+        public string Directory { get; }
 
         private static TResult ExecuteTakeScreenshot<TResult, TAbility>(
             TAbility ability,
             Func<TResult> execute,
+            string directory,
             Func<string> nextScreenshotName)
         {
             try
@@ -42,12 +47,12 @@ namespace Tranquire.Selenium
                 var webBrowser = ability as WebBrowser;
                 if (webBrowser != null)
                 {
-                    if (!Directory.Exists("Screenshots"))
+                    if (!System.IO.Directory.Exists(directory))
                     {
-                        Directory.CreateDirectory("Screenshots");
+                        System.IO.Directory.CreateDirectory(directory);
                     }
                     var name = nextScreenshotName();
-                    ((ITakesScreenshot)webBrowser.Driver).GetScreenshot().SaveAsFile($"Screenshots\\{name}.jpg", ScreenshotImageFormat.Jpeg);
+                    ((ITakesScreenshot)webBrowser.Driver).GetScreenshot().SaveAsFile(Path.Combine(directory, $"{name}.jpg"), ScreenshotImageFormat.Jpeg);
                 }
             }
         }
@@ -60,23 +65,25 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            return Actor.AsksForWithAbility(new TakeScreenshotQuestion<TAnswer, TAbility>(question, NextScreenshotName));
+            return Actor.AsksForWithAbility(new TakeScreenshotQuestion<TAnswer, TAbility>(question, Directory, NextScreenshotName));
         }
 
         private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : Question<TAnswer, TAbility>
         {
             private readonly IQuestion<TAnswer, TAbility> _question;
             private readonly Func<string> _nextScreenshotName;
+            private readonly string _directory;
             
-            public TakeScreenshotQuestion(IQuestion<TAnswer, TAbility> question, Func<string> nextScreenshotName)
+            public TakeScreenshotQuestion(IQuestion<TAnswer, TAbility> question, string directory, Func<string> nextScreenshotName)
             {
                 _question = question;
                 _nextScreenshotName = nextScreenshotName;
+                _directory = directory;
             }
 
             protected override TAnswer Answer(IActor actor, TAbility ability)
             {
-                return ExecuteTakeScreenshot(ability, () => _question.AnsweredBy(actor, ability), _nextScreenshotName);
+                return ExecuteTakeScreenshot(ability, () => _question.AnsweredBy(actor, ability), _directory, _nextScreenshotName);
             }
 
             /// <summary>
@@ -94,28 +101,30 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            return Actor.ExecuteWithAbility(new TakeScreenshotAction<TGiven, TWhen, TResult>(action, NextScreenshotName));
+            return Actor.ExecuteWithAbility(new TakeScreenshotAction<TGiven, TWhen, TResult>(action, Directory, NextScreenshotName));
         }
 
         private sealed class TakeScreenshotAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>
         {
             private readonly IAction<TGiven, TWhen, TResult> _action;
             private readonly Func<string> _nextScreenshotName;
+            private readonly string _directory;
 
-            public TakeScreenshotAction(IAction<TGiven, TWhen, TResult> action, Func<string> nextScreenshotName)
+            public TakeScreenshotAction(IAction<TGiven, TWhen, TResult> action, string directory, Func<string> nextScreenshotName)
             {
                 _action = action;
                 _nextScreenshotName = nextScreenshotName;
+                _directory = directory;
             }
 
             protected override TResult ExecuteGiven(IActor actor, TGiven ability)
             {
-                return ExecuteTakeScreenshot(ability, () => _action.ExecuteGivenAs(actor, ability), _nextScreenshotName);
+                return ExecuteTakeScreenshot(ability, () => _action.ExecuteGivenAs(actor, ability), _directory, _nextScreenshotName);
             }
 
             protected override TResult ExecuteWhen(IActor actor, TWhen ability)
             {
-                return ExecuteTakeScreenshot(ability, () => _action.ExecuteWhenAs(actor, ability), _nextScreenshotName);
+                return ExecuteTakeScreenshot(ability, () => _action.ExecuteWhenAs(actor, ability), _directory, _nextScreenshotName);
             }
 
             /// <summary>
