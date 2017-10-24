@@ -67,30 +67,10 @@ namespace Tranquire.ActionBuilders
             string previousActionName,
             string name)
         {
-            if (actionFactory == null)
-            {
-                throw new ArgumentNullException(nameof(actionFactory));
-            }
-
-            if (previousAction == null)
-            {
-                throw new ArgumentNullException(nameof(previousAction));
-            }
-
-            if (executableAction == null)
-            {
-                throw new ArgumentNullException(nameof(executableAction));
-            }
-
-            if (previousActionName == null)
-            {
-                throw new ArgumentNullException(nameof(previousActionName));
-            }
-
-            ActionFactory = actionFactory;
-            PreviousAction = previousAction;
-            PreviousActionName = previousActionName;
-            _executableAction = executableAction;
+            ActionFactory = actionFactory ?? throw new ArgumentNullException(nameof(actionFactory));
+            PreviousAction = previousAction ?? throw new ArgumentNullException(nameof(previousAction));
+            PreviousActionName = previousActionName ?? throw new ArgumentNullException(nameof(previousActionName));
+            _executableAction = executableAction ?? throw new ArgumentNullException(nameof(executableAction));
             _name = name;
         }
 
