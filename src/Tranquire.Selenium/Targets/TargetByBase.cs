@@ -51,7 +51,6 @@ namespace Tranquire.Selenium.Targets
         public IWebElement ResolveFor(IWebDriver webDriver)
         {
             Guard.ForNull(webDriver, nameof(webDriver));
-            //TODO: ensure that the web element is visible
             return SearchContext(webDriver).FindElement(By);
         }
 
