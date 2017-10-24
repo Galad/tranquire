@@ -28,8 +28,7 @@ namespace Tranquire.Selenium.Questions.Converters
         /// <returns>An enum value corresponding to the string</returns>
         public T Convert(string value, CultureInfo culture)
         {
-            T result;
-            if (Enum.TryParse(value, out result) && _enumValues.Contains(result))
+            if (Enum.TryParse(value, out T result) && _enumValues.Contains(result))
             {
                 return result;
             }

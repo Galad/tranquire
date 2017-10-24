@@ -82,8 +82,7 @@ namespace Tranquire
         /// <exception cref="InvalidOperationException">The actor does not have the requested ability</exception>
         private object AbilityTo(Type abilityType)
         {
-            object ability;
-            if (!Abilities.TryGetValue(abilityType, out ability))
+            if (!Abilities.TryGetValue(abilityType, out object ability))
             {
                 throw new InvalidOperationException($"The ability {abilityType.Name} was requested but the actor {Name} does not have it.");
             }
