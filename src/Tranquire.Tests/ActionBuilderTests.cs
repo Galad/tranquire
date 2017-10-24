@@ -625,7 +625,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_VerifyGuardClauses(ConstructorInitializedMemberAssertion assertion)
+        public void Sut_VerifyConstructorInitializedMembers(ConstructorInitializedMemberAssertion assertion)
         {
             assertion.Verify(typeof(ActionResult<IAction<Unit>, Unit>));
         }
