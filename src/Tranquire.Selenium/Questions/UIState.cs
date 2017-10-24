@@ -24,7 +24,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="target"></param>
         /// <param name="culture"></param>
-        public UIState(ITarget target, CultureInfo culture)
+        protected UIState(ITarget target, CultureInfo culture)
         {
             Guard.ForNull(target, nameof(target));
             Guard.ForNull(culture, nameof(culture));

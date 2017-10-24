@@ -85,27 +85,29 @@ namespace Tranquire.Tests
 
             public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
             {
-                Invocations++;
-                return default(TAnswer);
+                return Increment<TAnswer>();
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
             public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
-                Invocations++;
-                return default(TAnswer);
+                return Increment<TAnswer>();
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
             public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
-                Invocations++;
-                return default(TResult);
+                return Increment<TResult>();
             }
 
             public TResult Execute<TResult>(IAction<TResult> action)
+            {
+                return Increment<TResult>();
+            }
+
+            private TResult Increment<TResult>()
             {
                 Invocations++;
                 return default(TResult);

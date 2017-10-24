@@ -33,9 +33,21 @@ namespace Tranquire.Extensions
         /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
         public IfAction(Func<bool> predicate, IAction<T> action, T defaultValue)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (action == null) throw new ArgumentNullException(nameof(action));
-            if ((defaultValue as object) == null) throw new ArgumentNullException(nameof(defaultValue));
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (defaultValue == null)
+            {
+                throw new ArgumentNullException(nameof(defaultValue));
+            }
+
             Action = action;
             Predicate = predicate;
             DefaultValue = defaultValue;
@@ -94,9 +106,21 @@ namespace Tranquire.Extensions
         /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
         public IfAction(Func<TAbility, bool> predicate, IAction<T> action, T defaultValue)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (action == null) throw new ArgumentNullException(nameof(action));
-            if ((defaultValue as object) == null) throw new ArgumentNullException(nameof(defaultValue));
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (defaultValue == null)
+            {
+                throw new ArgumentNullException(nameof(defaultValue));
+            }
+
             Action = action;
             Predicate = predicate;
             DefaultValue = defaultValue;

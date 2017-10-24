@@ -24,7 +24,11 @@ namespace Tranquire.ActionBuilders
 
         internal ActionBuilder(TAction currentAction, CompositeAction executableAction, string name)
         {
-            if (currentAction == null) throw new ArgumentNullException(nameof(currentAction));            
+            if (currentAction == null)
+            {
+                throw new ArgumentNullException(nameof(currentAction));
+            }
+
             Action = currentAction;
             _executableAction = executableAction;
             Name = name;
@@ -37,7 +41,11 @@ namespace Tranquire.ActionBuilders
 
         IActionBuilder<TNextAction, TNextResult> IActionBuilder.Then<TNextAction, TNextResult>(TNextAction nextAction)            
         {
-            if (nextAction == null) throw new ArgumentNullException(nameof(nextAction));
+            if (nextAction == null)
+            {
+                throw new ArgumentNullException(nameof(nextAction));
+            }
+
             var actions = new CompositeActionForBuilder(_executableAction.Actions.Add(Action.AsActionUnit()));
             var name = Name + ", Then " + nextAction.Name;
             return new ActionBuilder<TNextAction, TNextResult>(nextAction, actions, name);
@@ -87,7 +95,11 @@ namespace Tranquire.ActionBuilders
 
         IActionBuilder<TAction, TResult> IActionBuilder<TAction, TResult>.Named(string name)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return new ActionBuilder<TAction, TResult>(Action, _executableAction, name);
         }
     }

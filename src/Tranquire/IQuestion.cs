@@ -10,7 +10,7 @@ namespace Tranquire
     /// Represent a question
     /// </summary>
     /// <typeparam name="TAnswer">The answer's type</typeparam>
-    public interface IQuestion<TAnswer> : INamed
+    public interface IQuestion<out TAnswer> : INamed
     {
         /// <summary>
         /// Answers the question
@@ -26,7 +26,7 @@ namespace Tranquire
     /// <typeparam name="TAnswer">The answer's type</typeparam>
     /// <typeparam name="TAbility">The type of the ability required to answer this question</typeparam>
     [Obsolete("Prefer using IQuestion<TAnswer> when exposing a question, or inheriting the abstract class Question<TAnswer, TAbility> when implementing one.", false)]
-    public interface IQuestion<TAnswer, TAbility> : INamed, IQuestion<TAnswer>
+    public interface IQuestion<out TAnswer, in TAbility> : INamed, IQuestion<TAnswer>
     {
         /// <summary>
         /// Answers the question

@@ -12,7 +12,7 @@ namespace Tranquire.Selenium.Actions
     /// </summary>
     public class UsingIFrame : Action<WebBrowser, IDisposable>
     {
-        private ITarget _target;
+        private readonly ITarget _target;
         /// <summary>
         /// Gets the action's name
         /// </summary>

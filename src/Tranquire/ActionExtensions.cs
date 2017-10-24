@@ -73,7 +73,11 @@ namespace Tranquire
         /// <returns>A new action</returns>
         public static IAction<Unit> AsActionUnit<TResult>(this IAction<TResult> action)
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return new DiscardActionResult<TResult>(action);
         }
 

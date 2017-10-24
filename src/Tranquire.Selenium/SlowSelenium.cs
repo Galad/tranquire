@@ -44,14 +44,14 @@ namespace Tranquire.Selenium
             var targeted = question as ITargeted;
             if (webBrowserQuestion != null && targeted != null)
             {
-                return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer, WebBrowser>(webBrowserQuestion, DelayMilliseconds, targeted));
+                return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer>(webBrowserQuestion, DelayMilliseconds, targeted));
             }
             return Actor.AsksForWithAbility(question);
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : Question<TAnswer, WebBrowser>, ITargeted
+        private sealed class SlowSeleniumQuestion<TAnswer> : Question<TAnswer, WebBrowser>, ITargeted
         {
-            private int _delay;
+            private readonly int _delay;
             private readonly IQuestion<TAnswer, WebBrowser> _question;
             private readonly ITargeted _targeted;
 
@@ -94,8 +94,8 @@ namespace Tranquire.Selenium
 
         private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>, ITargeted
         {
-            private IAction<TGiven, TWhen, TResult> action;
-            private int _delay;
+            private readonly IAction<TGiven, TWhen, TResult> action;
+            private readonly int _delay;
             private readonly ITargeted _targeted;
             public override string Name => $"[Delayed of {_delay}ms] " + action.Name;
 

@@ -7,7 +7,7 @@ namespace Tranquire.Selenium.Questions.Converters
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     /// <typeparam name="TConverted"></typeparam>
-    public interface IConverter<TSource, TConverted>
+    public interface IConverter<in TSource, out TConverted>
     {
         /// <summary>
         /// Conver the given value to the specified type.

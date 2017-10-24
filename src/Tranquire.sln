@@ -1,25 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BB557DCD-9C67-428C-B283-14F7681D357D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{D3AC275C-3A02-484D-9631-4944378BDEA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tranquire", "Tranquire\Tranquire.csproj", "{08831808-B81A-4153-8CA9-1ABD34959285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire", "Tranquire\Tranquire.csproj", "{08831808-B81A-4153-8CA9-1ABD34959285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tranquire.Selenium", "Tranquire.Selenium\Tranquire.Selenium.csproj", "{A4FAE459-E7D4-4CF0-A6F4-D12353187C85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Selenium", "Tranquire.Selenium\Tranquire.Selenium.csproj", "{A4FAE459-E7D4-4CF0-A6F4-D12353187C85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tranquire.Tests", "Tranquire.Tests\Tranquire.Tests.csproj", "{3000E54C-40CC-4B53-A1A0-141FB861F90A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Tests", "Tranquire.Tests\Tranquire.Tests.csproj", "{3000E54C-40CC-4B53-A1A0-141FB861F90A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tranquire.Selenium.Tests", "Tranquire.Selenium.Tests\Tranquire.Selenium.Tests.csproj", "{D8674422-37DA-4462-B258-7A09D9803F89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Selenium.Tests", "Tranquire.Selenium.Tests\Tranquire.Selenium.Tests.csproj", "{D8674422-37DA-4462-B258-7A09D9803F89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{07EA5CF3-2850-469F-AC69-97B3624E0ACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "Sandbox\Sandbox.csproj", "{07EA5CF3-2850-469F-AC69-97B3624E0ACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoList.Automation", "ToDoList.Automation\ToDoList.Automation.csproj", "{A8925A78-F467-4140-8740-F1BC4A87935B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Automation", "ToDoList.Automation\ToDoList.Automation.csproj", "{A8925A78-F467-4140-8740-F1BC4A87935B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoList.Specifications", "ToDoList.Specifications\ToDoList.Specifications.csproj", "{1CF77FC5-941A-4258-B598-F558F10C9D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Specifications", "ToDoList.Specifications\ToDoList.Specifications.csproj", "{1CF77FC5-941A-4258-B598-F558F10C9D48}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SonarQube", "SonarQube", "{D58E383A-988C-4A99-8D1A-FFB0CBBA696E}"
+	ProjectSection(SolutionItems) = preProject
+		SonarQube\SolutionBinding.sqconfig = SonarQube\SolutionBinding.sqconfig
+		SonarQube\TranquireCSharp.ruleset = SonarQube\TranquireCSharp.ruleset
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,5 +71,8 @@ Global
 		{07EA5CF3-2850-469F-AC69-97B3624E0ACD} = {D3AC275C-3A02-484D-9631-4944378BDEA5}
 		{A8925A78-F467-4140-8740-F1BC4A87935B} = {D3AC275C-3A02-484D-9631-4944378BDEA5}
 		{1CF77FC5-941A-4258-B598-F558F10C9D48} = {D3AC275C-3A02-484D-9631-4944378BDEA5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0DE7AE28-21D3-4CC2-B47F-BB1F63D6D457}
 	EndGlobalSection
 EndGlobal

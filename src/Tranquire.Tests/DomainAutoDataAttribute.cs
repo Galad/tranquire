@@ -75,7 +75,7 @@ namespace Tranquire.Tests
 
         private class ConstructorMethod : IMethod
         {
-            private ConstructorInfo _constructor;
+            private readonly ConstructorInfo _constructor;
 
             public ConstructorMethod(ConstructorInfo constructor)
             {

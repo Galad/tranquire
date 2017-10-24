@@ -16,7 +16,11 @@ namespace Tranquire.ActionBuilders
         /// <param name="result">The action result</param>
         public ActionResult(TAction action, TResult result)
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             Result = result;
             Action = action;
         }

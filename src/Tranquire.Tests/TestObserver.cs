@@ -17,7 +17,7 @@ namespace Tranquire.Tests
         {
         }
 
-        private List<T> _values = new List<T>();
+        private readonly List<T> _values = new List<T>();
 
         public IReadOnlyList<T> Values => _values;
         public void OnNext(T value)

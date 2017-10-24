@@ -16,8 +16,8 @@ namespace Tranquire.Selenium.Actions.Waiters
     /// <typeparam name="TAnswer">The type of the answer</typeparam>
     public class WaitUntilQuestionIsAnswered<TAnswer> : ActionUnit<WebBrowser>
     {
-        private Predicate<TAnswer> _isAnswered;
-        private IQuestion<TAnswer> _question;
+        private readonly Predicate<TAnswer> _isAnswered;
+        private readonly IQuestion<TAnswer> _question;
         private readonly TimeSpan _timeout;
         /// <summary>
         /// Gets the question's name

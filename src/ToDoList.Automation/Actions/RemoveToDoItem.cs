@@ -6,7 +6,7 @@ namespace ToDoList.Automation.Actions
 {
     public class RemoveToDoItem : Tranquire.ActionUnit
     {
-        private string item;
+        private readonly string item;
 
         public RemoveToDoItem(string item)
         {

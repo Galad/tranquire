@@ -40,7 +40,11 @@ namespace Tranquire.Selenium.Actions.Enters
         public EnterNewValue(ITarget target, string value)
             : base(t => t.And(Clear.TheValueOf(target)).And(Enter.TheValue(value).Into(target)))
         {
-            if(target == null) throw new ArgumentNullException(nameof(target));
+            if(target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             Target = target;
             Value = value;
         }

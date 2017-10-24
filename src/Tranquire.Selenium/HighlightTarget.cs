@@ -28,7 +28,7 @@ namespace Tranquire.Selenium
             }
         }
 
-        private HighlighActions _highlightActions;
+        private readonly HighlighActions _highlightActions;
 
         /// <summary>
         /// Creates a new instance of <see cref="HighlightTarget"/>
@@ -82,7 +82,7 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            if (typeof(TAbility) == typeof(WebBrowser) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
+            if (typeof(TAbility) == typeof(WebBrowser) && question is ITargeted)
             {
                 return Actor.AsksForWithAbility(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
             }
@@ -91,8 +91,8 @@ namespace Tranquire.Selenium
 
         private sealed class HighlightedQuestion<TAnswer> : Question<TAnswer, WebBrowser>
         {
-            private IQuestion<TAnswer, WebBrowser> question;
-            private HighlighActions _highlightActions;
+            private readonly IQuestion<TAnswer, WebBrowser> question;
+            private readonly HighlighActions _highlightActions;
             private ITargeted Targeted => (ITargeted)question;
             public override string Name => "[Highlighted] " + question.Name;
 
@@ -116,7 +116,7 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            if ((typeof(TGiven) == typeof(WebBrowser) || typeof(TWhen) == typeof(WebBrowser)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
+            if ((typeof(TGiven) == typeof(WebBrowser) || typeof(TWhen) == typeof(WebBrowser)) && action is ITarget)
             {
                 return Actor.ExecuteWithAbility(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
             }
@@ -125,9 +125,9 @@ namespace Tranquire.Selenium
 
         private sealed class HighlightedAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>
         {
-            private IAction<TGiven, TWhen, TResult> _action;
-            private ITargeted Targeted => (ITargeted)_action;
-            private HighlighActions _highlightActions;
+            private readonly IAction<TGiven, TWhen, TResult> _action;
+            private readonly HighlighActions _highlightActions;
+            private ITargeted Targeted => (ITargeted)_action;            
             public override string Name => "[Highlighted] " + _action.Name;
 
             public HighlightedAction(IAction<TGiven, TWhen, TResult> action, HighlighActions highlightActions)

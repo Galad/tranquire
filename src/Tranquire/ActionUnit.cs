@@ -68,10 +68,7 @@ namespace Tranquire
         /// <returns></returns>
         public Unit ExecuteGivenAs(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
-#pragma warning disable CS0618 // Type or member is obsolete
-            return actor.ExecuteWithAbility(this as IAction<T, T, Unit>);
-#pragma warning restore CS0618 // Type or member is obsolete
+            return Execute(actor);
         }
 
         /// <summary>
@@ -80,6 +77,11 @@ namespace Tranquire
         /// <param name="actor"></param>
         /// <returns></returns>
         public Unit ExecuteWhenAs(IActor actor)
+        {
+            return Execute(actor);
+        }
+
+        private Unit Execute(IActor actor)
         {
             Guard.ForNull(actor, nameof(actor));
 #pragma warning disable CS0618 // Type or member is obsolete
