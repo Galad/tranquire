@@ -120,10 +120,12 @@ namespace Tranquire.Selenium.Questions
 
             public void Clear()
             {
+                // Does not do anything since it is not a real element in the DOM
             }
 
             public void Click()
             {
+                // Does not do anything since it is not a real element in the DOM
             }
 
             public IWebElement FindElement(By by) => this;
@@ -133,10 +135,12 @@ namespace Tranquire.Selenium.Questions
 
             public void SendKeys(string text)
             {
+                // Does not do anything since it is not a real element in the DOM
             }
 
             public void Submit()
             {
+                // Does not do anything since it is not a real element in the DOM
             }
         }
     }
