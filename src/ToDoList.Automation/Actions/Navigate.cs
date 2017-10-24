@@ -10,7 +10,7 @@ namespace ToDoList.Automation.Actions
 {
     public class Navigate : Tranquire.ActionUnit<WebBrowser>
     {
-        private string _url;
+        private readonly string _url;
 
         public Navigate(string v)
         {

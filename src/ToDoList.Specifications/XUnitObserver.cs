@@ -7,7 +7,7 @@ namespace ToDoList.Specifications
 {
     public class XUnitObserver : IObserver<string>
     {
-        Lazy<ITestOutputHelper> _helper;
+        private readonly Lazy<ITestOutputHelper> _helper;
 
         public XUnitObserver(Func<ITestOutputHelper> helper)
         {
