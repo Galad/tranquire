@@ -214,3 +214,7 @@ nuget.exe
 *.ncrunchproject
 *.ncrunchsolution
 /src/OpenCover
+
+#SonarQube
+.sonar
+.sonarqube

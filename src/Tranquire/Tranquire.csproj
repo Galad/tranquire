@@ -17,6 +17,11 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard1.0' ">    
+    <!-- Prevent analyzing this project multiple times, for each target framework. We only analyze it for .NET standard. Otherwise the scanner would ignore it -->
+    <SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.0|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard1.0\Tranquire.xml</DocumentationFile>
   </PropertyGroup>
