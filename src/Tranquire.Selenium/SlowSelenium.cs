@@ -44,12 +44,12 @@ namespace Tranquire.Selenium
             var targeted = question as ITargeted;
             if (webBrowserQuestion != null && targeted != null)
             {
-                return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer, WebBrowser>(webBrowserQuestion, DelayMilliseconds, targeted));
+                return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer>(webBrowserQuestion, DelayMilliseconds, targeted));
             }
             return Actor.AsksForWithAbility(question);
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer, TResult> : Question<TAnswer, WebBrowser>, ITargeted
+        private sealed class SlowSeleniumQuestion<TAnswer> : Question<TAnswer, WebBrowser>, ITargeted
         {
             private readonly int _delay;
             private readonly IQuestion<TAnswer, WebBrowser> _question;
