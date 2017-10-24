@@ -35,7 +35,7 @@ namespace Tranquire.Extensions
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (action == null) throw new ArgumentNullException(nameof(action));
-            if ((defaultValue as object) == null) throw new ArgumentNullException(nameof(defaultValue));
+            if (defaultValue == null) throw new ArgumentNullException(nameof(defaultValue));
             Action = action;
             Predicate = predicate;
             DefaultValue = defaultValue;
@@ -96,7 +96,7 @@ namespace Tranquire.Extensions
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (action == null) throw new ArgumentNullException(nameof(action));
-            if ((defaultValue as object) == null) throw new ArgumentNullException(nameof(defaultValue));
+            if (defaultValue == null) throw new ArgumentNullException(nameof(defaultValue));
             Action = action;
             Predicate = predicate;
             DefaultValue = defaultValue;

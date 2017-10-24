@@ -82,7 +82,7 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            if (typeof(TAbility) == typeof(WebBrowser) && typeof(ITargeted).IsAssignableFrom(question.GetType()))
+            if (typeof(TAbility) == typeof(WebBrowser) && question is ITargeted)
             {
                 return Actor.AsksForWithAbility(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
             }
@@ -116,7 +116,7 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
         {
-            if ((typeof(TGiven) == typeof(WebBrowser) || typeof(TWhen) == typeof(WebBrowser)) && typeof(ITargeted).IsAssignableFrom(action.GetType()))
+            if ((typeof(TGiven) == typeof(WebBrowser) || typeof(TWhen) == typeof(WebBrowser)) && action is ITarget)
             {
                 return Actor.ExecuteWithAbility(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
             }
