@@ -42,7 +42,11 @@ namespace Tranquire.Selenium.Actions
         /// <param name="ability"></param>
         protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
-            if (ability == null) throw new ArgumentNullException(nameof(ability));
+            if (ability == null)
+            {
+                throw new ArgumentNullException(nameof(ability));
+            }
+
             ability.Navigate().GoToUrl(Uri);
         }
 

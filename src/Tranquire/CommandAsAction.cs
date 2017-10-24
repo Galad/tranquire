@@ -14,7 +14,11 @@ namespace Tranquire
 
         public WhenCommandAsAction(IWhenCommand<TResult> command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             Command = command;
         }
 
@@ -36,7 +40,11 @@ namespace Tranquire
 
         public WhenCommandAsAction(IWhenCommand<TWhen, TResult> command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             Command = command;
         }
         
@@ -58,7 +66,11 @@ namespace Tranquire
 
         public GivenCommandAsAction(IGivenCommand<TResult> command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             Command = command;
         }
 
@@ -80,7 +92,11 @@ namespace Tranquire
 
         public GivenCommandAsAction(IGivenCommand<TGiven, TResult> command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             Command = command;
         }
         

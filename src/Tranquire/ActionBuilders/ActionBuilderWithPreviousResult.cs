@@ -69,10 +69,25 @@ namespace Tranquire.ActionBuilders
             string previousActionName,
             string name)
         {
-            if (actionFactory == null) throw new ArgumentNullException(nameof(actionFactory));
-            if (previousAction == null) throw new ArgumentNullException(nameof(previousAction));
-            if (executableAction == null) throw new ArgumentNullException(nameof(executableAction));
-            if (previousActionName == null) throw new ArgumentNullException(nameof(previousActionName));
+            if (actionFactory == null)
+            {
+                throw new ArgumentNullException(nameof(actionFactory));
+            }
+
+            if (previousAction == null)
+            {
+                throw new ArgumentNullException(nameof(previousAction));
+            }
+
+            if (executableAction == null)
+            {
+                throw new ArgumentNullException(nameof(executableAction));
+            }
+
+            if (previousActionName == null)
+            {
+                throw new ArgumentNullException(nameof(previousActionName));
+            }
 
             ActionFactory = actionFactory;
             PreviousAction = previousAction;
@@ -123,7 +138,11 @@ namespace Tranquire.ActionBuilders
 
         IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult> IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult>.Named(string name)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return new ActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult>(
                 PreviousAction,
                 _executableAction,

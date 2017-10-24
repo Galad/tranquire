@@ -21,8 +21,16 @@ namespace Tranquire
         /// <returns>A new builder</returns>
         public static IActionBuilder<TAction, Unit> Then<TAction>(this IActionBuilder source, TAction nextAction) where TAction : class, IAction<Unit>
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (nextAction == null) throw new ArgumentNullException(nameof(nextAction));
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (nextAction == null)
+            {
+                throw new ArgumentNullException(nameof(nextAction));
+            }
+
             return source.Then<TAction, Unit>(nextAction);
         }
 
@@ -41,8 +49,16 @@ namespace Tranquire
             where TAction : class, IAction<Unit>
             where TCurrentAction : class, IAction<TCurrentResult>
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (nextAction == null) throw new ArgumentNullException(nameof(nextAction));
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (nextAction == null)
+            {
+                throw new ArgumentNullException(nameof(nextAction));
+            }
+
             return source.Then<TAction, Unit>(nextAction);
         }
 
@@ -63,8 +79,16 @@ namespace Tranquire
 #pragma warning restore RCS1163 // Unused parameter.
             where TAction : class, IAction<TResult>
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (nextAction == null) throw new ArgumentNullException(nameof(nextAction));
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (nextAction == null)
+            {
+                throw new ArgumentNullException(nameof(nextAction));
+            }
+
             return source.Then<TAction, TResult>(nextAction);
         }
 
@@ -88,8 +112,16 @@ namespace Tranquire
            where TAction : class, IAction<TResult>
            where TCurrentAction : class, IAction<TCurrentResult>
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (nextAction == null) throw new ArgumentNullException(nameof(nextAction));
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (nextAction == null)
+            {
+                throw new ArgumentNullException(nameof(nextAction));
+            }
+
             return source.Then<TAction, TResult>(nextAction);
         }
 

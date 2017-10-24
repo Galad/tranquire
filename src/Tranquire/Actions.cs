@@ -66,8 +66,16 @@ namespace Tranquire
 
             public DelegateAction(string name, System.Action<IActor> action)
             {
-                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-                if (action == null) throw new ArgumentNullException(nameof(action));
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentNullException(nameof(name));
+                }
+
+                if (action == null)
+                {
+                    throw new ArgumentNullException(nameof(action));
+                }
+
                 Name = name;
                 this.Action = action;
             }
@@ -96,8 +104,16 @@ namespace Tranquire
 
             public DelegateAction(string name, System.Action<IActor, T> action)
             {
-                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-                if (action == null) throw new ArgumentNullException(nameof(action));
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentNullException(nameof(name));
+                }
+
+                if (action == null)
+                {
+                    throw new ArgumentNullException(nameof(action));
+                }
+
                 Name = name;
                 this.Action = action;
             }
@@ -128,8 +144,16 @@ namespace Tranquire
 
             public FuncAction(string name, Func<IActor, TResult> action)
             {
-                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-                if (action == null) throw new ArgumentNullException(nameof(action));
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentNullException(nameof(name));
+                }
+
+                if (action == null)
+                {
+                    throw new ArgumentNullException(nameof(action));
+                }
+
                 Name = name;
                 Action = action;
             }
@@ -148,8 +172,16 @@ namespace Tranquire
         /// <returns></returns>
         public static IAction<T> Create<T>(string name, Func<IActor, T> action)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return new FuncAction<T>(name, action);
         }
 
@@ -160,8 +192,16 @@ namespace Tranquire
 
             public FuncAction(string name, Func<IActor, TAbility, TResult> action)
             {
-                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-                if (action == null) throw new ArgumentNullException(nameof(action));
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentNullException(nameof(name));
+                }
+
+                if (action == null)
+                {
+                    throw new ArgumentNullException(nameof(action));
+                }
+
                 Name = name;
                 Action = action;
             }
@@ -182,8 +222,16 @@ namespace Tranquire
         public static IAction<TAbility, TAbility, TResult> Create<TResult, TAbility>(string name, Func<IActor, TAbility, TResult> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return new FuncAction<TAbility, TResult>(name, action);
         }
     }

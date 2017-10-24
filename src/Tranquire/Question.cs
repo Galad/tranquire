@@ -31,14 +31,25 @@ namespace Tranquire
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TAnswer AnsweredBy(IActor actor, TAbility ability)
         {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
-            if (EqualityComparer<TAbility>.Default.Equals(ability, default(TAbility))) throw new ArgumentNullException(nameof(ability));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
+            if (EqualityComparer<TAbility>.Default.Equals(ability, default(TAbility)))
+            {
+                throw new ArgumentNullException(nameof(ability));
+            }
+
             return Answer(actor, ability);
         }
 
         public TAnswer AnsweredBy(IActor actor)
         {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
 #pragma warning disable CS0618 // Type or member is obsolete
             return actor.AsksForWithAbility(this);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -72,7 +83,11 @@ namespace Tranquire
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TAnswer AnsweredBy(IActor actor)
         {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
             return Answer(actor);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

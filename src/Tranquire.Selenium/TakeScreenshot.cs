@@ -18,9 +18,21 @@ namespace Tranquire.Selenium
         /// <param name="nextScreenshotName">A function returning the name of the next screenshot. Each name should be different.</param>
         public TakeScreenshot(IActor actor, string directory, Func<string> nextScreenshotName)
         {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
-            if (nextScreenshotName == null) throw new ArgumentNullException(nameof(nextScreenshotName));
-            if (string.IsNullOrEmpty(directory)) throw new ArgumentNullException(nameof(directory));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
+            if (nextScreenshotName == null)
+            {
+                throw new ArgumentNullException(nameof(nextScreenshotName));
+            }
+
+            if (string.IsNullOrEmpty(directory))
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
             Actor = actor;
             NextScreenshotName = nextScreenshotName;
             Directory = directory;
