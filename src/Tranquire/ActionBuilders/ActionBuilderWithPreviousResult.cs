@@ -148,11 +148,15 @@ namespace Tranquire.ActionBuilders
 
             public TLazyResult ExecuteGivenAs(IActor actor)
             {
-                var action = _actionFactory(actor);
-                return actor.Execute(action);
+                return Execute(actor);
             }
 
             public TLazyResult ExecuteWhenAs(IActor actor)
+            {
+                return Execute(actor);
+            }
+
+            private TLazyResult Execute(IActor actor)
             {
                 var action = _actionFactory(actor);
                 return actor.Execute(action);
