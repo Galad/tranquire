@@ -5,7 +5,7 @@
     /// </summary>
     /// <typeparam name="T">The depending ability type</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-    public interface IWhenCommand<T, out TResult> : INamed, IWhenCommand<TResult>
+    public interface IWhenCommand<T, out TResult> : IWhenCommand<TResult>
     {
         /// <summary>
         /// Execute the action with the given actor

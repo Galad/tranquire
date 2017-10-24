@@ -49,7 +49,7 @@ namespace Tranquire.Selenium.Actions
             return new Disposable(() => actor.Execute(new SwitchToParentIFrame()));
         }
         
-        private class Disposable : IDisposable
+        private sealed class Disposable : IDisposable
         {
             private System.Action _action;
 
@@ -58,15 +58,27 @@ namespace Tranquire.Selenium.Actions
                 _action = action;
             }
 
+            #region IDisposable Support
+            private bool disposedValue = false; // To detect redundant calls
+
+            void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        Interlocked.Exchange(ref _action, null)?.Invoke();
+                    }
+                    disposedValue = true;
+                }
+            }
+                        
             public void Dispose()
             {
-                var action = Interlocked.Exchange(ref _action, null);
-                if (action == null)
-                {
-                    return;
-                }                
-                action();
+                // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+                Dispose(true);                
             }
+            #endregion
         }
 
         private class SwitchToParentIFrame : ActionUnit<WebBrowser>

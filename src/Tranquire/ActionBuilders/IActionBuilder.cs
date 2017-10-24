@@ -68,8 +68,7 @@ namespace Tranquire.ActionBuilders
     /// <typeparam name="TPreviousAction">The previous action type</typeparam>
     /// <typeparam name="TPreviousResult">The previous action result type</typeparam>
     public interface IActionBuilderWithPreviousResult<TAction, TResult, TPreviousAction, TPreviousResult>
-        : IAction<TResult>,
-          IActionBuilder,
+        : IActionBuilder,
           IActionBuilderWithCurrentAction<TAction, TResult>,
           IActionFactoryContainer<TAction, TResult, TPreviousAction, TPreviousResult>
         where TAction : class, IAction<TResult>
