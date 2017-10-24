@@ -7,7 +7,7 @@ namespace Tranquire.Selenium.Actions.Selects
     /// A strategy that is used to select a value on a <see cref="SelectElement"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ISelectStrategy<T>
+    public interface ISelectStrategy<in T>
     {        
         /// <summary>
         /// Select the element

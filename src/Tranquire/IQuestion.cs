@@ -10,7 +10,7 @@ namespace Tranquire
     /// Represent a question
     /// </summary>
     /// <typeparam name="TAnswer">The answer's type</typeparam>
-    public interface IQuestion<TAnswer> : INamed
+    public interface IQuestion<out TAnswer> : INamed
     {
         /// <summary>
         /// Answers the question
