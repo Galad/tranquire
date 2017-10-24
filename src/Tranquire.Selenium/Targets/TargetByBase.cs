@@ -25,7 +25,7 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="by"></param>
         /// <param name="name"></param>
-        public TargetByBase(By by, string name)
+        protected TargetByBase(By by, string name)
         {
             Guard.ForNull(by, nameof(by));
             Guard.ForNullOrEmpty(name, nameof(name));

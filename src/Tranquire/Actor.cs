@@ -185,7 +185,7 @@ namespace Tranquire
 
         private abstract class InnerActor : IActor
         {
-            public InnerActor(
+            protected InnerActor(
                 string name, 
                 Func<Type, object> getAbility)
             {

@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="target"></param>
         /// <param name="culture"></param>
-        public SingleUIState(ITarget target, CultureInfo culture) : base (target, culture)
+        protected SingleUIState(ITarget target, CultureInfo culture) : base (target, culture)
         {
         }
         

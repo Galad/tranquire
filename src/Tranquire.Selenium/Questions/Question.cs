@@ -18,7 +18,7 @@ namespace Tranquire.Selenium.Questions
         public IConverter<TSource, TConverted> Converter { get; }
         public CultureInfo Culture { get; }
 
-        public WebBrowserQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
+        protected WebBrowserQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
         {
             Guard.ForNull(target, nameof(target));
             Guard.ForNull(webElementResolver, nameof(webElementResolver));
