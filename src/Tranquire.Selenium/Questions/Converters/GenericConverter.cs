@@ -37,12 +37,12 @@ namespace Tranquire.Selenium.Questions.Converters
         /// <summary>
         /// Perform the conversion
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="value"></param>
         /// <param name="culture"></param>
         /// <returns></returns>
-        public TConverted Convert(TSource source, CultureInfo culture)
+        public TConverted Convert(TSource value, CultureInfo culture)
         {
-            return ConvertFunction(source, culture);
+            return ConvertFunction(value, culture);
         }
     }
 }
