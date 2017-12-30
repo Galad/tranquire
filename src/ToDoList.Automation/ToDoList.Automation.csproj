@@ -19,4 +19,8 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="1.6.35" />
+  </ItemGroup>
 </Project>

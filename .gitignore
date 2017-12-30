@@ -218,3 +218,6 @@ nuget.exe
 #SonarQube
 .sonar
 .sonarqube
+/src/Sandbox/chromedriver.exe
+/src/Sandbox/fred_1.jpg.jpg
+/p1.patch

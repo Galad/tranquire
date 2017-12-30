@@ -2,18 +2,15 @@
 using Tranquire;
 using Tranquire.Selenium;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using ToDoList.Automation.Actions;
-using System.Threading;
 using OpenQA.Selenium;
 using Xunit.Abstractions;
 using OpenQA.Selenium.Chrome;
-using System.Diagnostics;
+using Tranquire.Selenium.Tests;
 
 namespace ToDoList.Specifications
 {
@@ -22,24 +19,29 @@ namespace ToDoList.Specifications
     {
         private readonly StringBuilder _reportingStringBuilder;
 
+
         public ToDoListSteps(ScenarioContext context) : base(context)
         {
             _reportingStringBuilder = new StringBuilder();
         }
 
+      
         [BeforeScenario]
         public void Before()
         {
-            var driver = new ChromeDriver();
+
+            var driver = WebDriverFixture.CreateDriver();
+
             var screenshotName = Context.ScenarioInfo.Title;            
 #if DEBUG
             var delay = TimeSpan.FromSeconds(1);
 #else
             var delay = TimeSpan.Zero;
 #endif
+            var observer = new InMemoryObserver(_reportingStringBuilder);
             var actor = new Actor("John")
-                            .WithReporting(new InMemoryObserver(_reportingStringBuilder))
-                            .TakeScreenshots(@"C:\Enablon\Screenshots", screenshotName)
+                            .WithReporting(observer)
+                            .TakeScreenshots(@"C:\Enablon\Screenshots", screenshotName, observer)
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(WebBrowser.With(driver));
@@ -49,12 +51,17 @@ namespace ToDoList.Specifications
             actor.Given(Open.TheApplication());
         }
 
+        private void destroyDriver()
+        {
+            Context.Get<IWebDriver>().Dispose();
+        }
         [AfterScenario]
         public void After()
         {
-            Context.Get<ChromeDriver>().Dispose();
-            //Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
-            Debug.WriteLine(_reportingStringBuilder.ToString());
+            destroyDriver();
+
+            // Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
+            System.Diagnostics.Debug.WriteLine(_reportingStringBuilder.ToString());
         }
 
         [Given(@"I have an empty to-do list")]

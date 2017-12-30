@@ -56,7 +56,9 @@ namespace Tranquire.Selenium.Tests.Actions
         private void RemoveOverlay(string expected, int time)
         {
             var js = $"setupTest('{expected}', {time});";
-            Fixture.WebDriver.ExecuteScript(js);
+            var executor = (IJavaScriptExecutor)Fixture.WebDriver;
+
+            executor.ExecuteScript(js);
         }
     }
 }
