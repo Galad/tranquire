@@ -11,6 +11,7 @@ namespace Tranquire.Selenium.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
         {
+            
             assertion.Verify(typeof(ActorExtensions));
         }
 
@@ -31,7 +32,7 @@ namespace Tranquire.Selenium.Tests
             //act
             var actual = ActorExtensions.TakeScreenshots(actor, expected.Directory, name).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));            
+            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName).Excluding(x => x.Observer));            
         }
 
         [Theory, DomainAutoData]

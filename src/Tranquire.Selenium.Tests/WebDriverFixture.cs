@@ -15,19 +15,44 @@ using OpenQA.Selenium.Chrome;
 
 namespace Tranquire.Selenium.Tests
 {
+    
     public sealed class WebDriverFixture : IDisposable
     {
         public static int Port = 30000;
         private readonly IDisposable _host;
         public Actor Actor { get; }
         private readonly int _port;        
-        public ChromeDriver WebDriver { get; }
+        public IWebDriver WebDriver { get; }
 
+        #region Driver creation methods
+        private static IWebDriver createChromeDriver()
+        {
+            //for windows`
+            var opts = new ChromeOptions();
+            //opts.AddArgument("test-type");
+            opts.AddArgument("no-sandbox");
+            var driver = new ChromeDriver(opts);
+
+            return driver;
+        }
+        private static IWebDriver createFirefoxDriver()
+        {
+            var driver = new FirefoxDriver();
+
+            return driver;
+        }
+        #endregion
+
+        public static IWebDriver CreateDriver()
+        {
+            return createFirefoxDriver();
+        }
         public WebDriverFixture()
         {
             _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
-            WebDriver = new ChromeDriver();
+            WebDriver = CreateDriver();
+
             Actor = (Actor)(new Actor("James").CanUse(WebBrowser.With(WebDriver)));
         }
 

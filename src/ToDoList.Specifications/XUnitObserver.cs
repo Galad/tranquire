@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using Tranquire.Reporting;
+using Tranquire.Selenium;
 using Xunit.Abstractions;
 
 namespace ToDoList.Specifications
@@ -48,7 +50,7 @@ namespace ToDoList.Specifications
         }
     }
 
-    public class InMemoryObserver : IObserver<string>
+    public class InMemoryObserver : IObserver<string>, IObserver<ScreenshotNotification>
     {
         private readonly StringBuilder _builder;
 
@@ -70,6 +72,11 @@ namespace ToDoList.Specifications
         public void OnNext(string value)
         {
             _builder.AppendLine(value);
+        }
+
+        public void OnNext(ScreenshotNotification value)
+        {
+            _builder.AppendLine($"Screenshot! {value.FilePath}");
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Tranquire.Selenium.Tests.Actions
                                  "element.innerText = '" + id + "';" +
                                  "document.body.appendChild(element)";
             js = "setTimeout(function(){" + js + "}, 1000);";
-            Fixture.WebDriver.ExecuteScript(js);
+            ((IJavaScriptExecutor) Fixture.WebDriver).ExecuteScript(js);
         }
 
         [Theory, DomainAutoData]
@@ -91,7 +91,7 @@ namespace Tranquire.Selenium.Tests.Actions
         {
             var js = $"var element = document.getElementById('ChangeTextElement').innerText = '{expected}';";
             js = "setTimeout(function(){" + js + "}, 1000);";
-            Fixture.WebDriver.ExecuteScript(js);
+            ((IJavaScriptExecutor)Fixture.WebDriver).ExecuteScript(js);
         }
     }
 }

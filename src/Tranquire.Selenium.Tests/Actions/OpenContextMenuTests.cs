@@ -22,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Actions
         {
             //arrange
             var js = $"setupTest('{expected}');";
-            Fixture.WebDriver.ExecuteScript(js);
+            ((IJavaScriptExecutor) Fixture.WebDriver).ExecuteScript(js);
             var target = Target.The("element where to open the context menu").LocatedBy(By.Id("ClickableElement"));
             var expectedClickContent = Target.The("expected click content").LocatedBy(By.Id("ExpectedValue"));
             var action = OpenContextMenu.On(target);
