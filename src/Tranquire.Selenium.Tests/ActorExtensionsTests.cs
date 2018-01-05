@@ -1,8 +1,8 @@
-﻿using Ploeh.AutoFixture.Idioms;
+﻿using FluentAssertions;
+using Ploeh.AutoFixture.Idioms;
+using Ploeh.AutoFixture.Xunit2;
 using Tranquire.Tests;
 using Xunit;
-using FluentAssertions;
-using Ploeh.AutoFixture.Xunit2;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -31,7 +31,7 @@ namespace Tranquire.Selenium.Tests
             //act
             var actual = ActorExtensions.TakeScreenshots(actor, expected.Directory, name).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));            
+            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));
         }
 
         [Theory, DomainAutoData]

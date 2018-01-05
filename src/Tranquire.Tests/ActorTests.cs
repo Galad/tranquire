@@ -1,18 +1,14 @@
 ﻿using FluentAssertions;
 using Moq;
+using Moq.Protected;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Kernel;
 using Ploeh.AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using System.Reflection;
-using Moq.Protected;
 
 namespace Tranquire.Tests
 {
@@ -91,7 +87,7 @@ namespace Tranquire.Tests
             var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
             action.Protected()
                    .Setup<object>("ExecuteWhen", ItExpr.IsAny<IActor>(), expectedAbility)
-                   .Returns(expected);            
+                   .Returns(expected);
             //act
             var actual = sut.When(action.Object);
             //assert
@@ -170,7 +166,7 @@ namespace Tranquire.Tests
             var ability = sut.Abilities.Values.OfType<Ability1>().First();
             question.Protected()
                     .Setup<object>("Answer", ItExpr.IsAny<IActor>(), ability)
-                    .Returns(expected);            
+                    .Returns(expected);
             //act
             var actual = sut.AsksFor(question.Object);
             //assert

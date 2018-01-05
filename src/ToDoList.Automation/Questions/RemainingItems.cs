@@ -1,7 +1,5 @@
-﻿using System;
-using ToDoList.Automation.Actions;
+﻿using ToDoList.Automation.Actions;
 using Tranquire;
-using Tranquire.Selenium;
 using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.Questions

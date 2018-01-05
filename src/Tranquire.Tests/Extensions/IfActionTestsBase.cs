@@ -1,10 +1,7 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
-using Tranquire.Extensions;
 using Xunit;
 
 namespace Tranquire.Tests.Extensions

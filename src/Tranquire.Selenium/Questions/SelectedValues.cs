@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Collections.Immutable;
+using System.Globalization;
+using System.Linq;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -29,7 +25,7 @@ namespace Tranquire.Selenium.Questions
         /// <param name="target"></param>
         /// <param name="culture"></param>
         public SelectedValues(ITarget target, CultureInfo culture) : base(target, culture)
-        {            
+        {
         }
 
         /// <summary>

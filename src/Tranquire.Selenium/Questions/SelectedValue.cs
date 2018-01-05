@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System.Globalization;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -28,7 +23,7 @@ namespace Tranquire.Selenium.Questions
         /// <param name="target"></param>
         /// <param name="culture"></param>
         public SelectedValue(ITarget target, CultureInfo culture) : base(target, culture)
-        {            
+        {
         }
 
         /// <summary>
@@ -60,7 +55,7 @@ namespace Tranquire.Selenium.Questions
         protected override string ResolveFor(IWebElement element)
         {
             var selected = new SelectElement(element);
-            if(selected.AllSelectedOptions.Count == 0)
+            if (selected.AllSelectedOptions.Count == 0)
             {
                 return string.Empty;
             }

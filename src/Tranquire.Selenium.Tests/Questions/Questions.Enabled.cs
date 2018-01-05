@@ -1,9 +1,4 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Selenium.Questions;
 using Xunit;
 
@@ -14,7 +9,7 @@ namespace Tranquire.Selenium.Tests.Questions
         [Theory]
         [InlineData("EnabledElement", true)]
         [InlineData("DisabledElement", false)]
-        [InlineData("CannotBeDisabledElement", true)]        
+        [InlineData("CannotBeDisabledElement", true)]
         public void EnabledElement_ShouldReturnCorrectValue(string id, bool expected)
         {
             //arrange

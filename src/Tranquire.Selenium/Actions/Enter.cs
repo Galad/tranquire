@@ -19,7 +19,7 @@ namespace Tranquire.Selenium.Actions
         /// Creates a new instance of <see cref = "Enter"/>
         /// </summary>
         /// <param name = "value">The value to enter</param>
-        public Enter(string value): base (t => new EnterValue(value, t))
+        public Enter(string value) : base(t => new EnterValue(value, t))
         {
             Value = value;
         }

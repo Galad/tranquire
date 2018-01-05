@@ -1,13 +1,9 @@
 ﻿using OpenQA.Selenium;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Globalization;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -103,7 +99,7 @@ namespace Tranquire.Selenium.Questions
                     return ImmutableArray<IWebElement>.Empty;
                 }
             }
-            
+
         }
 
         private class NotFoundElement : IWebElement

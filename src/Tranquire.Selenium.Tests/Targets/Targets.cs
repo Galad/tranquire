@@ -1,11 +1,6 @@
 ﻿using Moq;
 using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium.Targets;
 using Xunit;
 
 namespace Tranquire.Selenium.Tests.Targets
@@ -22,7 +17,7 @@ namespace Tranquire.Selenium.Tests.Targets
         public const string DivContainer = "divcontainer";
         public const string RelativeText = "Relative Text";
 
-        public TargetsTests(WebDriverFixture fixture):base(fixture, "Targets.html")
+        public TargetsTests(WebDriverFixture fixture) : base(fixture, "Targets.html")
         {
         }
 
@@ -122,7 +117,7 @@ namespace Tranquire.Selenium.Tests.Targets
             var containerTarget = Target.The("container")
                                         .LocatedBy(By.Id(DivContainer));
 
-            var actual = Target.The("relative text")                               
+            var actual = Target.The("relative text")
                                .LocatedBy(By.CssSelector("div p"))
                                .RelativeTo(containerTarget)
                                .ResolveFor(Fixture.WebDriver)
@@ -134,7 +129,7 @@ namespace Tranquire.Selenium.Tests.Targets
         public void ResolveFor_LocatedByWebElement_ShouldReturnCorrectValue()
         {
             //arrange
-            var expected = new Mock<IWebElement>();            
+            var expected = new Mock<IWebElement>();
             var sut = Target.The("element")
                             .LocatedByWebElement(expected.Object);
             //act

@@ -2,12 +2,8 @@
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 using Tranquire.Reporting;
+using Xunit;
 
 namespace Tranquire.Tests
 {

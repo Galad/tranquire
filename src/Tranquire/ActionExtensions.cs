@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Extensions;
 
 namespace Tranquire
@@ -63,7 +59,7 @@ namespace Tranquire
             return action.If(predicate, Unit.Default);
         }
         #endregion
-        
+
         #region AsActionUnit
         /// <summary>
         /// Transform the given action to a action returning <see cref="Unit"/> that execute the action and discards its result

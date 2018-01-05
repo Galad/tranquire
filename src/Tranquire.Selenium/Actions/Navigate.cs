@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -26,11 +22,11 @@ namespace Tranquire.Selenium.Actions
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                              /// <summary>
-                              /// Creates an action that navigates to an Uri
-                              /// </summary>
-                              /// <param name="uri">The Uri to navigate to</param>
-                              /// <returns>A new action that navigate to the Uri</returns>
+        /// <summary>
+        /// Creates an action that navigates to an Uri
+        /// </summary>
+        /// <param name="uri">The Uri to navigate to</param>
+        /// <returns>A new action that navigate to the Uri</returns>
         public static IAction<WebBrowser, WebBrowser, Unit> To(Uri uri)
 #pragma warning restore CS0618 // Type or member is obsolete
         {

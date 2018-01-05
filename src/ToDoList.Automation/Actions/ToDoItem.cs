@@ -1,11 +1,6 @@
-﻿using Tranquire;
-using Tranquire.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Tranquire;
 using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions

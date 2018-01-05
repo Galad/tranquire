@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
+using System.Globalization;
 using Tranquire.Selenium.Questions.Builders;
 
 namespace Tranquire.Selenium.Questions
@@ -64,6 +64,6 @@ namespace Tranquire.Selenium.Questions
         protected override string ResolveFor(IWebElement element)
         {
             return element.GetAttribute(AttributeName);
-        }        
+        }
     }
 }

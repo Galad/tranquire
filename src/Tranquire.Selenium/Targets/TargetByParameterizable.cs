@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
-using System.Globalization;
+﻿using OpenQA.Selenium;
+using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Tranquire.Selenium.Targets
 {

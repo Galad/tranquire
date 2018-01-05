@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
@@ -72,8 +68,8 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="T">The type of the enum</typeparam>
         /// <param name="state">The source state</param>
         /// <returns></returns>
-        public static IQuestion<T> AsEnum<TState, T>(this SingleUIState<string, TState> state) 
-            where TState : SingleUIState<string, TState> 
+        public static IQuestion<T> AsEnum<TState, T>(this SingleUIState<string, TState> state)
+            where TState : SingleUIState<string, TState>
             where T : struct
         {
             return state.As(new StringToEnumConverter<T>());

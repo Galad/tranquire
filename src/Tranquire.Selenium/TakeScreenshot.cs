@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using System;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace Tranquire.Selenium
@@ -9,7 +8,7 @@ namespace Tranquire.Selenium
     /// Take a screenshot of the web browser after the action or the question ends
     /// </summary>
     public class TakeScreenshot : IActor
-    {        
+    {
         /// <summary>
         /// Creates a new instance of <see cref="TakeScreenshot"/>
         /// </summary>
@@ -51,7 +50,7 @@ namespace Tranquire.Selenium
             Func<string> nextScreenshotName)
         {
             try
-            {                
+            {
                 return execute();
             }
             finally
@@ -85,7 +84,7 @@ namespace Tranquire.Selenium
             private readonly IQuestion<TAnswer, TAbility> _question;
             private readonly Func<string> _nextScreenshotName;
             private readonly string _directory;
-            
+
             public TakeScreenshotQuestion(IQuestion<TAnswer, TAbility> question, string directory, Func<string> nextScreenshotName)
             {
                 _question = question;

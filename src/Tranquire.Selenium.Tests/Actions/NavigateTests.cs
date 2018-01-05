@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using OpenQA.Selenium;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
+using System;
 using Tranquire.Selenium.Actions;
 using Tranquire.Tests;
 using Xunit;
@@ -34,9 +30,9 @@ namespace Tranquire.Selenium.Tests.Actions
         {
             sut.Name.Should().Be($"Navigate to {sut.Uri}");
         }
-        
+
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldReturnCorrectValue(            
+        public void ExecuteGivenAs_ShouldReturnCorrectValue(
             Navigate sut,
             [Frozen]IWebDriver webDriver,
             WebBrowser ability,

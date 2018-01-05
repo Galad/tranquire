@@ -1,16 +1,11 @@
 ﻿using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium.Questions.Converters;
-using ToDoList.Automation.Model;
-using Tranquire.Selenium;
-using Tranquire;
-using Tranquire.Selenium.Questions;
-using ToDoList.Automation.Actions;
 using System.Globalization;
+using ToDoList.Automation.Actions;
+using Tranquire;
+using Tranquire.Selenium;
+using Tranquire.Selenium.Questions;
+using Tranquire.Selenium.Questions.Converters;
 
 namespace ToDoList.Automation.Questions.Converters
 {
@@ -21,15 +16,15 @@ namespace ToDoList.Automation.Questions.Converters
 
         public WebElementToToDoItemConverter(IActor actor, IWebDriver webDriver)
         {
-            if(actor == null)
+            if (actor == null)
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-            if(webDriver == null)
+            if (webDriver == null)
             {
                 throw new ArgumentNullException(nameof(webDriver));
             }
-            _webDriver = webDriver; 
+            _webDriver = webDriver;
             _actor = actor;
         }
 

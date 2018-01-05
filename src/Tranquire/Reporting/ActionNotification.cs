@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tranquire.Reporting
+﻿namespace Tranquire.Reporting
 {
     /// <summary>
     /// Represent informations about the action execution

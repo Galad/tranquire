@@ -1,10 +1,5 @@
 ﻿using Tranquire;
 using Tranquire.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToDoList.Automation.Actions
 {
@@ -27,6 +22,6 @@ namespace ToDoList.Automation.Actions
             ability.Navigate().GoToUrl(_url);
         }
 
-        public override string Name=> "Navigate to " + _url;
+        public override string Name => "Navigate to " + _url;
     }
 }

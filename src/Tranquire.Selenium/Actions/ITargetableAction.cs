@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium;
-
-namespace Tranquire.Selenium.Actions
+﻿namespace Tranquire.Selenium.Actions
 {
     /// <summary>
     /// Represent an action which is performed on a target

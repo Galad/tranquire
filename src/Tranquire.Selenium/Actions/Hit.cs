@@ -1,8 +1,4 @@
-﻿
-
-using OpenQA.Selenium;
-using System;
-using Tranquire.Selenium.Actions.Enters;
+﻿using Tranquire.Selenium.Actions.Enters;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -33,5 +29,5 @@ namespace Tranquire.Selenium.Actions
         {
             return new Hit(OpenQA.Selenium.Keys.Enter);
         }
-    }   
+    }
 }

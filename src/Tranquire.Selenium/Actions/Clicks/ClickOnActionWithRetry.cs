@@ -1,10 +1,6 @@
 ﻿using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Clicks
 {
@@ -77,7 +73,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         private void Execute(IActor actor)
         {
             var startTime = DateTimeOffset.Now;
-            bool hasSucceeded = false;   
+            bool hasSucceeded = false;
             while (!hasSucceeded)
             {
                 try
@@ -95,7 +91,7 @@ namespace Tranquire.Selenium.Actions.Clicks
                 }
                 catch (InvalidOperationException)
                 {
-                    if(DateTimeOffset.Now.Subtract(startTime) > Timeout)
+                    if (DateTimeOffset.Now.Subtract(startTime) > Timeout)
                     {
                         throw;
                     }

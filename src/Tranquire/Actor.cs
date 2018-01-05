@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire
 {
@@ -25,7 +22,7 @@ namespace Tranquire
         /// Gets the function used to decorate an actor
         /// </summary>
         public Func<IActor, IActor> InnerActorBuilder { get; }
-        
+
         /// <summary>
         /// Create a new instance of <see cref="Actor"/>
         /// </summary>
@@ -36,15 +33,15 @@ namespace Tranquire
         /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
         /// </param>
         public Actor(
-            string name, 
-            IReadOnlyDictionary<Type, object> abilities, 
+            string name,
+            IReadOnlyDictionary<Type, object> abilities,
             Func<IActor, IActor> innerActorBuilder)
         {
             Guard.ForNull(name, nameof(name));
             Guard.ForNull(abilities, nameof(abilities));
             Guard.ForNull(innerActorBuilder, nameof(innerActorBuilder));
             Name = name;
-            Abilities = abilities;            
+            Abilities = abilities;
             InnerActorBuilder = innerActorBuilder;
         }
 
@@ -73,9 +70,9 @@ namespace Tranquire
         /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
         /// </param>
         public Actor(string name, Func<IActor, IActor> innerActorBuilder)
-            :this(name, new Dictionary<Type, object>(), innerActorBuilder)
+            : this(name, new Dictionary<Type, object>(), innerActorBuilder)
         {
-        }        
+        }
 
         /// <summary>
         /// Retrieve an actor's ability
@@ -91,7 +88,7 @@ namespace Tranquire
                 throw new InvalidOperationException($"The ability {abilityType.Name} was requested but the actor {Name} does not have it.");
             }
             return Abilities[abilityType];
-        }        
+        }
 
         /// <summary>
         /// Execute the action in the When context
@@ -158,7 +155,7 @@ namespace Tranquire
             Guard.ForNull(question, nameof(question));
             return CreateWhenActor().AsksFor(question);
         }
-        
+
         private class WhenInnerActor : InnerActor
         {
             public WhenInnerActor(string name, Func<Type, object> getAbility) : base(name, getAbility)
@@ -186,12 +183,12 @@ namespace Tranquire
         private abstract class InnerActor : IActor
         {
             protected InnerActor(
-                string name, 
+                string name,
                 Func<Type, object> getAbility)
             {
                 Name = name;
                 GetAbility = getAbility;
-            }            
+            }
 
             public IActor Actor { get; set; }
             public string Name { get; }

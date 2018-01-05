@@ -78,7 +78,7 @@ namespace Tranquire.Selenium.Questions
             /// <summary>
             /// Gets the question's name
             /// </summary>
-            public override string Name => $"What are the state of the elements identified by {Target.ToString()} ?";            
+            public override string Name => $"What are the state of the elements identified by {Target.ToString()} ?";
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using System.Globalization;
-using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -37,6 +36,6 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="element">The element to resolve the value from</param>
         /// <returns></returns>
-        protected abstract T ResolveFor(IWebElement element);        
+        protected abstract T ResolveFor(IWebElement element);
     }
 }

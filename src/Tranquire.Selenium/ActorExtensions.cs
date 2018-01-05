@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium
 {
@@ -19,7 +15,7 @@ namespace Tranquire.Selenium
         /// <returns>An new actor</returns>
         public static Actor HighlightTargets(this Actor actor)
         {
-            Guard.ForNull(actor, nameof(actor));            
+            Guard.ForNull(actor, nameof(actor));
             return new Actor(actor.Name, actor.Abilities, a => new HighlightTarget(actor.InnerActorBuilder(a)));
         }
 
@@ -31,7 +27,7 @@ namespace Tranquire.Selenium
         /// <returns>An new actor</returns>
         public static Actor SlowSelenium(this Actor actor, TimeSpan delay)
         {
-            Guard.ForNull(actor, nameof(actor));            
+            Guard.ForNull(actor, nameof(actor));
             return new Actor(actor.Name, actor.Abilities, a => new SlowSelenium(actor.InnerActorBuilder(a), delay));
         }
 
@@ -50,7 +46,7 @@ namespace Tranquire.Selenium
             var id = 0;
             return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), directory, () => NextScreenshotName(ref id, screenshotName)));
         }
-        
+
         private static string NextScreenshotName(ref int i, string screenshotName)
         {
             return $"{screenshotName}_{Interlocked.Increment(ref i)}.jpg";

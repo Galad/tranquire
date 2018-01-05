@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire.Extensions
 {
@@ -64,7 +60,7 @@ namespace Tranquire.Extensions
         /// <param name="actor"></param>
         /// <returns></returns>
         protected override T ExecuteWhen(IActor actor)
-        {            
+        {
             if (Predicate())
             {
                 return actor.Execute(Action);
@@ -133,7 +129,7 @@ namespace Tranquire.Extensions
         /// <param name="ability"></param>
         /// <returns></returns>
         protected override T ExecuteWhen(IActor actor, TAbility ability)
-        {            
+        {
             if (Predicate(ability))
             {
                 return actor.Execute(Action);

@@ -1,9 +1,4 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium
 {
@@ -16,7 +11,7 @@ namespace Tranquire.Selenium
         /// Gets the Selenium <see cref="IWebDriver"/>
         /// </summary>
         public IWebDriver Driver { get; }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="WebBrowser"/>
         /// </summary>

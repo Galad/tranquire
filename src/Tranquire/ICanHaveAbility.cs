@@ -11,6 +11,6 @@
         /// <typeparam name = "T">The type of the capability</typeparam>
         /// <param name = "doSomething">The capability</param>
         /// <returns>The current <see cref = "IActor"/> instance, allowing to chain calls</returns>
-        TActor CanUse<T>(T doSomething)where T : class;
+        TActor CanUse<T>(T doSomething) where T : class;
     }
 }

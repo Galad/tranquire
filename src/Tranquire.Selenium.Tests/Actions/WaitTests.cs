@@ -1,11 +1,5 @@
-﻿using Moq;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
@@ -24,7 +18,7 @@ namespace Tranquire.Selenium.Tests.Actions
         {
             Assert.IsAssignableFrom<ActionUnit<WebBrowser>>(sut);
         }
-        
+
         [Theory, DomainAutoData]
         public void Execute_ShouldWait(string id)
         {
@@ -32,7 +26,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var target = Target.The("element to wait for").LocatedBy(By.Id(id));
             InsertElement(id);
             //act
-            Fixture.Actor.When(Wait.UntilTargetIsPresent(target));            
+            Fixture.Actor.When(Wait.UntilTargetIsPresent(target));
             //assert
             var actual = Answer(Presence.Of(target).Value);
             Assert.True(actual);

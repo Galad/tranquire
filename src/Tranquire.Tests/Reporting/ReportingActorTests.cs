@@ -2,23 +2,21 @@
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
+using Ploeh.AutoFixture.Kernel;
+using Ploeh.AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using Tranquire.Reporting;
-using Ploeh.AutoFixture.Xunit2;
 using System.Linq.Expressions;
-using Ploeh.AutoFixture.Kernel;
+using Tranquire.Reporting;
+using Xunit;
 
 namespace Tranquire.Tests.Reporting
 {
     public class ReportingActorTests
     {
         public class ReportingActorCustomization : ICustomization
-        {               
+        {
             public void Customize(IFixture fixture)
             {
                 fixture.Register<ICanNotify>(() => new Mock<CanNotify>() { CallBase = true }.Object);
@@ -79,14 +77,14 @@ namespace Tranquire.Tests.Reporting
             //assert
             Assert.Equal(expected, actual);
         }
-        
+
         [Theory, MemberData("ExecutionTestCases")]
         public void Sut_AllMethods_ShouldReturnInnerResult(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression)
         {
             //arrange                  
-            var fixture = CreateFixture();            
+            var fixture = CreateFixture();
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var duration = fixture.Create<TimeSpan>();
             var sut = fixture.Create<ReportingActor>();
@@ -125,7 +123,7 @@ namespace Tranquire.Tests.Reporting
             public string Name => "";
             public override string ToString() => ToStringValue;
         }
-        
+
         public static IEnumerable<object[]> ExecutionTestCases
         {
             get
@@ -146,7 +144,7 @@ namespace Tranquire.Tests.Reporting
         public static IEnumerable<object[]> NotNotifyingActionTestCases
         {
             get
-            {                
+            {
 #pragma warning disable CS0618 // Type or member is obsolete
                 yield return ExecutionTestCasesValues((sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action), action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action));
                 yield return ExecutionTestCasesValues((sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action), action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action));
@@ -207,14 +205,14 @@ namespace Tranquire.Tests.Reporting
                                    .Returns(() =>
                                    {
                                        var innerResult = executeAction(sut, actions[ii + 1]);
-                                       return actions[ii].Result;                                       
+                                       return actions[ii].Result;
                                    });
                 measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
                                .Returns((Func<object> f) =>
                                {
                                    var result = f();
                                    var resultIndex = Array.FindIndex(actions, a => a.Result == result);
-                                   var duration = expectedDurations[resultIndex == -1 ? NumberOfActions - 1 : resultIndex];                                   
+                                   var duration = expectedDurations[resultIndex == -1 ? NumberOfActions - 1 : resultIndex];
                                    return Tuple.Create(duration, result);
                                });
             }
@@ -247,7 +245,7 @@ namespace Tranquire.Tests.Reporting
             var sut = fixture.Create<ReportingActor>();
             var action = fixture.Create<MockToString>();
             var expected = fixture.Create<Exception>();
-            Mock.Get(sut.Actor).Setup(expression(action)).Throws(expected);            
+            Mock.Get(sut.Actor).Setup(expression(action)).Throws(expected);
             //act and assert
             var actual = Assert.Throws<Exception>(() => executeAction(sut, action));
             Assert.Equal(expected, actual);
@@ -262,7 +260,7 @@ namespace Tranquire.Tests.Reporting
             var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();            
+            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var sut = fixture.Create<ReportingActor>();
             var action = fixture.Create<MockToString>();
             var exception = fixture.Create<Exception>();
@@ -293,7 +291,7 @@ namespace Tranquire.Tests.Reporting
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var sut = fixture.Create<ReportingActor>();
             const int NumberOfActions = 4;
-            var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();            
+            var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();
             var exception = fixture.Create<Exception>();
 
             for (var i = 0; i < actions.Length - 1; i++)
@@ -307,7 +305,7 @@ namespace Tranquire.Tests.Reporting
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
                                .Returns((Func<object> f) => Tuple.Create(TimeSpan.Zero, f()));
             //act
-            new Action(() => { executeAction(sut, actions[0]); }).ShouldThrow<Exception>().And.Should().Be(exception);            
+            new Action(() => { executeAction(sut, actions[0]); }).ShouldThrow<Exception>().And.Should().Be(exception);
             //assert
             var expected = new[]{
                 new ActionNotification(actions[0], 1, new BeforeActionNotificationContent()),
@@ -321,10 +319,10 @@ namespace Tranquire.Tests.Reporting
             };
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
-        
+
         [Theory, ReportingActorAutoData]
         public void ExecuteWithAbility_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,            
+            [Frozen]TestObserver<ActionNotification> observer,
             ReportingActor sut,
 #pragma warning disable CS0618 // Type or member is obsolete
             IAction<Ability1, Ability2, object> action)
@@ -339,7 +337,7 @@ namespace Tranquire.Tests.Reporting
 
         [Theory, ReportingActorAutoData]
         public void AsksFor_WithAbility_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,            
+            [Frozen]TestObserver<ActionNotification> observer,
             ReportingActor sut,
 #pragma warning disable CS0618 // Type or member is obsolete
             IQuestion<object, Ability1> question)
@@ -365,7 +363,7 @@ namespace Tranquire.Tests.Reporting
             sut.Execute(action);
             //assert
             observer.Values.Should().BeEmpty();
-        }        
+        }
 
         [Theory, ReportingActorAutoData]
         public void AsksFor_WhenCanNotifyReturnsFalse_ShouldNotNotify(
@@ -380,6 +378,6 @@ namespace Tranquire.Tests.Reporting
             sut.AsksFor(question);
             //assert
             observer.Values.Should().BeEmpty();
-        }        
+        }
     }
 }

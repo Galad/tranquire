@@ -2,8 +2,6 @@
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
-using System;
-using Tranquire;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -74,14 +72,14 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_ShouldBeAction(Action<object> sut)
         {
-            Assert.IsAssignableFrom(typeof (IAction<object>), sut);
+            Assert.IsAssignableFrom(typeof(IAction<object>), sut);
         }
 
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof (ActionExecuteGiven).GetMethods());
+            assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
         }
 
         [Theory, DomainAutoData]

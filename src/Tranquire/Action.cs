@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tranquire
+﻿namespace Tranquire
 {
     /// <summary>
     /// Represent an action on the system

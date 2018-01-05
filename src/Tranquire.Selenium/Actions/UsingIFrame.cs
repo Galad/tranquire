@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -35,7 +31,7 @@ namespace Tranquire.Selenium.Actions
         /// <returns>A <see cref="IDisposable"/> object. When it is disposed, the browser will go back to the parent frame.</returns>
         public static UsingIFrame LocatedBy(ITarget target)
         {
-            return new UsingIFrame(target);                
+            return new UsingIFrame(target);
         }
 
         /// <summary>
@@ -48,7 +44,7 @@ namespace Tranquire.Selenium.Actions
             ability.SwitchTo().Frame(_target.ResolveFor(ability));
             return new Disposable(() => actor.Execute(new SwitchToParentIFrame()));
         }
-        
+
         private sealed class Disposable : IDisposable
         {
             private System.Action _action;
@@ -72,17 +68,17 @@ namespace Tranquire.Selenium.Actions
                     disposedValue = true;
                 }
             }
-                        
+
             public void Dispose()
             {
                 // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-                Dispose(true);                
+                Dispose(true);
             }
             #endregion
         }
 
         private class SwitchToParentIFrame : ActionUnit<WebBrowser>
-        {            
+        {
             protected override void ExecuteWhen(IActor actor, WebBrowser ability)
             {
                 ability.SwitchTo().ParentFrame();
