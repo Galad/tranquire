@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using System;
 using Xunit;
+
 
 namespace Tranquire.Tests
 {
@@ -22,23 +18,23 @@ namespace Tranquire.Tests
             {
                 Name = name;
             }
-            
+
             protected override object Answer(IActor actor)
             {
                 throw new NotImplementedException();
             }
         }
-        
+
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause(GuardClauseAssertion assertion)
         {
             assertion.Verify(typeof(Question<object>));
         }
-        
+
         [Theory, DomainAutoData]
         public void AnswerByWithAbility_ShouldReturnCorrectValue(
             Question<object> sut,
-            IActor actor,            
+            IActor actor,
             object expected)
         {
             //arrange

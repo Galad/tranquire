@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Ploeh.AutoFixture;
+using Ploeh.AutoFixture.Kernel;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Kernel;
 
 namespace Tranquire.Tests
 {

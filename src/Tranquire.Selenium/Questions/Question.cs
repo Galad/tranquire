@@ -28,7 +28,7 @@ namespace Tranquire.Selenium.Questions
             WebElementResolver = webElementResolver;
             Converter = converter;
             Culture = culture;
-        }        
+        }
 
         protected TConverted Convert(TSource value)
         {

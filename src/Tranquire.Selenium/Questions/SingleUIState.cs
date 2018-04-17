@@ -17,10 +17,10 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <param name="target"></param>
         /// <param name="culture"></param>
-        protected SingleUIState(ITarget target, CultureInfo culture) : base (target, culture)
+        protected SingleUIState(ITarget target, CultureInfo culture) : base(target, culture)
         {
         }
-        
+
         /// <summary>
         /// Gets a question returning the state
         /// </summary>
@@ -72,7 +72,7 @@ namespace Tranquire.Selenium.Questions
         private class SingleQuestion<TSource, TConverted> : WebBrowserQuestion<TSource, TConverted, TConverted>
         {
             public SingleQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
-                : base (target, webElementResolver, converter, culture)
+                : base(target, webElementResolver, converter, culture)
             {
             }
 

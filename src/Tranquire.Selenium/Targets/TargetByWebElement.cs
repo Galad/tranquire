@@ -1,6 +1,5 @@
-﻿using System;
+﻿using OpenQA.Selenium;
 using System.Collections.Immutable;
-using OpenQA.Selenium;
 using System.Diagnostics;
 
 namespace Tranquire.Selenium.Targets

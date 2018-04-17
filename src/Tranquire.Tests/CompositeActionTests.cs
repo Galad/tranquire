@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -89,7 +87,7 @@ namespace Tranquire.Tests
             //assert            
             actual.Actions.Except(existingActions).Single().Should().Be(expected);
         }
-                
+
         [Theory, DomainAutoData]
         public void Sut_WithCompositeActionBuilder_ShouldHaveCorrectCompositeActions(
            IAction<Unit>[] expected
@@ -122,7 +120,7 @@ namespace Tranquire.Tests
 
         public class EnumeratorCompositeAction : CompositeAction
         {
-            public EnumeratorCompositeAction(IAction<Unit>[] actions):base(actions)
+            public EnumeratorCompositeAction(IAction<Unit>[] actions) : base(actions)
             {
             }
 

@@ -1,6 +1,4 @@
 ﻿using OpenQA.Selenium;
-using Tranquire;
-using System;
 
 namespace Tranquire.Selenium.Actions.Enters
 {

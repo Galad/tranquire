@@ -1,19 +1,12 @@
-﻿using OpenQA.Selenium.Firefox;
-using Tranquire;
-using Tranquire.Selenium;
+﻿using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using ToDoList.Automation.Actions;
-using System.Threading;
-using OpenQA.Selenium;
-using Xunit.Abstractions;
-using OpenQA.Selenium.Chrome;
-using System.Diagnostics;
+using Tranquire;
+using Tranquire.Selenium;
 
 namespace ToDoList.Specifications
 {
@@ -31,7 +24,7 @@ namespace ToDoList.Specifications
         public void Before()
         {
             var driver = new ChromeDriver();
-            var screenshotName = Context.ScenarioInfo.Title;            
+            var screenshotName = Context.ScenarioInfo.Title;
 #if DEBUG
             var delay = TimeSpan.FromSeconds(1);
 #else

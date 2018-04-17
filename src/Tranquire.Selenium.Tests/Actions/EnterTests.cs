@@ -1,10 +1,5 @@
 ﻿using OpenQA.Selenium;
 using Ploeh.AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Xunit;
@@ -15,7 +10,7 @@ namespace Tranquire.Selenium.Tests.Actions
     {
         public EnterTests(WebDriverFixture fixture) : base(fixture, "Actions.html")
         {
-        }       
+        }
 
         [Theory, AutoData]
         public void EnterNewValue_ShouldReturnCorrectValue(string expected)

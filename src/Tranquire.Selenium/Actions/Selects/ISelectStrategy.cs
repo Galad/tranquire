@@ -1,5 +1,4 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+﻿using OpenQA.Selenium.Support.UI;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
@@ -8,7 +7,7 @@ namespace Tranquire.Selenium.Actions.Selects
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface ISelectStrategy<in T>
-    {        
+    {
         /// <summary>
         /// Select the element
         /// </summary>

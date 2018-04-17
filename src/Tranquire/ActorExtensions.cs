@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Reporting;
 
 namespace Tranquire
@@ -11,7 +7,7 @@ namespace Tranquire
     /// Extension methods for the <see cref="Actor"/> class
     /// </summary>
     public static class ActorExtensions
-    {        
+    {
         /// <summary>
         /// Add the ability to report the actor actions
         /// </summary>
@@ -39,7 +35,7 @@ namespace Tranquire
             Guard.ForNull(canNotify, nameof(canNotify));
             return new Actor(actor.Name, actor.Abilities, a => new ReportingActor(observer, actor.InnerActorBuilder(a), new DefaultMeasureDuration(), canNotify));
         }
-        
+
         /// <summary>
         /// Add the ability to report the actor actions as text
         /// </summary>

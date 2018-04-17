@@ -1,8 +1,6 @@
 ﻿using OpenQA.Selenium.Support.UI;
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Tranquire.Selenium.Actions.Selects
 {

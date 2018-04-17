@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System;
 using TechTalk.SpecFlow;
 using ToDoList.Automation.Questions;
 

@@ -127,7 +127,7 @@ namespace Tranquire.Selenium
         {
             private readonly IAction<TGiven, TWhen, TResult> _action;
             private readonly HighlighActions _highlightActions;
-            private ITargeted Targeted => (ITargeted)_action;            
+            private ITargeted Targeted => (ITargeted)_action;
             public override string Name => "[Highlighted] " + _action.Name;
 
             public HighlightedAction(IAction<TGiven, TWhen, TResult> action, HighlighActions highlightActions)

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Questions.Converters
 {
@@ -31,11 +28,11 @@ namespace Tranquire.Selenium.Questions.Converters
         /// <returns>An enum value corresponding to the string</returns>
         public T Convert(string value, CultureInfo culture)
         {
-            T result;                        
+            T result;
             if (Enum.TryParse(value, out result) && _enumValues.Contains(result))
             {
                 return result;
-            }            
+            }
             throw new FormatException($"Cannot convert the value {value} to the enum of type {typeof(T)}");
         }
     }

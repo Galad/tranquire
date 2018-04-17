@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using System;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -51,7 +46,7 @@ namespace Tranquire.Tests
 #pragma warning disable CS0618 // Type or member is obsolete
             Mock.Get(actor).Setup(a => a.AsksForWithAbility(sut)).Returns(expected);
 #pragma warning restore CS0618 // Type or member is obsolete
-                              //act
+            //act
             var actual = sut.AnsweredBy(actor);
             //assert
             actual.Should().Be(expected);

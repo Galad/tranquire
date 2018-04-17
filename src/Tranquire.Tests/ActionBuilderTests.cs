@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using Ploeh.AutoFixture.Idioms;
+using System;
+using System.Collections.Generic;
 using Tranquire.ActionBuilders;
 using Tranquire.Tests.Extensions;
 using Xunit;
@@ -39,7 +36,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void ActionBuilderWithPreviousResultTests_VerifyGuardClause_Constructor(GuardClauseAssertion assertion)
-        {            
+        {
             assertion.Verify(typeof(ActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit>).GetConstructors());
         }
 
@@ -583,7 +580,7 @@ namespace Tranquire.Tests
             //arrange   
             Mock.Get(action2).Setup(a => a.Name).Returns(name2);
             //act
-            var name = sut.Then<IAction<object>, object>(action1)                          
+            var name = sut.Then<IAction<object>, object>(action1)
                           .Named(name1)
                           .Then<IAction<object>, object>(action2)
                           .Name;

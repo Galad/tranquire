@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Tranquire
 {
@@ -34,7 +33,7 @@ namespace Tranquire
         /// Gets the action's name
         /// </summary>
         public abstract string Name { get; }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="CompositeAction"/>
         /// </summary>

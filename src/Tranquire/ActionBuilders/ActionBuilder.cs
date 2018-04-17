@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Tranquire.ActionBuilders
 {
@@ -13,12 +12,12 @@ namespace Tranquire.ActionBuilders
         where TAction : class, IAction<TResult>
     {
         private readonly CompositeAction _executableAction;
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="ActionBuilder{TAction, TResult}"/>
         /// </summary>
         /// <param name="action">The current action</param>
-        public ActionBuilder(TAction action) : this(action, new CompositeActionForBuilder(ImmutableArray<IAction<Unit>>.Empty), action?.Name ?? "") 
+        public ActionBuilder(TAction action) : this(action, new CompositeActionForBuilder(ImmutableArray<IAction<Unit>>.Empty), action?.Name ?? "")
         {
         }
 
@@ -39,7 +38,7 @@ namespace Tranquire.ActionBuilders
         /// </summary>
         public TAction Action { get; }
 
-        IActionBuilder<TNextAction, TNextResult> IActionBuilder.Then<TNextAction, TNextResult>(TNextAction nextAction)            
+        IActionBuilder<TNextAction, TNextResult> IActionBuilder.Then<TNextAction, TNextResult>(TNextAction nextAction)
         {
             if (nextAction == null)
             {
@@ -64,7 +63,7 @@ namespace Tranquire.ActionBuilders
                 return Action.ExecuteGivenAs(actor);
             }
             else
-            {                
+            {
                 _executableAction.ExecuteGivenAs(actor);
                 return actor.Execute(Action);
             }
@@ -83,7 +82,7 @@ namespace Tranquire.ActionBuilders
             }
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        
+
         IActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult> IActionBuilderWithCurrentAction<TAction, TResult>.Then<TNextAction, TNextResult>(Func<ActionResult<TAction, TResult>, TNextAction> nextAction)
         {
             return new ActionBuilderWithPreviousResult<TNextAction, TNextResult, TAction, TResult>(

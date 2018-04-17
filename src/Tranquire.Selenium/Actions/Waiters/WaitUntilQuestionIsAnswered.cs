@@ -1,12 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Waiters
 {
@@ -22,7 +17,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// <summary>
         /// Gets the question's name
         /// </summary>
-        public override string Name=> $"Wait until the question {_question.Name} is answered during { _timeout.ToString("c", CultureInfo.CurrentCulture)}";
+        public override string Name => $"Wait until the question {_question.Name} is answered during { _timeout.ToString("c", CultureInfo.CurrentCulture)}";
 
         /// <summary>
         /// Creates a new instance of <see cref="WaitUntilQuestionIsAnswered{TAnswer}"/>
@@ -50,7 +45,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         public WaitUntilQuestionIsAnswered(
             IQuestion<TAnswer> question,
             Predicate<TAnswer> isAnswered)
-            :this(question, isAnswered, TimeSpan.FromSeconds(5))
+            : this(question, isAnswered, TimeSpan.FromSeconds(5))
         {
         }
 

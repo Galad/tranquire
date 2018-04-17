@@ -12,7 +12,7 @@
         /// <param name="action">The action to check</param>
         /// <returns>True if the action can send a notification, otherwise fase</returns>
         bool Action<TResult>(IAction<TResult> action);
-        
+
         /// <summary>
         /// Indicates wether an question can send a notification
         /// </summary>

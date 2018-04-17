@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using System;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -176,11 +171,11 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Create_ShouldNotCallAction(
             string name,
-            IActor actor            
+            IActor actor
             )
         {
             //arrange
-            var action = new Mock<System.Action<IActor>>();            
+            var action = new Mock<System.Action<IActor>>();
             //act
             var actual = Actions.Create(name, action.Object);
             //assert
@@ -209,7 +204,7 @@ namespace Tranquire.Tests
             )
         {
             //arrange
-            var action = new Mock<System.Action<IActor>>();            
+            var action = new Mock<System.Action<IActor>>();
             //act
             var actual = Actions.Create(name, action.Object);
             actual.ExecuteGivenAs(actor);
@@ -373,7 +368,7 @@ namespace Tranquire.Tests
             string name,
             IActor actor,
             object ability,
-            object expected           
+            object expected
             )
         {
             //arrange

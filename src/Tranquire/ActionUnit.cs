@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tranquire
+﻿namespace Tranquire
 {
 #pragma warning disable CS0618 // Type or member is obsolete
     /// <summary>
@@ -50,7 +48,7 @@ namespace Tranquire
         {
             ExecuteWhen(actor, ability);
         }
-        
+
         /// <summary>
         /// Gets the action's name
         /// </summary>

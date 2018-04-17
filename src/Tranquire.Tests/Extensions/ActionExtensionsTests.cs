@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
-using Tranquire.Extensions;
+using System;
 using Xunit;
 
 namespace Tranquire.Tests.Extensions
@@ -43,9 +37,9 @@ namespace Tranquire.Tests.Extensions
         public void If_PredicateAbility_ShouldReturnCorrectValue() => TestIf((IAction<object> a, Func<Ability, bool> p, object v) => ActionExtensions.If(a, p, v));
 
         [Fact]
-        public void If_PredicateAbility_Unit_ShouldReturnCorrectValue() => TestIf((IAction<Unit> a, Func<Ability, bool> p, Unit v) => ActionExtensions.If(a, p));        
+        public void If_PredicateAbility_Unit_ShouldReturnCorrectValue() => TestIf((IAction<Unit> a, Func<Ability, bool> p, Unit v) => ActionExtensions.If(a, p));
         #endregion
-        
+
         #region AsActionUnit
         [Theory, DomainAutoData]
         public void AsActionUnit_ExecuteWhen_ShouldCallExecuteWhenOnSourceAction(Mock<IAction<object>> action, IActor actor)
@@ -75,7 +69,7 @@ namespace Tranquire.Tests.Extensions
             //assert
             actual.Should().BeAssignableTo<IAction<Unit>>();
             actual.Name.Should().Be(action.Object.Name);
-        }        
+        }
         #endregion
     }
 }

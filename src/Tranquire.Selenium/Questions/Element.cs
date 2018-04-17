@@ -1,11 +1,5 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
 {

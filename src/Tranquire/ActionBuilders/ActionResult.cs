@@ -24,7 +24,7 @@ namespace Tranquire.ActionBuilders
             Result = result;
             Action = action;
         }
-        
+
         /// <summary>
         /// Gets the action that produced the result
         /// </summary>

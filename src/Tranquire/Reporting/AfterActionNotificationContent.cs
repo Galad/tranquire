@@ -23,6 +23,6 @@ namespace Tranquire.Reporting
         /// <summary>
         /// Gets the content type
         /// </summary>
-        public ActionNotificationContentType NotificationContentType => ActionNotificationContentType.AfterActionExecution;        
+        public ActionNotificationContentType NotificationContentType => ActionNotificationContentType.AfterActionExecution;
     }
 }

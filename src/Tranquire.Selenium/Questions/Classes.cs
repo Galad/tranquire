@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -18,7 +14,7 @@ namespace Tranquire.Selenium.Questions
         /// Creates a new instance of <see cref="Classes"/>
         /// </summary>
         /// <param name="target"></param>
-        public Classes(ITarget target):this(target, CultureInfo.CurrentCulture)
+        public Classes(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 

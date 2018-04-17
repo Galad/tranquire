@@ -1,9 +1,9 @@
-﻿using Ploeh.AutoFixture.Idioms;
+﻿using FluentAssertions;
+using Ploeh.AutoFixture.Idioms;
+using Ploeh.AutoFixture.Kernel;
 using System;
 using System.Linq;
 using System.Reflection;
-using Ploeh.AutoFixture.Kernel;
-using FluentAssertions;
 
 namespace Tranquire.Tests
 {
@@ -11,7 +11,7 @@ namespace Tranquire.Tests
     {
         public ActorDecoratorExtensionAssertion(ISpecimenBuilder specimenBuilder)
         {
-            if(specimenBuilder == null) throw new ArgumentNullException(nameof(specimenBuilder));
+            if (specimenBuilder == null) throw new ArgumentNullException(nameof(specimenBuilder));
             SpecimenBuilder = specimenBuilder;
         }
 

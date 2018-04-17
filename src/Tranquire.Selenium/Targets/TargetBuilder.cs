@@ -1,8 +1,8 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
+using System;
 
 namespace Tranquire.Selenium.Targets
-{    
+{
     /// <summary>
     /// Configures the targets
     /// </summary>

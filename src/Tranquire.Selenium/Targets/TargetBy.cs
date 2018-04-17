@@ -12,7 +12,7 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="by">The <see cref="By"/> locator</param>
         /// <param name="name">The target name</param>
-        public TargetBy(By by, string name): base (by, name)
+        public TargetBy(By by, string name) : base(by, name)
         {
         }
 

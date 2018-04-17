@@ -2,11 +2,6 @@
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -79,7 +74,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_ShouldBeAction(Action<object> sut)
         {
-            Assert.IsAssignableFrom(typeof(IAction<object>), sut);
+            Assert.IsAssignableFrom<IAction<object>>(sut);
         }
 
         [Theory, DomainAutoData]

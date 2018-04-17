@@ -2,7 +2,6 @@
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
-using System;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -20,7 +19,7 @@ namespace Tranquire.Tests
         public class ActionExecuteWhen : Action<AbilityGiven, AbilityWhen, object>
         {
             public IActor Actor;
-            private readonly IAction<object> _action;            
+            private readonly IAction<object> _action;
             public AbilityWhen Ability;
             public override string Name { get; }
 
@@ -72,7 +71,7 @@ namespace Tranquire.Tests
         public void Sut_ShouldBeAction(Action<AbilityGiven, AbilityWhen, object> sut)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.IsAssignableFrom(typeof (IAction<AbilityGiven, AbilityWhen, object>), sut);
+            Assert.IsAssignableFrom(typeof(IAction<AbilityGiven, AbilityWhen, object>), sut);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -80,7 +79,7 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof (ActionExecuteGiven).GetMethods());
+            assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
         }
 
         [Theory, DomainAutoData]
@@ -114,7 +113,7 @@ namespace Tranquire.Tests
             //assert
             Assert.Equal(expected, actual);
         }
-        
+
         [Theory, DomainAutoData]
         public void ExecuteWhenAs_ShouldUseCorrectActor(
             ActionExecuteWhen sut,

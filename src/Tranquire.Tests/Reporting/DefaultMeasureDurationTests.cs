@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using System;
+using System.Threading;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -31,7 +26,7 @@ namespace Tranquire.Tests.Reporting
             //assert
             Assert.Equal(expected, actual.Item2);
         }
-        
+
         [Theory, DomainAutoData]
         public void MeasureTime_ShouldReturnCorrectDuration(
             DefaultMeasureDuration sut,

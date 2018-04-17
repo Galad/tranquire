@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Collections.Immutable;
 using Tranquire;
-using System.Collections.Immutable;
-using Tranquire.Selenium;
 
 namespace ToDoList.Automation.Questions
 {

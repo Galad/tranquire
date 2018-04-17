@@ -2,7 +2,6 @@
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit2;
-using System;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -84,7 +83,7 @@ namespace Tranquire.Tests
         public void Sut_ShouldBeAction(Action<TestAbility, object> sut)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.IsAssignableFrom(typeof (IAction<TestAbility, TestAbility, object>), sut);
+            Assert.IsAssignableFrom(typeof(IAction<TestAbility, TestAbility, object>), sut);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -92,7 +91,7 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof (ActionExecuteGiven).GetMethods());
+            assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
         }
 
         [Theory, DomainAutoData]

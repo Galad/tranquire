@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire
 {
@@ -47,7 +43,7 @@ namespace Tranquire
 
             Command = command;
         }
-        
+
         protected override TResult ExecuteWhen(IActor actor, TWhen ability)
         {
             return Command.ExecuteWhenAs(actor, ability);
@@ -99,7 +95,7 @@ namespace Tranquire
 
             Command = command;
         }
-        
+
         protected override TResult ExecuteWhen(IActor actor, Unit ability)
         {
             throw new InvalidOperationException("Cannot call ExecuteWhenAs with a GivenCommand when");

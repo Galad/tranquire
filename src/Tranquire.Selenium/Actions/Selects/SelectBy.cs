@@ -1,9 +1,4 @@
 ﻿using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Actions.Selects
 {
@@ -28,11 +23,11 @@ namespace Tranquire.Selenium.Actions.Selects
         /// <param name="value">The value to select</param>
         /// <param name="selectStrategy">The strategy used to select the element</param>
         public SelectBy(
-            ITarget target, 
+            ITarget target,
             TValue value,
             ISelectStrategy<TValue> selectStrategy)
         {
-            Guard.ForNull(target, nameof(value));            
+            Guard.ForNull(target, nameof(value));
             Guard.ForNull(selectStrategy, nameof(selectStrategy));
             _target = target;
             _value = value;

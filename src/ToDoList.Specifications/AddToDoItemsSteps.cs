@@ -1,14 +1,8 @@
 ﻿using FluentAssertions;
-using OpenQA.Selenium.Firefox;
-using Tranquire;
-using Tranquire.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using TechTalk.SpecFlow;
-using ToDoList.Automation.Actions;
 using ToDoList.Automation.Questions;
+using Tranquire;
 
 namespace ToDoList.Specifications
 {

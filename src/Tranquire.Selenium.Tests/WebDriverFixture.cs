@@ -1,17 +1,10 @@
-﻿using Microsoft.Owin.Hosting;
-using OpenQA.Selenium.Firefox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Owin;
+﻿using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.Hosting;
 using Microsoft.Owin.StaticFiles;
-using Microsoft.Owin.StaticFiles.Infrastructure;
-using Microsoft.Owin.FileSystems;
-using System.Threading;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using Owin;
+using System;
+using System.Threading;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -20,7 +13,7 @@ namespace Tranquire.Selenium.Tests
         public static int Port = 30000;
         private readonly IDisposable _host;
         public Actor Actor { get; }
-        private readonly int _port;        
+        private readonly int _port;
         public ChromeDriver WebDriver { get; }
 
         public WebDriverFixture()

@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using System.Globalization;
-using System;
 
 namespace Tranquire.Selenium.Questions
 {
@@ -13,7 +12,7 @@ namespace Tranquire.Selenium.Questions
         /// Creates a new instance of <see cref="TextContent"/>
         /// </summary>
         /// <param name="target"></param>
-        public TextContent(ITarget target): this (target, CultureInfo.CurrentCulture)
+        public TextContent(ITarget target) : this(target, CultureInfo.CurrentCulture)
         {
         }
 
