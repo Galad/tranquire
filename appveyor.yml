@@ -14,11 +14,11 @@ before_build:
   msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore > nul
   msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore
 - choco install "msbuild-sonarqube-runner" -y
-- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { msbuild.sonarqube.runner.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**,src/Tranquire.Selenium.Tests/**/*.html" /v:"$env:GitBuildVersion" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=https://github.com/Galad/tranquire" /d:"sonar.github.oauth=$env:tranquire_bot"}
-- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { msbuild.sonarqube.runner.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**,src/Tranquire.Selenium.Tests/**/*.html" /v:"$env:GitBuildVersion" }
+- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**,src/Tranquire.*.Tests/**" /v:"$env:GitBuildVersion" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=https://github.com/Galad/tranquire" /d:"sonar.github.oauth=$env:tranquire_bot"}
+- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**,src/Tranquire.*.Tests/**" /v:"$env:GitBuildVersion" }
 build_script:
 - msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
-- ps: msbuild.sonarqube.runner.exe end /d:"sonar.login=$env:sonarqube_token"
+- ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 test:
   assemblies:
   - '**\*.Tests.dll'
