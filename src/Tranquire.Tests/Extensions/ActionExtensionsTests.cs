@@ -3,6 +3,7 @@ using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using System;
+using Tranquire.Extensions;
 using Xunit;
 
 namespace Tranquire.Tests.Extensions
@@ -69,6 +70,18 @@ namespace Tranquire.Tests.Extensions
             //assert
             actual.Should().BeAssignableTo<IAction<Unit>>();
             actual.Name.Should().Be(action.Object.Name);
+        }
+        #endregion
+
+        #region Using
+        [Theory, DomainAutoData]
+        public void Using_ShouldReturnCorrectValue(IAction<IDisposable> disposableAction, IAction<object> action)
+        {
+            // act
+            var actual = ActionExtensions.Using(action, disposableAction);
+            // assert
+            var expected = new UsingAction<object>(disposableAction, action);
+            actual.ShouldBeEquivalentTo(expected);
         }
         #endregion
     }
