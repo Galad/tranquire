@@ -5,6 +5,7 @@ using OpenQA.Selenium.Chrome;
 using Owin;
 using System;
 using System.Threading;
+using Xunit.Abstractions;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -15,13 +16,13 @@ namespace Tranquire.Selenium.Tests
         public Actor Actor { get; }
         private readonly int _port;
         public ChromeDriver WebDriver { get; }
-
+                
         public WebDriverFixture()
         {
             _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
             WebDriver = new ChromeDriver();
-            Actor = (Actor)(new Actor("James").CanUse(WebBrowser.With(WebDriver)));
+            Actor = (Actor)(new Actor("James").CanUse(WebBrowser.With(WebDriver)));            
         }
 
         public string RootUrl => "http://localhost:" + _port.ToString();
@@ -46,6 +47,42 @@ namespace Tranquire.Selenium.Tests
         {
             WebDriver.Dispose();
             _host.Dispose();
+        }
+
+        private class XUnitObserver : IObserver<string>
+        {
+            private readonly ITestOutputHelper _helper;
+
+            public XUnitObserver(ITestOutputHelper helper)
+            {
+                _helper = helper;
+            }
+
+            public void OnCompleted()
+            {
+                _helper.WriteLine("Completed");
+            }
+
+            public void OnError(Exception error)
+            {
+                _helper.WriteLine("Error " + error.Message);
+            }
+
+            public void OnNext(string value)
+            {
+                _helper.WriteLine(value);
+            }
+        }
+
+        private class EmptyTestOutputHelper : ITestOutputHelper
+        {
+            public void WriteLine(string message)
+            {
+            }
+
+            public void WriteLine(string format, params object[] args)
+            {
+            }
         }
     }
 }
