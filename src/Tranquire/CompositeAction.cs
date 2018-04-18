@@ -48,7 +48,7 @@ namespace Tranquire
         /// Creates a new instance of <see cref="CompositeAction"/>
         /// </summary>
         /// <param name="actions">The actions executed by this composite action</param>
-        protected CompositeAction(params IAction<Unit>[] actions) : this(ImmutableArray.Create(actions))
+        protected CompositeAction(params IAction<Unit>[] actions) : this(ImmutableArray.Create(actions ?? throw new ArgumentNullException(nameof(actions))))
         {
         }
 
