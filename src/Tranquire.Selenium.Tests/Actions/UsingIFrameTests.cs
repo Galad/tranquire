@@ -2,7 +2,6 @@
 using System;
 using Tranquire.Selenium.Actions;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Tranquire.Selenium.Tests.Actions
 {
