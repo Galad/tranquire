@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System;
 using Tranquire.Selenium.Actions;
 using Xunit;
 
@@ -16,13 +17,16 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
             var expectedElement = Target.The("element in iframe").LocatedBy(By.Id("ElementInIFrame"));
-            //act
-            using (Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)))
+            //act            
+            ExecuteWithRetry(() =>
             {
-                var element = expectedElement.ResolveFor(Fixture.WebDriver);
-                //assert
-                Assert.NotNull(element);
-            }
+                using (Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)))
+                {
+                    var element = expectedElement.ResolveFor(Fixture.WebDriver);
+                    //assert
+                    Assert.NotNull(element);
+                }
+            });
         }
 
         [Fact]
@@ -31,11 +35,33 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
             var expectedElement = Target.The("element outside iframe").LocatedBy(By.Id("ElementOutsideIFrame"));
-            //act
-            Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)).Dispose();
+            //act      
+            ExecuteWithRetry(() =>
+            {
+                Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)).Dispose();
+            });
             var element = expectedElement.ResolveFor(Fixture.WebDriver);
             //assert
             Assert.NotNull(element);
+        }
+
+        private void ExecuteWithRetry(Action action)
+        {
+            // Switching to an iframe seems to fail sometimes, so we reload the page until it stops failing
+            var start = DateTimeOffset.Now;
+            while (true)
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (NoSuchFrameException) when (DateTimeOffset.Now.Subtract(start) < TimeSpan.FromSeconds(5))
+                {
+                    System.Threading.Thread.Sleep(200);
+                    ReloadPage();
+                }
+            }
         }
     }
 }
