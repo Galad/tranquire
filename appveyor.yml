@@ -24,10 +24,10 @@ build_script:
 - msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
 - ps: 
 test_script:
-- ps: OpenCover.Console.exe -output:"opencover.xml" -register:user -target:"vstest.console.exe" -targetargs:"src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor"
+- ps: OpenCover.Console.exe -output:"opencover.xml" -register:user -target:"vstest.console.exe" -targetargs:"src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" -mergebyhash
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
-- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"TestResults-SonarFormat.xml" solutionFolder="C:\Users\galad\Source\Repos\Tranquire\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,ToDoList.Specifications"
+- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
