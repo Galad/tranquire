@@ -67,13 +67,8 @@ namespace Tranquire
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 Name = name;
-                this.Action = action;
+                this.Action = action ?? throw new ArgumentNullException(nameof(action));
             }
 
             protected override void ExecuteWhen(IActor actor)
@@ -105,13 +100,8 @@ namespace Tranquire
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 Name = name;
-                this.Action = action;
+                this.Action = action ?? throw new ArgumentNullException(nameof(action));
             }
 
             protected override void ExecuteWhen(IActor actor, T ability)
@@ -145,13 +135,8 @@ namespace Tranquire
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 Name = name;
-                Action = action;
+                Action = action ?? throw new ArgumentNullException(nameof(action));
             }
 
             protected override TResult ExecuteWhen(IActor actor)
@@ -193,13 +178,8 @@ namespace Tranquire
                     throw new ArgumentNullException(nameof(name));
                 }
 
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
                 Name = name;
-                Action = action;
+                Action = action ?? throw new ArgumentNullException(nameof(action));
             }
 
             protected override TResult ExecuteWhen(IActor actor, TAbility ability)
