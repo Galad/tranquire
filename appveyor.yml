@@ -22,7 +22,7 @@ build_script:
 - ps: 
 test_script:
 - ps: >
-    OpenCover.Console.exe -output:"opencover.xml" -register:user -target:"$env:VSINSTALLDIR\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -targetargs:"src\Tranquire.Tests\bin\Release\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\ToDoList.Specifications.dll /Logger:trx"
+    OpenCover.Console.exe -output:"opencover.xml" -register:user -target:"vstest.console" -targetargs:"src\Tranquire.Tests\bin\Release\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\ToDoList.Specifications.dll /Logger:trx"
     SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
