@@ -24,8 +24,16 @@ namespace Tranquire.Extensions
         /// <param name="disposableAction">The action that creates a <see cref="IDisposable"/> instance</param>
         public UsingAction(IAction<IDisposable> disposableAction, IAction<T> actionToExecute)
         {
-            if (disposableAction == null) throw new ArgumentNullException(nameof(disposableAction));
-            if (actionToExecute == null) throw new ArgumentNullException(nameof(actionToExecute));
+            if (disposableAction == null)
+            {
+                throw new ArgumentNullException(nameof(disposableAction));
+            }
+
+            if (actionToExecute == null)
+            {
+                throw new ArgumentNullException(nameof(actionToExecute));
+            }
+
             DisposableAction = disposableAction;
             ActionToExecute = actionToExecute;
         }

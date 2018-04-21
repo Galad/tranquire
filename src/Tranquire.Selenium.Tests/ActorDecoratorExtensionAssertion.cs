@@ -11,7 +11,11 @@ namespace Tranquire.Tests
     {
         public ActorDecoratorExtensionAssertion(ISpecimenBuilder specimenBuilder)
         {
-            if (specimenBuilder == null) throw new ArgumentNullException(nameof(specimenBuilder));
+            if (specimenBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(specimenBuilder));
+            }
+
             SpecimenBuilder = specimenBuilder;
         }
 
