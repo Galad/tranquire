@@ -105,7 +105,7 @@ namespace Tranquire.Tests
             private TResult Increment<TResult>()
             {
                 Invocations++;
-                return default(TResult);
+                return default;
             }
         }
 

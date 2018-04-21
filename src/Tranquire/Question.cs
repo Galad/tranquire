@@ -33,7 +33,7 @@ namespace Tranquire
                 throw new ArgumentNullException(nameof(actor));
             }
 
-            if (EqualityComparer<TAbility>.Default.Equals(ability, default(TAbility)))
+            if (EqualityComparer<TAbility>.Default.Equals(ability, default))
             {
                 throw new ArgumentNullException(nameof(ability));
             }

@@ -9,7 +9,7 @@ namespace Tranquire
     public struct Unit : IEquatable<Unit>
     {
 #pragma warning disable CS1591,CA1801
-        public static Unit Default { get; } = default(Unit);
+        public static Unit Default { get; } = default;
         public bool Equals(Unit other) => true;
         public override bool Equals(object obj) => obj is Unit;
         public static bool operator ==(Unit left, Unit right) => true;

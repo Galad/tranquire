@@ -40,9 +40,8 @@ namespace Tranquire.Selenium
 #pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            var webBrowserQuestion = question as IQuestion<TAnswer, WebBrowser>;
             var targeted = question as ITargeted;
-            if (webBrowserQuestion != null && targeted != null)
+            if (question is IQuestion<TAnswer, WebBrowser> webBrowserQuestion && targeted != null)
             {
                 return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer>(webBrowserQuestion, DelayMilliseconds, targeted));
             }

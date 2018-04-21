@@ -52,7 +52,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause_ActionBuilder(ActionBuilder sut)
         {
-            Assert.Throws<ArgumentNullException>(() => sut.Then<IAction<Unit>, Unit>(default(IAction<Unit>)));
+            Assert.Throws<ArgumentNullException>(() => sut.Then<IAction<Unit>, Unit>(default));
         }
 
         [Theory, DomainAutoData]

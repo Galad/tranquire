@@ -16,6 +16,7 @@
     <IsPackable>true</IsPackable>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
     <CodeAnalysisRuleSet>Tranquire.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard1.0' ">    
@@ -32,7 +33,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.0|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard1.0\Tranquire.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard1.0\Tranquire.xml</DocumentationFile>    
   </PropertyGroup>
 
   <ItemGroup>

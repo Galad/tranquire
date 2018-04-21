@@ -22,12 +22,7 @@ namespace Tranquire.Tests
 
             public ActionExecuteWhen(IAction<Unit> action, string name)
             {
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
-                _action = action;
+                _action = action ?? throw new ArgumentNullException(nameof(action));
                 Name = name;
             }
 
@@ -52,12 +47,7 @@ namespace Tranquire.Tests
 
             public ActionExecuteGiven(IAction<Unit> action)
             {
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
-                _action = action;
+                _action = action ?? throw new ArgumentNullException(nameof(action));
             }
 
             protected override void ExecuteWhen(IActor actor, TestAbility ability)
@@ -79,12 +69,7 @@ namespace Tranquire.Tests
 
             public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
             {
-                if (action == null)
-                {
-                    throw new ArgumentNullException(nameof(action));
-                }
-
-                _action = action;
+                _action = action ?? throw new ArgumentNullException(nameof(action));
             }
 
             protected override void ExecuteWhen(IActor actor, TestAbility ability)
