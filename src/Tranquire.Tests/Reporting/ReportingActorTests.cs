@@ -78,7 +78,7 @@ namespace Tranquire.Tests.Reporting
             Assert.Equal(expected, actual);
         }
 
-        [Theory, MemberData("ExecutionTestCases")]
+        [Theory, MemberData(nameof(ExecutionTestCases))]
         public void Sut_AllMethods_ShouldReturnInnerResult(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression)
@@ -160,10 +160,12 @@ namespace Tranquire.Tests.Reporting
             return new object[] { action, expression };
         }
 
-        [Theory, MemberData("NotifyingTestCases")]
+        [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
             Func<INamed, Expression<Func<IActor, object>>> dummy)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             //arrange                  
             var fixture = CreateFixture();
@@ -184,7 +186,7 @@ namespace Tranquire.Tests.Reporting
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
-        [Theory, MemberData("NotifyingTestCases")]
+        [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_Recursive_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression)
@@ -232,7 +234,7 @@ namespace Tranquire.Tests.Reporting
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
-        [Theory, MemberData("ExecutionTestCases")]
+        [Theory, MemberData(nameof(ExecutionTestCases))]
         public void Sut_AllMethods_WhenErrorOccurs_ShouldThrow(
           Func<ReportingActor, INamed, object> executeAction,
           Func<INamed, Expression<Func<IActor, object>>> expression)
@@ -251,10 +253,12 @@ namespace Tranquire.Tests.Reporting
             Assert.Equal(expected, actual);
         }
 
-        [Theory, MemberData("NotifyingTestCases")]
+        [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_WhenErrorOccurs_ShouldCallOnNext(
            Func<ReportingActor, INamed, object> executeAction,
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
            Func<INamed, Expression<Func<IActor, object>>> dummy)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             //arrange                  
             var fixture = CreateFixture();
@@ -279,7 +283,7 @@ namespace Tranquire.Tests.Reporting
             observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
-        [Theory, MemberData("NotifyingTestCases")]
+        [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_Recursive_WhenErrorOccurs_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression)

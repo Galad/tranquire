@@ -249,7 +249,7 @@ namespace Tranquire.Tests
             }
         }
 
-        [Theory, MemberData("ActionsWithAbility")]
+        [Theory, MemberData(nameof(ActionsWithAbility))]
         public void ActionWithAbility_WhenAbilityIsNotRegistered_ShouldThrow(System.Action<Actor, IFixture> action)
         {
             //arrange

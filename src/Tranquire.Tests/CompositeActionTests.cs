@@ -76,7 +76,6 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void And_ShouldAddAction(
            CompositeAction sut,
-           Mock<IActor> actor,
            IAction<Unit> expected
            )
         {
@@ -110,7 +109,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ToString_ShouldReturnCorrectValue(ToStringCompositeAction sut, string expected)
+        public void ToString_ShouldReturnCorrectValue(ToStringCompositeAction sut)
         {
             //act
             var actual = sut.ToString();

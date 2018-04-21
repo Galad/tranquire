@@ -131,8 +131,8 @@ namespace Tranquire.Tests
             actor.Invocations.Should().Be(0);
         }
 
-        [Theory, DomainAutoData]
-        public void Empty_NameShouldNotCallActor(InvocationCountActor actor)
+        [Fact]
+        public void Empty_NameShouldNotCallActor()
         {
             //arrange
             var sut = Actions.Empty;
@@ -142,8 +142,8 @@ namespace Tranquire.Tests
             actual.Should().Be("Empty action");
         }
 
-        [Theory, DomainAutoData]
-        public void Empty_ToStringShouldReturnName(InvocationCountActor actor)
+        [Fact]
+        public void Empty_ToStringShouldReturnName()
         {
             //arrange
             var sut = Actions.Empty;
@@ -170,8 +170,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void Create_ShouldNotCallAction(
-            string name,
-            IActor actor
+            string name
             )
         {
             //arrange
@@ -229,8 +228,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void Create_WithAbility_ShouldNotCallAction(
-            string name,
-            IActor actor
+            string name
             )
         {
             //arrange

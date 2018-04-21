@@ -25,13 +25,13 @@ namespace Tranquire.Selenium.Tests.Questions
             }
         }
 
-        [Theory, MemberData("SingleUIStateValues")]
+        [Theory, MemberData(nameof(SingleUIStateValues))]
         public void Many_ShouldReturnCorrectValue(object value)
         {
             Assert.NotNull(value.GetType().GetMethod("Many").Invoke(value, new object[] { }));
         }
 
-        [Theory, MemberData("SingleUIStateValues")]
+        [Theory, MemberData(nameof(SingleUIStateValues))]
         public void WithCulture_ShouldReturnCorrectCultureValue_ShouldReturnCorrectValue(object value)
         {
             //arrange

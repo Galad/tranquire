@@ -49,8 +49,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void ToString_ShouldReturnCorrectValue(
-            TestQuestion sut,
-            string expected)
+            TestQuestion sut)
         {
             //act
             var actual = sut.ToString();

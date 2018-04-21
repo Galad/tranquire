@@ -71,7 +71,7 @@ namespace Tranquire.Tests
         public void Sut_ShouldBeAction(Action<AbilityGiven, AbilityWhen, object> sut)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.IsAssignableFrom(typeof(IAction<AbilityGiven, AbilityWhen, object>), sut);
+            Assert.IsAssignableFrom<IAction<AbilityGiven, AbilityWhen, object>>(sut);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

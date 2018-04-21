@@ -21,8 +21,7 @@ namespace Tranquire.Selenium.Tests
         }
 
         [Theory, DomainAutoData]
-        public void TakeScreenshots_ShouldDecorateActor(
-            ActorDecoratorExtensionAssertion assertion,
+        public void TakeScreenshots_ShouldDecorateActor(            
             [Modest]Actor actor,
             TakeScreenshot expected,
             string name)
@@ -35,8 +34,7 @@ namespace Tranquire.Selenium.Tests
         }
 
         [Theory, DomainAutoData]
-        public void TakeScreenshots_NextScreenshotName_ShouldReturnCorrectValue(
-            ActorDecoratorExtensionAssertion assertion,
+        public void TakeScreenshots_NextScreenshotName_ShouldReturnCorrectValue(            
             [Modest]Actor actor,
             TakeScreenshot expected,
             string expectedName,
@@ -50,8 +48,7 @@ namespace Tranquire.Selenium.Tests
         }
 
         [Theory, DomainAutoData]
-        public void HighlighTargets_ShouldDecorateActor(
-           ActorDecoratorExtensionAssertion assertion,
+        public void HighlighTargets_ShouldDecorateActor(           
            [Modest]Actor actor,
            [Modest]HighlightTarget expected)
         {
@@ -64,7 +61,6 @@ namespace Tranquire.Selenium.Tests
 
         [Theory, DomainAutoData]
         public void SlowSelenium_ShouldDecorateActor(
-           ActorDecoratorExtensionAssertion assertion,
            [Modest]Actor actor,
            [Modest]SlowSelenium expected)
         {
