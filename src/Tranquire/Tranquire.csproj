@@ -17,30 +17,23 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
     <CodeAnalysisRuleSet>Tranquire.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.xml</DocumentationFile>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard1.0' ">    
     <!-- Prevent analyzing this project multiple times, for each target framework. We only analyze it for .NET standard. Otherwise the scanner would ignore it -->
     <SonarQubeExclude>true</SonarQubeExclude>    
   </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.0|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard1.0\Tranquire.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\netstandard1.0\</OutputPath>    
-  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-    <DocumentationFile>bin\Debug\net45\Tranquire.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.0|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard1.0\Tranquire.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>    
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

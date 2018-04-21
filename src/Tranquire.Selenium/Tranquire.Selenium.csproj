@@ -14,20 +14,18 @@
     <PackageTags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</PackageTags>
     <IsPackable>true</IsPackable>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
-    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\net45\Tranquire.Selenium.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>    
     <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.Selenium.xml</DocumentationFile>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">    
-    <OutputPath>bin\Debug\</OutputPath>    
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">        
     <DebugType>full</DebugType>    
     <DebugSymbols>true</DebugSymbols>    
-    
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">    
-    <OutputPath>bin\Release\</OutputPath>    
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">        
     <DebugType>pdbonly</DebugType>    
     <DebugSymbols>true</DebugSymbols>        
   </PropertyGroup>
