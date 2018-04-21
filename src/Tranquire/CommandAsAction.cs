@@ -23,6 +23,11 @@ namespace Tranquire
         {
             return Command.ExecuteWhenAs(actor);
         }
+
+        public void Dispose()
+        {
+            throw new InvalidOperationException("fesfd");
+        }
     }
 
     internal class WhenCommandAsAction<TWhen, TResult> : Action<Unit, TWhen, TResult>
