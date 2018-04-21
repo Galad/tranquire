@@ -15,14 +15,14 @@ before_build:
   msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore
 - choco install "msbuild-sonarqube-runner" -y
 - choco install "opencover.portable"  -y
-- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Galad/tranquire" /d:"sonar.github.oauth=$env:tranquire_bot" /d:sonar.cs.opencover.reportsPaths="opencover.xml"}
-- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:sonar.cs.opencover.reportsPaths="opencover.xml"}
+- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Galad/tranquire" /d:sonar.cs.vstest.reportsPaths=TestResults\*.trx" /d:"sonar.github.oauth=$env:tranquire_bot" /d:sonar.cs.opencover.reportsPaths="opencover.xml"}
+- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:sonar.cs.vstest.reportsPaths="TestResults\*.trx" /d:sonar.cs.opencover.reportsPaths="opencover.xml"}
 build_script:
 - msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
 - ps: 
 test_script:
 - ps: >
-    OpenCover.Console.exe -output:"opencover.xml" -register:user -target: "%VSINSTALLDIR%\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" targetargs:"src\Tranquire.Tests\bin\Release\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\ToDoList.Specifications.dll"
+    OpenCover.Console.exe -output:"opencover.xml" -register:user -target: "$env:VSINSTALLDIR\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" targetargs:"src\Tranquire.Tests\bin\Release\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\ToDoList.Specifications.dll /Logger:trx"
     SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
