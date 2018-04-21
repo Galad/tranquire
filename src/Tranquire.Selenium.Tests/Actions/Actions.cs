@@ -68,7 +68,11 @@ namespace Tranquire.Selenium.Tests.Actions
         [InlineData(1, new string[] { "1" })]
         [InlineData(1, new string[] { "1", "2", "3" })]
         [InlineData(1, new string[] { "1", "3" })]
-        public void SelectByValuesAction_ShouldSelectCorrectElement(int dummy, string[] expected)
+        public void SelectByValuesAction_ShouldSelectCorrectElement(
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+            int dummy, 
+            string[] expected)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             //arrange
             Fixture.WebDriver.Navigate().Refresh();

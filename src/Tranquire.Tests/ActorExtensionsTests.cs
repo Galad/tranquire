@@ -23,7 +23,6 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void WithReporting_ShouldDecorateActor(
-            ActorDecoratorExtensionAssertion assertion,
             [Modest]Actor actor,
             ReportingActor expected)
         {
@@ -36,7 +35,6 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void WithReporting_WithIObserverOfString_ShouldDecorateActor(
-            ActorDecoratorExtensionAssertion assertion,
             [Modest]Actor actor,
             ReportingActor expected,
             IObserver<string> observer)

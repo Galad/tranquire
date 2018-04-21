@@ -24,7 +24,7 @@ namespace Tranquire.Selenium.Tests.Converters
         [Fact]
         public void Sut_ShouldBeConverter()
         {
-            Assert.IsAssignableFrom(typeof(IConverter<string, TestEnum>), _sut);
+            Assert.IsAssignableFrom<IConverter<string, TestEnum>>(_sut);
         }
 
         [Theory]

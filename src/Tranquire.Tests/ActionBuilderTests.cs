@@ -212,8 +212,7 @@ namespace Tranquire.Tests
             IAction<object> action1,
             IAction<object> action2,
             Mock<IFunc> funcs,
-            object result1,
-            IActor actor)
+            object result1)
         {
             //arrange 
             var previousResult = new ActionResult<IAction<object>, object>(action1, result1);

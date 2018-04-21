@@ -72,7 +72,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_ShouldBeAction(Action<object> sut)
         {
-            Assert.IsAssignableFrom(typeof(IAction<object>), sut);
+            Assert.IsAssignableFrom<IAction<object>>(sut);
         }
 
         [Theory, DomainAutoData]
