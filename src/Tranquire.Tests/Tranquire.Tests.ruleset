@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Tranquire.Tests" Description=" " ToolsVersion="10.0">
+	<Include Path="..\sonarqube\DisableSonarRules.ruleset" Action="Default" />  
+</RuleSet>
