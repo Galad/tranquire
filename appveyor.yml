@@ -18,8 +18,8 @@ before_build:
 - choco install "saxonHE" -y
 - refreshenv
 - echo %APPVEYOR_PULL_REQUEST_NUMBER%
-- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Galad/tranquire" /d:"sonar.github.oauth=$env:tranquire_bot" /d:"sonar.testExecutionReportPaths=TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml"}
-- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml"}
+- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=Galad/tranquire" /d:"sonar.github.oauth=$env:tranquire_bot" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml"}
+- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml"}
 build_script:
 - msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
 - ps: 
@@ -27,7 +27,7 @@ test_script:
 - ps: OpenCover.Console.exe -output:"opencover.xml" -register:user -target:"vstest.console.exe" -targetargs:"src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" -mergebyhash
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
-- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,ToDoList.Specifications"
+- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
