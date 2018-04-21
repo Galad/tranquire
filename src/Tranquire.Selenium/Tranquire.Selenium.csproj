@@ -15,17 +15,21 @@
     <IsPackable>true</IsPackable>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
     <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\net45\Tranquire.Selenium.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\net45\Tranquire.Selenium.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">    
-    <OutputPath>bin\Debug\net45\</OutputPath>    
+    <OutputPath>bin\Debug\</OutputPath>    
+    <DebugType>full</DebugType>    
+    <DebugSymbols>true</DebugSymbols>    
     
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">    
-    <OutputPath>bin\Release\net45\</OutputPath>        
+    <OutputPath>bin\Release\</OutputPath>    
+    <DebugType>pdbonly</DebugType>    
+    <DebugSymbols>true</DebugSymbols>        
   </PropertyGroup>
 
   <ItemGroup>
