@@ -23,12 +23,7 @@ namespace Tranquire.ActionBuilders
 
         internal ActionBuilder(TAction currentAction, CompositeAction executableAction, string name)
         {
-            if (currentAction == null)
-            {
-                throw new ArgumentNullException(nameof(currentAction));
-            }
-
-            Action = currentAction;
+            Action = currentAction ?? throw new ArgumentNullException(nameof(currentAction));
             _executableAction = executableAction;
             Name = name;
         }

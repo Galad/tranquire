@@ -10,12 +10,7 @@ namespace Tranquire
 
         public WhenCommandAsAction(IWhenCommand<TResult> command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            Command = command;
+            Command = command ?? throw new ArgumentNullException(nameof(command));
         }
 
         public TResult ExecuteGivenAs(IActor actor)
@@ -36,12 +31,7 @@ namespace Tranquire
 
         public WhenCommandAsAction(IWhenCommand<TWhen, TResult> command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            Command = command;
+            Command = command ?? throw new ArgumentNullException(nameof(command));
         }
 
         protected override TResult ExecuteWhen(IActor actor, TWhen ability)
@@ -62,12 +52,7 @@ namespace Tranquire
 
         public GivenCommandAsAction(IGivenCommand<TResult> command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            Command = command;
+            Command = command ?? throw new ArgumentNullException(nameof(command));
         }
 
         public TResult ExecuteGivenAs(IActor actor)
@@ -88,12 +73,7 @@ namespace Tranquire
 
         public GivenCommandAsAction(IGivenCommand<TGiven, TResult> command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            Command = command;
+            Command = command ?? throw new ArgumentNullException(nameof(command));
         }
 
         protected override TResult ExecuteWhen(IActor actor, Unit ability)
