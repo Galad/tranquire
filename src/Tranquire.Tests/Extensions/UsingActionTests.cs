@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture.Idioms;
 using System;
 using System.Collections.Generic;
 using Tranquire.Extensions;
@@ -138,7 +138,7 @@ namespace Tranquire.Tests.Extensions
             sut.ExecuteWhenAs(actor);
             // assert
             var expected = new[] { "createDisposable", "executeAction" };
-            callOrder.ShouldAllBeEquivalentTo(expected, o => o.WithStrictOrdering());
+            callOrder.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
 
         [Theory, DomainAutoData]
@@ -158,7 +158,7 @@ namespace Tranquire.Tests.Extensions
             sut.ExecuteGivenAs(actor);
             // assert
             var expected = new[] { "createDisposable", "executeAction" };
-            callOrder.ShouldAllBeEquivalentTo(expected, o => o.WithStrictOrdering());
+            callOrder.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
     }
 }

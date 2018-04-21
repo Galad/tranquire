@@ -129,6 +129,11 @@ namespace Tranquire.Selenium.Questions
             public string GetAttribute(string attributeName) => string.Empty;
             public string GetCssValue(string propertyName) => string.Empty;
 
+            public string GetProperty(string propertyName)
+            {
+                return string.Empty;
+            }
+
             public void SendKeys(string text)
             {
                 // Does not do anything since it is not a real element in the DOM

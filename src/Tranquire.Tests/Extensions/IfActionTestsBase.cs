@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using Xunit;
 
 namespace Tranquire.Tests.Extensions

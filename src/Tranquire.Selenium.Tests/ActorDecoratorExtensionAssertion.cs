@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Kernel;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -31,7 +31,7 @@ namespace Tranquire.Tests
             var values = parameters.Select(p => new SpecimenContext(SpecimenBuilder).Resolve(p)).ToArray();
             var expected = (Actor)values[0];
             var actual = (Actor)methodInfo.Invoke(null, values);
-            actual.ShouldBeEquivalentTo(expected, o => o.Excluding(a => a.InnerActorBuilder), "The method {0} did not return a correct actor", methodInfo.Name);
+            actual.Should().BeEquivalentTo(expected, o => o.Excluding(a => a.InnerActorBuilder), "The method {0} did not return a correct actor", methodInfo.Name);
             base.Verify(methodInfo);
         }
     }

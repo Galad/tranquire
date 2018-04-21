@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using System.Collections.Immutable;
 using Xunit;
 
@@ -30,12 +30,12 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Actions_ShouldReturnCorrectValue([Frozen]ImmutableArray<IAction<Unit>> expected, DefaultCompositeAction sut)
+        public void Actions_ShouldReturnCorrectValue([Frozen]IAction<Unit>[] expected, DefaultCompositeAction sut)
         {
             // act
             var actual = sut.Actions;
             // assert
-            actual.ShouldAllBeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected);
         }
     }
 }

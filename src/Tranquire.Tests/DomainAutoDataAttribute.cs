@@ -1,7 +1,7 @@
-﻿using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Kernel;
-using Ploeh.AutoFixture.Xunit2;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +11,15 @@ namespace Tranquire.Tests
 {
     public class DomainAutoDataAttribute : AutoDataAttribute
     {
-        public DomainAutoDataAttribute() : base(new Fixture().Customize(new DomainCustomization()))
+        public DomainAutoDataAttribute() : base(() => new Fixture().Customize(new DomainCustomization()))
         {
         }
     }
 
-    public class DomainInlineAutoDataAttribute : CompositeDataAttribute
+    public class DomainInlineAutoDataAttribute : InlineAutoDataAttribute
     {
         public DomainInlineAutoDataAttribute(params object[] args)
-            : base(new InlineAutoDataAttribute(args), new AutoDataAttribute(new Fixture().Customize(new DomainCustomization())))
+            : base(new DomainAutoDataAttribute(), args)
         {
         }
     }
@@ -30,7 +30,7 @@ namespace Tranquire.Tests
             : base(
                  new ImmutableCollectionCustomization(),
                  new ActorCustomization(),
-                 new AutoConfiguredMoqCustomization())
+                 new AutoMoqCustomization() { ConfigureMembers = true })
         {
         }
     }

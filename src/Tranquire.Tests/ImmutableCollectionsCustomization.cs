@@ -1,5 +1,5 @@
-﻿using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Kernel;
+﻿using AutoFixture;
+using AutoFixture.Kernel;
 using System;
 using System.Collections.Immutable;
 using System.Linq;

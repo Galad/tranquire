@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using System;
 using Tranquire.Reporting;
 using Xunit;
@@ -30,7 +30,7 @@ namespace Tranquire.Tests
             //act
             var actual = ActorExtensions.WithReporting(actor, expected.Observer).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<ReportingActor>().Which.ShouldBeEquivalentTo(expected);
+            actual.Should().BeOfType<ReportingActor>().Which.Should().BeEquivalentTo(expected);
         }
 
         [Theory, DomainAutoData]

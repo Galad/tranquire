@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using Tranquire.Tests;
 using Xunit;
 
@@ -30,7 +30,7 @@ namespace Tranquire.Selenium.Tests
             //act
             var actual = ActorExtensions.TakeScreenshots(actor, expected.Directory, name).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<TakeScreenshot>().Which.ShouldBeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));
+            actual.Should().BeOfType<TakeScreenshot>().Which.Should().BeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));
         }
 
         [Theory, DomainAutoData]
@@ -56,7 +56,7 @@ namespace Tranquire.Selenium.Tests
             //act
             var actual = ActorExtensions.HighlightTargets(actor).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<HighlightTarget>().Which.ShouldBeEquivalentTo(expected);
+            actual.Should().BeOfType<HighlightTarget>().Which.Should().BeEquivalentTo(expected);
         }
 
         [Theory, DomainAutoData]
@@ -68,7 +68,7 @@ namespace Tranquire.Selenium.Tests
             //act
             var actual = ActorExtensions.SlowSelenium(actor, expected.Delay).InnerActorBuilder(expected.Actor);
             //assert
-            actual.Should().BeOfType<SlowSelenium>().Which.ShouldBeEquivalentTo(expected);
+            actual.Should().BeOfType<SlowSelenium>().Which.Should().BeEquivalentTo(expected);
         }
     }
 }

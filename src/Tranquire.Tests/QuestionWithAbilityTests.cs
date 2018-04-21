@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using Moq.Protected;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture.Idioms;
 using System;
 using Xunit;
 

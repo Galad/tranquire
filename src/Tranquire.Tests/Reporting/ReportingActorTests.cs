@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Kernel;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace Tranquire.Tests.Reporting
 
         public class ReportingActorAutoDataAttribute : AutoDataAttribute
         {
-            public ReportingActorAutoDataAttribute() : base(CreateFixture())
+            public ReportingActorAutoDataAttribute() : base(CreateFixture)
             {
             }
         }
@@ -183,7 +183,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(action, 1, new BeforeActionNotificationContent()),
                 new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
             };
-            observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
         [Theory, MemberData(nameof(NotifyingTestCases))]
@@ -231,7 +231,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(actions[1], 2, new AfterActionNotificationContent(expectedDurations[1])),
                 new ActionNotification(actions[0], 1, new AfterActionNotificationContent(expectedDurations[0]))
             };
-            observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
         [Theory, MemberData(nameof(ExecutionTestCases))]
@@ -280,7 +280,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(action, 1, new BeforeActionNotificationContent()),
                 new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception))
             };
-            observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
         [Theory, MemberData(nameof(NotifyingTestCases))]
@@ -309,7 +309,7 @@ namespace Tranquire.Tests.Reporting
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
                                .Returns((Func<object> f) => Tuple.Create(TimeSpan.Zero, f()));
             //act
-            new Action(() => { executeAction(sut, actions[0]); }).ShouldThrow<Exception>().And.Should().Be(exception);
+            new Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
             var expected = new[]{
                 new ActionNotification(actions[0], 1, new BeforeActionNotificationContent()),
@@ -321,7 +321,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception)),
                 new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception))
             };
-            observer.Values.ShouldAllBeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
         [Theory, ReportingActorAutoData]

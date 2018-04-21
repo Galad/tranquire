@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture.Idioms;
 using System;
 using System.Collections.Generic;
 using Tranquire.ActionBuilders;
@@ -44,9 +44,9 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClause_ActionBuilder2(ActionBuilder<TestAction, Unit> sut)
         {
             var sutAsInterface = (IActionBuilder<TestAction, Unit>)sut;
-            new Action(() => sutAsInterface.Then<IAction<Unit>, Unit>(default(IAction<Unit>))).ShouldThrowExactly<ArgumentNullException>("Then");
-            new Action(() => sutAsInterface.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
-            new Action(() => sutAsInterface.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
+            new Action(() => sutAsInterface.Then<IAction<Unit>, Unit>(default(IAction<Unit>))).Should().ThrowExactly<ArgumentNullException>("Then");
+            new Action(() => sutAsInterface.Named(string.Empty)).Should().ThrowExactly<ArgumentNullException>("string.Empty");
+            new Action(() => sutAsInterface.Named(null)).Should().ThrowExactly<ArgumentNullException>("null");
         }
 
         [Theory, DomainAutoData]
@@ -59,9 +59,9 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClause_ActionBuilder4(ActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit> sut)
         {
             var sutAsInterface = (IActionBuilderWithPreviousResult<TestAction, Unit, TestAction, Unit>)sut;
-            new Action(() => sutAsInterface.Then(default(TestAction), Unit.Default)).ShouldThrowExactly<ArgumentNullException>("Then");
-            new Action(() => sutAsInterface.Named(string.Empty)).ShouldThrowExactly<ArgumentNullException>("string.Empty");
-            new Action(() => sutAsInterface.Named(null)).ShouldThrowExactly<ArgumentNullException>("null");
+            new Action(() => sutAsInterface.Then(default(TestAction), Unit.Default)).Should().ThrowExactly<ArgumentNullException>("Then");
+            new Action(() => sutAsInterface.Named(string.Empty)).Should().ThrowExactly<ArgumentNullException>("string.Empty");
+            new Action(() => sutAsInterface.Named(null)).Should().ThrowExactly<ArgumentNullException>("null");
         }
 
         [Theory, DomainAutoData]
@@ -177,7 +177,7 @@ namespace Tranquire.Tests
             action.ExecuteGivenAs(actor);
             //assert
             var expected = new[] { "action1", "action2", "action3" };
-            callResult.ShouldAllBeEquivalentTo(expected, o => o.WithStrictOrdering());
+            callResult.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
 
         [Theory, DomainAutoData]
@@ -201,7 +201,7 @@ namespace Tranquire.Tests
             action.ExecuteWhenAs(actor);
             //assert
             var expected = new[] { "action1", "action2", "action3" };
-            callResult.ShouldAllBeEquivalentTo(expected, o => o.WithStrictOrdering());
+            callResult.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
         #endregion
 
@@ -532,7 +532,7 @@ namespace Tranquire.Tests
             //act
             var actual = expected.Named(name);
             //assert
-            actual.ShouldBeEquivalentTo(expected, o => o.Excluding(b => b.Name));
+            actual.Should().BeEquivalentTo(expected, o => o.Excluding(b => b.Name));
         }
 
         [Theory, DomainAutoData]
@@ -565,7 +565,7 @@ namespace Tranquire.Tests
             //act
             var actual = expected.Named(name);
             //assert
-            actual.ShouldBeEquivalentTo(expected, o => o.Excluding(b => b.Name));
+            actual.Should().BeEquivalentTo(expected, o => o.Excluding(b => b.Name));
         }
 
         [Theory, DomainAutoData]

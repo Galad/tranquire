@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture;
+using AutoFixture;
 using System;
 using Tranquire.Extensions;
 using Xunit;

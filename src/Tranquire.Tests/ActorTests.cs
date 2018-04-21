@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Moq;
 using Moq.Protected;
-using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -253,11 +253,11 @@ namespace Tranquire.Tests
         public void ActionWithAbility_WhenAbilityIsNotRegistered_ShouldThrow(System.Action<Actor, IFixture> action)
         {
             //arrange
-            var fixture = new Fixture().Customize(new ActorCustomization()).Customize(new AutoConfiguredMoqCustomization());
+            var fixture = new Fixture().Customize(new ActorCustomization()).Customize(new AutoMoqCustomization() { ConfigureMembers = true });
             var sut = fixture.Create<Actor>();
             System.Action testedAction = () => action(sut, fixture);
             //act and assert
-            testedAction.ShouldThrow<InvalidOperationException>().Where(ex => ex.Message.Contains(typeof(AbilityTest).Name));
+            testedAction.Should().Throw<InvalidOperationException>().Where(ex => ex.Message.Contains(typeof(AbilityTest).Name));
         }
     }
 }

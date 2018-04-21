@@ -95,13 +95,13 @@ namespace Tranquire
 
         #region Using
         /// <summary>
-        /// Creates an action that executes the <paramref name="disposableAction"/>, then the <paramref name="action"/> and finally dispose the result of the <paramref name="disposableAction"/>
+        /// Creates an action that executes the <paramref name="disposableAction"/>, then the <paramref name="actionToExecute"/> and finally dispose the result of the <paramref name="disposableAction"/>
         /// </summary>
         /// <typeparam name="T">The action return type</typeparam>
-        /// <param name="action">The action to execute</param>
+        /// <param name="actionToExecute">The action to execute</param>
         /// <param name="disposableAction">The action that creates a <see cref="IDisposable"/> instance</param>
         /// <returns></returns>
-        public static IAction<T> Using<T>(this IAction<T> action, IAction<IDisposable> disposableAction) => new UsingAction<T>(disposableAction, action);
+        public static IAction<T> Using<T>(this IAction<T> actionToExecute, IAction<IDisposable> disposableAction) => new UsingAction<T>(disposableAction, actionToExecute);
         #endregion
     }
 }
