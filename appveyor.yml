@@ -30,6 +30,8 @@ after_test:
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
+  - path: opencover.xml
+  - path: TestResults-SonarFormat.xml
     
 deploy:
 - provider: NuGet
