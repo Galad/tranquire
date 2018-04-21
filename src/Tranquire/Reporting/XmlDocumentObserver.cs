@@ -8,7 +8,7 @@ namespace Tranquire.Reporting
     /// <summary>
     /// A <see cref="IObserver{ActionNotification}"/> implementation that writes notifications in a XmlDocument
     /// </summary>
-    public class XmlDocumentObserver : IObserver<ActionNotification>
+    public partial class XmlDocumentObserver : IObserver<ActionNotification>
     {
         private readonly Stack<TranquireXmlReportItem> _items = new Stack<TranquireXmlReportItem>();
 
@@ -102,7 +102,7 @@ namespace Tranquire.Reporting
             }
             
             var item = CurrentItem;
-            var document = new XDocument(GetElement(item));
+            var document = new XDocument(GetElement(item));            
             return document;
         }
 

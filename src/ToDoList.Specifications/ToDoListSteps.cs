@@ -54,6 +54,7 @@ namespace ToDoList.Specifications
             Debug.WriteLine(_reportingStringBuilder.ToString());
             var xmlDocument = Context.Get<XmlDocumentObserver>();
             Debug.WriteLine(xmlDocument.GetXmlDocument().ToString());
+            Debug.WriteLine(xmlDocument.GetHtmlDocument().ToString());
         }
 
         [Given(@"I have an empty to-do list")]

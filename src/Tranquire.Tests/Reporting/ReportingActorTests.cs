@@ -81,7 +81,8 @@ namespace Tranquire.Tests.Reporting
         [Theory, MemberData(nameof(ExecutionTestCases))]
         public void Sut_AllMethods_ShouldReturnInnerResult(
             Func<ReportingActor, INamed, object> executeAction,
-            Func<INamed, Expression<Func<IActor, object>>> expression)
+            Func<INamed, Expression<Func<IActor, object>>> expression,
+            CommandType commandType)
         {
             //arrange                  
             var fixture = CreateFixture();
@@ -136,8 +137,8 @@ namespace Tranquire.Tests.Reporting
         {
             get
             {
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action));
-                yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action));
+                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action), CommandType.Question);
+                yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action), CommandType.Action);
             }
         }
 
@@ -146,26 +147,34 @@ namespace Tranquire.Tests.Reporting
             get
             {
 #pragma warning disable CS0618 // Type or member is obsolete
-                yield return ExecutionTestCasesValues((sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action), action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action));
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action), action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action));
+                yield return ExecutionTestCasesValues(
+                    (sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action), 
+                    action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action),
+                    CommandType.Action);
+                yield return ExecutionTestCasesValues(
+                    (sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action), 
+                    action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action),
+                    CommandType.Question);
 #pragma warning restore CS0618 // Type or member is obsolete
             }
         }
 
         private static object[] ExecutionTestCasesValues(
             Func<ReportingActor, INamed, object> action,
-            Func<INamed, Expression<Func<IActor, object>>> expression
+            Func<INamed, Expression<Func<IActor, object>>> expression,
+            CommandType commandType
             )
         {
-            return new object[] { action, expression };
+            return new object[] { action, expression, commandType };
         }
 
         [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-            Func<INamed, Expression<Func<IActor, object>>> dummy)
+            Func<INamed, Expression<Func<IActor, object>>> dummy,
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+            CommandType commandType)
         {
             //arrange                  
             var fixture = CreateFixture();
@@ -180,7 +189,7 @@ namespace Tranquire.Tests.Reporting
             executeAction(sut, action);
             //assert
             var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent()),
+                new ActionNotification(action, 1, new BeforeActionNotificationContent(commandType)),
                 new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -189,7 +198,8 @@ namespace Tranquire.Tests.Reporting
         [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_Recursive_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
-            Func<INamed, Expression<Func<IActor, object>>> expression)
+            Func<INamed, Expression<Func<IActor, object>>> expression,
+            CommandType commandType)
         {
             //arrange 
             var fixture = CreateFixture();
@@ -221,11 +231,12 @@ namespace Tranquire.Tests.Reporting
             //act
             executeAction(sut, actions[0]);
             //assert
+            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(commandType);
             var expected = new[]{
-                new ActionNotification(actions[0], 1, new BeforeActionNotificationContent()),
-                new ActionNotification(actions[1], 2, new BeforeActionNotificationContent()),
-                new ActionNotification(actions[2], 3, new BeforeActionNotificationContent()),
-                new ActionNotification(actions[3], NumberOfActions, new BeforeActionNotificationContent()),
+                new ActionNotification(actions[0], 1, before()),
+                new ActionNotification(actions[1], 2, before()),
+                new ActionNotification(actions[2], 3, before()),
+                new ActionNotification(actions[3], NumberOfActions, before()),
                 new ActionNotification(actions[3], NumberOfActions, new AfterActionNotificationContent(expectedDurations[3])),
                 new ActionNotification(actions[2], 3, new AfterActionNotificationContent(expectedDurations[2])),
                 new ActionNotification(actions[1], 2, new AfterActionNotificationContent(expectedDurations[1])),
@@ -237,7 +248,8 @@ namespace Tranquire.Tests.Reporting
         [Theory, MemberData(nameof(ExecutionTestCases))]
         public void Sut_AllMethods_WhenErrorOccurs_ShouldThrow(
           Func<ReportingActor, INamed, object> executeAction,
-          Func<INamed, Expression<Func<IActor, object>>> expression)
+          Func<INamed, Expression<Func<IActor, object>>> expression,
+          CommandType commandType)
         {
             //arrange   
             var fixture = CreateFixture();
@@ -257,8 +269,9 @@ namespace Tranquire.Tests.Reporting
         public void Sut_AllMethods_WhenErrorOccurs_ShouldCallOnNext(
            Func<ReportingActor, INamed, object> executeAction,
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-           Func<INamed, Expression<Func<IActor, object>>> dummy)
+           Func<INamed, Expression<Func<IActor, object>>> dummy,
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+           CommandType commandType)
         {
             //arrange                  
             var fixture = CreateFixture();
@@ -277,7 +290,7 @@ namespace Tranquire.Tests.Reporting
             catch { }
             //assert
             var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent()),
+                new ActionNotification(action, 1, new BeforeActionNotificationContent(commandType)),
                 new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -286,7 +299,8 @@ namespace Tranquire.Tests.Reporting
         [Theory, MemberData(nameof(NotifyingTestCases))]
         public void Sut_AllMethods_Recursive_WhenErrorOccurs_ShouldCallOnNext(
             Func<ReportingActor, INamed, object> executeAction,
-            Func<INamed, Expression<Func<IActor, object>>> expression)
+            Func<INamed, Expression<Func<IActor, object>>> expression,
+            CommandType commandType)
         {
             //arrange 
             var fixture = CreateFixture();
@@ -311,11 +325,12 @@ namespace Tranquire.Tests.Reporting
             //act
             new Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
+            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(commandType);
             var expected = new[]{
-                new ActionNotification(actions[0], 1, new BeforeActionNotificationContent()),
-                new ActionNotification(actions[1], 2, new BeforeActionNotificationContent()),
-                new ActionNotification(actions[2], 3, new BeforeActionNotificationContent()),
-                new ActionNotification(actions[3], NumberOfActions, new BeforeActionNotificationContent()),
+                new ActionNotification(actions[0], 1, before()),
+                new ActionNotification(actions[1], 2, before()),
+                new ActionNotification(actions[2], 3, before()),
+                new ActionNotification(actions[3], NumberOfActions, before()),
                 new ActionNotification(actions[3], NumberOfActions, new ExecutionErrorNotificationContent(exception)),
                 new ActionNotification(actions[2], 3, new ExecutionErrorNotificationContent(exception)),
                 new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception)),
