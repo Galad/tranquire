@@ -15,7 +15,6 @@ namespace Tranquire
 
         public TResult ExecuteGivenAs(IActor actor)
         {
-            var a = actor.Name;
             throw new InvalidOperationException("Cannot call ExecuteGivenAs with a WhenCommand when");
         }
 
