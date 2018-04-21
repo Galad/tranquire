@@ -24,7 +24,7 @@ build_script:
 test_script:
 - ps: OpenCover.Console.exe -output:"opencover.xml" -register:user -target:"vstest.console.exe" -targetargs:"src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor"
 after_test:
-- ps: >
+- ps: |
      $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
      transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:TestResults-SonarFormat.xml solutionFolder="C:\Users\galad\Source\Repos\Tranquire\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
