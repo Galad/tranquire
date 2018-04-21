@@ -45,8 +45,7 @@ namespace Tranquire.Selenium
             }
             finally
             {
-                var webBrowser = ability as WebBrowser;
-                if (webBrowser != null)
+                if (ability is WebBrowser webBrowser)
                 {
                     if (!System.IO.Directory.Exists(directory))
                     {

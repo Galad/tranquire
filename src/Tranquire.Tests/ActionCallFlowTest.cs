@@ -74,7 +74,7 @@ namespace Tranquire.Tests
             //arrange
             var actor = new Actor("john");
             var actual = new List<string>();
-            System.Action<string> notify = (s) => actual.Add(s);
+            void notify(string s) => actual.Add(s);
             //act
             actor.When(new Action1(notify));
             //assert
@@ -93,7 +93,7 @@ namespace Tranquire.Tests
             //arrange
             var actor = new Actor("john");
             var actual = new List<string>();
-            System.Action<string> notify = (s) => actual.Add(s);
+            void notify(string s) => actual.Add(s);
             //act
             actor.Given(new Action1(notify));
             //assert

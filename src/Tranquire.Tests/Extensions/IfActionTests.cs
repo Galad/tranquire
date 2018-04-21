@@ -17,8 +17,7 @@ namespace Tranquire.Tests.Extensions
             object expected)
         {
             //arrange
-            Func<bool> func = () => true;
-            fixture.Inject(func);
+            fixture.Inject<Func<bool>>(() => true);
             var sut = fixture.Create<IfAction<object>>();
             actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
             //act
@@ -34,8 +33,7 @@ namespace Tranquire.Tests.Extensions
            Mock<IActor> actor)
         {
             //arrange
-            Func<bool> func = () => false;
-            fixture.Inject(func);
+            fixture.Inject<Func<bool>>(() => false);
             var expected = fixture.Freeze<object>();
             var sut = fixture.Create<IfAction<object>>();
             //act
@@ -52,8 +50,7 @@ namespace Tranquire.Tests.Extensions
          object expected)
         {
             //arrange
-            Func<bool> func = () => true;
-            fixture.Inject(func);
+            fixture.Inject<Func<bool>>(() => true);
             var sut = fixture.Create<IfAction<object>>();
             actor.Setup(a => a.Execute(sut.Action)).Returns(expected);
             //act
@@ -69,8 +66,7 @@ namespace Tranquire.Tests.Extensions
            Mock<IActor> actor)
         {
             //arrange
-            Func<bool> func = () => false;
-            fixture.Inject(func);
+            fixture.Inject<Func<bool>>(() => false);
             var expected = fixture.Freeze<object>();
             var sut = fixture.Create<IfAction<object>>();
             //act

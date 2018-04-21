@@ -16,16 +16,8 @@ namespace ToDoList.Automation.Questions.Converters
 
         public WebElementToToDoItemConverter(IActor actor, IWebDriver webDriver)
         {
-            if (actor == null)
-            {
-                throw new ArgumentNullException(nameof(actor));
-            }
-            if (webDriver == null)
-            {
-                throw new ArgumentNullException(nameof(webDriver));
-            }
-            _webDriver = webDriver;
-            _actor = actor;
+            _webDriver = webDriver ?? throw new ArgumentNullException(nameof(webDriver));
+            _actor = actor ?? throw new ArgumentNullException(nameof(actor));
         }
 
         public Model.ToDoItem Convert(IWebElement source, CultureInfo culture)
