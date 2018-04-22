@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture;
+using AutoFixture.Idioms;
 using System;
 using Tranquire.Extensions;
 using Xunit;
@@ -24,7 +24,7 @@ namespace Tranquire.Tests.Extensions
             //act
             var actual = act(action, predicate, defaultValue);
             //assert
-            actual.ShouldBeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         #region If
@@ -81,7 +81,7 @@ namespace Tranquire.Tests.Extensions
             var actual = ActionExtensions.Using(action, disposableAction);
             // assert
             var expected = new UsingAction<object>(disposableAction, action);
-            actual.ShouldBeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected);
         }
         #endregion
     }

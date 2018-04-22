@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture.Idioms;
 using System;
 using Tranquire.Extensions;
 using Xunit;
@@ -19,7 +19,7 @@ namespace Tranquire.Tests
             // assert
             var expected = new SelectQuestion<string, object>(question, selector);
             actual.Should().BeOfType<SelectQuestion<string, object>>();
-            actual.ShouldBeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected);
         }
     }
 }

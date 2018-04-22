@@ -1,7 +1,7 @@
 ﻿using Moq;
-using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using System;
 using Xunit;
 

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture.Idioms;
 using System;
 using System.Linq;
 using Xunit;

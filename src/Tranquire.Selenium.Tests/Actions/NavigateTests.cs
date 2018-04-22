@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Moq;
 using OpenQA.Selenium;
-using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit2;
+using AutoFixture.Idioms;
+using AutoFixture.Xunit2;
 using System;
 using Tranquire.Selenium.Actions;
 using Tranquire.Tests;
@@ -22,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Actions
         public void To_ShouldReturnCorrectValue(Uri uri)
         {
             var actual = Navigate.To(uri);
-            actual.ShouldBeEquivalentTo(new Navigate(uri));
+            actual.Should().BeEquivalentTo(new Navigate(uri));
         }
 
         [Theory, DomainAutoData]

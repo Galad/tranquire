@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Ploeh.AutoFixture.Idioms;
+using AutoFixture.Idioms;
 using System;
 using System.Threading;
 using Tranquire.Reporting;

@@ -35,11 +35,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="1.6.35">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.23">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Selenium.Support" version="3.4.0" />
-    <PackageReference Include="Selenium.WebDriver" version="3.4.0" />
+    <PackageReference Include="Selenium.Support" version="3.11.2" />
+    <PackageReference Include="Selenium.WebDriver" version="3.11.2" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="7.0.1.4822" />
   </ItemGroup>
 

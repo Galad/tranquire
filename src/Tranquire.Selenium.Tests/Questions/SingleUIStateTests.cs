@@ -1,6 +1,6 @@
-﻿using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Kernel;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Kernel;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             get
             {
-                var fixture = new Fixture().Customize(new AutoConfiguredMoqCustomization()).Customize(new DomainCustomization());
+                var fixture = new Fixture().Customize(new AutoMoqCustomization() { ConfigureMembers = true }).Customize(new DomainCustomization());
                 return typeof(SingleUIState<,>).Assembly
                                                .GetTypes()
                                                .Where(t => InheritGenericTypeDefinition(t, typeof(SingleUIState<,>)))

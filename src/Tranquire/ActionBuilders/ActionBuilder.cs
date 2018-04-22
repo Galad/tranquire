@@ -21,9 +21,9 @@ namespace Tranquire.ActionBuilders
         {
         }
 
-        internal ActionBuilder(TAction currentAction, CompositeAction executableAction, string name)
+        internal ActionBuilder(TAction action, CompositeAction executableAction, string name)
         {
-            Action = currentAction ?? throw new ArgumentNullException(nameof(currentAction));
+            Action = action ?? throw new ArgumentNullException(nameof(action));
             _executableAction = executableAction;
             Name = name;
         }
