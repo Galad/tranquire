@@ -32,10 +32,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Reporting\XmlReport.xsl" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Reporting\XmlReport.xsl" />
   </ItemGroup>
 
