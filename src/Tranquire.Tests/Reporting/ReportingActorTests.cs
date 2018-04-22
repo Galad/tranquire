@@ -82,7 +82,9 @@ namespace Tranquire.Tests.Reporting
         public void Sut_AllMethods_ShouldReturnInnerResult(
             Func<ReportingActor, INamed, object> executeAction,
             Func<INamed, Expression<Func<IActor, object>>> expression,
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
             CommandType commandType)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             //arrange                  
             var fixture = CreateFixture();
@@ -249,7 +251,9 @@ namespace Tranquire.Tests.Reporting
         public void Sut_AllMethods_WhenErrorOccurs_ShouldThrow(
           Func<ReportingActor, INamed, object> executeAction,
           Func<INamed, Expression<Func<IActor, object>>> expression,
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
           CommandType commandType)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             //arrange   
             var fixture = CreateFixture();
