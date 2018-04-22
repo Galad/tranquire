@@ -68,7 +68,7 @@ namespace Tranquire.Reporting
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
             Guard.ForNull(question, nameof(question));
-            return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksFor(question), question);
+            return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksFor(question), question, CommandType.Question);
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -86,7 +86,7 @@ namespace Tranquire.Reporting
             {
                 return Actor.Execute(action);
             }
-            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action);
+            return ExecuteNotifyingAction(() => CanNotify.Action(action), () => Actor.Execute(action), action, CommandType.Action);
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -99,14 +99,18 @@ namespace Tranquire.Reporting
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        private TResult ExecuteNotifyingAction<TResult>(Func<bool> canNotify, Func<TResult> executeAction, INamed action)
+        private TResult ExecuteNotifyingAction<TResult>(
+            Func<bool> canNotify, 
+            Func<TResult> executeAction, 
+            INamed action, 
+            CommandType commandType)
         {
             if (!canNotify())
             {
                 return executeAction();
             }
             _depth++;
-            Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent()));
+            Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)));
             try
             {
                 var result = MeasureTime.Measure(executeAction);

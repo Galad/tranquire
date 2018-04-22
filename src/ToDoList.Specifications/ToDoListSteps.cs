@@ -6,6 +6,7 @@ using System.Text;
 using TechTalk.SpecFlow;
 using ToDoList.Automation.Actions;
 using Tranquire;
+using Tranquire.Reporting;
 using Tranquire.Selenium;
 
 namespace ToDoList.Specifications
@@ -30,8 +31,11 @@ namespace ToDoList.Specifications
 #else
             var delay = TimeSpan.Zero;
 #endif
+            var xmlDocumentReporting = new XmlDocumentObserver();
+            Context.Set(xmlDocumentReporting);
             var actor = new Actor("John")
-                            .WithReporting(new InMemoryObserver(_reportingStringBuilder))
+                            //.WithReporting(new InMemoryObserver(_reportingStringBuilder))
+                            .WithReporting(xmlDocumentReporting)
                             .TakeScreenshots(@"C:\Enablon\Screenshots", screenshotName)
                             .HighlightTargets()
                             .SlowSelenium(delay)
@@ -48,6 +52,9 @@ namespace ToDoList.Specifications
             Context.Get<ChromeDriver>().Dispose();
             //Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
             Debug.WriteLine(_reportingStringBuilder.ToString());
+            var xmlDocument = Context.Get<XmlDocumentObserver>();
+            Debug.WriteLine(xmlDocument.GetXmlDocument().ToString());
+            Debug.WriteLine(xmlDocument.GetHtmlDocument().ToString());
         }
 
         [Given(@"I have an empty to-do list")]

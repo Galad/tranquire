@@ -32,6 +32,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Reporting\XmlReport.xsl" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.23">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
