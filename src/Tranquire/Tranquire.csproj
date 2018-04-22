@@ -21,11 +21,6 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard1.0' ">    
-    <!-- Prevent analyzing this project multiple times, for each target framework. We only analyze it for .NET standard. Otherwise the scanner would ignore it -->
-    <SonarQubeExclude>true</SonarQubeExclude>    
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
