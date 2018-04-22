@@ -99,14 +99,18 @@ namespace Tranquire.Reporting
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        private TResult ExecuteNotifyingAction<TResult>(Func<bool> canNotify, Func<TResult> executeAction, INamed action, CommandType commandType)
+        private TResult ExecuteNotifyingAction<TResult>(
+            Func<bool> canNotify, 
+            Func<TResult> executeAction, 
+            INamed action, 
+            CommandType commandType)
         {
             if (!canNotify())
             {
                 return executeAction();
             }
             _depth++;
-            Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent(commandType)));
+            Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)));
             try
             {
                 var result = MeasureTime.Measure(executeAction);

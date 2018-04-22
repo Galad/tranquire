@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -28,20 +29,30 @@ namespace Tranquire.Reporting
             }
         }
 
-        public XmlDocumentObserver()
-        {
-        }
-
+        /// <inheritsdoc />
         public void OnCompleted()
         {
+            // not used
         }
 
+        /// <inheritsdoc />
         public void OnError(Exception error)
         {
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
+            // not used
         }
 
+        /// <inheritsdoc />
         public void OnNext(ActionNotification value)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             switch (value.Content.NotificationContentType)
             {
                 case ActionNotificationContentType.BeforeActionExecution:
@@ -53,29 +64,27 @@ namespace Tranquire.Reporting
                 case ActionNotificationContentType.ExecutionError:
                     HandleExecutionErrorNotificationContent(value.Content as ExecutionErrorNotificationContent);
                     break;
-                default:
-                    break;
             }
         }
 
         private void HandleExecutionErrorNotificationContent(ExecutionErrorNotificationContent content)
         {
             var item = _items.Pop();
-            item.EndDate = DateTimeOffset.Now;
+            item.EndDate = item.StartDate + content.Duration;
             item.Error = content.Exception;
         }
 
         private void HandleAfterActionExecution(AfterActionNotificationContent content)
         {
             var item = _items.Pop();
-            item.EndDate = item.StartDate.Add(content.Duration);            
+            item.EndDate = item.StartDate + content.Duration;
         }
 
         private void HandleBeforeActionExecution(BeforeActionNotificationContent beforeActionNotificationContent, INamed named)
         {
             var currentItem = CurrentItem;
             var newItem = CreateItem(beforeActionNotificationContent.CommandType);
-            newItem.StartDate = DateTimeOffset.Now;
+            newItem.StartDate = beforeActionNotificationContent.StartDate;
             newItem.Name = named.Name;
             currentItem.Children.Add(newItem);
             _items.Push(newItem);
@@ -87,22 +96,24 @@ namespace Tranquire.Reporting
             {
                 case CommandType.Action:
                     return new TranquireXmlReportAction();
-                case CommandType.Question:
-                    return new TranquireXmlReportQuestion();
                 default:
-                    throw new NotSupportedException("The command type " + commandType.ToString() + " is not supported");
+                    return new TranquireXmlReportQuestion();
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="XDocument"/> instance that contains the test report in a XML format.
+        /// </summary>
+        /// <returns></returns>
         public XDocument GetXmlDocument()
         {
             if (_items.Count > 1)
             {
                 throw new InvalidOperationException("The run did not finish, the XML document cannot be created");
             }
-            
+
             var item = CurrentItem;
-            var document = new XDocument(GetElement(item));            
+            var document = new XDocument(GetElement(item));
             return document;
         }
 
@@ -110,26 +121,23 @@ namespace Tranquire.Reporting
         {
             string elementName()
             {
-                if(item is TranquireXmlReportDocument)
+                if (item is TranquireXmlReportDocument)
                 {
                     return "root";
                 }
-                if(item is TranquireXmlReportAction)
+                if (item is TranquireXmlReportAction)
                 {
                     return "action";
                 }
-                if (item is TranquireXmlReportQuestion)
-                {
-                    return "question";
-                }
-                return "";
+                return "question";
             }
             var element = new XElement(
                 elementName(),
-                new XAttribute("start-date", item.StartDate),
-                new XAttribute("end-date", item.EndDate),
+                new XAttribute("start-date", item.StartDate.ToString(CultureInfo.InvariantCulture)),
+                new XAttribute("end-date", item.EndDate.ToString(CultureInfo.InvariantCulture)),
                 new XAttribute("duration", (int)item.Duration.TotalMilliseconds),
                 new XAttribute("name", item.Name),
+                new XAttribute("has-error", item.HasError),
                 item.Children.Select(GetElement)
                 );
             return element;

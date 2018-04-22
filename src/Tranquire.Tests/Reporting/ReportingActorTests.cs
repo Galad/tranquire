@@ -191,7 +191,7 @@ namespace Tranquire.Tests.Reporting
             executeAction(sut, action);
             //assert
             var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent(commandType)),
+                new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)),
                 new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -233,7 +233,7 @@ namespace Tranquire.Tests.Reporting
             //act
             executeAction(sut, actions[0]);
             //assert
-            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(commandType);
+            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType);
             var expected = new[]{
                 new ActionNotification(actions[0], 1, before()),
                 new ActionNotification(actions[1], 2, before()),
@@ -294,7 +294,7 @@ namespace Tranquire.Tests.Reporting
             catch { }
             //assert
             var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent(commandType)),
+                new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)),
                 new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -327,9 +327,9 @@ namespace Tranquire.Tests.Reporting
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
                                .Returns((Func<object> f) => Tuple.Create(TimeSpan.Zero, f()));
             //act
-            new Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
+            new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
-            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(commandType);
+            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType);
             var expected = new[]{
                 new ActionNotification(actions[0], 1, before()),
                 new ActionNotification(actions[1], 2, before()),

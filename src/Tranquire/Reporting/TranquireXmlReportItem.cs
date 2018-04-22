@@ -10,7 +10,8 @@ namespace Tranquire.Reporting
         public TimeSpan Duration => EndDate.Subtract(StartDate);
         public string Name { get; set; }
         public Exception Error { get; set; }
-        public List<TranquireXmlReportItem> Children { get; set; } = new List<TranquireXmlReportItem>();
+        public bool HasError => Error != null;
+        public List<TranquireXmlReportItem> Children { get; } = new List<TranquireXmlReportItem>();
     }
 
     internal class TranquireXmlReportDocument : TranquireXmlReportItem { }

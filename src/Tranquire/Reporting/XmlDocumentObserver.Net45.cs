@@ -11,6 +11,10 @@ namespace Tranquire.Reporting
 {
     partial class XmlDocumentObserver
     {
+        /// <summary>
+        /// Returns a HTML document that contains the report.
+        /// </summary>
+        /// <returns></returns>
         public string GetHtmlDocument()
         {
             var xmlDocument = GetXmlDocument();
@@ -20,7 +24,8 @@ namespace Tranquire.Reporting
             var result = new StringBuilder();
             var xmlWriter = XmlWriter.Create(result);
             xslt.Transform(xmlDocument.CreateNavigator(), xmlWriter);
-            return result.ToString();
+            return result.ToString()
+                         .Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<!DOCTYPE html>");
         }
     }
 }
