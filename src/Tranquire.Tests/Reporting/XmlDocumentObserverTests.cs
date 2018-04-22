@@ -267,9 +267,12 @@ namespace Tranquire.Tests.Reporting
         [Theory, DomainAutoData]
         public void GetHtmlDocument_ShouldReturnCorrectValue(
             XmlDocumentObserver sut,
-            (INamed action, CommandType commandType)[] actions)
+            IFixture fixture)
         {
             // arrange
+            var actions = fixture.CreateMany<INamed>(6)
+                                 .Select((action, i) => (action, commandType: i % 2 == 0 ? CommandType.Action : CommandType.Question))
+                                 .ToArray();
             var notifications = actions
                                .Select((a, i) => (a.action, a.commandType, i))
                                .Reverse()
@@ -289,7 +292,32 @@ namespace Tranquire.Tests.Reporting
             actual.Should()
                   .ContainAll(notifications.Select(a => a.Action.Name))
                   .And.StartWith("<!DOCTYPE html>");
-            
+            var questionCount = actual.Split(new[] { "class=\"question\"" }, StringSplitOptions.None).Length - 1;
+            var expectedQuestionCount = actions.Count(a => a.commandType == CommandType.Question);
+            questionCount.Should().Be(expectedQuestionCount, "Number of questions");
+            var actionCount = actual.Split(new[] { "class=\"action\"" }, StringSplitOptions.None).Length - 1;
+            var expectedActionCount = actions.Count(a => a.commandType == CommandType.Action);
+            actionCount.Should().Be(expectedActionCount, "Number of actions");
+        }
+
+        [Theory]
+        [DomainInlineAutoData(CommandType.Action, "action")]
+        [DomainInlineAutoData(CommandType.Question, "question")]
+        public void GetHtmlDocument_WithError_ShouldReturnCorrectValue(
+            CommandType commandType,
+            string className,
+            XmlDocumentObserver sut, 
+            INamed action,
+            Exception exception)
+        {
+            //arrange
+            sut.OnNext(new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)));
+            sut.OnNext(new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, TimeSpan.FromSeconds(1))));
+            //act
+            var actual = sut.GetHtmlDocument();
+            //assert
+            var errorCount = actual.Split(new[] { $"class=\"{className} error\"" }, StringSplitOptions.None).Length - 1;
+            errorCount.Should().Be(1);
         }
     }
 }
