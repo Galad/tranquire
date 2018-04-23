@@ -39,7 +39,9 @@
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.23">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.0.1.4822" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.0.1.4822">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="System.Collections.Immutable" version="1.4.0" />
   </ItemGroup>
 </Project>
