@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using TechTalk.SpecFlow;
 using ToDoList.Automation.Actions;
@@ -36,7 +38,7 @@ namespace ToDoList.Specifications
             var actor = new Actor("John")
                             //.WithReporting(new InMemoryObserver(_reportingStringBuilder))
                             .WithReporting(xmlDocumentReporting)
-                            .TakeScreenshots(@"C:\Enablon\Screenshots", screenshotName)
+                            .TakeScreenshots(Path.Combine(GetTestDirectory(), "Screenshots"), screenshotName)
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(WebBrowser.With(driver));
@@ -44,6 +46,13 @@ namespace ToDoList.Specifications
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             actor.Given(Open.TheApplication());
+        }
+
+        private static string GetTestDirectory()
+        {
+            var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
+            return Path.GetDirectoryName(codeBasePath);
         }
 
         [AfterScenario]
