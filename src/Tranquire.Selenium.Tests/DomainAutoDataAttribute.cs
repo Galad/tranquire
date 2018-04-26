@@ -54,6 +54,7 @@ namespace Tranquire.Tests
             });
             fixture.Register<Func<IActor, IActor>>(() => a => a);
             new ConstructorCustomization(typeof(Actor), new ActorConstructorQuery()).Customize(fixture);
+            fixture.Register(() => Unit.Default);
         }
 
         private class ActorConstructorQuery : IMethodQuery

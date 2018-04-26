@@ -3,6 +3,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using TechTalk.SpecFlow;
@@ -10,6 +11,7 @@ using ToDoList.Automation.Actions;
 using Tranquire;
 using Tranquire.Reporting;
 using Tranquire.Selenium;
+using Tranquire.Selenium.Extensions;
 
 namespace ToDoList.Specifications
 {
@@ -17,6 +19,7 @@ namespace ToDoList.Specifications
     public class ToDoListSteps : StepsBase
     {
         private readonly StringBuilder _reportingStringBuilder;
+        private IObserver<ScreenshotInfo> _observer;
 
         public ToDoListSteps(ScenarioContext context) : base(context)
         {
@@ -26,7 +29,12 @@ namespace ToDoList.Specifications
         [BeforeScenario]
         public void Before()
         {
-            var driver = new ChromeDriver();
+            var options = new ChromeOptions();
+            if (IsLiveUnitTesting)
+            {
+                options.AddArguments("--headless", "--disable-gpu");
+            }
+            var driver = new ChromeDriver(options);
             var screenshotName = Context.ScenarioInfo.Title;
 #if DEBUG
             var delay = TimeSpan.FromSeconds(1);
@@ -35,18 +43,21 @@ namespace ToDoList.Specifications
 #endif
             var xmlDocumentReporting = new XmlDocumentObserver();
             Context.Set(xmlDocumentReporting);
+            _observer = new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots"));
             var actor = new Actor("John")
                             //.WithReporting(new InMemoryObserver(_reportingStringBuilder))
                             .WithReporting(xmlDocumentReporting)
-                            .TakeScreenshots(Path.Combine(GetTestDirectory(), "Screenshots"), screenshotName)
+                            .TakeScreenshots(screenshotName, _observer)
                             .HighlightTargets()
                             .SlowSelenium(delay)
-                            .CanUse(WebBrowser.With(driver));
+                            .CanUse(WebBrowser.With(driver));            
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             actor.Given(Open.TheApplication());
         }
+        public static bool IsLiveUnitTesting => AppDomain.CurrentDomain.GetAssemblies()
+            .Any(a => a.GetName().Name == "Microsoft.CodeAnalysis.LiveUnitTesting.Runtime");
 
         private static string GetTestDirectory()
         {
@@ -58,6 +69,7 @@ namespace ToDoList.Specifications
         [AfterScenario]
         public void After()
         {
+            _observer.OnCompleted();
             Context.Get<ChromeDriver>().Dispose();
             //Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
             Debug.WriteLine(_reportingStringBuilder.ToString());

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Tranquire.Selenium.Extensions;
 
 namespace Tranquire.Selenium
 {
@@ -46,26 +47,38 @@ namespace Tranquire.Selenium
         /// <returns>An new actor taking screenshots</returns>
         public static Actor TakeScreenshots(this Actor actor, string directory, string screenshotNameOrFormat)
         {
-            Guard.ForNull(actor, nameof(actor));
-            Guard.ForNull(directory, nameof(directory));
+            return actor.TakeScreenshots(screenshotNameOrFormat, new SaveScreenshotsToFileOnNext(directory));
+        }
+
+        public static Actor TakeScreenshots(
+            this Actor actor,
+            string screenshotNameOrFormat,
+            IObserver<ScreenshotInfo> screenshotInfoObserver)
+        {
+            if (screenshotInfoObserver == null)
+            {
+                throw new ArgumentNullException(nameof(screenshotInfoObserver));
+            }
+
+            Guard.ForNull(actor, nameof(actor));            
             Guard.ForNull(screenshotNameOrFormat, nameof(screenshotNameOrFormat));
             var id = 0;
 
             string screenshotFormat;
             if (string.Format(screenshotNameOrFormat, 1) == screenshotNameOrFormat)
             {
-                screenshotFormat = screenshotNameOrFormat + "_" + "{0:00}"; 
+                screenshotFormat = screenshotNameOrFormat + "_" + "{0:00}";
             }
             else
             {
                 screenshotFormat = screenshotNameOrFormat;
             }
-
+                        
             string nextScreenshotName()
             {
                 return string.Format(CultureInfo.InvariantCulture, screenshotFormat, Interlocked.Increment(ref id));
-            }
-            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), directory, nextScreenshotName));
-        }
+            }       
+            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), nextScreenshotName, screenshotInfoObserver));
+        }        
     }
 }
