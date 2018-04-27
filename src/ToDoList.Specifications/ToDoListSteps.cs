@@ -43,7 +43,7 @@ namespace ToDoList.Specifications
 #endif
             var xmlDocumentReporting = new XmlDocumentObserver();
             Context.Set(xmlDocumentReporting);            
-            _observer = new SaveScreenshotsToFileOnNext(Path.Combine(GetTestDirectory(), "Screenshots"));
+            _observer = new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots"));
             var actor = new Actor("John")
                             .WithReporting(xmlDocumentReporting)
                             .TakeScreenshots(screenshotName, _observer)

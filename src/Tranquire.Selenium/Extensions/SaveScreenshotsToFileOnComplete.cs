@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Tranquire.Selenium.Extensions;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Extensions
 {
     public class SaveScreenshotsToFileOnComplete : IObserver<ScreenshotInfo>
     {

@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using Tranquire.Selenium.Extensions;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium.Extensions
 {
     public class SaveScreenshotsToFileOnNext : IObserver<ScreenshotInfo>
     {
@@ -29,6 +29,10 @@ namespace Tranquire.Selenium
 
         public void OnNext(ScreenshotInfo value)
         {
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
             var filename = Path.Combine(directory, value.FileName + ".jpg");
             value.Screenshot.SaveAsFile(filename, ScreenshotImageFormat.Jpeg);
         }
