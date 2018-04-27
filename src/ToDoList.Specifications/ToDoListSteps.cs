@@ -42,15 +42,14 @@ namespace ToDoList.Specifications
             var delay = TimeSpan.Zero;
 #endif
             var xmlDocumentReporting = new XmlDocumentObserver();
-            Context.Set(xmlDocumentReporting);
-            _observer = new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots"));
+            Context.Set(xmlDocumentReporting);            
+            _observer = new SaveScreenshotsToFileOnNext(Path.Combine(GetTestDirectory(), "Screenshots"));
             var actor = new Actor("John")
-                            //.WithReporting(new InMemoryObserver(_reportingStringBuilder))
                             .WithReporting(xmlDocumentReporting)
                             .TakeScreenshots(screenshotName, _observer)
                             .HighlightTargets()
                             .SlowSelenium(delay)
-                            .CanUse(WebBrowser.With(driver));            
+                            .CanUse(WebBrowser.With(driver));
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
@@ -75,7 +74,7 @@ namespace ToDoList.Specifications
             Debug.WriteLine(_reportingStringBuilder.ToString());
             var xmlDocument = Context.Get<XmlDocumentObserver>();
             Debug.WriteLine(xmlDocument.GetXmlDocument().ToString());
-            Debug.WriteLine(xmlDocument.GetHtmlDocument().ToString());
+            //Debug.WriteLine(xmlDocument.GetHtmlDocument().ToString());            
         }
 
         [Given(@"I have an empty to-do list")]

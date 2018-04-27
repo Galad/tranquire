@@ -19,6 +19,10 @@ namespace Tranquire.Selenium
 
         public void OnCompleted()
         {
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
             while (_queue.Count > 0)
             {
                 var screenshot = _queue.Dequeue();
