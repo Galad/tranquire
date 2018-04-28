@@ -69,12 +69,10 @@ namespace ToDoList.Specifications
         public void After()
         {
             _observer.OnCompleted();
-            Context.Get<ChromeDriver>().Dispose();
-            //Context.Get<ITestOutputHelper>().WriteLine(_reportingStringBuilder.ToString());
+            Context.Get<ChromeDriver>().Dispose();            
             Debug.WriteLine(_reportingStringBuilder.ToString());
             var xmlDocument = Context.Get<XmlDocumentObserver>();
-            Debug.WriteLine(xmlDocument.GetXmlDocument().ToString());
-            //Debug.WriteLine(xmlDocument.GetHtmlDocument().ToString());            
+            Debug.WriteLine(xmlDocument.GetXmlDocument().ToString());            
         }
 
         [Given(@"I have an empty to-do list")]
