@@ -1,6 +1,9 @@
 tranquire
 =========
 
+[![Build status](https://ci.appveyor.com/api/projects/status/qmv6y5576jyvra1q/branch/master?svg=true)](https://ci.appveyor.com/project/Galad/tranquire/branch/master)
+[![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=Tranquire&metric=alert_status)](https://sonarcloud.io/dashboard?id=Tranquire)
+
 Introduction
 ------------
 Tranquire brings the [screenplay pattern](http://www.infoq.com/articles/Beyond-Page-Objects-Test-Automation-Serenity-Screenplay) to .NET. It is highly inspired by the implementation of [Serenity BDD](http://www.serenity-bdd.info). You can refer to the Serenity documentation to understand how Tranquire works.
@@ -27,6 +30,3 @@ The solution is composed by Tranquire as well as test projects.
 ### Tests projects
 * Tranquire.Tests
 * Tranquire.Selenium.Tests
-
-[![Build status](https://ci.appveyor.com/api/projects/status/qmv6y5576jyvra1q/branch/master?svg=true)](https://ci.appveyor.com/project/Galad/tranquire/branch/master)
-[![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=Tranquire&metric=alert_status)](https://sonarcloud.io/dashboard?id=Tranquire)
