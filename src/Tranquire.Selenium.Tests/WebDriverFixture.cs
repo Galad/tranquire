@@ -4,6 +4,7 @@ using Microsoft.Owin.StaticFiles;
 using OpenQA.Selenium.Chrome;
 using Owin;
 using System;
+using System.Linq;
 using System.Threading;
 
 namespace Tranquire.Selenium.Tests
@@ -20,11 +21,19 @@ namespace Tranquire.Selenium.Tests
         {
             _port = Interlocked.Increment(ref Port);
             _host = WebApp.Start(RootUrl, BuildHost);
-            WebDriver = new ChromeDriver();
+            var options = new ChromeOptions();
+            if (IsLiveUnitTesting)
+            {                
+                options.AddArguments("--headless", "--disable-gpu");
+            }
+            WebDriver = new ChromeDriver(options);
             Actor = (Actor)(new Actor("James").CanUse(WebBrowser.With(WebDriver)));
         }
 
         public string RootUrl => "http://localhost:" + _port.ToString();
+
+        public static bool IsLiveUnitTesting => AppDomain.CurrentDomain.GetAssemblies()
+            .Any(a => a.GetName().Name == "Microsoft.CodeAnalysis.LiveUnitTesting.Runtime");
 
         public void NavigateTo(string localFileName)
         {

@@ -113,11 +113,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AddToDoItems.feature.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddToDoItems.feature</DependentUpon>
+    </Compile>
+    <Compile Update="RemainingCount.feature.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RemainingCount.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="AddToDoItems.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AddToDoItems.feature.cs</LastGenOutput>
     </None>
     <None Update="RemainingCount.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>RemainingCount.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
 </Project>

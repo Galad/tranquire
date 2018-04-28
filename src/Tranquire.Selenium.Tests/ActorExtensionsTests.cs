@@ -5,6 +5,7 @@ using Tranquire.Tests;
 using Xunit;
 using System.Linq;
 using System;
+using Tranquire.Selenium.Extensions;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -26,11 +27,13 @@ namespace Tranquire.Selenium.Tests
         public void TakeScreenshots_ShouldDecorateActor(
             [Modest]Actor actor,
             TakeScreenshot expected,
-            string name)
+            string name,
+            string directory)
         {
-            //arrange
+            //arrange       
+            expected = new TakeScreenshot(expected.Actor, expected.NextScreenshotName, new SaveScreenshotsToFileOnNext(directory));
             //act
-            var actual = ActorExtensions.TakeScreenshots(actor, expected.Directory, name).InnerActorBuilder(expected.Actor);
+            var actual = ActorExtensions.TakeScreenshots(actor, directory, name).InnerActorBuilder(expected.Actor);
             //assert
             actual.Should().BeOfType<TakeScreenshot>().Which.Should().BeEquivalentTo(expected, o => o.Excluding(t => t.NextScreenshotName));
         }

@@ -28,7 +28,8 @@ namespace Tranquire.Tests
                 return;
             }
 
-            var values = parameters.Select(p => new SpecimenContext(SpecimenBuilder).Resolve(p)).ToArray();
+            var values = parameters.Select(p => p.IsOut ? null : new SpecimenContext(SpecimenBuilder).Resolve(p))
+                                   .ToArray();
             var expected = (Actor)values[0];
             var actual = (Actor)methodInfo.Invoke(null, values);
             actual.Should().BeEquivalentTo(expected, o => o.Excluding(a => a.InnerActorBuilder), "The method {0} did not return a correct actor", methodInfo.Name);
