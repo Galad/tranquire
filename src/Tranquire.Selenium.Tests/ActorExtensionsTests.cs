@@ -26,7 +26,6 @@ namespace Tranquire.Selenium.Tests
         [Theory, DomainAutoData]
         public void TakeScreenshots_ShouldDecorateActor(
             [Modest]Actor actor,
-            [Frozen]IObserver<ScreenshotInfo> observer,
             TakeScreenshot expected,
             string name,
             string directory)

@@ -33,8 +33,7 @@ namespace Tranquire.Selenium
             Guard.ForNull(actor, nameof(actor));
             return new Actor(actor.Name, actor.Abilities, a => new SlowSelenium(actor.InnerActorBuilder(a), delay));
         }
-
-        //private static readonly Regex hasFormatItem = new Regex("\{")
+                
         /// <summary>
         /// Add the ability to take screenshot on each action
         /// </summary>
@@ -50,6 +49,17 @@ namespace Tranquire.Selenium
             return actor.TakeScreenshots(screenshotNameOrFormat, new SaveScreenshotsToFileOnNext(directory));
         }
 
+        /// <summary>
+        /// Add the ability to take screenshot on each action. The screenshots are saved using the given <see cref="ScreenshotInfo"/> observer.
+        /// </summary>
+        /// <param name="actor">The actor</param>        
+        /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
+        /// <param name="screenshotInfoObserver">An observer that is notify that screenshots were taken, and can be used to save them on the disk.
+        /// Use <see cref="SaveScreenshotsToFileOnComplete"/> or <see cref="SaveScreenshotsToFileOnNext"/></param>
+        /// <example>
+        /// actor.TakeScreenshots("Screenhshot_{0:000}", new SaveScreenshotsToFileOnComplete(@"C:\tests\screeshots"));
+        /// </example>
+        /// <returns>An new actor taking screenshots</returns>
         public static Actor TakeScreenshots(
             this Actor actor,
             string screenshotNameOrFormat,

@@ -45,8 +45,7 @@ namespace Tranquire.Selenium.Extensions
                 {                    
                     var name = takeScreenshot.NextScreenshotName();
                     var screenshot = ((ITakesScreenshot)webBrowser.Driver).GetScreenshot();
-                    takeScreenshot.ScreenshotObserver.OnNext(new ScreenshotInfo(screenshot, name));
-                    //.SaveAsFile(Path.Combine(directory, $"{name}.jpg"), ScreenshotImageFormat.Jpeg);
+                    takeScreenshot.ScreenshotObserver.OnNext(new ScreenshotInfo(screenshot, name));                    
                 }
             }
         }
