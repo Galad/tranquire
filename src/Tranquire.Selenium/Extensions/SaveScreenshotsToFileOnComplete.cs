@@ -11,8 +11,7 @@ namespace Tranquire.Selenium.Extensions
     /// </summary>
     public class SaveScreenshotsToFileOnComplete : IObserver<ScreenshotInfo>
     {
-        private readonly Queue<ScreenshotInfo> _queue;
-        private readonly string _directory;
+        private readonly List<ScreenshotInfo> screenshots;
 
         /// <summary>
         /// Creates a new instance of <see cref="SaveScreenshotsToFileOnComplete"/>
@@ -20,21 +19,30 @@ namespace Tranquire.Selenium.Extensions
         /// <param name="directory">The directory where the screenshots will be saved</param>
         public SaveScreenshotsToFileOnComplete(string directory)
         {
-            _queue = new Queue<ScreenshotInfo>();
-            _directory = directory;
+            if (string.IsNullOrEmpty(directory))
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            screenshots = new List<ScreenshotInfo>();
+            Directory = directory;
         }
+
+        /// <summary>
+        /// Gets the directory
+        /// </summary>
+        public string Directory { get; }
 
         /// <inheritsdoc />
         public void OnCompleted()
         {
-            if (!Directory.Exists(_directory))
+            if (!System.IO.Directory.Exists(Directory))
             {
-                Directory.CreateDirectory(_directory);
+                System.IO.Directory.CreateDirectory(Directory);
             }
-            while (_queue.Count > 0)
+            foreach(var screenshot in screenshots)
             {
-                var screenshot = _queue.Dequeue();
-                var filename = Path.Combine(_directory, screenshot.FileName + ".jpg");
+                var filename = Path.Combine(Directory, screenshot.FileName + ".jpg");
                 screenshot.Screenshot.SaveAsFile(filename, ScreenshotImageFormat.Jpeg);
             }
         }
@@ -42,13 +50,21 @@ namespace Tranquire.Selenium.Extensions
         /// <inheritsdoc />
         public void OnError(Exception error)
         {
-            // Not used
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
         }
 
         /// <inheritsdoc />
         public void OnNext(ScreenshotInfo value)
         {
-            _queue.Enqueue(value);
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            screenshots.Add(value);
         }
     }
 }
