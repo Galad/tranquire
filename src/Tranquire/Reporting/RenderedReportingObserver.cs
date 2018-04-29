@@ -13,7 +13,11 @@ namespace Tranquire.Reporting
         /// Gets the observer
         /// </summary>
         public IObserver<string> Observer { get; }
-        private readonly Func<ActionNotification, string> _renderer;
+               
+        /// <summary>
+        /// Gets the rendered
+        /// </summary>
+        public Func<ActionNotification, string> Renderer { get; }
 
         /// <summary>
         /// Creates a new instance of <see cref="RenderedReportingObserver"/>
@@ -24,29 +28,50 @@ namespace Tranquire.Reporting
             IObserver<string> observer,
             Func<ActionNotification, string> renderer)
         {
-            Guard.ForNull(observer, nameof(observer));
-            Guard.ForNull(renderer, nameof(renderer));
-            Observer = observer;
-            _renderer = renderer;
+            Observer = observer ?? throw new ArgumentNullException(nameof(observer));
+            Renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
         }
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member        
+
+        /// <inheritsdoc />
         public void OnCompleted()
         {
             Observer.OnCompleted();
         }
 
+        /// <inheritsdoc />
         public void OnError(Exception error)
         {
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
+
             Observer.OnError(error);
         }
 
+        /// <inheritsdoc />
         public void OnNext(ActionNotification value)
         {
-            Observer.OnNext(_renderer(value));
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Observer.OnNext(Renderer(value));
         }
 
+        /// <summary>
+        /// Gets a default renderer
+        /// </summary>
+        /// <param name="notification"></param>
+        /// <returns></returns>
         public static string DefaultRenderer(ActionNotification notification)
         {
+            if (notification == null)
+            {
+                throw new ArgumentNullException(nameof(notification));
+            }
+            
             switch (notification.Content.NotificationContentType)
             {
                 case ActionNotificationContentType.BeforeActionExecution:
@@ -87,6 +112,5 @@ namespace Tranquire.Reporting
             }
             return new string(Enumerable.Repeat(' ', (depth - 1) * 3).ToArray()) + "|--- ";
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
