@@ -10,7 +10,6 @@ namespace Tranquire.Selenium.Extensions
     /// </summary>
     public class SaveScreenshotsToFileOnNext : IObserver<ScreenshotInfo>
     {
-        private readonly string _directory;
 
         /// <summary>
         /// Creates a new instance of <see cref="SaveScreenshotsToFileOnNext"/>
@@ -23,8 +22,13 @@ namespace Tranquire.Selenium.Extensions
                 throw new ArgumentNullException(nameof(directory));
             }
 
-            _directory = directory;
+            Directory = directory;
         }
+
+        /// <summary>
+        /// Gets the directory
+        /// </summary>
+        public string Directory { get; }
 
         /// <inheritsdoc />
         public void OnCompleted()
@@ -35,17 +39,26 @@ namespace Tranquire.Selenium.Extensions
         /// <inheritsdoc />
         public void OnError(Exception error)
         {
+            if (error == null)
+            {
+                throw new ArgumentNullException(nameof(error));
+            }
             // Not used
         }
 
         /// <inheritsdoc />
         public void OnNext(ScreenshotInfo value)
         {
-            if (!Directory.Exists(_directory))
+            if (value == null)
             {
-                Directory.CreateDirectory(_directory);
+                throw new ArgumentNullException(nameof(value));
             }
-            var filename = Path.Combine(_directory, value.FileName + ".jpg");
+
+            if (!System.IO.Directory.Exists(Directory))
+            {
+                System.IO.Directory.CreateDirectory(Directory);
+            }
+            var filename = Path.Combine(Directory, value.FileName + ".jpg");
             value.Screenshot.SaveAsFile(filename, ScreenshotImageFormat.Jpeg);
         }
     }
