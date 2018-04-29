@@ -41,6 +41,10 @@ namespace ToDoList.Specifications
 #else
             var delay = TimeSpan.Zero;
 #endif
+            if (IsLiveUnitTesting)
+            {
+                delay = TimeSpan.Zero;
+            }
             var xmlDocumentReporting = new XmlDocumentObserver();
             Context.Set(xmlDocumentReporting);            
             _observer = new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots"));
