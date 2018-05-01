@@ -1,7 +1,5 @@
 ﻿#if NET45
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tranquire.Reporting
 {
@@ -15,7 +13,7 @@ namespace Tranquire.Reporting
         {
             Console.WriteLine("Completed");
         }
-        
+
         /// <inheritdoc />
         public void OnError(Exception error)
         {
@@ -35,7 +33,7 @@ namespace Tranquire.Reporting
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Console.WriteLine(value);
         }
     }

@@ -1,8 +1,7 @@
-﻿using System;
-using Xunit;
-using AutoFixture.Idioms;
+﻿using AutoFixture.Idioms;
+using System;
 using System.Text;
-using System.Diagnostics;
+using Xunit;
 
 namespace Tranquire.Tests.Reporting
 {

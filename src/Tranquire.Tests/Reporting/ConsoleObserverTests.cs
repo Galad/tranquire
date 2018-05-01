@@ -1,9 +1,7 @@
-using Moq;
 using System;
-using Tranquire.Reporting;
-using AutoFixture;
 using System.IO;
 using System.Text;
+using Tranquire.Reporting;
 
 namespace Tranquire.Tests.Reporting
 {
