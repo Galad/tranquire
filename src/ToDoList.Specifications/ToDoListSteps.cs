@@ -46,8 +46,11 @@ namespace ToDoList.Specifications
                 delay = TimeSpan.Zero;
             }
             var xmlDocumentReporting = new XmlDocumentObserver();
-            Context.Set(xmlDocumentReporting);            
-            _observer = new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots"));
+            Context.Set(xmlDocumentReporting);
+            _observer = new CompositeObserver<ScreenshotInfo>(
+                new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots")),
+                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentReporting)
+                );
             var actor = new Actor("John")
                             .WithReporting(xmlDocumentReporting)
                             .TakeScreenshots(screenshotName, _observer)
