@@ -5,45 +5,64 @@
       <head>
         <!--<link rel="stylesheet" type="text/css" href="TestRun.css" />-->
         <style>
-li {
-  background-color: lightgreen;
-  border-radius: 8px;
-  border-left-style: solid;
-  border-width: 2px;
-  padding: 8px;
-  margin-top: 8px;
-  list-style: none;
-}
+          body {
+          padding-bottom: 1000px;
+          }
+          
+          li {
+          background-color: lightgreen;
+          border-radius: 8px;
+          border-left-style: solid;
+          border-width: 2px;
+          padding: 8px;
+          margin-top: 8px;
+          list-style: none;
+          }
 
-li.question {
-  font-weight: bold;
-  background-color: rgba(57, 185, 45, 0.445);
-}
+          li.question {
+          font-weight: bold;
+          background-color: rgba(57, 185, 45, 0.445);
+          }
 
-li.action {
-  font-weight: bold;
-  background-color: rgba(55, 146, 189, 0.411);
-}
+          li.action {
+          font-weight: bold;
+          background-color: rgba(55, 146, 189, 0.411);
+          }
 
-.command-info {
-  padding: 4px;
-  font-size: 12px;
-  background-color: rgba(46, 46, 46, 0.637);
-  color: lightgray;
-  font-weight: normal;
-}
+          .command-info {
+          padding: 4px;
+          font-size: 12px;
+          background-color: rgba(46, 46, 46, 0.637);
+          color: lightgray;
+          font-weight: normal;
+          }
 
-.date {
-  background-color: rgba(255, 174, 0, 0.726);
-  color: black;
-  padding: 2px;
-  font-weight: bold;
-}
+          .date {
+          background-color: rgba(255, 174, 0, 0.726);
+          color: black;
+          padding: 2px;
+          font-weight: bold;
+          }
 
-li.error {
-  border-color: red;
-  border-left-width: 3px;
-}
+          li.error {
+          border-color: red;
+          border-left-width: 3px;
+          }
+
+
+          img.attachment {
+          height: 40px;
+          transition: transform .2s;
+          transform-origin: left top;
+          margin: 6px;
+          border-radius: 2px;
+          }
+
+          img.attachment:hover {
+          transform: scale(20);
+          transform-origin: left top;
+          border-radius: 0px;
+          }
         </style>
       </head>
       <body style="font-family:Arial;font-size:12pt;background-color:#EEEEEE">
@@ -105,9 +124,14 @@ li.error {
       </div>
       <xsl:if test="*">
         <ul>
-          <xsl:apply-templates select="*"/>
+          <xsl:apply-templates select="action | question"/>
+          <xsl:apply-templates select="attachments"/>
         </ul>
       </xsl:if>
     </li>
+  </xsl:template>
+
+  <xsl:template match="attachment">    
+    <img src="{@filepath}" class="attachment" />
   </xsl:template>
 </xsl:stylesheet>

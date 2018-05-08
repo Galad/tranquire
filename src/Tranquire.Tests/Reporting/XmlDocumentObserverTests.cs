@@ -342,6 +342,23 @@ namespace Tranquire.Tests.Reporting
             var errorCount = actual.Split(new[] { $"class=\"{className} error\"" }, StringSplitOptions.None).Length - 1;
             errorCount.Should().Be(1);
         }
+        
+        [Theory]
+        [DomainAutoData]
+        public void GetHtmlDocument_WithAttachments_ShouldContainImgElement(            
+            XmlDocumentObserver sut,
+            INamed named,
+            ActionFileAttachment attachment)
+        {
+            //arrange            
+            sut.OnNext(new ActionNotification(named, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Action)));
+            sut.OnNext(attachment);
+            sut.OnNext(new ActionNotification(named, 1, new AfterActionNotificationContent(TimeSpan.Zero)));
+            //act
+            var actual = sut.GetHtmlDocument();
+            //assert
+            actual.Should().Contain($"<img src=\"{attachment.FilePath}\" class=\"attachment\" />");
+        }
 
         [Theory]
         [DomainInlineAutoData(1)]
