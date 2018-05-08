@@ -12,6 +12,7 @@ namespace Tranquire.Reporting
         public Exception Error { get; set; }
         public bool HasError => Error != null;
         public List<TranquireXmlReportItem> Children { get; } = new List<TranquireXmlReportItem>();
+        public List<ActionFileAttachment> Attachments { get; } = new List<ActionFileAttachment>();
     }
 
     internal class TranquireXmlReportDocument : TranquireXmlReportItem { }
