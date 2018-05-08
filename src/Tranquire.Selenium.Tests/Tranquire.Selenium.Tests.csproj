@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\Tranquire.Tests\IdiomaticAssertionExtensions.cs" Link="IdiomaticAssertionExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Actions.html" />
     <EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
     <EmbeddedResource Include="IFrame.html" />
