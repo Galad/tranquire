@@ -30,6 +30,9 @@ namespace Tranquire.Tests.Reporting
         [XmlElement(typeof(XmlReportAction), ElementName = "action")]
         [XmlElement(typeof(XmlReportQuestion), ElementName = "question")]
         public List<XmlReportItem> Children { get; set; } = new List<XmlReportItem>();
+        [XmlArray("attachments")]
+        [XmlArrayItem("attachment")]
+        public List<XlmActionAttachment> Attachments { get; set; } = new List<XlmActionAttachment>();
     }
 
     [XmlRoot("root")]
@@ -41,12 +44,32 @@ namespace Tranquire.Tests.Reporting
     [XmlType("question")]
     public class XmlReportQuestion : XmlReportItem { }
 
+    public class XlmActionAttachment
+    {
+        [XmlAttribute("filepath")]
+        public string FilePath { get; set; }
+        [XmlAttribute("description")]
+        public string Description { get; set; }
+    }
+
     public class XmlDocumentObserverTests
     {
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
         {
             assertion.Verify(typeof(XmlDocumentObserver));
+        }
+
+        [Theory, DomainAutoData]
+        public void Sut_IsActionNotificationObserver(XmlDocumentObserver sut)
+        {
+            sut.Should().BeAssignableTo<IObserver<ActionNotification>>();
+        }
+
+        [Theory, DomainAutoData]
+        public void Sut_IsActionFileAttachmentObserver(XmlDocumentObserver sut)
+        {
+            sut.Should().BeAssignableTo<IObserver<ActionFileAttachment>>();
         }
 
         public static IEnumerable<object[]> Notifications
@@ -306,7 +329,7 @@ namespace Tranquire.Tests.Reporting
         public void GetHtmlDocument_WithError_ShouldReturnCorrectValue(
             CommandType commandType,
             string className,
-            XmlDocumentObserver sut, 
+            XmlDocumentObserver sut,
             INamed action,
             Exception exception)
         {
@@ -318,6 +341,52 @@ namespace Tranquire.Tests.Reporting
             //assert
             var errorCount = actual.Split(new[] { $"class=\"{className} error\"" }, StringSplitOptions.None).Length - 1;
             errorCount.Should().Be(1);
+        }
+
+        [Theory]
+        [DomainInlineAutoData(1)]
+        [DomainInlineAutoData(5)]
+        public void GetXmlDocument_WithAttachments_ShouldReturnCorrectValue(
+            int count,
+            XmlDocumentObserver sut,
+            INamed named,
+            DateTimeOffset startDate,
+            IFixture fixture
+            )
+        {
+            // arrange
+            var attachments = fixture.CreateMany<ActionFileAttachment>(count).ToArray();
+            sut.OnNext(new ActionNotification(named, 1, new BeforeActionNotificationContent(startDate, CommandType.Action)));
+            // act           
+            foreach (var attachment in attachments)
+            {
+                sut.OnNext(attachment);
+            }
+            sut.OnNext(new ActionNotification(named, 1, new AfterActionNotificationContent(TimeSpan.Zero)));
+            // assert
+            var expected = new XmlReportRoot()
+            {
+                Name = "Test",
+                Children = new List<XmlReportItem>()
+                            {
+                    new XmlReportAction()
+                    {
+                        Name = named.Name,
+                        Duration = 0,
+                        StartDate = startDate.ToString(CultureInfo.InvariantCulture),
+                        EndDate = startDate.ToString(CultureInfo.InvariantCulture),
+                        HasError = false,
+                        Attachments = attachments.Select(attachment =>
+                            new XlmActionAttachment()
+                            {
+                                Description = attachment.Description,
+                                FilePath = attachment.FilePath,
+                            }).ToList()
+                    }
+                }
+            };
+            var actual = DeserializeXmlDocument(sut.GetXmlDocument());
+            AssertRootAreEqual(expected, actual);
         }
     }
 }
