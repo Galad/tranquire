@@ -9,7 +9,7 @@ namespace Tranquire.Reporting
     /// <summary>
     /// A <see cref="IObserver{ActionNotification}"/> implementation that writes notifications in a XmlDocument
     /// </summary>
-    public partial class XmlDocumentObserver : IObserver<ActionNotification>
+    public partial class XmlDocumentObserver : IObserver<ActionNotification>, IObserver<ActionFileAttachment>
     {
         private readonly Stack<TranquireXmlReportItem> _items = new Stack<TranquireXmlReportItem>();
 
@@ -131,6 +131,14 @@ namespace Tranquire.Reporting
                 }
                 return "question";
             }
+            XElement getAttachment(ActionFileAttachment attachment)
+            {
+                return new XElement(
+                    "attachment",
+                    new XAttribute("filepath", attachment.FilePath),
+                    new XAttribute("description", attachment.Description)
+                    );
+            }
             var element = new XElement(
                 elementName(),
                 new XAttribute("start-date", item.StartDate.ToString(CultureInfo.InvariantCulture)),
@@ -138,9 +146,21 @@ namespace Tranquire.Reporting
                 new XAttribute("duration", (int)item.Duration.TotalMilliseconds),
                 new XAttribute("name", item.Name),
                 new XAttribute("has-error", item.HasError),
-                item.Children.Select(GetElement)
+                new XElement("attachments", item.Attachments.Select(getAttachment)),
+                item.Children.Select(GetElement)      
                 );
             return element;
+        }
+        
+        /// <inheritdoc />
+        public void OnNext(ActionFileAttachment value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            CurrentItem.Attachments.Add(value);
         }
     }
 }
