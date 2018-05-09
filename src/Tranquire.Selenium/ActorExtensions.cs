@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Threading;
+using Tranquire.Reporting;
 using Tranquire.Selenium.Extensions;
 
 namespace Tranquire.Selenium
@@ -89,6 +89,100 @@ namespace Tranquire.Selenium
                 return string.Format(CultureInfo.InvariantCulture, screenshotFormat, Interlocked.Increment(ref id));
             }       
             return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), nextScreenshotName, screenshotInfoObserver));
-        }        
+        }
+
+        /// <summary>
+        /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
+        /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification})"/>
+        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo})"/>
+        /// </summary>
+        /// <param name="actor">The actor</param>
+        /// <param name="screenshotDirectory">The directory where the screenshots are saved</param>
+        /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
+        /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>
+        /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
+        /// <returns></returns>
+        public static Actor WithSeleniumReporting(
+            this Actor actor,
+            string screenshotDirectory,
+            string screenshotNameOrFormat,
+            out ISeleniumReporter seleniumReporter,
+            params IObserver<string>[] textOutputObservers)
+        {
+            return WithSeleniumReportingInternal(
+                actor, 
+                screenshotDirectory, 
+                screenshotNameOrFormat, 
+                out seleniumReporter, 
+                textOutputObservers,
+                (a, o) => a.WithReporting(o));
+        }
+
+        /// <summary>
+        /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
+        /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification}, ICanNotify)"/>
+        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo})"/>
+        /// </summary>
+        /// <param name="actor">The actor</param>
+        /// <param name="screenshotDirectory">The directory where the screenshots are saved</param>
+        /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
+        /// <param name="canNotify">A <see cref="ICanNotify"/> instance that allows to control what actions and questions can send a notification</param>
+        /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>
+        /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
+        /// <returns></returns>
+        public static Actor WithSeleniumReporting(
+            this Actor actor,
+            string screenshotDirectory,
+            string screenshotNameOrFormat,
+            ICanNotify canNotify,
+            out ISeleniumReporter seleniumReporter,
+            params IObserver<string>[] textOutputObservers)
+        {
+            return WithSeleniumReportingInternal(
+                actor,
+                screenshotDirectory,
+                screenshotNameOrFormat,
+                out seleniumReporter,
+                textOutputObservers,
+                (a, o) => a.WithReporting(o, canNotify));
+        }
+
+        private static Actor WithSeleniumReportingInternal(
+            Actor actor, 
+            string screenshotDirectory, 
+            string screenshotNameOrFormat, 
+            out ISeleniumReporter seleniumReporter, 
+            IObserver<string>[] textOutputObservers,
+            Func<Actor, IObserver<ActionNotification>, Actor> applyWithReporting)
+        {
+            if (string.IsNullOrEmpty(screenshotDirectory))
+            {
+                throw new ArgumentNullException(nameof(screenshotDirectory));
+            }
+            if (string.IsNullOrEmpty(screenshotNameOrFormat))
+            {
+                throw new ArgumentNullException(nameof(screenshotNameOrFormat));
+            }
+            if (textOutputObservers == null)
+            {
+                throw new ArgumentNullException(nameof(textOutputObservers));
+            }
+
+            var xmlDocumentObserver = new XmlDocumentObserver();
+            var textObservers = new CompositeObserver<string>(textOutputObservers);
+            var reportingObserver = new CompositeObserver<ActionNotification>(
+                xmlDocumentObserver,
+                new RenderedReportingObserver(textObservers, RenderedReportingObserver.DefaultRenderer)
+                );
+            var saveScreenshotObserver = new SaveScreenshotsToFileOnComplete(screenshotDirectory);
+            var screenshotObserver = new CompositeObserver<ScreenshotInfo>(
+                saveScreenshotObserver,
+                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver),
+                new RenderedScreenshotInfoObserver(textObservers)
+                );
+            seleniumReporter = new SeleniumReporter(xmlDocumentObserver, saveScreenshotObserver);
+            return applyWithReporting(actor, reportingObserver)
+                        .TakeScreenshots(screenshotNameOrFormat, screenshotObserver);
+        }
     }
 }
