@@ -45,14 +45,20 @@ namespace ToDoList.Specifications
             {
                 delay = TimeSpan.Zero;
             }
+            var debugObserver = new DebugObserver();
             var xmlDocumentReporting = new XmlDocumentObserver();
+            var reportingObserver = new CompositeObserver<ActionNotification>(
+                xmlDocumentReporting,
+                new RenderedReportingObserver(debugObserver, RenderedReportingObserver.DefaultRenderer)
+                );
             Context.Set(xmlDocumentReporting);
             _observer = new CompositeObserver<ScreenshotInfo>(
                 new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots")),
-                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentReporting)
+                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentReporting),
+                new RenderedScreenshotInfoObserver(debugObserver)
                 );
             var actor = new Actor("John")
-                            .WithReporting(xmlDocumentReporting)
+                            .WithReporting(reportingObserver)
                             .TakeScreenshots(screenshotName, _observer)
                             .HighlightTargets()
                             .SlowSelenium(delay)
