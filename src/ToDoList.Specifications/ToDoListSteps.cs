@@ -11,7 +11,6 @@ using ToDoList.Automation.Actions;
 using Tranquire;
 using Tranquire.Reporting;
 using Tranquire.Selenium;
-using Tranquire.Selenium.Extensions;
 
 namespace ToDoList.Specifications
 {
@@ -19,8 +18,7 @@ namespace ToDoList.Specifications
     public class ToDoListSteps : StepsBase
     {
         private readonly StringBuilder _reportingStringBuilder;
-        private IObserver<ScreenshotInfo> _observer;
-
+        
         public ToDoListSteps(ScenarioContext context) : base(context)
         {
             _reportingStringBuilder = new StringBuilder();
@@ -44,25 +42,17 @@ namespace ToDoList.Specifications
             if (IsLiveUnitTesting)
             {
                 delay = TimeSpan.Zero;
-            }
-            var debugObserver = new DebugObserver();
-            var xmlDocumentReporting = new XmlDocumentObserver();
-            var reportingObserver = new CompositeObserver<ActionNotification>(
-                xmlDocumentReporting,
-                new RenderedReportingObserver(debugObserver, RenderedReportingObserver.DefaultRenderer)
-                );
-            Context.Set(xmlDocumentReporting);
-            _observer = new CompositeObserver<ScreenshotInfo>(
-                new SaveScreenshotsToFileOnComplete(Path.Combine(GetTestDirectory(), "Screenshots")),
-                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentReporting),
-                new RenderedScreenshotInfoObserver(debugObserver)
-                );
+            }       
             var actor = new Actor("John")
-                            .WithReporting(reportingObserver)
-                            .TakeScreenshots(screenshotName, _observer)
+                            .WithSeleniumReporting(
+                                Path.Combine(GetTestDirectory(), "Screenshots"),
+                                screenshotName,
+                                out var seleniumReporter,
+                                new DebugObserver())                           
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(WebBrowser.With(driver));
+            Context.Set(seleniumReporter);
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
@@ -81,11 +71,11 @@ namespace ToDoList.Specifications
         [AfterScenario]
         public void After()
         {
-            _observer.OnCompleted();
             Context.Get<ChromeDriver>().Dispose();            
             Debug.WriteLine(_reportingStringBuilder.ToString());
-            var xmlDocument = Context.Get<XmlDocumentObserver>();
-            Debug.WriteLine(xmlDocument.GetXmlDocument().ToString());            
+            var seleniumReporter = Context.Get<ISeleniumReporter>();
+            seleniumReporter.SaveScreenshots();
+            Debug.WriteLine(seleniumReporter.GetXmlDocument().ToString());            
         }
 
         [Given(@"I have an empty to-do list")]

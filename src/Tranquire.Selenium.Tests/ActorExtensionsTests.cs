@@ -1,11 +1,12 @@
-﻿using FluentAssertions;
-using AutoFixture.Idioms;
+﻿using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
+using FluentAssertions;
+using System;
+using System.Linq;
+using Tranquire.Reporting;
+using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
 using Xunit;
-using System.Linq;
-using System;
-using Tranquire.Selenium.Extensions;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -141,6 +142,102 @@ namespace Tranquire.Selenium.Tests
             var actual = ActorExtensions.SlowSelenium(actor, expected.Delay).InnerActorBuilder(expected.Actor);
             //assert
             actual.Should().BeOfType<SlowSelenium>().Which.Should().BeEquivalentTo(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void WithSeleniumReporting_ShouldReturnCorrectValue(
+            [Modest]Actor actor,
+            IActor iactor,
+            string screenshotDirectory,
+            string screenshotName,
+            IObserver<string> observers)
+        {
+            TestWithSeleniumReporting(actor, iactor, screenshotDirectory, screenshotName, observers);
+        }
+
+        [Theory, DomainAutoData]
+        public void WithSeleniumReporting_WithCanNotify_ShouldReturnCorrectValue(
+            [Modest]Actor actor,
+            IActor iactor,
+            string screenshotDirectory,
+            string screenshotName,
+            IObserver<string> observers,
+            ICanNotify canNotify)
+        {
+            TestWithSeleniumReporting(actor, iactor, screenshotDirectory, screenshotName, observers, canNotify);
+        }
+
+        private static void TestWithSeleniumReporting(
+            Actor actor, 
+            IActor iactor, 
+            string screenshotDirectory, 
+            string screenshotName, 
+            IObserver<string> observers,
+            ICanNotify canNotify = null)
+        {
+            // arrange
+            // act
+            Actor actual;
+            ISeleniumReporter actualSeleniumReporter;
+            if (canNotify == null)
+            {
+                actual = ActorExtensions.WithSeleniumReporting(
+                    actor,
+                    screenshotDirectory,
+                    screenshotName,
+                    out actualSeleniumReporter,
+                    observers
+                    );
+                canNotify = new CompositeCanNotify();
+            }
+            else
+            {
+                actual = ActorExtensions.WithSeleniumReporting(
+                    actor,
+                    screenshotDirectory,
+                    screenshotName,
+                    canNotify,
+                    out actualSeleniumReporter,
+                    observers
+                    );
+            }
+            // assert 
+            var xmlDocumentObserver = new XmlDocumentObserver();
+            var takeScreenshot = actual.InnerActorBuilder(iactor).Should().BeOfType<TakeScreenshot>().Which;
+            var expectedTakeScreenshot = ActorExtensions.TakeScreenshots(
+                actor,
+                screenshotName,
+                new CompositeObserver<ScreenshotInfo>(
+                    new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver),
+                    new RenderedScreenshotInfoObserver(new CompositeObserver<string>(observers)),
+                    new SaveScreenshotsToFileOnComplete(screenshotDirectory)
+                    )
+                )
+                .InnerActorBuilder(iactor) as TakeScreenshot;
+            takeScreenshot.Should().BeEquivalentTo(expectedTakeScreenshot, o => o.Excluding(a => a.Actor)
+                                                                                 .Excluding(a => a.NextScreenshotName)
+                                                                                 .RespectingRuntimeTypes());
+            var actualScreenshotNames = Enumerable.Range(0, 10).Select(_ => takeScreenshot.NextScreenshotName());
+            var expectedScreenshotNames = Enumerable.Range(0, 10).Select(_ => expectedTakeScreenshot.NextScreenshotName());
+            actualScreenshotNames.Should().BeEquivalentTo(expectedScreenshotNames);
+
+            var reportingActor = takeScreenshot.Actor.Should().BeOfType<ReportingActor>().Which;
+            var expectedReportingActor = actor.WithReporting(
+                new CompositeObserver<ActionNotification>(
+                    xmlDocumentObserver,
+                    new RenderedReportingObserver(
+                        new CompositeObserver<string>(observers),
+                        RenderedReportingObserver.DefaultRenderer
+                        )
+                    ),
+                canNotify
+                )
+                .InnerActorBuilder(iactor) as ReportingActor;
+            reportingActor.Should().BeEquivalentTo(expectedReportingActor, o => o.Excluding(a => a.Actor)
+                                                                                 .RespectingRuntimeTypes());
+
+            var expectedSeleniumReporter = new SeleniumReporter(xmlDocumentObserver, new SaveScreenshotsToFileOnComplete(screenshotDirectory));
+            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter);
         }
     }
 }
