@@ -30,24 +30,6 @@ namespace ToDoList.Specifications
         }
     }
 
-    public class DebugObserver : IObserver<string>
-    {
-        public void OnCompleted()
-        {
-            Debug.WriteLine("Completed");
-        }
-
-        public void OnError(Exception error)
-        {
-            Debug.WriteLine("Error " + error.Message);
-        }
-
-        public void OnNext(string value)
-        {
-            Debug.WriteLine(value);
-        }
-    }
-
     public class InMemoryObserver : IObserver<string>
     {
         private readonly StringBuilder _builder;

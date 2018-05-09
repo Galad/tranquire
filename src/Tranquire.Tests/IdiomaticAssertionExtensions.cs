@@ -7,8 +7,23 @@ namespace Tranquire.Tests
 {
     public static class IdiomaticAssertionExtensions
     {
+        public static void Verify<T>(this IIdiomaticAssertion assertion)
+        {
+            if (assertion == null)
+            {
+                throw new ArgumentNullException(nameof(assertion));
+            }
+
+            assertion.Verify(typeof(T));
+        }
+
         public static void Verify<T>(this IIdiomaticAssertion assertion, Expression<Func<T, object>> memberSelector)
         {
+            if (assertion == null)
+            {
+                throw new ArgumentNullException(nameof(assertion));
+            }
+
             if (memberSelector == null)
             {
                 throw new ArgumentNullException(nameof(memberSelector));
