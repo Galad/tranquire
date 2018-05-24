@@ -88,5 +88,30 @@ namespace Tranquire
                 return func(actor, ability);
             }
         }
+
+        /// <summary>
+        /// Creates a question that returns the given value
+        /// </summary>
+        /// <typeparam name="TAnswer">The value type</typeparam>
+        /// <param name="result">The value returned by the question</param>
+        /// <returns></returns>
+        public static IQuestion<TAnswer> FromResult<TAnswer>(TAnswer result)
+        {
+            return new ResultQuestion<TAnswer>(result);
+        }
+
+        private class ResultQuestion<TAnswer> : Question<TAnswer>
+        {
+            private readonly TAnswer result;
+
+            public ResultQuestion(TAnswer result)
+            {
+                this.result = result;
+            }
+
+            public override string Name => "Returns " + result.ToString();
+
+            protected override TAnswer Answer(IActor actor) => result;
+        }
     }
 }
