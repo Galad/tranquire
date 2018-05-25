@@ -30,7 +30,7 @@ namespace Tranquire.Tests
         }
         
         [Theory, DomainAutoData]
-        public void Name_ShouldReturnCorrectValue(string expected)
+        public void Create_Name_ShouldReturnCorrectValue(string expected)
         {
             // arrange
             // act
@@ -58,13 +58,36 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void NameWithAbility_ShouldReturnCorrectValue(string expected)
+        public void CreateWithAbility_Name_ShouldReturnCorrectValue(string expected)
         {
             // arrange
             // act
             var question = Questions.Create(expected, (IActor _, object __) => default(object));
             var actual = question.Name;
             // assert
+            actual.Should().Be(expected);
+        }
+        
+        [Theory, DomainAutoData]
+        public void FromResult_ShouldReturnCorrectValue(IActor actor, object expected)
+        {
+            // arrange
+            // act
+            var question = Questions.FromResult(expected);
+            var actual = question.AnsweredBy(actor);
+            // assert
+            actual.Should().Be(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void FromResult_Name_ShouldReturnCorrectValue(IActor actor, string value)
+        {
+            // arrange
+            // act
+            var question = Questions.FromResult(value);
+            var actual = question.Name;
+            // assert
+            var expected = "Returns " + value;
             actual.Should().Be(expected);
         }
     }
