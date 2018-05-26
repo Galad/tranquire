@@ -14,7 +14,7 @@ namespace ToDoList.Specifications
         [Then(@"I should have (.*) items remaining")]
         public void ThenIShouldHaveItemsRemaining(int expectedCount)
         {
-            Context.Actor().AsksFor(TheItems.Remaining()).Should().Be(expectedCount);
+            Context.Actor().Then(TheItems.Remaining(), items => items.Should().Be(expectedCount));
         }
     }
 }

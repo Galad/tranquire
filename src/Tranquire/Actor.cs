@@ -155,6 +155,23 @@ namespace Tranquire
             return CreateWhenActor().AsksFor(question);
         }
 
+        /// <inheritdoc />
+        public TAnswer Then<TAnswer>(IQuestion<TAnswer> question, System.Action<TAnswer> verifyAction)
+        {
+            if (question == null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+            if (verifyAction == null)
+            {
+                throw new ArgumentNullException(nameof(verifyAction));
+            }
+
+            var answer = AsksFor(question);
+            verifyAction(answer);
+            return answer;
+        }
+
         private class WhenInnerActor : InnerActor
         {
             public WhenInnerActor(string name, Func<Type, object> getAbility) : base(name, getAbility)

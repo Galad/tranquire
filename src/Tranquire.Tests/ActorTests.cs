@@ -31,6 +31,12 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
+        public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
+        {
+            assertion.Verify(typeof(Actor));
+        }
+
+        [Theory, DomainAutoData]
         public void Abilities_WhenUsingModestConstructor_ShouldBeEmpty([Modest]Actor sut)
         {
             sut.Abilities.Should().BeEmpty();
@@ -258,6 +264,35 @@ namespace Tranquire.Tests
             System.Action testedAction = () => action(sut, fixture);
             //act and assert
             testedAction.Should().Throw<InvalidOperationException>().Where(ex => ex.Message.Contains(typeof(AbilityTest).Name));
+        }
+
+        [Theory, DomainAutoData]
+        public void Then_ShouldCallAction(
+            [Greedy]Actor sut,
+            IQuestion<object> question,
+            object answer)
+        {
+            // arrange
+            var action = new Mock<System.Action<object>>();
+            Mock.Get(question).Setup(q => q.AnsweredBy(It.IsAny<IActor>())).Returns(answer);
+            // act
+            sut.Then(question, action.Object);
+            // assert
+            action.Verify(a => a(answer));
+        }
+        
+        [Theory, DomainAutoData]
+        public void Then_ReturnCorrectValue(
+            [Greedy]Actor sut,
+            IQuestion<object> question,            
+            object expected)
+        {
+            // arrange            
+            Mock.Get(question).Setup(q => q.AnsweredBy(It.IsAny<IActor>())).Returns(expected);
+            // act
+            var actual = sut.Then(question, _ => { });
+            // assert
+            actual.Should().Be(expected);
         }
     }
 }
