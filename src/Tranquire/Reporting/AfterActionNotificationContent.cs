@@ -3,7 +3,7 @@
 namespace Tranquire.Reporting
 {
     /// <summary>
-    /// Before the action
+    /// After the action
     /// </summary>
     public class AfterActionNotificationContent : IActionNotificationContent
     {

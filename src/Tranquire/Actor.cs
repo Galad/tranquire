@@ -158,18 +158,7 @@ namespace Tranquire
         /// <inheritdoc />
         public TAnswer Then<TAnswer>(IQuestion<TAnswer> question, System.Action<TAnswer> verifyAction)
         {
-            if (question == null)
-            {
-                throw new ArgumentNullException(nameof(question));
-            }
-            if (verifyAction == null)
-            {
-                throw new ArgumentNullException(nameof(verifyAction));
-            }
-
-            var answer = AsksFor(question);
-            verifyAction(answer);
-            return answer;
+            return CreateWhenActor().Execute(new ThenAction<TAnswer>(question, verifyAction));            
         }
 
         private class WhenInnerActor : InnerActor

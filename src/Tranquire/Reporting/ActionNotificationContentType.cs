@@ -16,6 +16,14 @@
         /// <summary>
         /// The action raised an error
         /// </summary>
-        ExecutionError
+        ExecutionError,
+        /// <summary>
+        /// A verification is about to start
+        /// </summary>
+        BeforeThen,
+        /// <summary>
+        /// A verification ended
+        /// </summary>
+        AfterThen
     }
 }

@@ -81,7 +81,7 @@ namespace Tranquire.Reporting
                 case ActionNotificationContentType.ExecutionError:
                     return RenderError(notification, notification.Content as ExecutionErrorNotificationContent);
                 default:
-                    throw new NotSupportedException(notification.Content.NotificationContentType.ToString() + " is not supported");
+                    return "Unknown action";
             }
         }
 

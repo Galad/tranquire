@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Tranquire.Reporting
 {
@@ -100,9 +101,9 @@ namespace Tranquire.Reporting
         }
 
         private TResult ExecuteNotifyingAction<TResult>(
-            Func<bool> canNotify, 
-            Func<TResult> executeAction, 
-            INamed action, 
+            Func<bool> canNotify,
+            Func<TResult> executeAction,
+            INamed action,
             CommandType commandType)
         {
             if (!canNotify())
@@ -110,16 +111,17 @@ namespace Tranquire.Reporting
                 return executeAction();
             }
             _depth++;
-            Observer.OnNext(new ActionNotification(action, _depth, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)));
+            var (createBefore, createAfter, createError) = GetNotificationContentFactories<TResult>(action, commandType);
+            Observer.OnNext(new ActionNotification(action, _depth, createBefore(DateTimeOffset.MinValue)));
             try
             {
                 var result = MeasureTime.Measure(executeAction);
-                Observer.OnNext(new ActionNotification(action, _depth, new AfterActionNotificationContent(result.Item1)));
+                Observer.OnNext(new ActionNotification(action, _depth, createAfter(result.Item1)));
                 return result.Item2;
             }
             catch (Exception ex)
             {
-                Observer.OnNext(new ActionNotification(action, _depth, new ExecutionErrorNotificationContent(ex)));
+                Observer.OnNext(new ActionNotification(action, _depth, createError(ex)));
                 throw;
             }
             finally
@@ -128,5 +130,45 @@ namespace Tranquire.Reporting
             }
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+        private static (
+            Func<DateTimeOffset, IActionNotificationContent>,
+            Func<TimeSpan, IActionNotificationContent>,
+            Func<Exception, IActionNotificationContent>
+            )
+            GetNotificationContentFactories<T>(INamed action, CommandType commandType)
+        {
+            if(action is ThenAction<T> thenAction)
+            {
+                return
+                (
+                    date => new BeforeThenNotificationContent<T>(date, thenAction.Question),
+                    time => new AfterThenNotificationContent(time, ThenOutcome.Pass),
+                    error => new AfterThenNotificationContent(TimeSpan.Zero, GetOutcome(error), error)
+                );
+            }
+            return
+                (
+                    date => new BeforeActionNotificationContent(date, commandType),
+                    time => new AfterActionNotificationContent(time),
+                    error => new ExecutionErrorNotificationContent(error)
+                );
+        }
+
+        private static readonly string[] _knownNamespaces = new[]
+        {
+            "Xunit.Sdk.",
+            "NUnit.Framework.",
+            "Microsoft.VisualStudio.TestTools.UnitTesting."
+        };
+
+        private static ThenOutcome GetOutcome(Exception error)
+        {
+            if (_knownNamespaces.Any(error.GetType().FullName.StartsWith))
+            {
+                return ThenOutcome.Failed;
+            }            
+            return ThenOutcome.Error;
+        }
     }
 }
