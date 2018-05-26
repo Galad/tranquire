@@ -17,22 +17,23 @@ namespace ToDoList.Specifications
         [Then(@"the to-do items list should contain ""(.*)""")]
         public void ThenTheTo_DoItemsListShouldContain(string item)
         {
-            Context.Actor().AsksFor(TheItems.Displayed()).Should().Contain(i => i.Name == item);
+            Context.Actor().Then(TheItems.Displayed(), items => items.Should().Contain(i => i.Name == item));
         }
 
         [Then(@"the to-do items list should not contain ""(.*)""")]
         public void ThenTheTo_DoItemsListShouldNotContain(string item)
         {
-            Context.Actor().AsksFor(TheItems.Displayed()).Should().NotContain(i => i.Name == item);
+            Context.Actor().Then(TheItems.Displayed(), items => items.Should().NotContain(i => i.Name == item));
         }
 
         [Then(@"the to-do items list should contain ""(.*)"" (.*) times")]
         public void ThenTheTo_DoItemsListShouldContainTimes(string item, int times)
         {
-            Context.Actor().AsksFor(TheItems.Displayed())
-                           .Where(i => i.Name == item)
-                           .Should()
-                           .HaveCount(times, "Expected to have {0} items in collection", times);
+            Context.Actor().Then(TheItems.Displayed(), items => 
+                           items.Where(i => i.Name == item)
+                                .Should()
+                                .HaveCount(times, "Expected to have {0} items in collection", times)
+                                );
         }
     }
 

@@ -80,7 +80,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void FromResult_Name_ShouldReturnCorrectValue(IActor actor, string value)
+        public void FromResult_Name_ShouldReturnCorrectValue(string value)
         {
             // arrange
             // act
