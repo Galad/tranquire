@@ -23,24 +23,50 @@ namespace Tranquire.Tests
             {
                 throw new ArgumentNullException(nameof(assertion));
             }
-
             if (memberSelector == null)
             {
                 throw new ArgumentNullException(nameof(memberSelector));
             }
 
-            var memberExpression = memberSelector.Body as MemberExpression;
-            if (memberExpression == null)
-            {
-                throw new ArgumentException("The expression is not a valid member selector");
-            }
+            VerifyExpression(assertion, memberSelector.Body);
+        }
 
-            if (memberExpression.Member is PropertyInfo propertyInfo)
+        private static void VerifyExpression(IIdiomaticAssertion assertion, Expression expression)
+        {
+            switch(expression)
             {
-                assertion.Verify(propertyInfo);
-                return;
+                case MemberExpression memberExpression:
+                    VerifyMemberExpression(assertion, memberExpression);
+                    break;
+                case NewArrayExpression arrayExpression:
+                    VerifyArrayExpression(assertion, arrayExpression);
+                    break;
+                default:
+                    throw new ArgumentException("The expression is not a valid member selector");
+            }            
+        }
+
+        private static void VerifyArrayExpression(IIdiomaticAssertion assertion, NewArrayExpression arrayExpression)
+        {
+            foreach (var expression in arrayExpression.Expressions)
+            {
+                VerifyExpression(assertion, expression);
             }
-            throw new ArgumentException("The expression is not a valid member selector");
+        }
+
+        private static void VerifyMemberExpression(IIdiomaticAssertion assertion, MemberExpression memberExpression)
+        {
+            switch (memberExpression.Member)
+            {
+                case PropertyInfo propertyInfo:
+                    assertion.Verify(propertyInfo);
+                    break;
+                case FieldInfo fieldInfo:
+                    assertion.Verify(fieldInfo);
+                    break;
+                default:
+                    throw new ArgumentException("The expression is not a valid member selector");
+            }
         }
     }
 }

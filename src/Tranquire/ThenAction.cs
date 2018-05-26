@@ -4,23 +4,40 @@ using System.Text;
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Represent an action that verifies the answer of a question
+    /// </summary>
+    /// <typeparam name="T">The question answer type</typeparam>
     public sealed class ThenAction<T> : Action<T>
     {
-        private readonly IQuestion<T> _question;
-        private readonly System.Action<T> _verifyAction;
+        /// <summary>
+        /// Gets the question
+        /// </summary>
+        public IQuestion<T> Question { get; }
+        /// <summary>
+        /// Gets the action that verifies the outcome
+        /// </summary>
+        public System.Action<T> VerifyAction { get; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ThenAction{T}"/>
+        /// </summary>
+        /// <param name="question">The question</param>
+        /// <param name="verifyAction">The action that verifies the outcome</param>
         public ThenAction(IQuestion<T> question, System.Action<T> verifyAction)
         {
-            _question = question ?? throw new ArgumentNullException(nameof(question));
-            _verifyAction = verifyAction ?? throw new ArgumentNullException(nameof(verifyAction));
+            Question = question ?? throw new ArgumentNullException(nameof(question));
+            VerifyAction = verifyAction ?? throw new ArgumentNullException(nameof(verifyAction));
         }
 
-        public override string Name => "Then";
+        /// <inheritdoc />
+        public override string Name => "Then verifies the answer of " + Question.Name;
 
+        /// <inheritdoc />
         protected override T ExecuteWhen(IActor actor)
         {
-            var answer = actor.AsksFor(_question);
-            _verifyAction(answer);
+            var answer = actor.AsksFor(Question);
+            VerifyAction(answer);
             return answer;
         }
     }
