@@ -6,7 +6,7 @@ namespace Tranquire.Reporting
     /// Before a verification
     /// </summary>
     /// <typeparam name="T">The type of the answer that is verified</typeparam>
-    public sealed class BeforeThenNotificationContent<T> : IActionNotificationContent
+    public sealed class BeforeThenNotificationContent<T> : IActionNotificationContent, INotificationHandler
     {
         /// <summary>
         /// Creates a new instance of<see cref="BeforeThenNotificationContent{T}"/>
@@ -30,5 +30,10 @@ namespace Tranquire.Reporting
         /// Gets the action which answer is verified
         /// </summary>
         public IQuestion<T> Question { get; }
+
+        void INotificationHandler.Handle(XmlDocumentObserver observer, INamed named)
+        {
+            observer.HandleBeforeThen(this, named);
+        }
     }
 }

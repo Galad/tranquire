@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Tranquire.Reporting;
@@ -29,6 +30,7 @@ namespace Tranquire.Tests.Reporting
         public bool HasError { get; set; }
         [XmlElement(typeof(XmlReportAction), ElementName = "action")]
         [XmlElement(typeof(XmlReportQuestion), ElementName = "question")]
+        [XmlElement(typeof(XmlReportThen), ElementName = "then")]
         public List<XmlReportItem> Children { get; set; } = new List<XmlReportItem>();
         [XmlArray("attachments")]
         [XmlArrayItem("attachment")]
@@ -43,6 +45,35 @@ namespace Tranquire.Tests.Reporting
 
     [XmlType("question")]
     public class XmlReportQuestion : XmlReportItem { }
+
+    [XmlType("then")]
+    public class XmlReportThen : XmlReportItem
+    {
+        [XmlAttribute("outcome")]        
+        public XmlReportThenOutcome Outcome { get; set; }
+        [XmlElement("outcomeDetail")]
+        [XmlText]
+        public string OutcomeDetail { get; set; }
+
+        public XmlReportThen WithOutcome(XmlReportThenOutcome outcome)
+        {
+            Outcome = outcome;
+            return this;
+        }
+
+        public XmlReportThen WithOutcomeDetail(string details)
+        {
+            OutcomeDetail = details;
+            return this;
+        }
+    }
+
+    public enum XmlReportThenOutcome
+    {
+        pass,
+        failed,
+        error
+    }
 
     public class XlmActionAttachment
     {
@@ -77,7 +108,7 @@ namespace Tranquire.Tests.Reporting
             get
             {
                 var fixture = new Fixture().Customize(new DomainCustomization());
-                XmlReportItem createItemGeneric<T>(
+                T createItemGeneric<T>(
                     string name,
                     DateTimeOffset startDate,
                     int duration,
@@ -215,6 +246,77 @@ namespace Tranquire.Tests.Reporting
                                                     })
                     };
                 }
+
+                {
+                    var question = fixture.Create<IQuestion<object>>();
+                    var thenAction = new ThenAction<object>(question, _ => { });
+                    yield return new object[]
+                    {
+                        "Verification",
+                        new ActionNotification[]{
+                            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, question)),
+                            new ActionNotification(question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)),
+                            new ActionNotification(question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))),
+                            new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), ThenOutcome.Pass))
+                        },
+                        createItemGeneric<XmlReportRoot>(
+                            "Test",
+                            expectedDate,
+                            0,
+                            false,
+                            new List<XmlReportItem>()
+                            {
+                                createItemGeneric<XmlReportThen>(
+                                    thenAction.Name,
+                                    DateTimeOffset.MinValue,
+                                    1000,
+                                    false,
+                                    new List<XmlReportItem>()
+                                    {
+                                        createItem(CommandType.Question, question.Name, DateTimeOffset.MinValue, 1000)
+                                    })
+                                    .WithOutcome(XmlReportThenOutcome.pass)
+                            })
+                    };
+                }
+
+                object[] createThenWithException(ThenOutcome outcome, XmlReportThenOutcome expectedOutcome)
+                {
+                    var question = fixture.Create<IQuestion<object>>();
+                    var thenAction = new ThenAction<object>(question, _ => { });
+                    var exception = fixture.Create<Exception>();
+                    return new object[]
+                    {
+                        "Verification with failure (" + outcome.ToString() + ")",
+                        new ActionNotification[]{
+                            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, question)),
+                            new ActionNotification(question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)),
+                            new ActionNotification(question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))),
+                            new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), outcome, exception))
+                        },
+                        createItemGeneric<XmlReportRoot>(
+                            "Test",
+                            expectedDate,
+                            0,
+                            false,
+                            new List<XmlReportItem>()
+                            {
+                                createItemGeneric<XmlReportThen>(
+                                    thenAction.Name,
+                                    DateTimeOffset.MinValue,
+                                    1000,
+                                    true,
+                                    new List<XmlReportItem>()
+                                    {
+                                        createItem(CommandType.Question, question.Name, DateTimeOffset.MinValue, 1000)
+                                    })
+                                    .WithOutcome(expectedOutcome)
+                                    .WithOutcomeDetail(exception.Message)
+                            })
+                    };
+                }
+                yield return createThenWithException(ThenOutcome.Failed, XmlReportThenOutcome.failed);
+                yield return createThenWithException(ThenOutcome.Error, XmlReportThenOutcome.error);
             }
         }
 
@@ -304,7 +406,7 @@ namespace Tranquire.Tests.Reporting
 
         private static void AssertRootAreEqual(XmlReportRoot expected, XmlReportRoot actual)
         {
-            actual.Should().BeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
         [Theory, DomainAutoData]
@@ -388,7 +490,7 @@ namespace Tranquire.Tests.Reporting
             DateTimeOffset startDate,
             [Frozen]DateTimeOffset date,
             [Greedy]XmlDocumentObserver sut,
-            INamed named,            
+            INamed named,
             IFixture fixture
             )
         {
