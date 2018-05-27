@@ -14,7 +14,7 @@ namespace Tranquire.Reporting
         /// <typeparam name="T">The type returned by the function</typeparam>
         /// <param name="function">The function to measure the duration of</param>
         /// <returns>A tuple containing the duration and the value returned by the function</returns>
-        Tuple<TimeSpan, T> Measure<T>(Func<T> function);
+        (TimeSpan, T) Measure<T>(Func<T> function);
         /// <summary>
         /// Gets the current date
         /// </summary>
@@ -30,7 +30,7 @@ namespace Tranquire.Reporting
         public DateTimeOffset Now => DateTimeOffset.UtcNow;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public Tuple<TimeSpan, T> Measure<T>(Func<T> function)
+        public (TimeSpan, T) Measure<T>(Func<T> function)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (function == null)
@@ -41,7 +41,7 @@ namespace Tranquire.Reporting
             var sw = Stopwatch.StartNew();
             var value = function();
             sw.Stop();
-            return Tuple.Create(sw.Elapsed, value);
+            return (sw.Elapsed, value);
         }
     }
 }

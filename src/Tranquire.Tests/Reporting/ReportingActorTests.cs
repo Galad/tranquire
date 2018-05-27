@@ -101,7 +101,7 @@ namespace Tranquire.Tests.Reporting
             var action = fixture.Create<MockToString>();
             var expected = fixture.Create<object>();
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                           .Returns((Func<object> f) => Tuple.Create(duration, f()));
+                           .Returns((Func<object> f) => (duration, f()));
             Mock.Get(sut.Actor).Setup(expression(action)).Returns(expected);
             //act
             var actual = executeAction(sut, action);
@@ -194,7 +194,7 @@ namespace Tranquire.Tests.Reporting
             var expectedDuration = fixture.Create<TimeSpan>();
             var sut = fixture.Create<ReportingActor>();
             var action = fixture.Create<MockToString>();            
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns(Tuple.Create(expectedDuration, new object()));
+            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object()));
             //act
             executeAction(sut, action);
             //assert
@@ -236,7 +236,7 @@ namespace Tranquire.Tests.Reporting
                                    var result = f();
                                    var resultIndex = Array.FindIndex(actions, a => a.Result == result);
                                    var duration = expectedDurations[resultIndex == -1 ? NumberOfActions - 1 : resultIndex];
-                                   return Tuple.Create(duration, result);
+                                   return (duration, result);
                                });
             }
             //act
@@ -336,7 +336,7 @@ namespace Tranquire.Tests.Reporting
             Mock.Get(sut.Actor).Setup(expression(actions.Last()))
                                .Throws(exception);
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                               .Returns((Func<object> f) => Tuple.Create(TimeSpan.Zero, f()));
+                               .Returns((Func<object> f) => (TimeSpan.Zero, f()));
             //act
             new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
@@ -425,7 +425,7 @@ namespace Tranquire.Tests.Reporting
             )
         {
             //arrange                              
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns(Tuple.Create(expectedDuration, new object()));
+            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object()));
             //act
             sut.Execute(thenAction);
             //assert
@@ -501,7 +501,7 @@ namespace Tranquire.Tests.Reporting
                                              expectedException = ex;
                                              throw;
                                          }
-                                         return Tuple.Create(TimeSpan.Zero, new object());
+                                         return (TimeSpan.Zero, new object());
                                      });
             //act
             try
