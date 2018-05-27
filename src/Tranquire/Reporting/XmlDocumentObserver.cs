@@ -84,7 +84,33 @@ namespace Tranquire.Reporting
                 case ActionNotificationContentType.ExecutionError:
                     HandleExecutionErrorNotificationContent(value.Content as ExecutionErrorNotificationContent);
                     break;
+                case ActionNotificationContentType.BeforeThen:
+                    (value.Content as INotificationHandler).Handle(this, value.Action);
+                    break;
+                case ActionNotificationContentType.AfterThen:
+                    HandleAfterThen(value.Content as AfterThenNotificationContent);
+                    break;
             }
+        }
+
+        private void HandleAfterThen(AfterThenNotificationContent afterThenNotificationContent)
+        {
+            var item = _items.Pop() as TranquireXmlReportThen;
+            item.EndDate = item.StartDate + afterThenNotificationContent.Duration;
+            item.Outcome = afterThenNotificationContent.Outcome;
+            item.Error = afterThenNotificationContent.Exception;
+        }
+
+        internal void HandleBeforeThen<T>(BeforeThenNotificationContent<T> beforeThen, INamed named)
+        {
+            var currentItem = CurrentItem;
+            var newItem = new TranquireXmlReportThen()
+            {
+                StartDate = beforeThen.StartDate,
+                Name = named.Name                
+            };
+            currentItem.Children.Add(newItem);
+            _items.Push(newItem);
         }
 
         private void HandleExecutionErrorNotificationContent(ExecutionErrorNotificationContent content)
@@ -142,15 +168,17 @@ namespace Tranquire.Reporting
         {
             string elementName()
             {
-                if (item is TranquireXmlReportDocument)
+                switch (item)
                 {
-                    return "root";
-                }
-                if (item is TranquireXmlReportAction)
-                {
-                    return "action";
-                }
-                return "question";
+                    case TranquireXmlReportQuestion _:
+                        return "question";
+                    case TranquireXmlReportAction _:
+                        return "action";
+                    case TranquireXmlReportThen _:
+                        return "then";
+                    default:
+                        return "root";
+                }                
             }
             XElement getAttachment(ActionFileAttachment attachment)
             {
@@ -160,15 +188,27 @@ namespace Tranquire.Reporting
                     new XAttribute("description", attachment.Description)
                     );
             }
-            var element = new XElement(
-                elementName(),
+            var content = new List<object>()
+            {
                 new XAttribute("start-date", item.StartDate.ToString(CultureInfo.InvariantCulture)),
                 new XAttribute("end-date", item.EndDate.ToString(CultureInfo.InvariantCulture)),
                 new XAttribute("duration", (int)item.Duration.TotalMilliseconds),
                 new XAttribute("name", item.Name),
                 new XAttribute("has-error", item.HasError),
                 new XElement("attachments", item.Attachments.Select(getAttachment)),
-                item.Children.Select(GetElement)      
+                item.Children.Select(GetElement)
+            };
+            if(item is TranquireXmlReportThen then)
+            {
+                content.Add(new XAttribute("outcome", then.Outcome.ToString().ToLower()));
+                if (then.Outcome != ThenOutcome.Pass)
+                {
+                    content.Add(new XElement("outcomeDetail", new XCData(then.Error.Message)));
+                }
+            }
+            var element = new XElement(
+                elementName(),
+                content.ToArray()
                 );
             return element;
         }

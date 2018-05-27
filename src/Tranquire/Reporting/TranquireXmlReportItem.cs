@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Tranquire.Reporting
 {
@@ -18,4 +19,9 @@ namespace Tranquire.Reporting
     internal class TranquireXmlReportDocument : TranquireXmlReportItem { }
     internal class TranquireXmlReportAction : TranquireXmlReportItem { }
     internal class TranquireXmlReportQuestion : TranquireXmlReportItem { }
+    internal class TranquireXmlReportThen : TranquireXmlReportItem
+    {
+        public ThenOutcome Outcome { get; set; }
+        public string OutcomeDetail { get; set; }
+    }
 }
