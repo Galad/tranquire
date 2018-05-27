@@ -112,46 +112,45 @@ namespace Tranquire.Reporting
             }
             _depth++;
             var (createBefore, createAfter, createError) = GetNotificationContentFactories<TResult>(action, commandType);
-            Observer.OnNext(new ActionNotification(action, _depth, createBefore(DateTimeOffset.MinValue)));
-            try
+            Observer.OnNext(new ActionNotification(action, _depth, createBefore(MeasureTime.Now)));
+            var (duration, result, exception) = MeasureTime.Measure(executeAction);
+            if (exception == null)
             {
-                var result = MeasureTime.Measure(executeAction);
-                Observer.OnNext(new ActionNotification(action, _depth, createAfter(result.Item1)));
-                return result.Item2;
-            }
-            catch (Exception ex)
-            {
-                Observer.OnNext(new ActionNotification(action, _depth, createError(ex)));
-                throw;
-            }
-            finally
-            {
+                Observer.OnNext(new ActionNotification(action, _depth, createAfter(duration)));
                 _depth--;
+                return result;
             }
+            else
+            {
+                Observer.OnNext(new ActionNotification(action, _depth, createError(exception, duration)));
+                _depth--;
+                throw exception;
+            }
+            
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private static (
             Func<DateTimeOffset, IActionNotificationContent>,
             Func<TimeSpan, IActionNotificationContent>,
-            Func<Exception, IActionNotificationContent>
+            Func<Exception, TimeSpan, IActionNotificationContent>
             )
             GetNotificationContentFactories<T>(INamed action, CommandType commandType)
         {
-            if(action is ThenAction<T> thenAction)
+            if (action is ThenAction<T> thenAction)
             {
                 return
                 (
                     date => new BeforeThenNotificationContent<T>(date, thenAction.Question),
                     time => new AfterThenNotificationContent(time, ThenOutcome.Pass),
-                    error => new AfterThenNotificationContent(TimeSpan.Zero, GetOutcome(error), error)
+                    (error, duration) => new AfterThenNotificationContent(duration, GetOutcome(error), error)
                 );
             }
             return
                 (
                     date => new BeforeActionNotificationContent(date, commandType),
                     time => new AfterActionNotificationContent(time),
-                    error => new ExecutionErrorNotificationContent(error)
+                    (error, duration) => new ExecutionErrorNotificationContent(error, duration)
                 );
         }
 
@@ -167,7 +166,7 @@ namespace Tranquire.Reporting
             if (_knownNamespaces.Any(error.GetType().FullName.StartsWith))
             {
                 return ThenOutcome.Failed;
-            }            
+            }
             return ThenOutcome.Error;
         }
     }

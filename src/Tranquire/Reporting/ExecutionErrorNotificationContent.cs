@@ -28,14 +28,6 @@ namespace Tranquire.Reporting
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ExecutionErrorNotificationContent"/> with a <see cref="Duration"/> of zero
-        /// </summary>
-        /// <param name="exception">The exception that has been raised</param>
-        public ExecutionErrorNotificationContent(Exception exception) : this(exception, TimeSpan.Zero)
-        {
-        }
-
-        /// <summary>
         /// Gets the content type
         /// </summary>
         public ActionNotificationContentType NotificationContentType => ActionNotificationContentType.ExecutionError;

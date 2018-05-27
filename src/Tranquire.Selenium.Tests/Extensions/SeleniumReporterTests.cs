@@ -1,4 +1,7 @@
+using AutoFixture;
 using AutoFixture.Idioms;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using Moq;
 using System;
@@ -32,11 +35,16 @@ namespace Tranquire.Selenium.Tests.Extensions
 
         [Theory, DomainAutoData]
         public void GetXmlDocument_ShouldReturnCorrectValue(
-            SeleniumReporter sut, 
-            XmlDocumentObserver expectedDocumentObserver,
-            INamed named)
+            [Frozen]IMeasureDuration measureDuration,            
+            [Greedy]XmlDocumentObserver expectedDocumentObserver,
+            INamed named,
+            IFixture fixture,
+            DateTimeOffset date)
         {
             // arrange
+            fixture.Customize<XmlDocumentObserver>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));            
+            var sut = fixture.Create<SeleniumReporter>();
+            Mock.Get(measureDuration).Setup(m => m.Now).Returns(date);
             SetupObserver(expectedDocumentObserver, named);
             SetupObserver(sut.XmlDocumentObserver, named);
             var expected = expectedDocumentObserver.GetXmlDocument();            
@@ -49,10 +57,11 @@ namespace Tranquire.Selenium.Tests.Extensions
         [Theory, DomainAutoData]
         public void GetHtmlDocument_ShouldReturnCorrectValue(
             SeleniumReporter sut,
-            XmlDocumentObserver expectedDocumentObserver,
+            [Greedy]XmlDocumentObserver expectedDocumentObserver,
             INamed named)
         {
             // arrange
+            
             SetupObserver(expectedDocumentObserver, named);
             SetupObserver(sut.XmlDocumentObserver, named);
             var expected = expectedDocumentObserver.GetHtmlDocument();

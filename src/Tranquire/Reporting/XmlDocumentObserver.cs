@@ -11,6 +11,21 @@ namespace Tranquire.Reporting
     /// </summary>
     public partial class XmlDocumentObserver : IObserver<ActionNotification>, IObserver<ActionFileAttachment>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="XmlDocumentObserver"/>
+        /// </summary>
+        public XmlDocumentObserver(IMeasureDuration measureDuration)
+        {
+            MeasureDuration = measureDuration ?? throw new ArgumentNullException(nameof(measureDuration));
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="XmlDocumentObserver"/>
+        /// </summary>
+        public XmlDocumentObserver():this(new DefaultMeasureDuration())
+        {
+        }
+
         private readonly Stack<TranquireXmlReportItem> _items = new Stack<TranquireXmlReportItem>();
 
         private TranquireXmlReportItem CurrentItem
@@ -21,13 +36,18 @@ namespace Tranquire.Reporting
                 {
                     _items.Push(new TranquireXmlReportDocument()
                     {
-                        StartDate = DateTimeOffset.Now,
+                        StartDate = MeasureDuration.Now,
                         Name = "Test"
                     });
                 }
                 return _items.Peek();
             }
         }
+
+        /// <summary>
+        /// Gets the object that provides the current date
+        /// </summary>
+        public IMeasureDuration MeasureDuration { get; }
 
         /// <inheritsdoc />
         public void OnCompleted()
@@ -113,6 +133,7 @@ namespace Tranquire.Reporting
             }
 
             var item = CurrentItem;
+            item.EndDate = MeasureDuration.Now;
             var document = new XDocument(GetElement(item));
             return document;
         }

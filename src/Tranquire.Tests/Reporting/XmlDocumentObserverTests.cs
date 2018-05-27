@@ -1,13 +1,13 @@
 ﻿using AutoFixture;
 using AutoFixture.Idioms;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Tranquire.Reporting;
@@ -81,7 +81,8 @@ namespace Tranquire.Tests.Reporting
                     string name,
                     DateTimeOffset startDate,
                     int duration,
-                    bool hasError) where T : XmlReportItem, new()
+                    bool hasError,
+                    List<XmlReportItem> children = null) where T : XmlReportItem, new()
                 {
                     return new T()
                     {
@@ -89,7 +90,8 @@ namespace Tranquire.Tests.Reporting
                         Duration = duration,
                         StartDate = startDate.ToString(CultureInfo.InvariantCulture),
                         EndDate = startDate.Add(TimeSpan.FromMilliseconds(duration)).ToString(CultureInfo.InvariantCulture),
-                        HasError = hasError
+                        HasError = hasError,
+                        Children = children ?? new List<XmlReportItem>()
                     };
                 }
                 XmlReportItem createItem(
@@ -109,15 +111,12 @@ namespace Tranquire.Tests.Reporting
                     }
                     throw new NotSupportedException($"{commandType} not supported");
                 }
-
+                var expectedDate = DateTimeOffset.Now;
                 yield return new object[]
                 {
                     "No notifications",
                     new ActionNotification[]{ },
-                    new XmlReportRoot()
-                    {
-                        Name = "Test"
-                    }
+                    createItemGeneric<XmlReportRoot>("Test", expectedDate, 0, false)
                 };
 
                 {
@@ -129,14 +128,15 @@ namespace Tranquire.Tests.Reporting
                             new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Action)),
                             new ActionNotification(action, 1, new AfterActionNotificationContent(TimeSpan.FromSeconds(1)))
                         },
-                        new XmlReportRoot()
-                        {
-                            Name = "Test",
-                            Children = new List<XmlReportItem>()
+                        createItemGeneric<XmlReportRoot>(
+                            "Test",
+                            expectedDate,
+                            0,
+                            false,
+                            new List<XmlReportItem>()
                             {
                                 createItem(CommandType.Action, action.Name, DateTimeOffset.MinValue, 1000)
-                            }
-                        }
+                            })
                     };
                 }
 
@@ -151,12 +151,13 @@ namespace Tranquire.Tests.Reporting
                                     new ActionNotification(a.action, i + 1, new AfterActionNotificationContent(TimeSpan.FromSeconds(i)))
                                 })
                                .ToArray(),
-                        new XmlReportRoot()
-                        {
-                            Name = "Test",
-                            Children = actions.Select((a, i) => createItem(a.commandType, a.action.Name, DateTimeOffset.MinValue, i * 1000))
-                                              .ToList()
-                        }
+                        createItemGeneric<XmlReportRoot>(
+                            "Test",
+                            expectedDate,
+                            0,
+                            false,
+                            actions.Select((a, i) => createItem(a.commandType, a.action.Name, DateTimeOffset.MinValue, i * 1000))
+                                              .ToList())
                     };
                 }
 
@@ -176,7 +177,7 @@ namespace Tranquire.Tests.Reporting
                         actions.Select((a,i) => (a.action, a.commandType, i))
                                                   .Select(a => createItem(a.commandType, a.action.Name, DateTimeOffset.MinValue, a.i * 1000))
                                                   .Reverse()
-                                                  .Concat(new[]{ new XmlReportRoot() { Name = "Test" }})
+                                                  .Concat(new[]{ createItemGeneric<XmlReportRoot>("Test", expectedDate, 0, false)})
                                                   .Aggregate(
                                                     (child, parent) => {
                                                         parent.Children.Add(child);
@@ -206,7 +207,7 @@ namespace Tranquire.Tests.Reporting
                         actions.Select((a,i) => (a.action, a.commandType, i))
                                                   .Select(a => createItem(a.commandType, a.action.Name, DateTimeOffset.MinValue, a.i * 1000, a.i == 3))
                                                   .Reverse()
-                                                  .Concat(new[]{ new XmlReportRoot() { Name = "Test" }})
+                                                  .Concat(new[]{ createItemGeneric<XmlReportRoot>("Test", expectedDate, 0, false)})
                                                   .Aggregate(
                                                     (child, parent) => {
                                                         parent.Children.Add(child);
@@ -225,8 +226,12 @@ namespace Tranquire.Tests.Reporting
             ActionNotification[] notifications,
             XmlReportRoot expected)
         {
-            // arrange
-            var sut = new Fixture().Create<XmlDocumentObserver>();
+            // arrange            
+            var fixture = new Fixture().Customize(new DomainCustomization());
+            fixture.Register(() => DateTimeOffset.Parse(expected.StartDate, CultureInfo.InvariantCulture));
+            var sut = fixture.Build<XmlDocumentObserver>()
+                .FromFactory(new MethodInvoker(new GreedyConstructorQuery()))
+                .Create();
             foreach (var notification in notifications)
             {
                 sut.OnNext(notification);
@@ -250,7 +255,9 @@ namespace Tranquire.Tests.Reporting
         }
 
         [Theory, DomainAutoData]
-        public void GetXmlDocument_WhenCallingOnCompleted_ShouldReturnXmlDocument(XmlDocumentObserver sut)
+        public void GetXmlDocument_WhenCallingOnCompleted_ShouldReturnXmlDocument(
+            [Frozen]DateTimeOffset date,
+            [Greedy]XmlDocumentObserver sut)
         {
             //arrange
             sut.OnCompleted();
@@ -258,11 +265,20 @@ namespace Tranquire.Tests.Reporting
             var xmlDocument = sut.GetXmlDocument();
             //assert
             var actual = DeserializeXmlDocument(xmlDocument);
-            AssertRootAreEqual(new XmlReportRoot() { Name = "Test" }, actual);
+            AssertRootAreEqual(new XmlReportRoot()
+            {
+                Name = "Test",
+                StartDate = date.ToString(CultureInfo.InvariantCulture),
+                EndDate = date.ToString(CultureInfo.InvariantCulture)
+            },
+            actual);
         }
 
         [Theory, DomainAutoData]
-        public void GetXmlDocument_WhenCallingOnError_ShouldReturnXmlDocument(XmlDocumentObserver sut, Exception exception)
+        public void GetXmlDocument_WhenCallingOnError_ShouldReturnXmlDocument(
+            [Frozen]DateTimeOffset date,
+            [Greedy]XmlDocumentObserver sut,
+            Exception exception)
         {
             //arrange
             sut.OnError(exception);
@@ -270,7 +286,13 @@ namespace Tranquire.Tests.Reporting
             var xmlDocument = sut.GetXmlDocument();
             //assert
             var actual = DeserializeXmlDocument(xmlDocument);
-            AssertRootAreEqual(new XmlReportRoot() { Name = "Test" }, actual);
+            AssertRootAreEqual(new XmlReportRoot()
+            {
+                Name = "Test",
+                StartDate = date.ToString(CultureInfo.InvariantCulture),
+                EndDate = date.ToString(CultureInfo.InvariantCulture)
+            },
+            actual);
         }
 
         private static XmlReportRoot DeserializeXmlDocument(XDocument xmlDocument)
@@ -282,9 +304,7 @@ namespace Tranquire.Tests.Reporting
 
         private static void AssertRootAreEqual(XmlReportRoot expected, XmlReportRoot actual)
         {
-            actual.Should().BeEquivalentTo(expected, o => o.Excluding(i => i.StartDate)
-                                                                       .Excluding(i => i.EndDate)
-                                                                       .Excluding(i => i.Duration));
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [Theory, DomainAutoData]
@@ -342,10 +362,10 @@ namespace Tranquire.Tests.Reporting
             var errorCount = actual.Split(new[] { $"class=\"{className} error\"" }, StringSplitOptions.None).Length - 1;
             errorCount.Should().Be(1);
         }
-        
+
         [Theory]
         [DomainAutoData]
-        public void GetHtmlDocument_WithAttachments_ShouldContainImgElement(            
+        public void GetHtmlDocument_WithAttachments_ShouldContainImgElement(
             XmlDocumentObserver sut,
             INamed named,
             ActionFileAttachment attachment)
@@ -365,9 +385,10 @@ namespace Tranquire.Tests.Reporting
         [DomainInlineAutoData(5)]
         public void GetXmlDocument_WithAttachments_ShouldReturnCorrectValue(
             int count,
-            XmlDocumentObserver sut,
-            INamed named,
             DateTimeOffset startDate,
+            [Frozen]DateTimeOffset date,
+            [Greedy]XmlDocumentObserver sut,
+            INamed named,            
             IFixture fixture
             )
         {
@@ -384,6 +405,8 @@ namespace Tranquire.Tests.Reporting
             var expected = new XmlReportRoot()
             {
                 Name = "Test",
+                StartDate = date.ToString(CultureInfo.InvariantCulture),
+                EndDate = date.ToString(CultureInfo.InvariantCulture),
                 Children = new List<XmlReportItem>()
                             {
                     new XmlReportAction()
