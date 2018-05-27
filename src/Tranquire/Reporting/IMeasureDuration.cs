@@ -14,34 +14,10 @@ namespace Tranquire.Reporting
         /// <typeparam name="T">The type returned by the function</typeparam>
         /// <param name="function">The function to measure the duration of</param>
         /// <returns>A tuple containing the duration and the value returned by the function</returns>
-        (TimeSpan, T) Measure<T>(Func<T> function);
+        (TimeSpan, T, Exception) Measure<T>(Func<T> function);
         /// <summary>
         /// Gets the current date
         /// </summary>
         DateTimeOffset Now { get; }
-    }
-
-    /// <summary>
-    /// A default implementation of the duration measurement
-    /// </summary>
-    public class DefaultMeasureDuration : IMeasureDuration
-    {
-        /// <inheritdoc />
-        public DateTimeOffset Now => DateTimeOffset.UtcNow;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public (TimeSpan, T) Measure<T>(Func<T> function)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-        {
-            if (function == null)
-            {
-                throw new ArgumentNullException(nameof(function));
-            }
-
-            var sw = Stopwatch.StartNew();
-            var value = function();
-            sw.Stop();
-            return (sw.Elapsed, value);
-        }
     }
 }

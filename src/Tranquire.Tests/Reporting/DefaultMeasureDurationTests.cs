@@ -22,9 +22,9 @@ namespace Tranquire.Tests.Reporting
         {
             //arrange
             //act
-            var actual = sut.Measure(() => expected);
+            var (duration, actual, exception) = sut.Measure(() => expected);
             //assert
-            Assert.Equal(expected, actual.Item2);
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
@@ -35,15 +35,51 @@ namespace Tranquire.Tests.Reporting
         {
             //arrange
             //act
-            var actual = sut.Measure(() =>
+            var (actual, result, exception) = sut.Measure(() =>
             {
                 Thread.Sleep((int)wait.TotalMilliseconds);
                 return value;
             });
             //assert
-            actual.Item1.Should().BeGreaterOrEqualTo(wait);
+            actual.Should().BeGreaterOrEqualTo(wait);
         }
         
+        [Theory, DomainAutoData]
+        public void MeasureTime_WhenFuncThrows_ShouldReturnCorrectDuration(
+            DefaultMeasureDuration sut,
+            Exception exception,
+            TimeSpan wait)
+        {
+            //arrange
+
+            //act
+            var (actual, result, ex) = sut.Measure<object>(() =>
+            {
+                Thread.Sleep((int)wait.TotalMilliseconds);
+                throw exception;
+            });
+            //assert
+            actual.Should().BeGreaterThan(wait);
+        }
+
+        [Theory, DomainAutoData]
+        public void MeasureTime_WhenFuncThrows_ShouldReturnCorrectException(
+            DefaultMeasureDuration sut,
+            Exception exception,
+            TimeSpan wait)
+        {
+            //arrange
+
+            //act
+            var (duration, result, actual) = sut.Measure<object>(() =>
+            {
+                Thread.Sleep((int)wait.TotalMilliseconds);
+                throw exception;
+            });
+            //assert
+            actual.Should().Be(exception);
+        }
+
         [Theory, DomainAutoData]
         public void Now_ShouldReturnCorrectValue(
             DefaultMeasureDuration sut)

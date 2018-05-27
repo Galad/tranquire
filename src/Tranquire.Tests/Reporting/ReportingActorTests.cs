@@ -101,7 +101,7 @@ namespace Tranquire.Tests.Reporting
             var action = fixture.Create<MockToString>();
             var expected = fixture.Create<object>();
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                           .Returns((Func<object> f) => (duration, f()));
+                           .Returns((Func<object> f) => (duration, f(), null));
             Mock.Get(sut.Actor).Setup(expression(action)).Returns(expected);
             //act
             var actual = executeAction(sut, action);
@@ -193,8 +193,8 @@ namespace Tranquire.Tests.Reporting
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var expectedDuration = fixture.Create<TimeSpan>();
             var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();            
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object()));
+            var action = fixture.Create<MockToString>();
+            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object(), null));
             //act
             executeAction(sut, action);
             //assert
@@ -236,7 +236,7 @@ namespace Tranquire.Tests.Reporting
                                    var result = f();
                                    var resultIndex = Array.FindIndex(actions, a => a.Result == result);
                                    var duration = expectedDurations[resultIndex == -1 ? NumberOfActions - 1 : resultIndex];
-                                   return (duration, result);
+                                   return (duration, result, null);
                                });
             }
             //act
@@ -295,7 +295,8 @@ namespace Tranquire.Tests.Reporting
             var sut = fixture.Create<ReportingActor>();
             var action = fixture.Create<MockToString>();
             var exception = fixture.Create<Exception>();
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Throws(exception);
+            var expectedDuration = fixture.Create<TimeSpan>();
+            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, null, exception));
             //act
             try
             {
@@ -305,7 +306,7 @@ namespace Tranquire.Tests.Reporting
             //assert
             var expected = new[]{
                 new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
-                new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception))
+                new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
@@ -326,6 +327,7 @@ namespace Tranquire.Tests.Reporting
             const int NumberOfActions = 4;
             var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();
             var exception = fixture.Create<Exception>();
+            var expectedDuration = fixture.Create<TimeSpan>();
 
             for (var i = 0; i < actions.Length - 1; i++)
             {
@@ -336,7 +338,17 @@ namespace Tranquire.Tests.Reporting
             Mock.Get(sut.Actor).Setup(expression(actions.Last()))
                                .Throws(exception);
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                               .Returns((Func<object> f) => (TimeSpan.Zero, f()));
+                           .Returns((Func<object> f) =>
+                           {
+                               try
+                               {
+                                   return (expectedDuration, f(), null);
+                               }
+                               catch (Exception ex)
+                               {
+                                   return (expectedDuration, null, ex);
+                               }
+                           });
             //act
             new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
@@ -346,10 +358,10 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(actions[1], 2, before()),
                 new ActionNotification(actions[2], 3, before()),
                 new ActionNotification(actions[3], NumberOfActions, before()),
-                new ActionNotification(actions[3], NumberOfActions, new ExecutionErrorNotificationContent(exception)),
-                new ActionNotification(actions[2], 3, new ExecutionErrorNotificationContent(exception)),
-                new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception)),
-                new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception))
+                new ActionNotification(actions[3], NumberOfActions, new ExecutionErrorNotificationContent(exception, expectedDuration)),
+                new ActionNotification(actions[2], 3, new ExecutionErrorNotificationContent(exception, expectedDuration)),
+                new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception, expectedDuration)),
+                new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
@@ -425,7 +437,7 @@ namespace Tranquire.Tests.Reporting
             )
         {
             //arrange                              
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object()));
+            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object(), null));
             //act
             sut.Execute(thenAction);
             //assert
@@ -443,12 +455,13 @@ namespace Tranquire.Tests.Reporting
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
             ThenAction<object> thenAction,
-            Exception error
+            Exception error,
+            TimeSpan expectedDuration
             )
         {
             //arrange                
             Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                                     .Throws(error);
+                                     .Returns((expectedDuration, null, error));
             //act
             try
             {
@@ -460,14 +473,14 @@ namespace Tranquire.Tests.Reporting
             //assert
             var expected = new[]{
                 new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
-                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.Zero, ThenOutcome.Error, error))
+                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Error, error))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
 
         private static System.Action[] _assertions = new System.Action[]
         {
-            () => Assert.True(false),            
+            () => Assert.True(false),
             () => NUnit.Framework.Assert.Fail(),
             () => NUnit.Framework.Assert.That(true, NUnit.Framework.Is.False),
             () => Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail()
@@ -477,14 +490,15 @@ namespace Tranquire.Tests.Reporting
         [ReportingActorInlineAutoData(0)]
         [ReportingActorInlineAutoData(1)]
         [ReportingActorInlineAutoData(2)]
-        [ReportingActorInlineAutoData(3)]        
+        [ReportingActorInlineAutoData(3)]
         public void Execute_WithThenActionWithAssertionError_ShouldCallOnNext(
             int i,
             [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
             [Frozen]DateTimeOffset date,
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
-            ThenAction<object> thenAction            
+            ThenAction<object> thenAction,
+            TimeSpan expectedDuration
             )
         {
             //arrange                
@@ -499,9 +513,9 @@ namespace Tranquire.Tests.Reporting
                                          catch (Exception ex)
                                          {
                                              expectedException = ex;
-                                             throw;
+                                             return (expectedDuration, new object(), ex);
                                          }
-                                         return (TimeSpan.Zero, new object());
+                                         throw new InvalidOperationException("Should not happen as the assertions actions should throw an exception");
                                      });
             //act
             try
@@ -514,7 +528,7 @@ namespace Tranquire.Tests.Reporting
             //assert
             var expected = new[]{
                 new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
-                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.Zero, ThenOutcome.Failed, expectedException))
+                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Failed, expectedException))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
