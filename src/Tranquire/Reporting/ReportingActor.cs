@@ -112,7 +112,7 @@ namespace Tranquire.Reporting
             }
             _depth++;
             var (createBefore, createAfter, createError) = GetNotificationContentFactories<TResult>(action, commandType);
-            Observer.OnNext(new ActionNotification(action, _depth, createBefore(DateTimeOffset.MinValue)));
+            Observer.OnNext(new ActionNotification(action, _depth, createBefore(MeasureTime.Now)));
             try
             {
                 var result = MeasureTime.Measure(executeAction);

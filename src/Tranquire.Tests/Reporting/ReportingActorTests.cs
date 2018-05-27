@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using Moq;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.Idioms;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
+using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,16 +189,17 @@ namespace Tranquire.Tests.Reporting
             var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
+            var date = fixture.Freeze<DateTimeOffset>();
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var expectedDuration = fixture.Create<TimeSpan>();
             var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();
+            var action = fixture.Create<MockToString>();            
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns(Tuple.Create(expectedDuration, new object()));
             //act
             executeAction(sut, action);
             //assert
             var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)),
+                new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
                 new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -214,6 +215,7 @@ namespace Tranquire.Tests.Reporting
             var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
+            var date = fixture.Freeze<DateTimeOffset>();
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var sut = fixture.Create<ReportingActor>();
             const int NumberOfActions = 4;
@@ -240,7 +242,7 @@ namespace Tranquire.Tests.Reporting
             //act
             executeAction(sut, actions[0]);
             //assert
-            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType);
+            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(date, commandType);
             var expected = new[]{
                 new ActionNotification(actions[0], 1, before()),
                 new ActionNotification(actions[1], 2, before()),
@@ -288,6 +290,7 @@ namespace Tranquire.Tests.Reporting
             var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
+            var date = fixture.Freeze<DateTimeOffset>();
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var sut = fixture.Create<ReportingActor>();
             var action = fixture.Create<MockToString>();
@@ -301,7 +304,7 @@ namespace Tranquire.Tests.Reporting
             catch { }
             //assert
             var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)),
+                new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
                 new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -317,6 +320,7 @@ namespace Tranquire.Tests.Reporting
             var fixture = CreateFixture();
             var observer = new TestObserver<ActionNotification>();
             fixture.Inject((IObserver<ActionNotification>)observer);
+            var date = fixture.Freeze<DateTimeOffset>();
             var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
             var sut = fixture.Create<ReportingActor>();
             const int NumberOfActions = 4;
@@ -336,7 +340,7 @@ namespace Tranquire.Tests.Reporting
             //act
             new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
-            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType);
+            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(date, commandType);
             var expected = new[]{
                 new ActionNotification(actions[0], 1, before()),
                 new ActionNotification(actions[1], 2, before()),
@@ -413,6 +417,7 @@ namespace Tranquire.Tests.Reporting
         [Theory, ReportingActorAutoData]
         public void Execute_WithThenAction_ShouldCallOnNext(
             [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
+            [Frozen]DateTimeOffset date,
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
             TimeSpan expectedDuration,
@@ -425,7 +430,7 @@ namespace Tranquire.Tests.Reporting
             sut.Execute(thenAction);
             //assert
             var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)),
+                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Pass))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -434,6 +439,7 @@ namespace Tranquire.Tests.Reporting
         [Theory, ReportingActorAutoData]
         public void Execute_WithThenActionWithError_ShouldCallOnNext(
             [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
+            [Frozen]DateTimeOffset date,
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
             ThenAction<object> thenAction,
@@ -453,7 +459,7 @@ namespace Tranquire.Tests.Reporting
             }
             //assert
             var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)),
+                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.Zero, ThenOutcome.Error, error))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -475,6 +481,7 @@ namespace Tranquire.Tests.Reporting
         public void Execute_WithThenActionWithAssertionError_ShouldCallOnNext(
             int i,
             [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
+            [Frozen]DateTimeOffset date,
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
             ThenAction<object> thenAction            
@@ -506,7 +513,7 @@ namespace Tranquire.Tests.Reporting
             }
             //assert
             var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)),
+                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.Zero, ThenOutcome.Failed, expectedException))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());

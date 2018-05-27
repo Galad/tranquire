@@ -15,6 +15,10 @@ namespace Tranquire.Reporting
         /// <param name="function">The function to measure the duration of</param>
         /// <returns>A tuple containing the duration and the value returned by the function</returns>
         Tuple<TimeSpan, T> Measure<T>(Func<T> function);
+        /// <summary>
+        /// Gets the current date
+        /// </summary>
+        DateTimeOffset Now { get; }
     }
 
     /// <summary>
@@ -22,6 +26,9 @@ namespace Tranquire.Reporting
     /// </summary>
     public class DefaultMeasureDuration : IMeasureDuration
     {
+        /// <inheritdoc />
+        public DateTimeOffset Now => DateTimeOffset.UtcNow;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public Tuple<TimeSpan, T> Measure<T>(Func<T> function)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

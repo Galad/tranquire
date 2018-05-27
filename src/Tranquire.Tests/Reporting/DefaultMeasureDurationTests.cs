@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using AutoFixture.Idioms;
+﻿using AutoFixture.Idioms;
+using FluentAssertions;
 using System;
 using System.Threading;
 using Tranquire.Reporting;
@@ -42,6 +42,19 @@ namespace Tranquire.Tests.Reporting
             });
             //assert
             actual.Item1.Should().BeGreaterOrEqualTo(wait);
+        }
+        
+        [Theory, DomainAutoData]
+        public void Now_ShouldReturnCorrectValue(
+            DefaultMeasureDuration sut)
+        {
+            //arrange
+            var expected = DateTimeOffset.UtcNow;
+            //act
+            var actual = sut.Now;
+            //assert
+            actual.Should().BeCloseTo(expected, TimeSpan.FromSeconds(1));
+            actual.Offset.Should().Be(TimeSpan.Zero);
         }
     }
 }
