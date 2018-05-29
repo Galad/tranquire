@@ -22,6 +22,5 @@ namespace Tranquire.Reporting
     internal class TranquireXmlReportThen : TranquireXmlReportItem
     {
         public ThenOutcome Outcome { get; set; }
-        public string OutcomeDetail { get; set; }
     }
 }

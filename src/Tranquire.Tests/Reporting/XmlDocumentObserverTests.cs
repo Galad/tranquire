@@ -482,6 +482,59 @@ namespace Tranquire.Tests.Reporting
             actual.Should().Contain($"<img src=\"{attachment.FilePath}\" class=\"attachment\" />");
         }
 
+        public XmlDocumentObserverTests(Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        {
+            this.testOutputHelper = testOutputHelper;
+        }
+
+        private readonly Xunit.Abstractions.ITestOutputHelper testOutputHelper;
+
+        [Theory]
+        [DomainAutoData]
+        public void GetHtmlDocument_WithPassingVerification_ShouldContainImgElement(
+            XmlDocumentObserver sut,          
+            ThenAction<object> thenAction)
+        {
+            //arrange  
+            sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)));
+            sut.OnNext(new ActionNotification(thenAction.Question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)));
+            sut.OnNext(new ActionNotification(thenAction.Question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))));
+            sut.OnNext(new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), ThenOutcome.Pass)));            
+            //act
+            var actual = sut.GetHtmlDocument();
+            testOutputHelper.WriteLine(actual);
+            //assert
+            actual.Should().Contain("<li class=\"then then-pass\">")
+                  .And.Contain(thenAction.Name)
+                  .And.Contain("class=\"question\"");
+        }
+
+        [Theory]
+        [DomainInlineAutoData(ThenOutcome.Error)]
+        [DomainInlineAutoData(ThenOutcome.Failed)]
+        public void GetHtmlDocument_WithFailingVerification_ShouldContainImgElement(
+            ThenOutcome outcome,
+            Exception exception,
+            XmlDocumentObserver sut,
+            ThenAction<object> thenAction)
+        {
+            //arrange  
+            sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)));
+            sut.OnNext(new ActionNotification(thenAction.Question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)));
+            sut.OnNext(new ActionNotification(thenAction.Question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))));
+            sut.OnNext(new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), outcome, exception)));
+            //act
+            var actual = sut.GetHtmlDocument();
+            testOutputHelper.WriteLine(actual);
+            //testOutputHelper.WriteLine(sut.GetXmlDocument().ToString(SaveOptions.None));
+            //assert
+            actual.Should().Contain("<li class=\"then then-fail error\">")
+                  .And.Contain(thenAction.Name)
+                  .And.Contain("class=\"question\"")
+                  .And.Contain("class=\"then-fail-detail error\"")
+                  .And.Contain(exception.Message);
+        }
+
         [Theory]
         [DomainInlineAutoData(1)]
         [DomainInlineAutoData(5)]

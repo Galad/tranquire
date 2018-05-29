@@ -8,9 +8,8 @@
           body {
           padding-bottom: 1000px;
           }
-          
+
           li {
-          background-color: lightgreen;
           border-radius: 8px;
           border-left-style: solid;
           border-width: 2px;
@@ -21,7 +20,7 @@
 
           li.question {
           font-weight: bold;
-          background-color: rgba(57, 185, 45, 0.445);
+          background-color: rgba(156, 89, 201, 0.726);
           }
 
           li.action {
@@ -63,6 +62,26 @@
           transform-origin: left top;
           border-radius: 0px;
           }
+
+          .then {
+          font-weight: bold;
+          }
+
+          .then-pass {
+          background-color: rgb(111, 194, 104);
+          }
+
+          .then-fail {
+          background-color: rgba(255, 158, 158, 0.781);
+          }
+
+          .then-fail-detail {
+          background-color: rgba(252, 76, 76, 0.842);
+          }
+
+          .then-fail-content {
+          font-weight: normal;
+          }
         </style>
       </head>
       <body style="font-family:Arial;font-size:12pt;background-color:#EEEEEE">
@@ -99,7 +118,8 @@
       </div>
       <xsl:if test="*">
         <ul>
-          <xsl:apply-templates select="*"/>
+          <xsl:apply-templates select="action | question"/>
+          <xsl:apply-templates select="attachments"/>
         </ul>
       </xsl:if>
     </li>
@@ -124,8 +144,8 @@
       </div>
       <xsl:if test="*">
         <ul>
-          <xsl:apply-templates select="action | question"/>
-          <xsl:apply-templates select="attachments"/>
+          <xsl:apply-templates select="action | question"/>          
+          <xsl:apply-templates select="attachments"/>          
         </ul>
       </xsl:if>
     </li>
@@ -133,5 +153,38 @@
 
   <xsl:template match="attachment">    
     <img src="{@filepath}" class="attachment" />
+  </xsl:template>
+
+  <xsl:template match="then">
+    <xsl:variable name="class">
+      <xsl:choose>
+        <xsl:when test="@outcome = 'pass'">pass</xsl:when>
+        <xsl:otherwise>fail error</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <li class="then then-{$class}">
+      <div>
+        <xsl:value-of select="@name"/>
+      </div>
+      <div class="command-info">
+        Duration:
+        <span class="date">
+          <xsl:value-of select="@duration" /> ms
+        </span>
+      </div>
+      <ul>
+        <xsl:apply-templates select="question" />
+        <xsl:if test="@outcome != 'pass'">
+          <li class="then-fail-detail error">
+            <div>The verification failed. Here are the details:</div>
+            <div class="then-fail-content">
+              <pre>
+                <xsl:value-of select="outcomeDetail" />
+              </pre>
+            </div>
+          </li>
+        </xsl:if>
+      </ul>
+    </li>
   </xsl:template>
 </xsl:stylesheet>
