@@ -194,10 +194,13 @@ namespace Tranquire.Reporting
                 new XAttribute("end-date", item.EndDate.ToString(CultureInfo.InvariantCulture)),
                 new XAttribute("duration", (int)item.Duration.TotalMilliseconds),
                 new XAttribute("name", item.Name),
-                new XAttribute("has-error", item.HasError),
-                new XElement("attachments", item.Attachments.Select(getAttachment)),
+                new XAttribute("has-error", item.HasError),                
                 item.Children.Select(GetElement)
             };
+            if(item.Attachments.Count > 0)
+            {
+                content.Add(new XElement("attachments", item.Attachments.Select(getAttachment)));
+            }
             if(item is TranquireXmlReportThen then)
             {
                 content.Add(new XAttribute("outcome", then.Outcome.ToString().ToLower()));
