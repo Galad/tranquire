@@ -43,8 +43,8 @@ namespace Tranquire.Selenium.Actions
         protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var element = Target.ResolveFor(ability);
-            element.SendKeys(Keys.LeftShift + Keys.Home);
-            element.SendKeys(Keys.Backspace);
+            element.SendKeys(Keys.LeftControl + "a");
+            element.SendKeys(Keys.Delete);
         }
     }
 }

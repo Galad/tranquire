@@ -166,5 +166,35 @@ namespace Tranquire.Selenium.Tests.Actions
             var actual = Answer(Value.Of(target).Value);
             Assert.Equal(string.Empty, actual);
         }
+        
+        [Fact]     
+        public void ClearValue_WhenCursorIsNotAtTheEnd_ShouldClearTheValue()
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var target = Target.The("input to clear").LocatedBy(By.Id("InputToClear"));
+            Fixture.Actor.When(Enter.TheValue("Value to clear").Into(target));
+            Fixture.Actor.When(Enter.TheValue(Keys.ArrowLeft).Into(target));
+            //act
+            Fixture.Actor.When(Clear.TheValueOf(target));
+            //assert
+            var actual = Answer(Value.Of(target).Value);
+            Assert.Equal(string.Empty, actual);
+        }
+
+        [Fact]
+        public void ClearValue_WhenCursorIsAtTheBeginning_ShouldClearTheValue()
+        {
+            //arrange
+            Fixture.WebDriver.Navigate().Refresh();
+            var target = Target.The("input to clear").LocatedBy(By.Id("InputToClear"));
+            Fixture.Actor.When(Enter.TheValue("Value to clear").Into(target));
+            Fixture.Actor.When(Enter.TheValue(Keys.Home).Into(target));
+            //act
+            Fixture.Actor.When(Clear.TheValueOf(target));
+            //assert
+            var actual = Answer(Value.Of(target).Value);
+            Assert.Equal(string.Empty, actual);
+        }
     }
 }
