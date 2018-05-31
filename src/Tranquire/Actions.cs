@@ -210,5 +210,21 @@ namespace Tranquire
 
             return new FuncAction<TAbility, TResult>(name, action);
         }
+
+        /// <summary>
+        /// Create an action that use the <paramref name="givenAction"/> when it is called with <see cref="Tranquire.Action{TResult}.ExecuteGivenAs(IActor)"/>, and <paramref name="whenAction"/> when it is called with <see cref="Tranquire.Action{TResult}.ExecuteWhenAs(IActor)"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">The action name</param>
+        /// <param name="givenAction">The action that is executed when the <see cref="Tranquire.Action{TResult}.ExecuteGivenAs(IActor)"/> is called on the returned action</param>
+        /// <param name="whenAction">The action that is executed when the <see cref="Tranquire.Action{TResult}.ExecuteWhenAs(IActor)"/> is called on the returned action</param>
+        /// <returns>Test</returns>
+        public static DispatchAction<T> CreateDispatched<T>(
+            string name, 
+            IAction<T> givenAction, 
+            IAction<T> whenAction)
+        {
+            return new DispatchAction<T>(name, givenAction, whenAction);
+        }
     }
 }

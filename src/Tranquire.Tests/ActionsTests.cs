@@ -397,5 +397,22 @@ namespace Tranquire.Tests
             Assert.Equal(expected, actual);
         }
         #endregion
+
+        #region DispatchedGivenWhen
+
+        [Theory, DomainAutoData]
+        public void DispatchedGivenWhen_ShouldReturnCorrectValue(
+              string name,
+              IAction<object> givenAction,
+              IAction<object> whenAction)
+        {
+            //arrange
+            //act
+            var actual = Actions.CreateDispatched(name, givenAction, whenAction);
+            //assert
+            var expected = new DispatchAction<object>(name, givenAction, whenAction);
+            actual.Should().BeEquivalentTo(expected);
+        }
+        #endregion
     }
 }
