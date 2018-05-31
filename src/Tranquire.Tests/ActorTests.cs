@@ -86,7 +86,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void WhenWithAbility_ShouldCallExecuteWhen(
          [Greedy]Actor sut,
-         Mock<Action<Ability1, Ability2, object>> action,
+         Mock<Action<Ability2, object>> action,
          object expected)
         {
             //arrange
@@ -117,7 +117,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void GivenWithAbility_ShouldCallExecuteGiven(
           [Greedy]Actor sut,
-          Mock<Action<Ability1, Ability2, object>> action,
+          Mock<Action<Ability2, object>> action,
           object expected)
         {
             //arrange
@@ -211,7 +211,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Name_WhenCallingGivenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
-            Mock<Action<Ability1, Ability1, string>> command)
+            Mock<Action<Ability1, string>> command)
         {
             //arrange
             var expected = sut.Name;
@@ -227,7 +227,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Name_WhenCallingWhenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
-            Mock<Action<Ability1, Ability1, string>> command)
+            Mock<Action<Ability1, string>> command)
         {
             //arrange
             var expected = sut.Name;
@@ -247,8 +247,8 @@ namespace Tranquire.Tests
                 return new System.Action<Actor, IFixture>[]
                 {
                     (sut, fixture) => sut.AsksFor(fixture.Create<Question<string, AbilityTest>>()),
-                    (sut, fixture) => sut.When(fixture.Create<Action<AbilityTest, AbilityTest, object>>()),
-                    (sut, fixture) => sut.Given(fixture.Create<Action<AbilityTest, AbilityTest, object>>()),
+                    (sut, fixture) => sut.When(fixture.Create<Action<AbilityTest, object>>()),
+                    (sut, fixture) => sut.Given(fixture.Create<Action<AbilityTest, object>>()),
                     //(sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest, object>>()),
                 }
                 .Select(a => new object[] { a });
