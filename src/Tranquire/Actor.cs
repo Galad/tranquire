@@ -30,7 +30,7 @@ namespace Tranquire
         /// <param name="abilities">A dictionary containing the abilities for the actor</param>
         /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.When{TResult}(IWhenCommand{TResult})"/>,         
         /// <see cref="IActionExecutor.Given{TResult}(IGivenCommand{TResult})"/>,         
-        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TAbility, TResult}(IAction{TAbility, TResult})"/>
         /// </param>
         public Actor(
             string name,
@@ -67,7 +67,7 @@ namespace Tranquire
         /// <param name="name">The actor's name</param>
         /// <param name="innerActorBuilder">A function called when calling <see cref="IActionExecutor.When{TResult}(IWhenCommand{TResult})"/>,         
         /// <see cref="IActionExecutor.Given{TResult}(IGivenCommand{TResult})"/>,         
-        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TGiven, TWhen, TResult}(IAction{TGiven, TWhen, TResult})"/>
+        /// Allow the object instanciator to decorate the actor that will be used when calling <see cref="IActor.Execute{TResult}(IAction{TResult})"/> and <see cref="IActor.ExecuteWithAbility{TAbility, TResult}(IAction{TAbility, TResult})"/>
         /// </param>
         public Actor(string name, Func<IActor, IActor> innerActorBuilder)
             : this(name, new Dictionary<Type, object>(), innerActorBuilder)
@@ -169,7 +169,7 @@ namespace Tranquire
 
             public override TResult Execute<TResult>(IAction<TResult> action) => action.ExecuteWhenAs(Actor);
 #pragma warning disable CS0618 // Type or member is obsolete
-            public override TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteWhenAs(Actor, (TWhen)GetAbility(typeof(TWhen)));
+            public override TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action) => action.ExecuteWhenAs(Actor, (TAbility)GetAbility(typeof(TAbility)));
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -181,7 +181,7 @@ namespace Tranquire
 
             public override TResult Execute<TResult>(IAction<TResult> action) => action.ExecuteGivenAs(Actor);
 #pragma warning disable CS0618 // Type or member is obsolete
-            public override TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action) => action.ExecuteGivenAs(Actor, (TGiven)GetAbility(typeof(TGiven)));
+            public override TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action) => action.ExecuteGivenAs(Actor, (TAbility)GetAbility(typeof(TAbility)));
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -212,7 +212,7 @@ namespace Tranquire
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            public abstract TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
+            public abstract TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action);
 #pragma warning restore CS0618 // Type or member is obsolete
             public abstract TResult Execute<TResult>(IAction<TResult> action);
         }

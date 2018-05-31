@@ -92,30 +92,30 @@ namespace Tranquire.Selenium.Extensions
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
         {
-            return Actor.ExecuteWithAbility(new TakeScreenshotAction<TGiven, TWhen, TResult>(action, this));
+            return Actor.ExecuteWithAbility(new TakeScreenshotAction<TAbility, TResult>(action, this));
         }
 
-        private sealed class TakeScreenshotAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>
+        private sealed class TakeScreenshotAction<TAbility, TResult> : Action<TAbility, TResult>
         {
-            private readonly IAction<TGiven, TWhen, TResult> _action;
+            private readonly IAction<TAbility, TResult> _action;
             private readonly TakeScreenshot _takeScreenshot;
 
             public TakeScreenshotAction(
-                IAction<TGiven, TWhen, TResult> action, 
+                IAction<TAbility, TResult> action, 
                 TakeScreenshot takeScreenshot)
             {
                 _action = action;
                 _takeScreenshot = takeScreenshot;
             }
 
-            protected override TResult ExecuteGiven(IActor actor, TGiven ability)
+            protected override TResult ExecuteGiven(IActor actor, TAbility ability)
             {
                 return ExecuteTakeScreenshot(ability, () => _action.ExecuteGivenAs(actor, ability), _takeScreenshot);
             }
 
-            protected override TResult ExecuteWhen(IActor actor, TWhen ability)
+            protected override TResult ExecuteWhen(IActor actor, TAbility ability)
             {
                 return ExecuteTakeScreenshot(ability, () => _action.ExecuteWhenAs(actor, ability), _takeScreenshot);
             }
