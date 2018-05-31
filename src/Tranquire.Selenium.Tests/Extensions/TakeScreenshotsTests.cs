@@ -62,14 +62,14 @@ namespace Tranquire.Selenium.Tests.Extensions
         public void Execute_WithActionWithoutWebBrowserAbility_CallingGiven_ShouldNotCallObserver(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
             TakeScreenshot sut,
-            IAction<object, object, object> action,
+            IAction<object, object> action,
             IActor otherActor,
             object ability
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object, object>>()))
-                               .Callback((IAction<object, object, object> a) => a.ExecuteGivenAs(otherActor, ability));
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>()))
+                               .Callback((IAction<object, object> a) => a.ExecuteGivenAs(otherActor, ability));
             // act
             sut.ExecuteWithAbility(action);
             // assert
@@ -81,14 +81,14 @@ namespace Tranquire.Selenium.Tests.Extensions
         public void Execute_WithActionWithoutWebBrowserAbility_CallingWhen_ShouldNotCallObserver(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
             TakeScreenshot sut,
-            IAction<object, object, object> action,
+            IAction<object, object> action,
             IActor otherActor,
             object ability
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object, object>>()))
-                               .Callback((IAction<object, object, object> a) => a.ExecuteWhenAs(otherActor, ability));
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>()))
+                               .Callback((IAction<object, object> a) => a.ExecuteWhenAs(otherActor, ability));
             // act
             sut.ExecuteWithAbility(action);
             // assert
@@ -97,30 +97,11 @@ namespace Tranquire.Selenium.Tests.Extensions
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WithActionWithWhenWebBrowserAbility_CallingGiven_ShouldNotCallObserver(
-            [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
-            IAction<object, WebBrowser, object> action,
-            IActor otherActor,
-            object ability
-            )
-        {
-            // arrange
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, WebBrowser, object>>()))
-                               .Callback((IAction<object, WebBrowser, object> a) => a.ExecuteGivenAs(otherActor, ability));
-            // act
-            sut.ExecuteWithAbility(action);
-            // assert
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.ExecuteGivenAs(otherActor, ability));
-        }
-
-        [Theory, DomainAutoData]
-        public void Execute_WithActionWithGivenWebBrowserAbility_CallingGiven_ShouldNotCallObserver(
+        public void Execute_WithActionWithWebBrowserAbility_CallingGiven_ShouldCallObserver(
             [Frozen] string expectedName,
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
             TakeScreenshot sut,
-            IAction<WebBrowser, object, object> action,
+            IAction<WebBrowser, object> action,
             IActor otherActor
             )
         {
@@ -130,8 +111,8 @@ namespace Tranquire.Selenium.Tests.Extensions
             var webDriver = new Mock<IWebDriver>();
             webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
             var ability = WebBrowser.With(webDriver.Object);
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<WebBrowser, object, object>>()))
-                .Callback((IAction<WebBrowser, object, object> a) => a.ExecuteGivenAs(otherActor, ability));
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<WebBrowser, object>>()))
+                .Callback((IAction<WebBrowser, object> a) => a.ExecuteGivenAs(otherActor, ability));
             // act
             sut.ExecuteWithAbility(action);
             // assert
@@ -140,11 +121,11 @@ namespace Tranquire.Selenium.Tests.Extensions
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WithActionWithWhenWebBrowserAbility_CallingWhen_ShouldNotCallObserver(
+        public void Execute_WithActionWithWebBrowserAbility_CallingWhen_ShouldCallObserver(
              [Frozen] string expectedName,
              [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
              TakeScreenshot sut,
-             IAction<object, WebBrowser, object> action,
+             IAction<WebBrowser, object> action,
              IActor otherActor
             )
         {
@@ -154,35 +135,14 @@ namespace Tranquire.Selenium.Tests.Extensions
             var webDriver = new Mock<IWebDriver>();
             webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
             var ability = WebBrowser.With(webDriver.Object);
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, WebBrowser, object>>()))
-                               .Callback((IAction<object, WebBrowser, object> a) => a.ExecuteWhenAs(otherActor, ability));
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<WebBrowser, object>>()))
+                               .Callback((IAction<WebBrowser, object> a) => a.ExecuteWhenAs(otherActor, ability));
             // act
             sut.ExecuteWithAbility(action);
             // assert
             observer.Verify(CallOnNext(expected), Times.Once());
             Mock.Get(action).Verify(a => a.ExecuteWhenAs(otherActor, ability));
         }
-
-
-        [Theory, DomainAutoData]
-        public void Execute_WithActionWithGivenWebBrowserAbility_CallingWhen_ShouldNotCallObserver(
-            [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
-            IAction<WebBrowser, object, object> action,
-            IActor otherActor,
-            object ability
-            )
-        {
-            // arrange
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<WebBrowser, object, object>>()))
-                               .Callback((IAction<WebBrowser, object, object> a) => a.ExecuteWhenAs(otherActor, ability));
-            // act
-            sut.ExecuteWithAbility(action);
-            // assert
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.ExecuteWhenAs(otherActor, ability));
-        }
-
         #endregion
 
         #region AskFor
@@ -301,13 +261,13 @@ namespace Tranquire.Selenium.Tests.Extensions
         [Theory, DomainAutoData]
         public void ActionName_WithAbility_ShouldReturnCorrectValue(
             TakeScreenshot sut,
-            IAction<object, object, object> action
+            IAction<object, object> action
             )
         {
             // arrange
             string actual = "";
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object, object>>()))
-                .Callback((IAction<object, object, object> q) => actual = q.Name);
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>()))
+                .Callback((IAction<object, object> q) => actual = q.Name);
             // act
             sut.ExecuteWithAbility(action);
             // assert

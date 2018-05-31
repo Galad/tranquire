@@ -112,7 +112,7 @@ namespace Tranquire.Tests.Reporting
 
         //Moq does not mock ToString if it is not overridden in the class
 #pragma warning disable CS0618 // Type or member is obsolete
-        public class MockToString : IQuestion<object>, IQuestion<object, Ability1>, IAction<object>, IAction<Ability1, Ability2, object>
+        public class MockToString : IQuestion<object>, IQuestion<object, Ability1>, IAction<object>, IAction<Ability2, object>
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             public string ToStringValue { get; }
@@ -127,7 +127,7 @@ namespace Tranquire.Tests.Reporting
             public object AnsweredBy(IActor actor) => Result;
             public object AnsweredBy(IActor actor, Ability1 ability) => Result;
             public object ExecuteGivenAs(IActor actor) => new object();
-            public object ExecuteGivenAs(IActor actor, Ability1 ability) => Result;
+            public object ExecuteGivenAs(IActor actor, Ability2 ability) => Result;
             public object ExecuteWhenAs(IActor actor) => Result;
             public object ExecuteWhenAs(IActor actor, Ability2 ability) => Result;
             public string Name => "";
@@ -157,8 +157,8 @@ namespace Tranquire.Tests.Reporting
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 yield return ExecutionTestCasesValues(
-                    (sut, action) => sut.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action),
-                    action => a => a.ExecuteWithAbility((IAction<Ability1, Ability2, object>)action),
+                    (sut, action) => sut.ExecuteWithAbility((IAction<Ability2, object>)action),
+                    action => a => a.ExecuteWithAbility((IAction<Ability2, object>)action),
                     CommandType.Action);
                 yield return ExecutionTestCasesValues(
                     (sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action),
@@ -371,7 +371,7 @@ namespace Tranquire.Tests.Reporting
             [Frozen]TestObserver<ActionNotification> observer,
             ReportingActor sut,
 #pragma warning disable CS0618 // Type or member is obsolete
-            IAction<Ability1, Ability2, object> action)
+            IAction<Ability2, object> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             //arrange                                                      

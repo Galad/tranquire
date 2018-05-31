@@ -10,13 +10,12 @@ namespace Tranquire
         /// <summary>
         /// Execute an action with an ability
         /// </summary>
-        /// <typeparam name = "TGiven">The ability required for the Given context</typeparam>
-        /// <typeparam name = "TWhen">The ability required for the When context</typeparam>
+        /// <typeparam name = "TAbility">The ability type required for the action</typeparam>        
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         /// <param name = "action">The action to execute</param>
 #pragma warning disable CS0618 // Type or member is obsolete
         [Obsolete("Prefer using Execute<TResult>(IAction<TResult>). Implementors can ignore this warning.", false)]
-        TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action);
+        TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action);
 #pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>

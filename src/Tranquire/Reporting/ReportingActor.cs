@@ -91,7 +91,7 @@ namespace Tranquire.Reporting
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             Guard.ForNull(action, nameof(action));

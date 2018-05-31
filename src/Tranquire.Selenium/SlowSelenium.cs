@@ -81,24 +81,24 @@ namespace Tranquire.Selenium
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
         {
             var targeted = action as ITargeted;
-            if (typeof(TGiven) != typeof(WebBrowser) && typeof(TWhen) != typeof(WebBrowser) || targeted == null)
+            if (typeof(TAbility) != typeof(WebBrowser) || targeted == null)
             {
                 return Actor.ExecuteWithAbility(action);
             }
-            return Actor.ExecuteWithAbility(new SlowSeleniumAction<TGiven, TWhen, TResult>(action, DelayMilliseconds, targeted));
+            return Actor.ExecuteWithAbility(new SlowSeleniumAction<TAbility, TResult>(action, DelayMilliseconds, targeted));
         }
 
-        private sealed class SlowSeleniumAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>, ITargeted
+        private sealed class SlowSeleniumAction<TAbility, TResult> : Action<TAbility, TResult>, ITargeted
         {
-            private readonly IAction<TGiven, TWhen, TResult> action;
+            private readonly IAction<TAbility, TResult> action;
             private readonly int _delay;
             private readonly ITargeted _targeted;
             public override string Name => $"[Delayed of {_delay}ms] " + action.Name;
 
-            public SlowSeleniumAction(IAction<TGiven, TWhen, TResult> action, int delay, ITargeted targeted)
+            public SlowSeleniumAction(IAction<TAbility, TResult> action, int delay, ITargeted targeted)
             {
                 this.action = action;
                 _delay = delay;
@@ -107,7 +107,7 @@ namespace Tranquire.Selenium
 
             public ITarget Target => _targeted.Target;
 
-            protected override TResult ExecuteGiven(IActor actor, TGiven ability)
+            protected override TResult ExecuteGiven(IActor actor, TAbility ability)
             {
                 Thread.Sleep(_delay);
                 var value = action.ExecuteGivenAs(actor, ability);
@@ -115,7 +115,7 @@ namespace Tranquire.Selenium
                 return value;
             }
 
-            protected override TResult ExecuteWhen(IActor actor, TWhen ability)
+            protected override TResult ExecuteWhen(IActor actor, TAbility ability)
             {
                 Thread.Sleep(_delay);
                 var value = action.ExecuteWhenAs(actor, ability);
