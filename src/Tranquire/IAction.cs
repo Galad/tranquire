@@ -7,7 +7,7 @@ namespace Tranquire
     /// </summary>
     /// <typeparam name="TAbility">The ability type</typeparam>    
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
-    [Obsolete("Prefer using IAction<T> when exposing an action, or inheriting the abstract class IAction<TGiven, TWhen, T> when implementing one.", false)]
+    [Obsolete("Prefer using IAction<T> when exposing an action, or inheriting the abstract class IAction<TAbility, T> when implementing one.", false)]
     public interface IAction<TAbility, out TResult> : IGivenCommand<TAbility, TResult>, IWhenCommand<TAbility, TResult>, IAction<TResult>
     {
     }
