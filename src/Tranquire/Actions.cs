@@ -153,16 +153,6 @@ namespace Tranquire
         /// <returns></returns>
         public static IAction<T> Create<T>(string name, Func<IActor, T> action)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
             return new FuncAction<T>(name, action);
         }
 
@@ -198,16 +188,6 @@ namespace Tranquire
         public static IAction<TAbility, TResult> Create<TResult, TAbility>(string name, Func<IActor, TAbility, TResult> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
             return new FuncAction<TAbility, TResult>(name, action);
         }
 
