@@ -36,7 +36,7 @@ namespace Tranquire.Tests
                 return actor.Execute(_action);
             }
 
-            protected override object ExecuteGiven(IActor actor, AbilityGiven ability)
+            protected override object ExecuteGiven(IActor actor, AbilityWhen ability)
             {
                 return new object();
             }
@@ -46,7 +46,7 @@ namespace Tranquire.Tests
         {
             public IActor Actor;
             private readonly IAction<object> _action;
-            public AbilityGiven Ability;
+            public AbilityWhen Ability;
             public override string Name => "";
 
             public ActionExecuteGiven(IAction<object> action)
@@ -59,7 +59,7 @@ namespace Tranquire.Tests
                 return new object();
             }
 
-            protected override object ExecuteGiven(IActor actor, AbilityGiven ability)
+            protected override object ExecuteGiven(IActor actor, AbilityWhen ability)
             {
                 Actor = actor;
                 Ability = ability;
@@ -71,7 +71,7 @@ namespace Tranquire.Tests
         public void Sut_ShouldBeAction(Action<AbilityGiven, AbilityWhen, object> sut)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.IsAssignableFrom<IAction<AbilityGiven, AbilityWhen, object>>(sut);
+            Assert.IsAssignableFrom<IAction<AbilityWhen, object>>(sut);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -103,7 +103,7 @@ namespace Tranquire.Tests
             [Frozen] IAction<object> action,
             ActionExecuteGiven sut,
             Mock<IActor> actor,
-            AbilityGiven ability,
+            AbilityWhen ability,
             object expected)
         {
             //arrange
@@ -129,7 +129,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldUseCorrectActor(ActionExecuteGiven sut, Mock<IActor> actor, AbilityGiven ability)
+        public void ExecuteGivenAs_ShouldUseCorrectActor(ActionExecuteGiven sut, Mock<IActor> actor, AbilityWhen ability)
         {
             //arrange
             var expected = actor.Object;
@@ -150,7 +150,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldUseCorrectAbility(ActionExecuteGiven sut, Mock<IActor> actor, AbilityGiven expected)
+        public void ExecuteGivenAs_ShouldUseCorrectAbility(ActionExecuteGiven sut, Mock<IActor> actor, AbilityWhen expected)
         {
             //arrange
             //act

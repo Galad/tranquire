@@ -27,7 +27,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="uri">The Uri to navigate to</param>
         /// <returns>A new action that navigate to the Uri</returns>
-        public static IAction<WebBrowser, WebBrowser, Unit> To(Uri uri)
+        public static IAction<WebBrowser, Unit> To(Uri uri)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             return new Navigate(uri);

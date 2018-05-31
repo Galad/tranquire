@@ -24,7 +24,7 @@ namespace Tranquire
         }
     }
 
-    internal class WhenCommandAsAction<TWhen, TResult> : Action<Unit, TWhen, TResult>
+    internal class WhenCommandAsAction<TWhen, TResult> : Action<TWhen, TResult>
     {
         public IWhenCommand<TWhen, TResult> Command { get; }
         public override string Name => Command.Name;
@@ -39,7 +39,7 @@ namespace Tranquire
             return Command.ExecuteWhenAs(actor, ability);
         }
 
-        protected override TResult ExecuteGiven(IActor actor, Unit ability)
+        protected override TResult ExecuteGiven(IActor actor, TWhen ability)
         {
             throw new InvalidOperationException("Cannot call ExecuteGivenAs with a WhenCommand when");
         }
@@ -66,7 +66,7 @@ namespace Tranquire
         }
     }
 
-    internal class GivenCommandAsAction<TGiven, TResult> : Action<TGiven, Unit, TResult>
+    internal class GivenCommandAsAction<TGiven, TResult> : Action<TGiven, TResult>
     {
         public IGivenCommand<TGiven, TResult> Command { get; }
         public override string Name => Command.Name;
@@ -76,7 +76,7 @@ namespace Tranquire
             Command = command ?? throw new ArgumentNullException(nameof(command));
         }
 
-        protected override TResult ExecuteWhen(IActor actor, Unit ability)
+        protected override TResult ExecuteWhen(IActor actor, TGiven ability)
         {
             throw new InvalidOperationException("Cannot call ExecuteWhenAs with a GivenCommand when");
         }

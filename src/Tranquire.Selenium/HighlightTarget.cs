@@ -114,31 +114,31 @@ namespace Tranquire.Selenium
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TResult ExecuteWithAbility<TGiven, TWhen, TResult>(IAction<TGiven, TWhen, TResult> action)
+        public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
         {
-            if ((typeof(TGiven) == typeof(WebBrowser) || typeof(TWhen) == typeof(WebBrowser)) && action is ITarget)
+            if (typeof(TAbility) == typeof(WebBrowser) && action is ITarget)
             {
-                return Actor.ExecuteWithAbility(new HighlightedAction<TGiven, TWhen, TResult>(action, _highlightActions));
+                return Actor.ExecuteWithAbility(new HighlightedAction<TAbility, TResult>(action, _highlightActions));
             }
             return Actor.ExecuteWithAbility(action);
         }
 
-        private sealed class HighlightedAction<TGiven, TWhen, TResult> : Action<TGiven, TWhen, TResult>
+        private sealed class HighlightedAction<TAbility, TResult> : Action<TAbility, TResult>
         {
-            private readonly IAction<TGiven, TWhen, TResult> _action;
+            private readonly IAction<TAbility, TResult> _action;
             private readonly HighlighActions _highlightActions;
             private ITargeted Targeted => (ITargeted)_action;
             public override string Name => "[Highlighted] " + _action.Name;
 
-            public HighlightedAction(IAction<TGiven, TWhen, TResult> action, HighlighActions highlightActions)
+            public HighlightedAction(IAction<TAbility, TResult> action, HighlighActions highlightActions)
             {
                 _action = action;
                 _highlightActions = highlightActions;
             }
 
-            protected override TResult ExecuteGiven(IActor actor, TGiven ability)
+            protected override TResult ExecuteGiven(IActor actor, TAbility ability)
             {
-                if (IsWebBrowser<TGiven>())
+                if (IsWebBrowser<TAbility>())
                 {
                     var a = ability as WebBrowser;
                     return Execute(a, Targeted, () => _action.ExecuteGivenAs(actor, ability), _highlightActions);
@@ -151,9 +151,9 @@ namespace Tranquire.Selenium
                 return typeof(T) == typeof(WebBrowser);
             }
 
-            protected override TResult ExecuteWhen(IActor actor, TWhen ability)
+            protected override TResult ExecuteWhen(IActor actor, TAbility ability)
             {
-                if (IsWebBrowser<TGiven>())
+                if (IsWebBrowser<TAbility>())
                 {
                     var a = ability as WebBrowser;
                     return Execute(a, Targeted, () => _action.ExecuteWhenAs(actor, ability), _highlightActions);

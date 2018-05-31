@@ -83,7 +83,7 @@ namespace Tranquire.Tests
         public void Sut_ShouldBeAction(Action<TestAbility, object> sut)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.IsAssignableFrom<IAction<TestAbility, TestAbility, object>>(sut);
+            Assert.IsAssignableFrom<IAction<TestAbility, object>>(sut);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

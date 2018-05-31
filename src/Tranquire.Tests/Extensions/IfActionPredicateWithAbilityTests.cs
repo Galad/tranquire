@@ -8,7 +8,7 @@ using Xunit;
 namespace Tranquire.Tests.Extensions
 {
 #pragma warning disable CS0618 // Type or member is obsolete
-    public class IfActionPredicateWithAbilityTests : IfActionTestsBase<IfAction<Ability, object>, IAction<Ability, Ability, object>, IAction<object>>
+    public class IfActionPredicateWithAbilityTests : IfActionTestsBase<IfAction<Ability, object>, IAction<Ability, object>, IAction<object>>
 #pragma warning restore CS0618 // Type or member is obsolete
     {
         public interface IFunc

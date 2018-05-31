@@ -6,7 +6,7 @@
     /// <typeparam name="T">The ability required for the contexts</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
 #pragma warning disable CS0618 // Type or member is obsolete
-    public abstract class Action<T, TResult> : IAction<T, T, TResult>
+    public abstract class Action<T, TResult> : IAction<T, TResult>
 #pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
@@ -84,7 +84,7 @@
         {
             Guard.ForNull(actor, nameof(actor));
 #pragma warning disable CS0618 // Type or member is obsolete
-            return actor.ExecuteWithAbility(this as IAction<T, T, TResult>);
+            return actor.ExecuteWithAbility(this as IAction<T, TResult>);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
     }
@@ -96,7 +96,7 @@
     /// <typeparam name="TWhen">The ability required for the When context</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
 #pragma warning disable CS0618 // Type or member is obsolete
-    public abstract class Action<TGiven, TWhen, TResult> : IAction<TGiven, TWhen, TResult>
+    public abstract class Action<TGiven, TWhen, TResult> : IAction<TWhen, TResult>
 #pragma warning restore CS0618 // Type or member is obsolete
 
     {
@@ -105,7 +105,7 @@
         /// </summary>
         /// <param name="actor">The actor used to execute the action.</param>
         /// <param name="ability">The ability for the current action.</param>
-        public TResult ExecuteGivenAs(IActor actor, TGiven ability)
+        public TResult ExecuteGivenAs(IActor actor, TWhen ability)
         {
             Guard.ForNull(actor, nameof(actor));
             Guard.ForNull(ability, nameof(ability));
@@ -136,7 +136,7 @@
         /// </summary>
         /// <param name="actor">The actor used to execute the action. Cannot be null.</param>
         /// <param name="ability">The ability for the current action. Cannot be null.</param>
-        protected abstract TResult ExecuteGiven(IActor actor, TGiven ability);
+        protected abstract TResult ExecuteGiven(IActor actor, TWhen ability);
 
         /// <summary>
         /// Gets the action's name
@@ -172,7 +172,7 @@
         {
             Guard.ForNull(actor, nameof(actor));
 #pragma warning disable CS0618 // Type or member is obsolete
-            return actor.ExecuteWithAbility(this as IAction<TGiven, TWhen, TResult>);
+            return actor.ExecuteWithAbility(this as IAction<TWhen, TResult>);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
     }

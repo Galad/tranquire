@@ -121,7 +121,7 @@ namespace Tranquire.Tests
           object expected)
         {
             //arrange
-            var expectedAbility = sut.Abilities.Values.OfType<Ability1>().First();
+            var expectedAbility = sut.Abilities.Values.OfType<Ability2>().First();
             action.Protected()
                   .Setup<object>("ExecuteGiven", ItExpr.IsAny<IActor>(), expectedAbility)
                   .Returns(expected);

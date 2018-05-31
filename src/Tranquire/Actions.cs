@@ -117,7 +117,7 @@ namespace Tranquire
         /// <param name="action">The delegate to execute</param>
         /// <returns></returns>
 #pragma warning disable CS0618 // Type or member is obsolete
-        public static IAction<T, T, Unit> Create<T>(string name, System.Action<IActor, T> action)
+        public static IAction<T, Unit> Create<T>(string name, System.Action<IActor, T> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             return new DelegateAction<T>(name, action);
@@ -195,7 +195,7 @@ namespace Tranquire
         /// <param name="action">The delegate to execute</param>
         /// <returns></returns>
 #pragma warning disable CS0618 // Type or member is obsolete
-        public static IAction<TAbility, TAbility, TResult> Create<TResult, TAbility>(string name, Func<IActor, TAbility, TResult> action)
+        public static IAction<TAbility, TResult> Create<TResult, TAbility>(string name, Func<IActor, TAbility, TResult> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             if (string.IsNullOrEmpty(name))
