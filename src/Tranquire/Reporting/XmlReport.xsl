@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="html" indent="yes" version="5.0" />
   <xsl:template match="/">
     <html xsl:version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-      <head>
-        <!--<link rel="stylesheet" type="text/css" href="TestRun.css" />-->
+      <head>        
         <style>
           body {
           padding-bottom: 1000px;
+          }
+
+          @font-face {
+          font-family: 'Glyphicons Halflings';
+          src: url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot);
+          src: url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'), url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2) format('woff2'), url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff) format('woff'), url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.ttf) format('truetype'), url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')
+          }
+
+          .action-context {
+          border-radius: 10px;
+          border-width: 4px;
+          border-style: solid;
+          padding: 8px;
+          margin-bottom: 8px;
+          }
+
+          .action-context legend {
+          text-transform: uppercase;
+          font-weight: bold;
+          margin-left: 8px;
+          padding: 0 0.5em;
           }
 
           li {
@@ -21,11 +42,15 @@
           li.question {
           font-weight: bold;
           background-color: rgba(156, 89, 201, 0.726);
+          border-color: black;
+          color: black;
           }
 
           li.action {
           font-weight: bold;
           background-color: rgba(55, 146, 189, 0.411);
+          border-color: black;
+          color: black;
           }
 
           .command-info {
@@ -55,7 +80,7 @@
           .error-content {
           font-weight: normal;
           }
-          
+
           img.attachment {
           height: 40px;
           transition: transform .2s;
@@ -70,24 +95,81 @@
           border-radius: 0px;
           }
 
-          .then {
-          font-weight: bold;
+          .then-icon{
+          margin-right: 0.4em;
           }
 
           .then-pass {
-          background-color: rgb(111, 194, 104);
+          border-color: green;
+          color: green;
+          }
+
+          .then-pass .then-icon:before {
+          content: "\e013";
           }
 
           .then-fail {
-          background-color: rgba(255, 158, 158, 0.781);
+          border-color: red;
+          color: red;
+          }
+
+          .then-fail .then-icon:before {
+          content: "\e014";
+          }
+
+          .then-fail .then-icon {            
+            transform: translateY(1px);
           }
 
           .then-fail-detail {
           background-color: rgba(252, 76, 76, 0.842);
+          color:black;
           }
 
           .then-fail-content {
           font-weight: normal;
+          }
+
+          .first-action {
+          border-radius: 10px;
+          border-width: 4px;
+          border-style: solid;
+          padding: 8px;
+          margin-bottom: 8px;
+          }
+
+          .first-action legend {
+          text-transform: uppercase;
+          font-weight: bold;
+          margin-left: 8px;
+          }
+
+          .first-action-given {
+          border-color: teal;
+          color: teal;
+          }
+
+          .first-action-when {
+          border-color: sienna;
+          color: sienna;
+          }
+
+          .glyphicon {
+          position: relative;
+          top: 1px;
+          display: inline-block;
+          font-family: 'Glyphicons Halflings';
+          font-style: normal;
+          font-weight: 400;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale
+          }
+
+          @font-face {
+          font-family: 'Glyphicons Halflings';
+          src: url(../fonts/glyphicons-halflings-regular.eot);
+          src: url(../fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'), url(../fonts/glyphicons-halflings-regular.woff2) format('woff2'), url(../fonts/glyphicons-halflings-regular.woff) format('woff'), url(../fonts/glyphicons-halflings-regular.ttf) format('truetype'), url(../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')
           }
         </style>
       </head>
@@ -171,30 +253,31 @@
         <xsl:otherwise>fail error</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <li class="then then-{$class}">
-      <div>
-        <xsl:value-of select="@name"/>
-      </div>
+    <fieldset class="action-context then-{$class}">
+      <legend>
+        <span class="glyphicon then-icon"></span>
+        <span>
+          <xsl:value-of select="@name"/>
+        </span>
+      </legend>
       <div class="command-info">
         Duration:
         <span class="date">
           <xsl:value-of select="@duration" /> ms
         </span>
       </div>
-      <ul>
-        <xsl:apply-templates select="question" />
-        <xsl:if test="@outcome != 'pass'">
-          <li class="then-fail-detail error">
-            <div>The verification failed. Here are the details:</div>
-            <div class="then-fail-content">
-              <pre>
-                <xsl:value-of select="outcomeDetail" />
-              </pre>
-            </div>
-          </li>
-        </xsl:if>
-      </ul>
-    </li>
+      <xsl:apply-templates select="question" />
+      <xsl:if test="@outcome != 'pass'">
+        <li class="then-fail-detail error">
+          <div>The verification failed. Here are the details:</div>
+          <div class="then-fail-content">
+            <pre>
+              <xsl:value-of select="outcomeDetail" />
+            </pre>
+          </div>
+        </li>
+      </xsl:if>
+    </fieldset>
   </xsl:template>
 
   <xsl:template match="error">
@@ -206,5 +289,14 @@
         </pre>
       </div>
     </li>
+  </xsl:template>
+
+  <xsl:template match="given | when">
+    <fieldset class="action-context first-action-{name()}">
+      <legend>
+        <xsl:value-of select="@name" />
+      </legend>
+      <xsl:apply-templates select="*"/>
+    </fieldset>
   </xsl:template>
 </xsl:stylesheet>

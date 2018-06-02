@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -11,6 +12,7 @@ namespace Tranquire.Tests.Reporting
         private static readonly IAction<Unit> Action2 = Actions.Create("Action 2", a => a.Execute(Action3));
         private static readonly IAction<Unit> Action3 = Actions.Create("Action 3", a => { });
         private static readonly IAction<Unit> ActionWithQuestions = Actions.Create("Action with question", a => { a.AsksFor(Question1); });
+        private static readonly IAction<Unit> ActionWithError = Actions.Create("Action with error", a => throw new InvalidOperationException("Error"));
 
         private static readonly IQuestion<string> Question1 = Questions.Create("Question 1", a => a.AsksFor(Question2));
         private static readonly IQuestion<string> Question2 = Questions.Create("Question 2", a =>
@@ -21,6 +23,7 @@ namespace Tranquire.Tests.Reporting
         private static readonly IQuestion<string> Question3 = Questions.Create("Question 3", a => "answer");
 
         private readonly XmlDocumentObserver _xmlObserver;
+        private readonly TestObserver<ActionNotification> _testObserver;
         private readonly Actor _actor;
         private readonly DateTimeOffset _now;
         private readonly TimeSpan _duration;
@@ -57,17 +60,23 @@ namespace Tranquire.Tests.Reporting
             _duration = TimeSpan.FromSeconds(5);
             MeasureDuration measureDuration = new MeasureDuration(new DefaultMeasureDuration(), _now, _duration);
             _xmlObserver = new XmlDocumentObserver(measureDuration);
-            _actor = new Actor("John").WithReporting(_xmlObserver, measureDuration);
+            _testObserver = new TestObserver<ActionNotification>();
+            _actor = new Actor("John").WithReporting(
+                new CompositeObserver<ActionNotification>(
+                    _xmlObserver,
+                    _testObserver),
+                measureDuration);
         }
 
-        private T CreateItem<T>(string name) where T : XmlReportItem, new()
+        private T CreateItem<T>(string name, bool hasError = false) where T : XmlReportItem, new()
         {
             return new T()
             {
                 StartDate = StartDate,
                 EndDate = typeof(T) == typeof(XmlReportRoot) ? StartDate : EndDate, // because XmlReportRoot uses IMeasureDuration.Now to get the end date, instead of using IMeasureDuration.Measure
                 Duration = typeof(T) == typeof(XmlReportRoot) ? 0 : Duration,
-                Name = name
+                Name = name,
+                HasError = hasError
             };
         }
 
@@ -135,6 +144,32 @@ namespace Tranquire.Tests.Reporting
             var actual = XmlDocumentObserverTests.DeserializeXmlDocument(_xmlObserver.GetXmlDocument());
             // arrange
             XmlDocumentObserverTests.AssertRootAreEqual(GivenWhenThenExpected, actual);
+        }
+
+        [Fact]
+        public void Error()
+        {
+            // arrange
+            try
+            {
+                _actor.When(ActionWithError);
+            }
+            catch (Exception) { }
+            // act
+            var actual = XmlDocumentObserverTests.DeserializeXmlDocument(_xmlObserver.GetXmlDocument());
+            // arrange            
+            var expectedError = _testObserver.Values.Select(v => v.Content)
+                                                    .OfType<ExecutionErrorNotificationContent>()
+                                                    .Select(n => n.Exception)
+                                                    .First();
+            var expected = (XmlReportRoot)CreateItem<XmlReportRoot>("Test")
+                .AddChildren(
+                    CreateItem<XmlReportWhen>("When " + ActionWithError.Name, true)
+                        .AddChildren(
+                            CreateItem<XmlReportAction>(ActionWithError.Name, true).WithError(expectedError.ToString())
+                        )
+                );
+            XmlDocumentObserverTests.AssertRootAreEqual(expected, actual);
         }
     }
 }
