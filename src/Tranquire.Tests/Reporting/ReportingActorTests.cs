@@ -66,13 +66,6 @@ namespace Tranquire.Tests.Reporting
         }
 
         [Theory, DomainAutoData]
-        public void Sut_UsingModestConstructor_MeasureDurationShouldBeDefaultMeasureDuration(
-            [Modest]ReportingActor sut)
-        {
-            sut.MeasureTime.Should().BeOfType<DefaultMeasureDuration>();
-        }
-
-        [Theory, DomainAutoData]
         public void Name_ShouldReturnCorrectValue(
             ReportingActor sut,
             string expected)

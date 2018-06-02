@@ -30,6 +30,8 @@ namespace Tranquire.Tests.Reporting
         public bool HasError { get; set; }
         [XmlElement(typeof(XmlReportAction), ElementName = "action")]
         [XmlElement(typeof(XmlReportQuestion), ElementName = "question")]
+        [XmlElement(typeof(XmlReportGiven), ElementName = "given")]
+        [XmlElement(typeof(XmlReportWhen), ElementName = "when")]
         [XmlElement(typeof(XmlReportThen), ElementName = "then")]
         public List<XmlReportItem> Children { get; set; } = new List<XmlReportItem>();
         [XmlArray("attachments")]
@@ -38,6 +40,15 @@ namespace Tranquire.Tests.Reporting
         [XmlElement("error")]
         [XmlText]
         public string Error { get; set; }
+        /// <summary>
+        /// A value representing the current type to help with assertions
+        /// </summary>
+        public string ElementType => this.GetType().Name;
+        public XmlReportItem AddChildren(params XmlReportItem[] children)
+        {
+            Children.AddRange(children);
+            return this;
+        }
     }
 
     [XmlRoot("root")]
@@ -49,10 +60,16 @@ namespace Tranquire.Tests.Reporting
     [XmlType("question")]
     public class XmlReportQuestion : XmlReportItem { }
 
+    [XmlType("given")]
+    public class XmlReportGiven : XmlReportItem { }
+
+    [XmlType("when")]
+    public class XmlReportWhen : XmlReportItem { }
+
     [XmlType("then")]
     public class XmlReportThen : XmlReportItem
     {
-        [XmlAttribute("outcome")]        
+        [XmlAttribute("outcome")]
         public XmlReportThenOutcome Outcome { get; set; }
         [XmlElement("outcomeDetail")]
         [XmlText]
@@ -198,7 +215,7 @@ namespace Tranquire.Tests.Reporting
                     };
                 }
 
-                {                    
+                {
                     var actions = fixture.CreateMany<(INamed action, CommandType commandType)>().ToArray();
                     yield return new object[]
                     {
@@ -236,17 +253,17 @@ namespace Tranquire.Tests.Reporting
                                     ImmutableArray<ActionNotification>.Empty,
                                     (notifications, a) => notifications
                                         .Insert(0, new ActionNotification(a.action, a.i + 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, a.commandType)))
-                                        .Add(new ActionNotification(a.action, a.i + 1,                                                    
+                                        .Add(new ActionNotification(a.action, a.i + 1,
                                                     new ExecutionErrorNotificationContent(a.exception, TimeSpan.FromSeconds(a.i))
                                                     ))
                                 ),
                         actions.Select((a,i) => (a.action, a.commandType, exception, i))
-                                                  .Select(a => 
+                                                  .Select(a =>
                                                     createItem(
-                                                        a.commandType, 
-                                                        a.action.Name, 
-                                                        DateTimeOffset.MinValue, 
-                                                        a.i * 1000, 
+                                                        a.commandType,
+                                                        a.action.Name,
+                                                        DateTimeOffset.MinValue,
+                                                        a.i * 1000,
                                                         true,
                                                         error: a.i < 3 ? null : exception.ToString())
                                                         )
@@ -330,6 +347,44 @@ namespace Tranquire.Tests.Reporting
                 }
                 yield return createThenWithException(ThenOutcome.Failed, XmlReportThenOutcome.failed);
                 yield return createThenWithException(ThenOutcome.Error, XmlReportThenOutcome.error);
+
+                object[] createWhenThen<T>(ActionContext actionContext, CommandType commandType)
+                    where T : XmlReportItem, new()
+                {
+                    var action = fixture.Create<INamed>();
+                    return new object[]
+                    {
+                        $"Single notification with context ({actionContext}, {commandType})",
+                        new ActionNotification[]{
+                            new ActionNotification(action, 1, new BeforeFirstActionNotificationContent(DateTimeOffset.MinValue, actionContext)),
+                            new ActionNotification(action, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)),
+                            new ActionNotification(action, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))),
+                            new ActionNotification(action, 1, new AfterActionNotificationContent(TimeSpan.FromSeconds(1)))
+                        },
+                        createItemGeneric<XmlReportRoot>(
+                            "Test",
+                            expectedDate,
+                            0,
+                            false,
+                            new List<XmlReportItem>()
+                            {
+                                createItemGeneric<T>(
+                                    action.Name,
+                                    DateTimeOffset.MinValue,
+                                    1000,
+                                    false,
+                                    children: new List<XmlReportItem>()
+                                    {
+                                        createItem(commandType, action.Name, DateTimeOffset.MinValue, 1000)
+                                    })
+                            })
+                    };
+                }
+
+                yield return createWhenThen<XmlReportGiven>(ActionContext.Given, CommandType.Action);
+                yield return createWhenThen<XmlReportGiven>(ActionContext.Given, CommandType.Question);
+                yield return createWhenThen<XmlReportWhen>(ActionContext.When, CommandType.Action);
+                yield return createWhenThen<XmlReportWhen>(ActionContext.When, CommandType.Question);
             }
         }
 
@@ -410,14 +465,16 @@ namespace Tranquire.Tests.Reporting
             actual);
         }
 
-        private static XmlReportRoot DeserializeXmlDocument(XDocument xmlDocument)
+        public static XmlReportRoot DeserializeXmlDocument(XDocument xmlDocument)
         {
             var serializer = new XmlSerializer(typeof(XmlReportRoot), new[] { typeof(XmlReportAction), typeof(XmlReportQuestion) });
             var actual = (XmlReportRoot)serializer.Deserialize(xmlDocument.CreateReader());
             return actual;
         }
 
-        private static void AssertRootAreEqual(XmlReportRoot expected, XmlReportRoot actual)
+#pragma warning disable xUnit1013 // Public method should be marked as test
+        public static void AssertRootAreEqual(XmlReportRoot expected, XmlReportRoot actual)
+#pragma warning restore xUnit1013 // Public method should be marked as test
         {
             actual.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
@@ -524,14 +581,14 @@ namespace Tranquire.Tests.Reporting
         [Theory]
         [DomainAutoData]
         public void GetHtmlDocument_WithPassingVerification_ShouldContainImgElement(
-            XmlDocumentObserver sut,          
+            XmlDocumentObserver sut,
             ThenAction<object> thenAction)
         {
             //arrange  
             sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)));
             sut.OnNext(new ActionNotification(thenAction.Question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)));
             sut.OnNext(new ActionNotification(thenAction.Question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))));
-            sut.OnNext(new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), ThenOutcome.Pass)));            
+            sut.OnNext(new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), ThenOutcome.Pass)));
             //act
             var actual = sut.GetHtmlDocument();
             testOutputHelper.WriteLine(actual);

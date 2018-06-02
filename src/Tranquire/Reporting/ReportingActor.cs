@@ -61,7 +61,8 @@ namespace Tranquire.Reporting
         /// </summary>
         /// <param name="observer">An <see cref="IObserver{T}"/> instance which is called when a notification occurs</param>
         /// <param name="actor">The given actor</param>
-        public ReportingActor(IObserver<ActionNotification> observer, IActor actor) : this(observer, actor, new DefaultMeasureDuration(), new CanAlwaysNotify())
+        /// /// <param name="measureTime">A <see cref="IMeasureDuration"/> instance used to measure the execution time of a function</param>
+        public ReportingActor(IObserver<ActionNotification> observer, IActor actor, IMeasureDuration measureTime) : this(observer, actor, measureTime, new CanAlwaysNotify())
         {
         }
 
@@ -144,6 +145,15 @@ namespace Tranquire.Reporting
                     date => new BeforeThenNotificationContent<T>(date, thenAction.Question),
                     time => new AfterThenNotificationContent(time, ThenOutcome.Pass),
                     (error, duration) => new AfterThenNotificationContent(duration, GetOutcome(error), error)
+                );
+            }
+            if(action is CommandAction<T> commandAction)
+            {
+                return
+                (
+                    date => new BeforeFirstActionNotificationContent(date, commandAction.ActionContext),
+                    time => new AfterActionNotificationContent(time),
+                    (error, duration) => new ExecutionErrorNotificationContent(error, duration)
                 );
             }
             return
