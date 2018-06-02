@@ -49,6 +49,11 @@ namespace Tranquire.Tests.Reporting
             Children.AddRange(children);
             return this;
         }
+        public XmlReportItem WithError(string error)
+        {
+            Error = error;
+            return this;
+        }
     }
 
     [XmlRoot("root")]
@@ -388,6 +393,7 @@ namespace Tranquire.Tests.Reporting
             }
         }
 
+        #region GetXmlDocument
         [Theory, MemberData(nameof(Notifications))]
         public void GetXmlDocument_ShouldReturnCorrectValue(
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
@@ -472,13 +478,64 @@ namespace Tranquire.Tests.Reporting
             return actual;
         }
 
+        [Theory]
+        [DomainInlineAutoData(1)]
+        [DomainInlineAutoData(5)]
+        public void GetXmlDocument_WithAttachments_ShouldReturnCorrectValue(
+            int count,
+            DateTimeOffset startDate,
+            [Frozen]DateTimeOffset date,
+            [Greedy]XmlDocumentObserver sut,
+            INamed named,
+            IFixture fixture
+            )
+        {
+            // arrange
+            var attachments = fixture.CreateMany<ActionFileAttachment>(count).ToArray();
+            sut.OnNext(new ActionNotification(named, 1, new BeforeActionNotificationContent(startDate, CommandType.Action)));
+            // act           
+            foreach (var attachment in attachments)
+            {
+                sut.OnNext(attachment);
+            }
+            sut.OnNext(new ActionNotification(named, 1, new AfterActionNotificationContent(TimeSpan.Zero)));
+            // assert
+            var expected = new XmlReportRoot()
+            {
+                Name = "Test",
+                StartDate = date.ToString(CultureInfo.InvariantCulture),
+                EndDate = date.ToString(CultureInfo.InvariantCulture),
+                Children = new List<XmlReportItem>()
+                            {
+                    new XmlReportAction()
+                    {
+                        Name = named.Name,
+                        Duration = 0,
+                        StartDate = startDate.ToString(CultureInfo.InvariantCulture),
+                        EndDate = startDate.ToString(CultureInfo.InvariantCulture),
+                        HasError = false,
+                        Attachments = attachments.Select(attachment =>
+                            new XlmActionAttachment()
+                            {
+                                Description = attachment.Description,
+                                FilePath = attachment.FilePath,
+                            }).ToList()
+                    }
+                }
+            };
+            var actual = DeserializeXmlDocument(sut.GetXmlDocument());
+            AssertRootAreEqual(expected, actual);
+        }
+
 #pragma warning disable xUnit1013 // Public method should be marked as test
         public static void AssertRootAreEqual(XmlReportRoot expected, XmlReportRoot actual)
 #pragma warning restore xUnit1013 // Public method should be marked as test
         {
             actual.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
+        #endregion
 
+        #region GetHtmlDocument
         [Theory, DomainAutoData]
         public void GetHtmlDocument_ShouldReturnCorrectValue(
             XmlDocumentObserver sut,
@@ -593,7 +650,7 @@ namespace Tranquire.Tests.Reporting
             var actual = sut.GetHtmlDocument();
             testOutputHelper.WriteLine(actual);
             //assert
-            actual.Should().Contain("<li class=\"then then-pass\">")
+            actual.Should().Contain("class=\"action-context then-pass\">")
                   .And.Contain(thenAction.Name)
                   .And.Contain("class=\"question\"");
         }
@@ -617,7 +674,7 @@ namespace Tranquire.Tests.Reporting
             testOutputHelper.WriteLine(actual);
             //testOutputHelper.WriteLine(sut.GetXmlDocument().ToString(SaveOptions.None));
             //assert
-            actual.Should().Contain("<li class=\"then then-fail error\">")
+            actual.Should().Contain("class=\"action-context then-fail error\">")
                   .And.Contain(thenAction.Name)
                   .And.Contain("class=\"question\"")
                   .And.Contain("class=\"then-fail-detail error\"")
@@ -625,52 +682,50 @@ namespace Tranquire.Tests.Reporting
         }
 
         [Theory]
-        [DomainInlineAutoData(1)]
-        [DomainInlineAutoData(5)]
-        public void GetXmlDocument_WithAttachments_ShouldReturnCorrectValue(
-            int count,
-            DateTimeOffset startDate,
-            [Frozen]DateTimeOffset date,
-            [Greedy]XmlDocumentObserver sut,
-            INamed named,
-            IFixture fixture
-            )
+        [DomainInlineAutoData(ActionContext.Given)]
+        [DomainInlineAutoData(ActionContext.When)]
+        public void GetHtmlDocument_WithGivenWhen_ShouldReturnCorrectValue(
+            ActionContext actionContext,
+            XmlDocumentObserver sut,
+            IFixture fixture)
         {
             // arrange
-            var attachments = fixture.CreateMany<ActionFileAttachment>(count).ToArray();
-            sut.OnNext(new ActionNotification(named, 1, new BeforeActionNotificationContent(startDate, CommandType.Action)));
-            // act           
-            foreach (var attachment in attachments)
+            var actions = fixture.CreateMany<IAction<Unit>>(3)                                 
+                                 .ToArray();
+            var notifications = actions
+                               .Select((a, i) => (action: a, i: i + 1))
+                               .Reverse()
+                               .Aggregate(
+                                    ImmutableArray<ActionNotification>.Empty,
+                                    (n, a) => n
+                                        .Insert(0, new ActionNotification(a.action, a.i + 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Action)))
+                                        .Add(new ActionNotification(a.action, a.i + 1, new AfterActionNotificationContent(TimeSpan.FromSeconds(a.i))))
+                                );
+            var firstAction = new CommandAction<Unit>(actions[0], actionContext);
+            sut.OnNext(new ActionNotification(firstAction, 1, new BeforeFirstActionNotificationContent(DateTimeOffset.MinValue, actionContext)));
+            foreach (var notification in notifications)
             {
-                sut.OnNext(attachment);
+                sut.OnNext(notification);
             }
-            sut.OnNext(new ActionNotification(named, 1, new AfterActionNotificationContent(TimeSpan.Zero)));
-            // assert
-            var expected = new XmlReportRoot()
-            {
-                Name = "Test",
-                StartDate = date.ToString(CultureInfo.InvariantCulture),
-                EndDate = date.ToString(CultureInfo.InvariantCulture),
-                Children = new List<XmlReportItem>()
-                            {
-                    new XmlReportAction()
-                    {
-                        Name = named.Name,
-                        Duration = 0,
-                        StartDate = startDate.ToString(CultureInfo.InvariantCulture),
-                        EndDate = startDate.ToString(CultureInfo.InvariantCulture),
-                        HasError = false,
-                        Attachments = attachments.Select(attachment =>
-                            new XlmActionAttachment()
-                            {
-                                Description = attachment.Description,
-                                FilePath = attachment.FilePath,
-                            }).ToList()
-                    }
-                }
-            };
-            var actual = DeserializeXmlDocument(sut.GetXmlDocument());
-            AssertRootAreEqual(expected, actual);
+            sut.OnNext(new ActionNotification(firstAction, 1, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))));
+            // act
+            var actual = sut.GetHtmlDocument();
+            // assert            
+            actual.Should()
+                  .ContainAll(notifications.Select(a => a.Action.Name))
+                  .And.StartWith("<!DOCTYPE html>");
+            var expectedClass = actionContext.ToString().ToLower();
+            var classesCount = CountStringOccurences(actual, $"class=\"action-context first-action-{expectedClass}\"");
+            classesCount.Should().Be(1);
+            var titleCount = CountStringOccurences(actual, firstAction.Name);            
+            titleCount.Should().Be(1);
+            
+        }
+        #endregion
+
+        private static int CountStringOccurences(string input, string value)
+        {
+            return input.Split(new[] { value }, StringSplitOptions.None).Length - 1;
         }
     }
 }
