@@ -165,29 +165,7 @@ namespace Tranquire.Reporting
         }
 
         private XElement GetElement(TranquireXmlReportItem item)
-        {
-            string elementName()
-            {
-                switch (item)
-                {
-                    case TranquireXmlReportQuestion _:
-                        return "question";
-                    case TranquireXmlReportAction _:
-                        return "action";
-                    case TranquireXmlReportThen _:
-                        return "then";
-                    default:
-                        return "root";
-                }                
-            }
-            XElement getAttachment(ActionFileAttachment attachment)
-            {
-                return new XElement(
-                    "attachment",
-                    new XAttribute("filepath", attachment.FilePath),
-                    new XAttribute("description", attachment.Description)
-                    );
-            }
+        {            
             var content = new List<object>()
             {
                 new XAttribute("start-date", item.StartDate.ToString(CultureInfo.InvariantCulture)),
@@ -196,7 +174,7 @@ namespace Tranquire.Reporting
                 new XAttribute("name", item.Name),
                 new XAttribute("has-error", item.HasError),                
                 item.Children.Select(GetElement)
-            };
+            };           
             if(item.Attachments.Count > 0)
             {
                 content.Add(new XElement("attachments", item.Attachments.Select(getAttachment)));
@@ -209,11 +187,44 @@ namespace Tranquire.Reporting
                     content.Add(new XElement("outcomeDetail", new XCData(then.Error.Message)));
                 }
             }
+            else if (item.HasError && !hasExceptionInChildren(item.Error, item.Children))
+            {
+                content.Add(new XElement("error", new XCData(item.Error.ToString())));
+            }
             var element = new XElement(
                 elementName(),
                 content.ToArray()
                 );
             return element;
+
+            string elementName()
+            {
+                switch (item)
+                {
+                    case TranquireXmlReportQuestion _:
+                        return "question";
+                    case TranquireXmlReportAction _:
+                        return "action";
+                    case TranquireXmlReportThen _:
+                        return "then";
+                    default:
+                        return "root";
+                }
+            }
+
+            XElement getAttachment(ActionFileAttachment attachment)
+            {
+                return new XElement(
+                    "attachment",
+                    new XAttribute("filepath", attachment.FilePath),
+                    new XAttribute("description", attachment.Description)
+                    );
+            }
+
+            bool hasExceptionInChildren(Exception ex, IEnumerable<TranquireXmlReportItem> items)
+            {
+                return items.Any(i => i.Error == ex || hasExceptionInChildren(ex, i.Children));
+            }
         }
         
         /// <inheritdoc />

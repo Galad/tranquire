@@ -35,7 +35,7 @@ namespace ToDoList.Specifications
             var driver = new ChromeDriver(options);
             var screenshotName = Context.ScenarioInfo.Title;
 #if DEBUG
-            var delay = TimeSpan.FromSeconds(1);
+            var delay = IsLiveUnitTesting ? TimeSpan.Zero : TimeSpan.FromSeconds(1);
 #else
             var delay = TimeSpan.Zero;
 #endif

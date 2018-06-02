@@ -35,6 +35,9 @@ namespace Tranquire.Tests.Reporting
         [XmlArray("attachments")]
         [XmlArrayItem("attachment")]
         public List<XlmActionAttachment> Attachments { get; set; } = new List<XlmActionAttachment>();
+        [XmlElement("error")]
+        [XmlText]
+        public string Error { get; set; }
     }
 
     [XmlRoot("root")]
@@ -113,7 +116,8 @@ namespace Tranquire.Tests.Reporting
                     DateTimeOffset startDate,
                     int duration,
                     bool hasError,
-                    List<XmlReportItem> children = null) where T : XmlReportItem, new()
+                    List<XmlReportItem> children = null,
+                    string error = null) where T : XmlReportItem, new()
                 {
                     return new T()
                     {
@@ -122,7 +126,8 @@ namespace Tranquire.Tests.Reporting
                         StartDate = startDate.ToString(CultureInfo.InvariantCulture),
                         EndDate = startDate.Add(TimeSpan.FromMilliseconds(duration)).ToString(CultureInfo.InvariantCulture),
                         HasError = hasError,
-                        Children = children ?? new List<XmlReportItem>()
+                        Children = children ?? new List<XmlReportItem>(),
+                        Error = error
                     };
                 }
                 XmlReportItem createItem(
@@ -130,15 +135,16 @@ namespace Tranquire.Tests.Reporting
                     string name,
                     DateTimeOffset startDate,
                     int duration,
-                    bool hasError = false)
+                    bool hasError = false,
+                    string error = null)
                 {
                     if (commandType == CommandType.Action)
                     {
-                        return createItemGeneric<XmlReportAction>(name, startDate, duration, hasError);
+                        return createItemGeneric<XmlReportAction>(name, startDate, duration, hasError, error: error);
                     }
                     if (commandType == CommandType.Question)
                     {
-                        return createItemGeneric<XmlReportQuestion>(name, startDate, duration, hasError);
+                        return createItemGeneric<XmlReportQuestion>(name, startDate, duration, hasError, error: error);
                     }
                     throw new NotSupportedException($"{commandType} not supported");
                 }
@@ -192,7 +198,7 @@ namespace Tranquire.Tests.Reporting
                     };
                 }
 
-                {
+                {                    
                     var actions = fixture.CreateMany<(INamed action, CommandType commandType)>().ToArray();
                     yield return new object[]
                     {
@@ -219,24 +225,31 @@ namespace Tranquire.Tests.Reporting
 
 
                 {
-                    var actions = fixture.CreateMany<(INamed action, Exception exception, CommandType commandType)>(4).ToArray();
+                    var exception = fixture.Create<Exception>();
+                    var actions = fixture.CreateMany<(INamed action, CommandType commandType)>(4).ToArray();
                     yield return new object[]
                     {
                         "Error nested notifications",
-                        actions.Select((a,i) => (a.action, a.commandType, a.exception, i))
+                        actions.Select((a,i) => (a.action, a.commandType, exception, i))
                                .Reverse()
                                .Aggregate(
                                     ImmutableArray<ActionNotification>.Empty,
                                     (notifications, a) => notifications
                                         .Insert(0, new ActionNotification(a.action, a.i + 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, a.commandType)))
-                                        .Add(new ActionNotification(a.action, a.i + 1,
-                                                    a.i < 3 ?
-                                                    new AfterActionNotificationContent(TimeSpan.FromSeconds(a.i)) :
-                                                    (IActionNotificationContent)new ExecutionErrorNotificationContent(a.exception, TimeSpan.FromSeconds(a.i))
+                                        .Add(new ActionNotification(a.action, a.i + 1,                                                    
+                                                    new ExecutionErrorNotificationContent(a.exception, TimeSpan.FromSeconds(a.i))
                                                     ))
                                 ),
-                        actions.Select((a,i) => (a.action, a.commandType, i))
-                                                  .Select(a => createItem(a.commandType, a.action.Name, DateTimeOffset.MinValue, a.i * 1000, a.i == 3))
+                        actions.Select((a,i) => (a.action, a.commandType, exception, i))
+                                                  .Select(a => 
+                                                    createItem(
+                                                        a.commandType, 
+                                                        a.action.Name, 
+                                                        DateTimeOffset.MinValue, 
+                                                        a.i * 1000, 
+                                                        true,
+                                                        error: a.i < 3 ? null : exception.ToString())
+                                                        )
                                                   .Reverse()
                                                   .Concat(new[]{ createItemGeneric<XmlReportRoot>("Test", expectedDate, 0, false)})
                                                   .Aggregate(
