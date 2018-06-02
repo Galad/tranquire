@@ -10,9 +10,7 @@ environment:
   tranquire_bot:
     secure: z9O00Ripejk/+QayghdxD4u5974h2DJgBuDCv0FGZPmFyRfak+fWj1DYHQT8zoaC
 before_build:
-- |- # Restore TWICE. See https://github.com/AArnott/Nerdbank.GitVersioning/issues/113#issuecomment-285903085
-  msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore > nul
-  msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore
+- msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore
 - choco install "msbuild-sonarqube-runner" -y
 - choco install "opencover.portable"  -y
 - choco install "saxonHE" -y
