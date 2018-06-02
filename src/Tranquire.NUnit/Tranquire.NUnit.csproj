@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard1.6;net45</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>Tranquire</RootNamespace>
     <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
