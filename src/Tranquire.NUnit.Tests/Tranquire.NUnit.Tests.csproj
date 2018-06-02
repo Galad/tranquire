@@ -29,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tranquire.NUnit\Tranquire.NUnit.csproj" />    
+    <ProjectReference Include="..\Tranquire.NUnit\Tranquire.NUnit.csproj" />
+    <ProjectReference Include="..\Tranquire.Tests\Tranquire.Tests.csproj" />
     <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
   </ItemGroup>
 </Project>
