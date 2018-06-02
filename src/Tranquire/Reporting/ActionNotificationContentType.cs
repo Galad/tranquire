@@ -24,6 +24,10 @@
         /// <summary>
         /// A verification ended
         /// </summary>
-        AfterThen
+        AfterThen,
+        /// <summary>
+        /// The action is the first action had has been initiated by calling Given or When
+        /// </summary>
+        BeforeFirstActionExecution            
     }
 }

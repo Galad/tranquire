@@ -78,6 +78,9 @@ namespace Tranquire.Reporting
                 case ActionNotificationContentType.BeforeActionExecution:
                     HandleBeforeActionExecution(value.Content as BeforeActionNotificationContent, value.Action);
                     break;
+                case ActionNotificationContentType.BeforeFirstActionExecution:
+                    HandleBeforeFirstActionExecution(value.Content as BeforeFirstActionNotificationContent, value.Action);
+                    break;
                 case ActionNotificationContentType.AfterActionExecution:
                     HandleAfterActionExecution(value.Content as AfterActionNotificationContent);
                     break;
@@ -147,6 +150,29 @@ namespace Tranquire.Reporting
             }
         }
 
+        private void HandleBeforeFirstActionExecution(
+            BeforeFirstActionNotificationContent beforeFirstActionNotificationContent,
+            INamed named)
+        {
+            var currentItem = CurrentItem;
+            var newItem = CreateItem(beforeFirstActionNotificationContent.ActionContext);
+            newItem.StartDate = beforeFirstActionNotificationContent.StartDate;
+            newItem.Name = named.Name;
+            currentItem.Children.Add(newItem);
+            _items.Push(newItem);
+        }
+
+        private TranquireXmlReportItem CreateItem(ActionContext actionContext)
+        {
+            switch (actionContext)
+            {
+                case ActionContext.Given:
+                    return new TranquireXmlReportGiven();
+                default:
+                    return new TranquireXmlReportWhen();
+            }
+        }
+
         /// <summary>
         /// Returns a <see cref="XDocument"/> instance that contains the test report in a XML format.
         /// </summary>
@@ -186,7 +212,7 @@ namespace Tranquire.Reporting
                 {
                     content.Add(new XElement("outcomeDetail", new XCData(then.Error.Message)));
                 }
-            }
+            }            
             else if (item.HasError && !hasExceptionInChildren(item.Error, item.Children))
             {
                 content.Add(new XElement("error", new XCData(item.Error.ToString())));
@@ -207,6 +233,10 @@ namespace Tranquire.Reporting
                         return "action";
                     case TranquireXmlReportThen _:
                         return "then";
+                    case TranquireXmlReportGiven _:
+                        return "given";
+                    case TranquireXmlReportWhen _:
+                        return "when";
                     default:
                         return "root";
                 }

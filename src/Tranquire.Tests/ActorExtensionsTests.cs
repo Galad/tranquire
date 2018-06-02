@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using AutoFixture.Idioms;
+﻿using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using System;
 using Tranquire.Reporting;
 using Xunit;
@@ -22,13 +22,13 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void WithReporting_ShouldDecorateActor(
+        public void WithReporting_ShouldDecorateActor(            
             [Modest]Actor actor,
             ReportingActor expected)
         {
-            //arrange
+            //arrange            
             //act
-            var actual = ActorExtensions.WithReporting(actor, expected.Observer).InnerActorBuilder(expected.Actor);
+            var actual = ActorExtensions.WithReporting(actor, expected.Observer, expected.MeasureTime).InnerActorBuilder(expected.Actor);
             //assert
             actual.Should().BeOfType<ReportingActor>().Which.Should().BeEquivalentTo(expected);
         }
@@ -46,6 +46,24 @@ namespace Tranquire.Tests
             actual.Should().BeOfType<ReportingActor>()
                 .Which.Observer.Should().BeOfType<RenderedReportingObserver>()
                 .Which.Observer.Should().Be(observer);
+        }
+
+
+        [Theory, DomainAutoData]
+        public void WithReporting_WithIObserverOfStringAndCanNotify_ShouldDecorateActor(
+            [Modest]Actor actor,
+            ReportingActor expected,
+            IObserver<string> observer,
+            ICanNotify canNotify)
+        {
+            //arrange
+            //act
+            var actual = ActorExtensions.WithReporting(actor, observer, canNotify).InnerActorBuilder(expected.Actor);
+            //assert
+            var actorAssertion = actual.Should().BeOfType<ReportingActor>();
+            actorAssertion.Which.Observer.Should().BeOfType<RenderedReportingObserver>()                
+                          .Which.Observer.Should().Be(observer);
+            actorAssertion.Which.CanNotify.Should().Be(canNotify);
         }
     }
 }
