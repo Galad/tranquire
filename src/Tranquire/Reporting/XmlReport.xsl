@@ -48,7 +48,14 @@
           border-left-width: 3px;
           }
 
+          .error-detail {
+          background-color: rgba(252, 76, 76, 0.842);
+          }
 
+          .error-content {
+          font-weight: normal;
+          }
+          
           img.attachment {
           height: 40px;
           transition: transform .2s;
@@ -120,6 +127,7 @@
         <ul>
           <xsl:apply-templates select="action | question"/>
           <xsl:apply-templates select="attachments"/>
+          <xsl:apply-templates select="error" />
         </ul>
       </xsl:if>
     </li>
@@ -144,14 +152,15 @@
       </div>
       <xsl:if test="*">
         <ul>
-          <xsl:apply-templates select="action | question"/>          
-          <xsl:apply-templates select="attachments"/>          
+          <xsl:apply-templates select="action | question"/>
+          <xsl:apply-templates select="attachments"/>
+          <xsl:apply-templates select="error" />
         </ul>
       </xsl:if>
     </li>
   </xsl:template>
 
-  <xsl:template match="attachment">    
+  <xsl:template match="attachment">
     <img src="{@filepath}" class="attachment" />
   </xsl:template>
 
@@ -185,6 +194,17 @@
           </li>
         </xsl:if>
       </ul>
+    </li>
+  </xsl:template>
+
+  <xsl:template match="error">
+    <li class="error-detail error">
+      <div>An error occured during the execution</div>
+      <div class="error-content">
+        <pre>
+          <xsl:value-of select="text()" />
+        </pre>
+      </div>
     </li>
   </xsl:template>
 </xsl:stylesheet>

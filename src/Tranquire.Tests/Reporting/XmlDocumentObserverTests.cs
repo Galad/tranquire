@@ -461,7 +461,7 @@ namespace Tranquire.Tests.Reporting
         [Theory]
         [DomainInlineAutoData(CommandType.Action, "action")]
         [DomainInlineAutoData(CommandType.Question, "question")]
-        public void GetHtmlDocument_WithError_ShouldReturnCorrectValue(
+        public void GetHtmlDocument_WithError_ShouldReturnCorrectErrorCount(
             CommandType commandType,
             string className,
             XmlDocumentObserver sut,
@@ -473,9 +473,28 @@ namespace Tranquire.Tests.Reporting
             sut.OnNext(new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, TimeSpan.FromSeconds(1))));
             //act
             var actual = sut.GetHtmlDocument();
-            //assert
+            //assert            
             var errorCount = actual.Split(new[] { $"class=\"{className} error\"" }, StringSplitOptions.None).Length - 1;
             errorCount.Should().Be(1);
+        }
+
+        [Theory]
+        [DomainInlineAutoData(CommandType.Action)]
+        [DomainInlineAutoData(CommandType.Question)]
+        public void GetHtmlDocument_WithError_ShouldReturnCorrectError(
+            CommandType commandType,
+            XmlDocumentObserver sut,
+            INamed action,
+            Exception exception)
+        {
+            //arrange
+            sut.OnNext(new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, commandType)));
+            sut.OnNext(new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, TimeSpan.FromSeconds(1))));
+            //act
+            var actual = sut.GetHtmlDocument();
+            //assert            
+            var exceptionCount = actual.Split(new[] { exception.ToString() }, StringSplitOptions.None).Length - 1;
+            exceptionCount.Should().Be(1);
         }
 
         [Theory]
