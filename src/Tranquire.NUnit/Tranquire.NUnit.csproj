@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RootNamespace>Tranquire</RootNamespace>
+    <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
+    <Copyright>Copyright 2017</Copyright>
+    <PackageTags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</PackageTags>
+    <Authors>Lucas Loegel</Authors>
+    <Company />
+    <Description>Provides integration of NUnit constraints with Tranquire.</Description>
+    <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>1.0.0</Version>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
+    <CodeAnalysisRuleSet>Tranquire.NUnit.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.NUnit.xml</DocumentationFile>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.1.0.5212" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
+  </ItemGroup>
+
+</Project>
