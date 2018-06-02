@@ -34,7 +34,6 @@ artifacts:
   - path: opencover.xml
   - path: TestResults-SonarFormat.xml
   - path: .sonarqube
-  - path: src\Tranquire.NUnit.Tests\bin
     
 deploy:
 - provider: NuGet
