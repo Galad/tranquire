@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFrameworks>netstandard1.6;net45</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>Tranquire</RootNamespace>
     <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
@@ -34,7 +34,9 @@
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.1.0.5212" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.1.0.5212">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
