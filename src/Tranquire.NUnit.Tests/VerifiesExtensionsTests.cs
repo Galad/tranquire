@@ -32,7 +32,7 @@ namespace Tranquire.NUnit.Tests
             var question = Question(expected);
             var constraint = NUnitF.Is.EqualTo(expected);
             // act                        
-            var actual = VerifiesExtensions.Then(actor, question, constraint);
+            var actual = actor.Then(question, constraint);
             // assert
             actual.Should().Be(expected);
         }
@@ -45,7 +45,7 @@ namespace Tranquire.NUnit.Tests
             var question = Question(new object());
             var constraint = NUnitF.Is.EqualTo(new object());
             // act and assert
-            Assert.Throws<NUnitF.AssertionException>(() => VerifiesExtensions.Then(actor, question, constraint));
+            Assert.Throws<NUnitF.AssertionException>(() => actor.Then(question, constraint));
         }
 
         [Theory, DomainAutoData]
@@ -58,7 +58,7 @@ namespace Tranquire.NUnit.Tests
             var question = Question(expected);
             var constraint = NUnitF.Is.EqualTo(expected);
             // act                        
-            var actual = VerifiesExtensions.Then(actor, question, constraint, () => message);
+            var actual = actor.Then(question, constraint, () => message);
             // assert
             actual.Should().Be(expected);
         }
@@ -72,7 +72,7 @@ namespace Tranquire.NUnit.Tests
             var question = Question(new object());
             var constraint = NUnitF.Is.EqualTo(new object());
             // act and assert
-            new System.Action(() => VerifiesExtensions.Then(actor, question, constraint, () => message))
+            new System.Action(() => actor.Then(question, constraint, () => message))
                 .Should().Throw<NUnitF.AssertionException>()
                 .Where(ex => ex.Message.Contains(message));
         }
@@ -88,7 +88,7 @@ namespace Tranquire.NUnit.Tests
             var question = Question(expected);
             var constraint = NUnitF.Is.EqualTo(expected);
             // act                        
-            var actual = VerifiesExtensions.Then(actor, question, constraint, message, args);
+            var actual = actor.Then(question, constraint, message, args);
             // assert
             actual.Should().Be(expected);
         }
@@ -104,7 +104,7 @@ namespace Tranquire.NUnit.Tests
             var constraint = NUnitF.Is.EqualTo(new object());
             // act and assert
             var expectedMessage = string.Format(message, args);
-            new System.Action(() => VerifiesExtensions.Then(actor, question, constraint, message, args))
+            new System.Action(() => actor.Then(question, constraint, message, args))
                 .Should().Throw<NUnitF.AssertionException>()
                 .Where(ex => ex.Message.Contains(expectedMessage));
         }
