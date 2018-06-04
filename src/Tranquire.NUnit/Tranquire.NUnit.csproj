@@ -6,6 +6,7 @@
     <RootNamespace>Tranquire</RootNamespace>
     <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
     <Copyright>Copyright 2017</Copyright>
     <PackageTags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</PackageTags>
     <Authors>Lucas Loegel</Authors>
