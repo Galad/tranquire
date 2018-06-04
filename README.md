@@ -1,5 +1,4 @@
 # tranquire
-![Tranquire logo](https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png)
 An .NET web UI automation framework based on the screenplay pattern implemented in Serenity BDD
 
 Introduction
