@@ -9,6 +9,7 @@
     <Copyright>Copyright 2017 Lucas Loegel</Copyright>
     <PackageIconUrl>https://github.com/Galad/tranquire</PackageIconUrl>
     <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
