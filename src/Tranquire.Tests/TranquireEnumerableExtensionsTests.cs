@@ -8,7 +8,7 @@ using System.Linq;
 using Tranquire.Tests;
 using Xunit;
 
-namespace Tranquire.NUnit.Tests
+namespace Tranquire.Tests
 {
     public class TranquireEnumerableExtensionsTests
     {
