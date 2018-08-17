@@ -15,7 +15,7 @@ Its goal is to better organize UI acceptance tests and make them more maintainab
 Tranquire provides an abstraction layer on top of [Selenium](http://www.seleniumhq.org/).
 Documentation
 ---------------
-See the [wiki](wiki)
+See the [wiki](https://github.com/Galad/tranquire/wiki)
 
 Solution overview 
 --------
