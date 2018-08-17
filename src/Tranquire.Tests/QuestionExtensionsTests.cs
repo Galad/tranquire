@@ -3,6 +3,7 @@ using AutoFixture.Idioms;
 using System;
 using Tranquire.Extensions;
 using Xunit;
+using Moq;
 
 namespace Tranquire.Tests
 {
@@ -15,10 +16,32 @@ namespace Tranquire.Tests
         public void Select_ShouldReturnCorrectResult(IQuestion<string> question, Func<string, object> selector)
         {
             // act
-            var actual = QuestionExtensions.Select(question, selector);
+            var actual = question.Select(selector);
             // assert
             var expected = new SelectQuestion<string, object>(question, selector);
             actual.Should().BeOfType<SelectQuestion<string, object>>();
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_ShouldReturnCorrectResult(IQuestion<string> question, Func<string, IQuestion<object>> selector)
+        {
+            // act
+            var actual = question.SelectMany(selector);
+            // assert
+            var expected = new SelectManyQuestion<string, object>(question, selector);
+            actual.Should().BeOfType<SelectManyQuestion<string, object>>();
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_ReturnAction_ShouldReturnCorrectResult(IQuestion<string> question, Func<string, IAction<object>> selector)
+        {
+            // act
+            var actual = question.SelectMany(selector);
+            // assert
+            var expected = new SelectManyQuestionToAction<string, object>(question, selector);
+            actual.Should().BeOfType<SelectManyQuestionToAction<string, object>>();
             actual.Should().BeEquivalentTo(expected);
         }
     }
