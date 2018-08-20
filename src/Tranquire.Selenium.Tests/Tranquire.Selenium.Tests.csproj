@@ -32,7 +32,7 @@
     <EmbeddedResource Include="IFrame.html" />
     <EmbeddedResource Include="OpenContextMenu.html" />
     <EmbeddedResource Include="Html.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Page.html" />
     <EmbeddedResource Include="PageWithIFrame.html" />
