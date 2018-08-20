@@ -17,11 +17,11 @@ namespace Tranquire.Selenium.Tests.Questions
         public async Task HtmlOfPage_ShouldReturnCorrectValue()
         {
             // arrange
-            var expected = (await GetExpectedHtml()).Replace("\r\n", string.Empty);            
+            var expected = (await GetExpectedHtml()).Replace(Environment.NewLine, string.Empty);            
             // act
             var actual = Answer(Html.OfPage);
             // assert
-            Assert.Equal(expected, actual.Replace("\r\n", string.Empty));
+            Assert.Equal(expected, actual.Replace(Environment.NewLine, string.Empty));
         }
 
         private async Task<string> GetExpectedHtml()
