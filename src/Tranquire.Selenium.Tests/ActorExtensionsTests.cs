@@ -234,6 +234,7 @@ namespace Tranquire.Selenium.Tests
                 )
                 .InnerActorBuilder(iactor) as ReportingActor;
             reportingActor.Should().BeEquivalentTo(expectedReportingActor, o => o.Excluding(a => a.Actor)
+                                                                                 .Excluding(a => a.MeasureTime.Now)
                                                                                  .RespectingRuntimeTypes());
 
             var expectedSeleniumReporter = new SeleniumReporter(xmlDocumentObserver, new SaveScreenshotsToFileOnComplete(screenshotDirectory));
