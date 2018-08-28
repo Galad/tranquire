@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Remove="Actions.html" />
     <None Remove="ClickWhenTargetIsNotClickableYet.html" />
+    <None Remove="Html.html" />
     <None Remove="IFrame.html" />
     <None Remove="OpenContextMenu.html" />
     <None Remove="Page.html" />
@@ -30,6 +31,9 @@
     <EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
     <EmbeddedResource Include="IFrame.html" />
     <EmbeddedResource Include="OpenContextMenu.html" />
+    <EmbeddedResource Include="Html.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Page.html" />
     <EmbeddedResource Include="PageWithIFrame.html" />
     <EmbeddedResource Include="Questions.html" />
