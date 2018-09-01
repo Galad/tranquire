@@ -3,6 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Globalization;
 using Tranquire.Selenium.Actions.Waiters;
+using Tranquire.Selenium.Questions;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -23,6 +24,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="target"></param>
         /// <param name="timeout"></param>
+        [Obsolete("This class will become static in a future version. Use Wait.Until(target).IsPresent instead")]
         public Wait(ITarget target, TimeSpan timeout)
         {
             Guard.ForNull(target, nameof(target));
@@ -34,6 +36,7 @@ namespace Tranquire.Selenium.Actions
         /// Creates a new instance of <see cref="Wait"/>
         /// </summary>
         /// <param name="target"></param>
+        [Obsolete("This class will become static in a future version. Use Wait.Until(target).IsPresent instead")]
         public Wait(ITarget target) : this(target, TimeSpan.FromSeconds(5)) { }
 
         /// <summary>
@@ -41,16 +44,13 @@ namespace Tranquire.Selenium.Actions
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>
+        [Obsolete("This class will become static in a future version. Use Wait.Until(target).IsPresent instead")]
         public Wait Timeout(TimeSpan timeout)
         {
             return new Wait(_target, timeout);
         }
 
-        /// <summary>
-        /// Wait
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="ability"></param>
+        /// <inheritdoc />
         protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var wait = new WebDriverWait(ability.Driver, _timeout);
@@ -65,10 +65,11 @@ namespace Tranquire.Selenium.Actions
         }
 
         /// <summary>
-        /// Returns a new wait action for the given target
+        /// Wait until the given target is present in the DOM
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="target">The target to wait for</param>
         /// <returns></returns>
+        [Obsolete("This method will be removed in a future version. Use Wait.Until(target).IsPresent")]
         public static Wait UntilTargetIsPresent(ITarget target)
         {
             return new Wait(target);
@@ -84,6 +85,15 @@ namespace Tranquire.Selenium.Actions
         public static WaitUntilQuestionIsAnswered<TAnswer> UntilQuestionIsAnswered<TAnswer>(IQuestion<TAnswer> question, Predicate<TAnswer> isAnswered)
         {
             return new WaitUntilQuestionIsAnswered<TAnswer>(question, isAnswered);
+        }
+                
+        /// <summary>
+        /// Wait until the given target is visible
+        /// </summary>
+        /// <param name="target">The target to wait for</param>
+        public static WaitUntilTargetBuilder Until(ITarget target)
+        {
+            return new WaitUntilTargetBuilder(target);
         }
     }
 }
