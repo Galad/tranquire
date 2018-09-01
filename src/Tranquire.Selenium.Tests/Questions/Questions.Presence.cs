@@ -13,7 +13,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("presence element").LocatedBy(By.Id(id));
-            var question = Presence.Of(target).Value;
+            var question = Presence.Of(target);
             //act
             var actual = Answer(question);
             //assert

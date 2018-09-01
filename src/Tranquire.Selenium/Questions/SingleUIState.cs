@@ -10,8 +10,11 @@ namespace Tranquire.Selenium.Questions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TState"></typeparam>
-    public abstract class SingleUIState<T, TState> : UIState<T> where TState : SingleUIState<T, TState>
+    public abstract class SingleUIState<T, TState> : UIState<T>, IQuestion<T>
+        where TState : SingleUIState<T, TState>
     {
+        private readonly Lazy<IQuestion<T>> _question;
+
         /// <summary>
         /// Creates a new instance of <see cref="SingleUIState{T, TState}"/> with a culture
         /// </summary>
@@ -19,12 +22,14 @@ namespace Tranquire.Selenium.Questions
         /// <param name="culture"></param>
         protected SingleUIState(ITarget target, CultureInfo culture) : base(target, culture)
         {
+            _question = new Lazy<IQuestion<T>>(() => CreateQuestion(new GenericConverter<T, T>(t => t)));
         }
 
         /// <summary>
         /// Gets a question returning the state
         /// </summary>
-        public IQuestion<T> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
+        [Obsolete("This property will be removed in the future. Cast this class as a IQuestion<T> in order to get a question")]
+        public IQuestion<T> Value => _question.Value;
 
         /// <summary>
         /// Creates a question
@@ -94,5 +99,12 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"What is the state of the element identified by {Target.ToString()} ?";
-    }
+        
+        string INamed.Name => _question.Value.Name;
+
+        T IQuestion<T>.AnsweredBy(IActor actor)
+        {
+            return _question.Value.AnsweredBy(actor);
+        }
+    }    
 }

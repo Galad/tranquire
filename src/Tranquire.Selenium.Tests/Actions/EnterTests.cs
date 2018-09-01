@@ -20,7 +20,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Enter.TheNewValue(expected).Into(target);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(Value.Of(target).Value);
+            var actual = Answer(Value.Of(target));
             //assert
             Assert.Equal(expected, actual);
         }

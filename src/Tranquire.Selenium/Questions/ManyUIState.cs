@@ -11,9 +11,10 @@ namespace Tranquire.Selenium.Questions
     /// Represent the UI state for a list of elements in the page
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ManyUIState<T> : UIState<T>
+    public class ManyUIState<T> : UIState<T>, IQuestion<ImmutableArray<T>>
     {
         private readonly Func<IWebElement, T> Resolve;
+        private readonly Lazy<IQuestion<ImmutableArray<T>>> _question;
 
         /// <summary>
         /// Creates a new instance of <see cref="ManyUIState{T}"/>
@@ -25,13 +26,15 @@ namespace Tranquire.Selenium.Questions
             : base(target, culture)
         {
             Resolve = resolve;
+            _question = new Lazy<IQuestion<ImmutableArray<T>>>(() => CreateQuestion(new GenericConverter<T, T>(t => t)));
         }
-
+        
         /// <summary>
         /// Gets a question which returns the state
         /// </summary>
-        public IQuestion<ImmutableArray<T>> Value => CreateQuestion<T>(new GenericConverter<T, T>(t => t));
-
+        [Obsolete("This property will be removed in the future. Cast this class as a IQuestion<ImmutableArray<T>> in order to get a question")]
+        public IQuestion<ImmutableArray<T>> Value => _question.Value;
+        
         /// <summary>
         /// Creates a question
         /// </summary>
@@ -86,5 +89,9 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"What are the state of the elements identified by {Target.ToString()} ?";
+        
+        string INamed.Name => _question.Value.Name;
+
+        ImmutableArray<T> IQuestion<ImmutableArray<T>>.AnsweredBy(IActor actor) => _question.Value.AnsweredBy(actor);
     }
 }

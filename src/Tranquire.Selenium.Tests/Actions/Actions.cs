@@ -43,7 +43,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act            
             Fixture.Actor.When(click(clickTarget));
             //assert
-            var actual = Answer(TextContent.Of(expectedClickContent).Value);
+            var actual = Answer(TextContent.Of(expectedClickContent));
             Assert.Equal(expected, actual);
         }
 
@@ -58,7 +58,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Select.TheValue(expected).Into(SelectElementTarget);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
+            var actual = Answer(SelectedValue.Of(SelectElementTarget));
             //assert
             Assert.Equal(expected, actual);
         }
@@ -79,7 +79,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Select.TheValues(expected).Into(SelectManyElementTarget);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
+            var actual = Answer(SelectedValues.Of(SelectManyElementTarget));
             //assert
             Assert.Equal(expected, actual);
         }
@@ -95,7 +95,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Select.TheIndex(index).Into(SelectElementTarget);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
+            var actual = Answer(SelectedValue.Of(SelectElementTarget));
             //assert
             Assert.Equal(expected, actual);
         }
@@ -112,7 +112,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Select.TheIndexes(indexes).Into(SelectManyElementTarget);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
+            var actual = Answer(SelectedValues.Of(SelectManyElementTarget));
             //assert
             Assert.Equal(expected, actual);
         }
@@ -128,7 +128,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Select.TheText(text).Into(SelectElementTarget);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(SelectedValue.Of(SelectElementTarget).Value);
+            var actual = Answer(SelectedValue.Of(SelectElementTarget));
             //assert
             Assert.Equal(expected, actual);
         }
@@ -145,7 +145,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var action = Select.TheTexts(texts).Into(SelectManyElementTarget);
             //act
             Fixture.Actor.When(action);
-            var actual = Answer(SelectedValues.Of(SelectManyElementTarget).Value);
+            var actual = Answer(SelectedValues.Of(SelectManyElementTarget));
             //assert
             Assert.Equal(expected, actual);
         }
@@ -163,7 +163,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Fixture.Actor.When(Clear.TheValueOf(target));
             //assert
-            var actual = Answer(Value.Of(target).Value);
+            var actual = Answer(Value.Of(target));
             Assert.Equal(string.Empty, actual);
         }
         
@@ -178,7 +178,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Fixture.Actor.When(Clear.TheValueOf(target));
             //assert
-            var actual = Answer(Value.Of(target).Value);
+            var actual = Answer(Value.Of(target));
             Assert.Equal(string.Empty, actual);
         }
 
@@ -193,7 +193,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Fixture.Actor.When(Clear.TheValueOf(target));
             //assert
-            var actual = Answer(Value.Of(target).Value);
+            var actual = Answer(Value.Of(target));
             Assert.Equal(string.Empty, actual);
         }
     }

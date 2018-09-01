@@ -15,7 +15,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("css value element").LocatedBy(By.Id(id));
-            var question = CssValue.Of(target).AndTheProperty(cssProperty).Value;
+            var question = CssValue.Of(target).AndTheProperty(cssProperty);
             //act
             var actual = Answer(question);
             //assert

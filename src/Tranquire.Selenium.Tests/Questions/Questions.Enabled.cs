@@ -14,7 +14,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("enabled element").LocatedBy(By.Id(id));
-            var question = Enabled.Of(target).Value;
+            var question = Enabled.Of(target);
             //act
             var actual = Answer(question);
             //assert

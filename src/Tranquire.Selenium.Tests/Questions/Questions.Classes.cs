@@ -16,7 +16,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("Element with classes").LocatedBy(By.Id(id));
-            var question = Classes.Of(target).Value;
+            var question = Classes.Of(target);
             //act            
             var actual = Answer(question);
             //assert

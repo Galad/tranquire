@@ -28,7 +28,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Fixture.Actor.When(Wait.UntilTargetIsPresent(target));
             //assert
-            var actual = Answer(Presence.Of(target).Value);
+            var actual = Answer(Presence.Of(target));
             Assert.True(actual);
         }
 
@@ -59,7 +59,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
             ChangeText(expected);
-            var question = TextContent.Of(target).Value;
+            var question = TextContent.Of(target);
             //act
             Fixture.Actor.When(Wait.UntilQuestionIsAnswered(question, t => t == expected));
             //arrange
@@ -73,7 +73,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id("ChangeTextElement"));
             ChangeText(expected);
-            var question = TextContent.Of(target).Value;
+            var question = TextContent.Of(target);
             //act
             Assert.Throws<TimeoutException>(() =>
             Fixture.Actor.When(Wait.UntilQuestionIsAnswered(question, t => t == expected)

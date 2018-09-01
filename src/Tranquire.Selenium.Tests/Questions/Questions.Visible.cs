@@ -14,7 +14,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("visible element").LocatedBy(By.Id(id));
-            var question = Visibility.Of(target).Value;
+            var question = Visibility.Of(target);
             //act
             var actual = Answer(question);
             //assert
