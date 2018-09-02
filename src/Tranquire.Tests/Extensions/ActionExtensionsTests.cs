@@ -96,6 +96,17 @@ namespace Tranquire.Tests.Extensions
             actual.Should().BeOfType<SelectManyAction<string, object>>();
             actual.Should().BeEquivalentTo(expected);
         }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_ReturnAction_ShouldReturnCorrectResult(IAction<string> action, Func<string, IQuestion<object>> selector)
+        {
+            // act
+            var actual = action.SelectMany(selector);
+            // assert
+            var expected = new SelectManyActionToQuestion<string, object>(action, selector);
+            actual.Should().BeOfType<SelectManyActionToQuestion<string, object>>();
+            actual.Should().BeEquivalentTo(expected);
+        }
         #endregion
     }
 }

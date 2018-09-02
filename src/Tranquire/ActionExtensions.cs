@@ -117,6 +117,19 @@ namespace Tranquire
         {
             return new SelectManyAction<TSource, TResult>(action, selector);
         }
+
+        /// <summary>
+        /// Projects the result of an action into a new question.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function that returns a new action.</param>
+        /// <returns></returns>
+        public static IQuestion<TResult> SelectMany<TSource, TResult>(this IAction<TSource> action, Func<TSource, IQuestion<TResult>> selector)
+        {
+            return new SelectManyActionToQuestion<TSource, TResult>(action, selector);
+        }
         #endregion
     }
 }
