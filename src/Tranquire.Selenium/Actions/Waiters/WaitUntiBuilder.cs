@@ -21,16 +21,16 @@ namespace Tranquire.Selenium.Actions.Waiters
         /// <summary>
         /// Wait until the target is visible
         /// </summary>
-        public WaitUntilQuestionIsAnswered<bool> IsVisible => new WaitUntilQuestionIsAnswered<bool>(Visibility.Of(_target).Value, isVisible => isVisible);
+        public WaitUntilQuestionIsAnswered<bool> IsVisible => new WaitUntilQuestionIsAnswered<bool>(Visibility.Of(_target), isVisible => isVisible);
 
         /// <summary>
         /// Wait until the target is not visible
         /// </summary>
-        public WaitUntilQuestionIsAnswered<bool> IsNotVisible => new WaitUntilQuestionIsAnswered<bool>(Visibility.Of(_target).Value, isVisible => !isVisible);
+        public WaitUntilQuestionIsAnswered<bool> IsNotVisible => new WaitUntilQuestionIsAnswered<bool>(Visibility.Of(_target), isVisible => !isVisible);
 
         /// <summary>
         /// Wait until the given target is present in the DOM
         /// </summary>
-        public WaitUntilQuestionIsAnswered<bool> IsPresent => new WaitUntilQuestionIsAnswered<bool>(Presence.Of(_target).Value, isPresent => isPresent);
+        public WaitUntilQuestionIsAnswered<bool> IsPresent => new WaitUntilQuestionIsAnswered<bool>(Presence.Of(_target), isPresent => isPresent);
     }
 }
