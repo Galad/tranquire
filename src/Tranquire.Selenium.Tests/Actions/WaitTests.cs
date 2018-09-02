@@ -31,7 +31,7 @@ namespace Tranquire.Selenium.Tests.Actions
             Fixture.Actor.When(Wait.UntilTargetIsPresent(target));
 #pragma warning restore CS0618 // Type or member is obsolete
                               //assert
-            var actual = Answer(Presence.Of(target).Value);
+            var actual = Answer(Presence.Of(target));
             Assert.True(actual);
         }
         
@@ -130,7 +130,7 @@ namespace Tranquire.Selenium.Tests.Actions
             // act
             Fixture.Actor.When(Wait.Until(target).IsVisible);
             // assert
-            var actual = Answer(Visibility.Of(target).Value);
+            var actual = Answer(Visibility.Of(target));
             Assert.True(actual);
         }
 
@@ -157,7 +157,7 @@ namespace Tranquire.Selenium.Tests.Actions
             // act
             Fixture.Actor.When(Wait.Until(target).IsNotVisible);
             // assert
-            var actual = Answer(Visibility.Of(target).Value);
+            var actual = Answer(Visibility.Of(target));
             Assert.False(actual);
         }
 
