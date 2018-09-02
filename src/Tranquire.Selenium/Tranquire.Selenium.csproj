@@ -37,13 +37,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.23">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Selenium.Support" version="3.11.2" />
-    <PackageReference Include="Selenium.WebDriver" version="3.11.2" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.1.0.5212">
+    <PackageReference Include="Selenium.Support" version="3.14.0" />
+    <PackageReference Include="Selenium.WebDriver" version="3.14.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.4.0.6452">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
