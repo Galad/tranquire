@@ -218,7 +218,7 @@ namespace Tranquire.Selenium.Tests.Actions
             await Fixture.Actor.When(action);
             // assert
             sw.Stop();
-            sw.Elapsed.Should().BeGreaterOrEqualTo(timeToWait).And.BeLessThan(timeToWait.Add(TimeSpan.FromMilliseconds(50)));
+            sw.Elapsed.Should().BeGreaterOrEqualTo(timeToWait).And.BeLessThan(timeToWait.Add(TimeSpan.FromMilliseconds(400)));
         }
     }
 }
