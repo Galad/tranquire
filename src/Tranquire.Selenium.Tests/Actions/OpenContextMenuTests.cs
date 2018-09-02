@@ -24,7 +24,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Fixture.Actor.When(action);
             //assert
-            var actual = Answer(Value.Of(expectedClickContent).Value);
+            var actual = Answer(Value.Of(expectedClickContent));
             Assert.Equal(expected, actual);
         }
     }

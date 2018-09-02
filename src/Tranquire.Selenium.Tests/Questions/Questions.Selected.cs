@@ -14,7 +14,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("selected element").LocatedBy(By.Id(id));
-            var question = Selected.Of(target).Value;
+            var question = Selected.Of(target);
             //act
             var actual = Answer(question);
             //assert
@@ -31,7 +31,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("selected element").LocatedBy(By.Id(id));
-            var question = SelectedValue.Of(target).Value;
+            var question = SelectedValue.Of(target);
             //act
             var actual = Answer(question);
             //assert
@@ -43,7 +43,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("selected element").LocatedBy(By.Id("NotASelectElement"));
-            var question = SelectedValue.Of(target).Value;
+            var question = SelectedValue.Of(target);
             //act
             Assert.Throws<UnexpectedTagNameException>(() => Answer(question));
         }
@@ -59,7 +59,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("selected element").LocatedBy(By.Id(id));
-            var question = SelectedValues.Of(target).Value;
+            var question = SelectedValues.Of(target);
             //act
             var actual = Answer(question);
             //assert
@@ -71,7 +71,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("selected element").LocatedBy(By.Id("NotASelectElement"));
-            var question = SelectedValues.Of(target).Value;
+            var question = SelectedValues.Of(target);
             //act
             Assert.Throws<UnexpectedTagNameException>(() => Answer(question));
         }

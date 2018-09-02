@@ -33,7 +33,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act                 
             execute(Click.On(target).AllowRetry());
             //assert            
-            var actual = Answer(Value.Of(Target.The("expected value").LocatedBy(By.Id("ExpectedValue"))).Value);
+            var actual = Answer(Value.Of(Target.The("expected value").LocatedBy(By.Id("ExpectedValue"))));
             Assert.Equal(expected, actual);
         }
 

@@ -13,7 +13,7 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             //arrange
             var target = Target.The("element with attribute").LocatedBy(By.Id("ElementWithAttribute"));
-            var question = HtmlAttribute.Of(target).Named(attribute).Value;
+            var question = HtmlAttribute.Of(target).Named(attribute);
             //act
             var actual = Answer(question);
             //assert
