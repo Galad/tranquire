@@ -95,5 +95,12 @@ namespace Tranquire.Selenium.Actions
         {
             return new WaitUntilTargetBuilder(target);
         }
+
+
+        /// <summary>
+        /// Wait during the specified amount of time
+        /// </summary>
+        /// <param name="timeToWait">The time to wait</param>
+        public static WaitDuring During(TimeSpan timeToWait) => new WaitDuring(timeToWait);
     }
 }

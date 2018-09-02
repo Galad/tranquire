@@ -1,5 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿using FluentAssertions;
+using OpenQA.Selenium;
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
@@ -188,6 +191,34 @@ namespace Tranquire.Selenium.Tests.Actions
                                  "document.body.appendChild(element)";
             js = js + "\nsetTimeout(function(){" + stateAfter + "}, 1000);";
             Fixture.WebDriver.ExecuteScript(js);
+        }
+
+        [Fact]
+        public void During_ShouldWait()
+        {
+            // arrange
+            var timeToWait = TimeSpan.FromMilliseconds(100);
+            var action = Wait.During(timeToWait);
+            var sw = Stopwatch.StartNew();
+            //act
+            Fixture.Actor.When(action);
+            // assert
+            sw.Stop();
+            sw.Elapsed.Should().BeGreaterOrEqualTo(timeToWait).And.BeLessThan(timeToWait.Add(TimeSpan.FromMilliseconds(50)));
+        }
+
+        [Fact]
+        public async Task DuringAsync_ShouldWait()
+        {
+            // arrange
+            var timeToWait = TimeSpan.FromMilliseconds(100);
+            var action = Wait.During(timeToWait).Async;
+            var sw = Stopwatch.StartNew();
+            //act
+            await Fixture.Actor.When(action);
+            // assert
+            sw.Stop();
+            sw.Elapsed.Should().BeGreaterOrEqualTo(timeToWait).And.BeLessThan(timeToWait.Add(TimeSpan.FromMilliseconds(50)));
         }
     }
 }
