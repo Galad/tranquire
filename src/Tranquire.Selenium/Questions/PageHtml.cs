@@ -3,7 +3,7 @@
     /// <summary>
     /// Provide Html for a WebBrowser
     /// </summary>
-    public class Html : Question<string, WebBrowser>
+    internal class PageHtml : Question<string, WebBrowser>
     {
         /// <inheritsdoc />
         public override string Name => "What is the current page HTML ?";
@@ -13,10 +13,5 @@
         {
             return ability.Driver.PageSource;
         }
-
-        /// <summary>
-        /// Gets a question that returns the Page html
-        /// </summary>
-        public static IQuestion<string> OfPage { get; } = new Html();
     }
 }

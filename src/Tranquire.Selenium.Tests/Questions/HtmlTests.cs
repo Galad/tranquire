@@ -14,12 +14,12 @@ namespace Tranquire.Selenium.Tests.Questions
         }
 
         [Fact]
-        public async Task HtmlOfPage_ShouldReturnCorrectValue()
+        public async Task PageHtml_ShouldReturnCorrectValue()
         {
             // arrange
             var expected = normalizeHtml(await GetExpectedHtml()); 
             // act
-            var actual = Answer(Html.OfPage);
+            var actual = Answer(Page.Html());
             // assert
             Assert.Equal(expected, normalizeHtml(actual));
 
