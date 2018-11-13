@@ -100,6 +100,7 @@ namespace Tranquire.Selenium.Questions
                 }
             }
 
+            public override string ToString() => _target.ToString();
         }
 
         private class NotFoundElement : IWebElement
