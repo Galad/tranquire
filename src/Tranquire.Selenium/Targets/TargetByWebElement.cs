@@ -36,5 +36,7 @@ namespace Tranquire.Selenium.Targets
         {
             return ImmutableArray.Create(WebElement);
         }
+
+        public override string ToString() => $"Name (web element: {WebElement.TagName})";
     }
 }
