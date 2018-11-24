@@ -1,6 +1,8 @@
-﻿using Moq;
+﻿using AutoFixture.Xunit2;
+using Moq;
 using OpenQA.Selenium;
 using System.Linq;
+using Tranquire.Tests;
 using Xunit;
 
 namespace Tranquire.Selenium.Tests.Targets
@@ -166,5 +168,78 @@ namespace Tranquire.Selenium.Tests.Targets
             //assert
             Assert.Equal(sut, actual);
         }
+
+        #region Name
+        [Theory, AutoData]
+        public void Name_LocatedBy_ShouldReturnCorrectValue(string expected)
+        {
+            // arrange
+            var sut = Target.The(expected).LocatedBy(By.Id("id"));
+            // act
+            var actual = sut.Name;
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, AutoData]
+        public void Name_LocatedByFormattable_ShouldReturnCorrectValue(string expected)
+        {
+            // arrange
+            var sut = Target.The(expected).LocatedBy("{0}", By.Id).Of("id");
+            // act
+            var actual = sut.Name;
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void Name_LocatedByWebElement_ShouldReturnCorrectValue(IWebElement webElement, string expected)
+        {
+            // arrange
+            var sut = Target.The(expected).LocatedByWebElement(webElement);
+            // act
+            var actual = sut.Name;
+            // assert
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region ToString
+        [Theory, AutoData]
+        public void ToString_LocatedBy_ShouldReturnCorrectValue(string name)
+        {
+            // arrange
+            var sut = Target.The(name).LocatedBy(By.Id("id"));
+            // act
+            var actual = sut.ToString();
+            // assert
+            var expected = $"{name} ({By.Id("id").ToString()})";
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, AutoData]
+        public void ToString_LocatedByFormattable_ShouldReturnCorrectValue(string name)
+        {
+            // arrange
+            var sut = Target.The(name).LocatedBy("{0}", By.Id).Of("id");
+            // act
+            var actual = sut.ToString();
+            // assert
+            var expected = $"{name} ({By.Id("id").ToString()})";
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void ToString_LocatedByWebElement_ShouldReturnCorrectValue(IWebElement webElement, string name)
+        {
+            // arrange
+            var sut = Target.The(name).LocatedByWebElement(webElement);
+            // act
+            var actual = sut.ToString();
+            // assert
+            var expected = $"{name} (web element: {webElement.TagName})";
+            Assert.Equal(expected, actual);
+        }
+        #endregion
     }
 }
