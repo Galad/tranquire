@@ -20,6 +20,8 @@
     <LangVersion>latest</LangVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.xml</DocumentationFile>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
