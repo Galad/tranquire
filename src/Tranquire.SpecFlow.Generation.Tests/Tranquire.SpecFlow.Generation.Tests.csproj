@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Albedo" Version="2.0.0" />
+    <PackageReference Include="AutoFixture" version="4.5.0" />
+    <PackageReference Include="AutoFixture.AutoMoq" version="4.5.0" />
+    <PackageReference Include="AutoFixture.Idioms" version="4.5.0" />
+    <PackageReference Include="AutoFixture.Xunit2" Version="4.5.0" />
+    <PackageReference Include="CodeGeneration.Roslyn" Version="0.4.88" />
+    <PackageReference Include="CodeGeneration.Roslyn.BuildTime" Version="0.4.88">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" version="5.4.1" />
+    <PackageReference Include="Moq" version="4.9.0" />
+    <PackageReference Include="SpecFlow" Version="2.4.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <DotNetCliToolReference Include="dotnet-codegen" Version="0.4.88" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tranquire.SpecFlow.Generation\Tranquire.SpecFlow.Generation.csproj" />
+    <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Setup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>
