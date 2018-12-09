@@ -4,8 +4,17 @@ using System.Linq;
 
 namespace Tranquire.SpecFlow.Generation.Generator
 {
-    public static class StepNameGenerator
+    /// <summary>
+    /// Generates step sentences
+    /// </summary>
+    public static class StepSentenceGenerator
     {
+        /// <summary>
+        /// Generate a step sentence from a method declaration
+        /// </summary>
+        /// <param name="method">The method declaration</param>
+        /// <param name="stepKind">The step kind</param>
+        /// <returns>A regex representing the step sentence, that matches the method arguments</returns>
         public static string FromMethod(MethodDeclarationSyntax method, StepKind stepKind)
         {
             if (method == null)

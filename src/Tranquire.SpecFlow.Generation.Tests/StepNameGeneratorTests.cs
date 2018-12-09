@@ -18,7 +18,7 @@ namespace Tranquire.SpecFlow.Generation.Tests
                                     PredefinedType(Token(SyntaxKind.VoidKeyword)),
                                     Identifier("test")
                                 ));
-            assertion.Verify(typeof(StepNameGenerator));
+            assertion.Verify(typeof(StepSentenceGenerator));
         }
 
         [Theory]
@@ -40,7 +40,7 @@ public class Add
 ";
             MethodDeclarationSyntax method = GetMethod(code);
             // act
-            string actual = StepNameGenerator.FromMethod(method, stepKind);
+            string actual = StepSentenceGenerator.FromMethod(method, stepKind);
             // assert
             Assert.Equal(expected, actual);
         }

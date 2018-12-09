@@ -10,17 +10,26 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Tranquire.SpecFlow.Generation.Generator
 {
+    /// <summary>
+    /// The code generator
+    /// </summary>
     public sealed class SpecFlowBindingGenerator : IRichCodeGenerator
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SpecFlowBindingGenerator"/>
+        /// </summary>
+        /// <param name="attributeData"></param>
         public SpecFlowBindingGenerator(AttributeData attributeData)
         {
         }
 
+        /// <inheritdoc />
         public Task<SyntaxList<MemberDeclarationSyntax>> GenerateAsync(TransformationContext context, IProgress<Diagnostic> progress, CancellationToken cancellationToken)
         {
             return Task.FromResult(List<MemberDeclarationSyntax>());
         }
 
+        /// <inheritdoc />
         public Task<RichGenerationResult> GenerateRichAsync(TransformationContext context, IProgress<Diagnostic> progress, CancellationToken cancellationToken)
         {
             ClassDeclarationSyntax classDeclaration = context.ProcessingNode as ClassDeclarationSyntax;

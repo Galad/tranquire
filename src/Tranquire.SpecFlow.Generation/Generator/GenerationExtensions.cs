@@ -6,7 +6,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Tranquire.SpecFlow.Generation.Generator
 {
-    public static class GenerationExtensions
+    internal static class GenerationExtensions
     {
         public static IEnumerable<MemberDeclarationSyntax> GetCandidateMethods(this ClassDeclarationSyntax classDeclaration)
         {
