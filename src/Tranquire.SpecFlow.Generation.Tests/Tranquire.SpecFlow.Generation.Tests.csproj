@@ -21,6 +21,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" version="5.4.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.9.0" />
     <PackageReference Include="Moq" version="4.9.0" />
     <PackageReference Include="SpecFlow" Version="2.4.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -37,6 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Add.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="Setup.cs">
       <SubType>Code</SubType>
     </Compile>

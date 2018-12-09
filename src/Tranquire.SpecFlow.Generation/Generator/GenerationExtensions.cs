@@ -116,12 +116,6 @@ namespace Tranquire.SpecFlow.Generation.Generator
             return true;
         }
 
-        public static bool IsQuestion(this MemberDeclarationSyntax memberDeclarationSyntax)
-        {
-            return memberDeclarationSyntax is MethodDeclarationSyntax m &&
-                   m.ReturnType.ToString().Contains("IQuestion");
-        }
-
         public static NameSyntax SpecFlowName { get; } = QualifiedName(
                     IdentifierName("TechTalk"),
                     IdentifierName("SpecFlow")

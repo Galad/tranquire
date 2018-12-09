@@ -1,54 +1,40 @@
 ﻿using AutoFixture;
-using AutoFixture.Xunit2;
 using BoDi;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using Xunit;
 
 namespace Tranquire.SpecFlow.Generation.Tests
-{
+{    
     public class StaticFactoriesTests
     {
-        public static IEnumerable<object[]> GeneratedStepsMethods
+        [Fact]
+        public async Task GeneratedStepsMethods_HaveCorrectAttribute()
         {
-            get
-            {
-                return typeof(Add_Steps).GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                                        .Where(m => m.Name.StartsWith("Given") || m.Name.StartsWith("When"))
-                                        .Select(m => new object[] { m });
-            }
-        }
+            var assembly = await CompilationTests.CompileSource(File.ReadAllText("Add.cs"));
+            var type = assembly.GetType("Tranquire.SpecFlow.Generation.Tests.Add_Steps");
+            Assert.NotNull(type);
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                              .Where(m => m.Name.StartsWith("Given") || m.Name.StartsWith("When"))
+                              .Select(m => (m, attribute: m.Name.StartsWith("Given") ? typeof(GivenAttribute) : typeof(WhenAttribute)))
+                              .Select(m => (m.m.Name, attribute: m.m.GetCustomAttribute(m.attribute)))
+                              .ToArray();
 
-        [Theory, MemberData(nameof(GeneratedStepsMethods))]
-        public void GeneratedStepsMethods_HaveCorrectAttribute(MethodInfo method)
-        {
-            Type expectedAttribute;
-            if (method.Name.StartsWith("Given"))
-            {
-                expectedAttribute = typeof(GivenAttribute);
-            }
-            else if (method.Name.StartsWith("When"))
-            {
-                expectedAttribute = typeof(WhenAttribute);
-            }
-            else
-            {
-                throw new Exception("Unexpected method name. It should begin with Given or When");
-            }
-
-            Assert.NotNull(method.GetCustomAttribute(expectedAttribute));
+            Assert.All(methods, m => Assert.NotNull(m.attribute));
         }
 
         public static IEnumerable<object[]> InvokeFactoryMethod
         {
             get
             {
-                var verifyMethod = typeof(Mock<IActorFacade>).GetMethods()
+                MethodInfo verifyMethod = typeof(Mock<IActorFacade>).GetMethods()
                                                              .Single(m => m.Name == "Verify" &&
                                                                           m.IsGenericMethod &&
                                                                           m.GetParameters().Length == 1
@@ -60,24 +46,24 @@ namespace Tranquire.SpecFlow.Generation.Tests
                         }
                         .Select(name =>
                         {
-                            var fixture = new Fixture().Customize(new DomainCustomization());
-                            var actor = fixture.Freeze<Mock<IActorFacade>>();
-                            var objectContainer = fixture.Freeze<Mock<IObjectContainer>>();
+                            IFixture fixture = new Fixture().Customize(new DomainCustomization());
+                            Mock<IActorFacade> actor = fixture.Freeze<Mock<IActorFacade>>();
+                            Mock<IObjectContainer> objectContainer = fixture.Freeze<Mock<IObjectContainer>>();
                             objectContainer.Setup(o => o.Resolve<IActorFacade>()).Returns(actor.Object);
-                            var sut = fixture.Create<Add_Steps>();    
+                            Add_Steps sut = fixture.Create<Add_Steps>();
                             return new object[]
                             {
                                 fixture,
                                 actor,
                                 new System.Action<string, object[]>((methodName, args) =>
                                 {
-                                    var sutMethodName = $"{name}_Add_{methodName}";
-                                    var sutMethod = typeof(Add_Steps).GetMethod(sutMethodName);
+                                    string sutMethodName = $"{name}_Add_{methodName}";
+                                    MethodInfo sutMethod = typeof(Add_Steps).GetMethod(sutMethodName);
                                     sutMethod.Invoke(sut, args);
                                 }),
                                 new System.Action<object>(expected =>
                                 {
-                                    var returnType = expected.GetType()
+                                    Type returnType = expected.GetType()
                                                              .GetInterfaces()
                                                              .Single(t => t.IsGenericType &&
                                                                           t.GetGenericTypeDefinition() == typeof(IAction<>)
@@ -90,8 +76,8 @@ namespace Tranquire.SpecFlow.Generation.Tests
 
                 void invokeVerify(string actionName, Mock<IActorFacade> actor, Type returnType, object expected)
                 {
-                    var method = verifyMethod.MakeGenericMethod(returnType);
-                    var verifyMethodExpression = typeof(StaticFactoriesTests).GetMethod($"Verify{actionName}Expression", BindingFlags.NonPublic | BindingFlags.Static)
+                    MethodInfo method = verifyMethod.MakeGenericMethod(returnType);
+                    object verifyMethodExpression = typeof(StaticFactoriesTests).GetMethod($"Verify{actionName}Expression", BindingFlags.NonPublic | BindingFlags.Static)
                                                                              .MakeGenericMethod(returnType)
                                                                              .Invoke(null, new object[] { expected });
                     method.Invoke(actor, new object[] { verifyMethodExpression });
