@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net45</TargetFrameworks>
+    <TargetFramework>netstandard1.6</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RootNamespace>Tranquire</RootNamespace>
     <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
@@ -11,18 +10,16 @@
     <PackageTags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</PackageTags>
     <Authors>Lucas Loegel</Authors>
     <Company />
-    <Description>Provides integration of NUnit constraints with Tranquire.</Description>
+    <Description>Provides automatic generation of SpecFlow step bindngs from Tranquire actions.</Description>
     <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>1.0.0</Version>
     <IsPackable>true</IsPackable>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
-    <CodeAnalysisRuleSet>Tranquire.NUnit.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.NUnit.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.xml</DocumentationFile>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
+    <CodeAnalysisRuleSet>Tranquire.SpecFlow.Generation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -36,7 +33,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="CodeGeneration.Roslyn" Version="0.4.88" />
+    <PackageReference Include="CodeGeneration.Roslyn.BuildTime" Version="0.4.88" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="7.9.0.7583">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -45,13 +43,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="2.2.13">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>
