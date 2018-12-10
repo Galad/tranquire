@@ -26,10 +26,10 @@ build_script:
 - msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
 - ps: 
 test_script:
-- ps: OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:vstest.console.exe" "-targetargs:src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\Tranquire.NUnit.Tests\bin\Release\net462\Tranquire.NUnit.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" "-mergebyhash" "-coverbytest:*"
+- ps: OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:vstest.console.exe" "-targetargs:src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\Tranquire.NUnit.Tests\bin\Release\net462\Tranquire.NUnit.Tests.dll src\Tranquire.SpecFlow.Generation.Tests\bin\Release\net462\Tranquire.SpecFlow.Generation.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" "-mergebyhash" "-coverbytest:*"
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
-- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"
+- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,Tranquire.SpecFlow.Generation.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg

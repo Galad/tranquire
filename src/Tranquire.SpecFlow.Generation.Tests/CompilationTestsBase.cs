@@ -66,12 +66,15 @@ namespace Tranquire.SpecFlow.Generation.Tests
 
         public static async Task<Assembly> CompileSource(string source)
         {
+            
             SyntaxTree tree = await Generate(source);
             SyntaxTree sourceTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(source));
             string assemblyName = "Generated_" + Guid.NewGuid().ToString();
             CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, new[] { tree, sourceTree }, MetadataReferences, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            Microsoft.CodeAnalysis.Emit.EmitResult result = compilation.Emit(assemblyName + ".dll");
+            var assemblyPath = Path.Combine(Directory.GetCurrentDirectory(), assemblyName + ".dll");
+            Microsoft.CodeAnalysis.Emit.EmitResult result = compilation.Emit(assemblyPath);
             AssemblyName assemblyName2 = new AssemblyName(assemblyName);
+            assemblyName2.CodeBase = assemblyPath;
             return Assembly.Load(assemblyName2);
         }
 
