@@ -14,7 +14,7 @@ namespace Tranquire.SpecFlow.Generation.Generator
                                            .Where(m => m.Modifiers.Any(mod => mod.Kind() == SyntaxKind.StaticKeyword) &&
                                                        m.Modifiers.Any(mod => mod.Kind() == SyntaxKind.PublicKeyword) &&
                                                        m.IsAction() &&
-                                                       m.ParameterList.Parameters.Count == 0
+                                                       m.ParameterList.Parameters.Count <= 1
                                                  );
         }
 
@@ -62,6 +62,7 @@ namespace Tranquire.SpecFlow.Generation.Generator
                                         )
                                     }
                                 ))
+                                .WithParameterList(ParameterList(SeparatedList(a.Parameters)))
                                 .WithBody(Block(GenerateInvokeActionStatement(a, stepKind)));
             }
 
@@ -88,7 +89,7 @@ namespace Tranquire.SpecFlow.Generation.Generator
                                                    IdentifierName("IActorFacade")
                                                )
                                            )
-                                       )
+                                       )                                       
                                    )
                                ),
                                IdentifierName(stepKind.ToString())
@@ -103,6 +104,14 @@ namespace Tranquire.SpecFlow.Generation.Generator
                                                SyntaxKind.SimpleMemberAccessExpression,
                                                IdentifierName((actionDescription.Method.Parent as ClassDeclarationSyntax).Identifier),
                                                IdentifierName((actionDescription.Method as MethodDeclarationSyntax).Identifier)
+                                           )
+                                       )
+                                       .WithArgumentList(
+                                           ArgumentList(
+                                               SeparatedList(
+                                                   actionDescription.Parameters
+                                                                    .Select(p => Argument(IdentifierName(p.Identifier)))
+                                               )
                                            )
                                        )
                                    )
