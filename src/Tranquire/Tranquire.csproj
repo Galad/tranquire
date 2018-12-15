@@ -38,11 +38,7 @@
     <EmbeddedResource Include="Reporting\XmlReport.xsl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+  <ItemGroup>   
     <PackageReference Include="SonarAnalyzer.CSharp" Version="7.9.0.7583">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

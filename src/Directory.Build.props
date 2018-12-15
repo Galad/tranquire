@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NerdbankGitVersioningVersion>2.1.23</NerdbankGitVersioningVersion>
+    <NerdbankGitVersioningVersion>2.2.13</NerdbankGitVersioningVersion>
   </PropertyGroup>
 
   <!-- https://github.com/NuGet/Home/issues/4337 -->

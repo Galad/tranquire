@@ -46,12 +46,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="2.2.13">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>

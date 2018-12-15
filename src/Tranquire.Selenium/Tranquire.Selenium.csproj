@@ -37,10 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Selenium.Support" version="3.14.0" />
     <PackageReference Include="Selenium.WebDriver" version="3.14.0" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="7.9.0.7583">

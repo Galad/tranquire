@@ -44,5 +44,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
   </ItemGroup>
-
 </Project>
