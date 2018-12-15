@@ -3,25 +3,11 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="2.2.13">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
   <PropertyGroup>
     <NerdbankGitVersioningVersion>2.2.13</NerdbankGitVersioningVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
   <!-- https://github.com/NuGet/Home/issues/4337 -->
-  <!--
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="all" />
   </ItemGroup>
@@ -34,6 +20,5 @@
       BeforeTargets="_GenerateRestoreProjectSpec"
       DependsOnTargets="GetBuildVersion"
       Condition=" '$(NerdbankGitVersioningTasksPath)' != '' " />
-  -->
   <!-- https://github.com/NuGet/Home/issues/4337 -->
 </Project>
