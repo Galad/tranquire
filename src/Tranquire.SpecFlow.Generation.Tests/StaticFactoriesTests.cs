@@ -18,7 +18,7 @@ namespace Tranquire.SpecFlow.Generation.Tests
         [Fact]
         public async Task GeneratedStepsMethods_HaveCorrectAttribute()
         {
-            var assembly = await CompilationTests.CompileSource(Path.Combine(Directory.GetCurrentDirectory(), File.ReadAllText("Add.cs")));
+            var assembly = await CompilationTests.CompileSource(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Add.cs")));
             var type = assembly.GetType("Tranquire.SpecFlow.Generation.Tests.Add_Steps");
             Assert.NotNull(type);
             var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance)
