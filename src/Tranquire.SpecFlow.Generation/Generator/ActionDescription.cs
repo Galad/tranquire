@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Tranquire.SpecFlow.Generation.Generator
@@ -20,6 +21,10 @@ namespace Tranquire.SpecFlow.Generation.Generator
         /// The step method name
         /// </summary>
         public string MethodName { get; }
+        /// <summary>
+        /// The parameters for the step method
+        /// </summary>
+        public IReadOnlyList<ParameterSyntax> Parameters { get; }
 
         /// <summary>
         /// Creates a new instance of <see cref="ActionDescription"/>
@@ -27,14 +32,17 @@ namespace Tranquire.SpecFlow.Generation.Generator
         /// <param name="kind">The action kind</param>
         /// <param name="method">The member declaration that creates the action</param>
         /// <param name="methodName">The step method name</param>
+        /// <param name="parameters">The parameters for the step method</param>
         public ActionDescription(
             ActionKind kind, 
             MemberDeclarationSyntax method, 
-            string methodName)
+            string methodName,
+            IReadOnlyList<ParameterSyntax> parameters)
         {
             Kind = kind;
             Method = method ?? throw new System.ArgumentNullException(nameof(method));
             MethodName = methodName ?? throw new System.ArgumentNullException(nameof(methodName));
+            Parameters = parameters;
         }
 
         /// <summary>
@@ -48,7 +56,7 @@ namespace Tranquire.SpecFlow.Generation.Generator
             var methodName = (memberDeclarationSyntax.Parent as ClassDeclarationSyntax).Identifier.ValueText +
                              "_" +
                              (memberDeclarationSyntax as MethodDeclarationSyntax).Identifier.ValueText;
-            return new ActionDescription(kind, memberDeclarationSyntax, methodName);
+            return new ActionDescription(kind, memberDeclarationSyntax, methodName, ((MethodDeclarationSyntax)memberDeclarationSyntax).ParameterList.Parameters);
         }
 
         /// <summary>

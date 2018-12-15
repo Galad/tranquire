@@ -1,4 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +12,8 @@ namespace Tranquire.SpecFlow.Generation.Generator
     /// </summary>
     public static class StepSentenceGenerator
     {
+        private const string Space = " ";
+
         /// <summary>
         /// Generate a step sentence from a method declaration
         /// </summary>
@@ -19,20 +24,67 @@ namespace Tranquire.SpecFlow.Generation.Generator
         {
             if (method == null)
             {
-                throw new System.ArgumentNullException(nameof(method));
+                throw new ArgumentNullException(nameof(method));
             }
 
-            IEnumerable<string> words = GetWords(method.Identifier.Text)
-                                            .Select(w => w.ToLower());
-            var sentence = string.Join(" ", words);
+            var parts = method.Identifier.Text.Split('_');
+            var wordGroups = parts.Select(p => SplitByUppercase(p).Select(w => w.ToLower()))
+                                  .ToArray();
+            string sentence;            
+            if(method.ParameterList.Parameters.Count == 1 && wordGroups.Length == 2)
+            {
+                sentence = string.Join(
+                    Space + GetRegexExpression(method.ParameterList.Parameters[0]) + Space,
+                    wordGroups.Select(words => string.Join(Space, words))
+                    );
+            }
+            else if (method.ParameterList.Parameters.Count == 1)
+            {
+                var parameter = GetRegexExpression(method.ParameterList.Parameters[0]);
+                var suffix = parameter == string.Empty ? string.Empty : Space + parameter;
+                sentence = string.Join(Space, wordGroups.SelectMany(w => w)) + suffix; 
+            }
+            else
+            {
+                sentence = string.Join(Space, wordGroups.SelectMany(w => w));
+            }
             if(stepKind == StepKind.Given)
             {
                 return sentence;
             }
-            return "I " + (method.Parent as ClassDeclarationSyntax).Identifier.Text.ToLower() + " " + sentence;
+            return "I " + (method.Parent as ClassDeclarationSyntax).Identifier.Text.ToLower() + Space + sentence;
         }
 
-        private static IEnumerable<string> GetWords(string text)
+        private static string GetRegexExpression(ParameterSyntax parameterSyntax)
+        {
+            if(parameterSyntax.Type is PredefinedTypeSyntax predefinedType)
+            {
+                switch (predefinedType.Keyword.Kind())
+                {
+                    case SyntaxKind.BoolKeyword:
+                    case SyntaxKind.ByteKeyword:
+                    case SyntaxKind.SByteKeyword:
+                    case SyntaxKind.ShortKeyword:
+                    case SyntaxKind.UShortKeyword:
+                    case SyntaxKind.IntKeyword:
+                    case SyntaxKind.UIntKeyword:
+                    case SyntaxKind.LongKeyword:
+                    case SyntaxKind.ULongKeyword:
+                    case SyntaxKind.DoubleKeyword:
+                    case SyntaxKind.FloatKeyword:
+                    case SyntaxKind.DecimalKeyword:                    
+                    case SyntaxKind.CharKeyword:
+                        return "(.*)";
+                    case SyntaxKind.ObjectKeyword:
+                        return string.Empty;
+                    default:
+                        return @"""(.*)""";
+                }
+            }
+            return string.Empty;
+        }
+
+        private static IEnumerable<string> SplitByUppercase(string text)
         {
             int i = 0, j = 0;
             char[] chars = text.ToCharArray();
