@@ -13,8 +13,7 @@ namespace Tranquire.SpecFlow.Generation.Generator
             return classDeclaration.Members.OfType<MethodDeclarationSyntax>()
                                            .Where(m => m.Modifiers.Any(mod => mod.Kind() == SyntaxKind.StaticKeyword) &&
                                                        m.Modifiers.Any(mod => mod.Kind() == SyntaxKind.PublicKeyword) &&
-                                                       m.IsAction() &&
-                                                       m.ParameterList.Parameters.Count <= 1
+                                                       m.IsAction()
                                                  );
         }
 

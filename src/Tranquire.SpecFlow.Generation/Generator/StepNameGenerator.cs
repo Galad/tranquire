@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
@@ -30,34 +29,32 @@ namespace Tranquire.SpecFlow.Generation.Generator
             var parts = method.Identifier.Text.Split('_');
             var wordGroups = parts.Select(p => SplitByUppercase(p).Select(w => w.ToLower()))
                                   .ToArray();
-            string sentence;            
-            if(method.ParameterList.Parameters.Count == 1 && wordGroups.Length == 2)
-            {
-                sentence = string.Join(
-                    Space + GetRegexExpression(method.ParameterList.Parameters[0]) + Space,
-                    wordGroups.Select(words => string.Join(Space, words))
-                    );
-            }
-            else if (method.ParameterList.Parameters.Count == 1)
-            {
-                var parameter = GetRegexExpression(method.ParameterList.Parameters[0]);
-                var suffix = parameter == string.Empty ? string.Empty : Space + parameter;
-                sentence = string.Join(Space, wordGroups.SelectMany(w => w)) + suffix; 
-            }
-            else
-            {
-                sentence = string.Join(Space, wordGroups.SelectMany(w => w));
-            }
-            if(stepKind == StepKind.Given)
+            var sentence = GetSentence(method, wordGroups);
+
+            if (stepKind == StepKind.Given)
             {
                 return sentence;
             }
             return "I " + (method.Parent as ClassDeclarationSyntax).Identifier.Text.ToLower() + Space + sentence;
         }
 
+        private static string GetSentence(MethodDeclarationSyntax method, IEnumerable<string>[] wordGroups)
+        {
+            var parameters = method.ParameterList.Parameters;
+            int parametersCount = parameters.Count;
+
+            return wordGroups.SelectMany((words, index) => words.Concat(index >= parametersCount
+                                                ? Enumerable.Empty<string>()
+                                                : new[] { GetRegexExpression(parameters[index]) })
+                                        )
+                             .Concat(parameters.Skip(wordGroups.Length).Select(GetRegexExpression))
+                             .Where(s => s != string.Empty)
+                             .Join(Space);
+        }
+
         private static string GetRegexExpression(ParameterSyntax parameterSyntax)
         {
-            if(parameterSyntax.Type is PredefinedTypeSyntax predefinedType)
+            if (parameterSyntax.Type is PredefinedTypeSyntax predefinedType)
             {
                 switch (predefinedType.Keyword.Kind())
                 {
@@ -72,7 +69,7 @@ namespace Tranquire.SpecFlow.Generation.Generator
                     case SyntaxKind.ULongKeyword:
                     case SyntaxKind.DoubleKeyword:
                     case SyntaxKind.FloatKeyword:
-                    case SyntaxKind.DecimalKeyword:                    
+                    case SyntaxKind.DecimalKeyword:
                     case SyntaxKind.CharKeyword:
                         return "(.*)";
                     case SyntaxKind.ObjectKeyword:

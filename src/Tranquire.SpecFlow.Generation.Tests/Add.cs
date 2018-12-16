@@ -8,6 +8,7 @@ namespace Tranquire.SpecFlow.Generation.Tests
     {
         internal static IAction<Unit> ParameterlessMethodAction = Actions.Create("Test", a => Console.WriteLine("test"));
         internal static Func<string, IAction<Unit>> MethodWithOneParameterAction = s => Actions.Create("Test", a => Console.WriteLine(s));
+        internal static Func<string, int, object, IAction<Unit>> MethodWithMultipleParametersAction = (s, i, o) => Actions.Create("Test", a => Console.WriteLine(s));
 
         public static IAction<Unit> ParameterlessMethod()
         {
@@ -17,6 +18,11 @@ namespace Tranquire.SpecFlow.Generation.Tests
         public static IAction<Unit> MethodWithOneParameter(string parameter)
         {
             return MethodWithOneParameterAction(parameter);
+        }
+
+        public static IAction<Unit> MethodWithMultipleParameters(string parameter1, int parameter2, object parameter3)
+        {
+            return MethodWithMultipleParametersAction(parameter1, parameter2, parameter3);
         }
     }
 }

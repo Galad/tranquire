@@ -127,5 +127,25 @@ namespace Tranquire.SpecFlow.Generation.Tests
             // assert
             verify(expected);
         }
+          
+        [Theory, MemberData(nameof(InvokeFactoryMethod))]
+        public void MethodWithMultipleParameters_ShouldCallAction(
+            System.Action<string, object[]> act,
+            System.Action<object> verify
+            )
+        {
+            // arrange
+            var actionFactory = new Mock<Func<string, int, object, IAction<Unit>>>();
+            var expected = Actions.Create("test", a => { });
+            var parameter1 = Guid.NewGuid().ToString();
+            var parameter2 = 99;
+            var parameter3 = new object();
+            actionFactory.Setup(f => f(parameter1, parameter2, parameter3)).Returns(expected);
+            Add.MethodWithMultipleParametersAction = actionFactory.Object;
+            // act
+            act(nameof(Add.MethodWithMultipleParameters), new[] { parameter1, parameter2, parameter3 });
+            // assert
+            verify(expected);
+        }
     }
 }

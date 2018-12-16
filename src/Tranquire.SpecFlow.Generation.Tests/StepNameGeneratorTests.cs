@@ -65,7 +65,13 @@ public class Add
         [InlineData("TheValue", "object value", StepKind.Given, @"the value")]
         [InlineData("TheValue", "Value value", StepKind.Given, @"the value")]
         [InlineData("TheBook_InTheLibrary", "string name", StepKind.Given, @"the book ""(.*)"" in the library")]
-        [InlineData("TheValue_InTheCalculator", "int value", StepKind.Given, @"the value (.*) in the calculator")]        
+        [InlineData("TheValue_InTheCalculator", "int value", StepKind.Given, @"the value (.*) in the calculator")]
+        [InlineData("TheBookFromAuthorWithPageCountOf", "string title, string author, int pageCount", StepKind.Given, @"the book from author with page count of ""(.*)"" ""(.*)"" (.*)")]
+        [InlineData("TheBook_FromAuthor_With_Pages", "string title, string author, int pageCount", StepKind.Given, @"the book ""(.*)"" from author ""(.*)"" with (.*) pages")]
+        [InlineData("TheBook_FromAuthor_WithPageCountOf", "string title, string author, int pageCount", StepKind.Given, @"the book ""(.*)"" from author ""(.*)"" with page count of (.*)")]
+        [InlineData("TheBook_FromAuthorWithPageCountOf", "string title, string author, int pageCount", StepKind.Given, @"the book ""(.*)"" from author with page count of ""(.*)"" (.*)")]
+        [InlineData("TheBook_WithProperties", "string title, object properties", StepKind.Given, @"the book ""(.*)"" with properties")]
+        [InlineData("TheBook_WithProperties", "object properties", StepKind.Given, @"the book with properties")]
         public void ActionWithParameters_ShouldReturnCorrectName(
             string methodName,
             string parameters,
