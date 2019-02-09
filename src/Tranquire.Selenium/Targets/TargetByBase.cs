@@ -37,7 +37,7 @@ namespace Tranquire.Selenium.Targets
         /// </summary>
         /// <param name="targetSource">The target containing this target</param>
         /// <returns></returns>
-        public ITarget RelativeTo(ITarget targetSource)
+        public virtual ITarget RelativeTo(ITarget targetSource)
         {
             return new TargetByRelative(By, Name, targetSource);
         }
