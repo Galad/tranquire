@@ -27,12 +27,12 @@ namespace Tranquire.Selenium.Targets
             return this;
         }
 
-        public IWebElement ResolveFor(IWebDriver webDriver)
+        public IWebElement ResolveFor(ISearchContext searchContext)
         {
             return WebElement;
         }
 
-        public ImmutableArray<IWebElement> ResoveAllFor(IWebDriver webDriver)
+        public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
         {
             return ImmutableArray.Create(WebElement);
         }
