@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Tests.Targets
         {
             // arrange
             // act
-            var actual = relative.RelativeTo(source) as TargetByRelative;
+            var actual = relative.RelativeTo(source) as RelativeTarget;
             // assert            
             Assert.NotNull(actual);
             Assert.Equal(source, actual.TargetSource);

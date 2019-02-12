@@ -203,7 +203,7 @@ namespace Tranquire.Selenium
 
         private static void Highlight(WebBrowser webBrowser, ITargeted targeted, string action)
         {
-            var webElements = targeted.Target.ResoveAllFor(webBrowser);
+            var webElements = targeted.Target.ResolveAllFor(webBrowser);
             foreach (var el in webElements)
             {
                 ((IJavaScriptExecutor)webBrowser.Driver).ExecuteScript(action, el);
