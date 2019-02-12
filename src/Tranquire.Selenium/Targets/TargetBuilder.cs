@@ -47,6 +47,21 @@ namespace Tranquire.Selenium.Targets
         }
 
         /// <summary>
+        /// Returns a target taking parameters
+        /// </summary>
+        /// <param name="createBy">A function taking a value and returning the <see cref="By"/> object</param>
+        /// <returns></returns>
+        public ITargetWithParameters<T> LocatedBy<T>(Func<T, By> createBy)
+        {
+            if (createBy == null)
+            {
+                throw new ArgumentNullException(nameof(createBy));
+            }
+
+            return new TargetByParameterizable<T>(FriendlyName, createBy);
+        }
+
+        /// <summary>
         /// Returns <see cref="ITarget"/> from a <see cref="IWebElement"/>
         /// </summary>
         /// <param name="webElement"></param>

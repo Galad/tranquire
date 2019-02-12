@@ -73,6 +73,16 @@ namespace Tranquire.Selenium.Tests.Targets
         }
 
         [Fact]
+        public void ResolveFor_LocatedByFormattableIdGeneric_WithParameters_ShouldReturnCorrectValue()
+        {
+            var actual = Target.The("target formattable by id with parameter")
+                               .LocatedBy<string>(s => By.Id(s))
+                               .Of(PElementId)
+                               .ResolveFor(Fixture.WebDriver);
+            Assert.Equal(PElementText, actual.Text);
+        }
+
+        [Fact]
         public void ResolveAllFor_LocatedByCss_ShouldReturnCorrectValue()
         {
             var actual = Target.The("target by id")
