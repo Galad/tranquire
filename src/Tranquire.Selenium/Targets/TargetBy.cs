@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -8,33 +9,67 @@ namespace Tranquire.Selenium.Targets
     /// <summary>
     /// Represent a target located by a <see cref="By"/> object
     /// </summary>    
-    public class TargetBy : TargetByBase
+    public class TargetBy : ITarget
     {
         /// <summary>
         /// Creates a new instance of <see cref="TargetBy"/>
         /// </summary>
         /// <param name="by">The <see cref="By"/> locator</param>
         /// <param name="name">The target name</param>
-        public TargetBy(By by, string name) : base(by, name)
+        public TargetBy(By by, string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new System.ArgumentException("Argument cannot be null or empty", nameof(name));
+            }
+
+            By = by ?? throw new System.ArgumentNullException(nameof(by));
+            Name = name;
         }
 
         /// <summary>
-        /// Return the <see cref="ISearchContext"/> for the current target
+        /// Gets the target locator
         /// </summary>
-        /// <param name="webDriver"></param>
+        public By By { get; }
+        /// <summary>
+        /// Gets the target name
+        /// </summary>
+        public string Name { get; }
+        
+        /// <summary>
+        /// Returns a <see cref="IWebElement"/> corresponding to the target
+        /// </summary>
+        /// <param name="searchContext">The <see cref="IWebDriver"/> used to retrieved the element</param>
         /// <returns></returns>
-        protected override ISearchContext SearchContext(IWebDriver webDriver)
+        public IWebElement ResolveFor(ISearchContext searchContext)
         {
-            return webDriver;
+            Guard.ForNull(searchContext, nameof(searchContext));
+            return searchContext.FindElement(By);
         }
 
+        /// <summary>
+        /// Returns an array of <see cref="IWebElement"/> corresponding to all targets
+        /// </summary>
+        /// <param name="searchContext">The <see cref="IWebDriver"/> used to retrieved the element</param>
+        /// <returns></returns>
+        public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
+        {
+            Guard.ForNull(searchContext, nameof(searchContext));
+            return searchContext.FindElements(By).ToImmutableArray();
+        }
+        
+        /// <summary>
+        /// Returns the action's name
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => Name + $" ({By.ToString()})";
+        
         /// <inheritdoc />
-        public override ITarget RelativeTo(ITarget targetSource)
+        public ITarget RelativeTo(ITarget targetSource)
         {
             if (!(targetSource is TargetBy sourceTargetBy))
             {
-                return base.RelativeTo(targetSource);
+                return new RelativeTarget(targetSource, this);
             }
 
             var (sourceValue, sourceByType) = GetByInfo(sourceTargetBy.By);
@@ -42,7 +77,7 @@ namespace Tranquire.Selenium.Targets
 
             if (sourceByType == ByType.Other || relativeByType == ByType.Other)
             {
-                return base.RelativeTo(targetSource);
+                return new RelativeTarget(targetSource, this);
             }
 
             var by = By.CssSelector(AsCssSelector(sourceValue, sourceByType) + " " + AsCssSelector(relativeValue, relativeByType));
@@ -79,10 +114,10 @@ namespace Tranquire.Selenium.Targets
             Other
         }
 
-        private static PropertyInfo _byDescriptionProperty
+        private static readonly PropertyInfo _byDescriptionProperty
             = typeof(By).GetProperty("Description", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static Regex _byDescriptionRegex = new Regex(@"(?<type>By\.[^:]*):\s(?<value>.*)", RegexOptions.Compiled);
-        private static Dictionary<string, ByType> _byTypeMap = new Dictionary<string, ByType>()
+        private static readonly Regex _byDescriptionRegex = new Regex(@"(?<type>By\.[^:]*):\s(?<value>.*)", RegexOptions.Compiled);
+        private static readonly Dictionary<string, ByType> _byTypeMap = new Dictionary<string, ByType>()
         {
             { "By.Id", ByType.Id },
             { "By.ClassName[Contains]", ByType.ClassName },
