@@ -73,7 +73,7 @@ namespace Tranquire.Selenium.Questions
 
             protected override ImmutableArray<TConverted> Answer(IActor actor, WebBrowser ability)
             {
-                var webElements = Target.ResoveAllFor(ability);
+                var webElements = Target.ResolveAllFor(ability);
                 return webElements.Select(w => Convert(WebElementResolver(w)))
                                   .ToImmutableArray();
             }

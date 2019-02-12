@@ -18,6 +18,8 @@ namespace Tranquire.Selenium.Tests.Targets
         public const string YellowContent = "Yellow";
         public const string DivContainer = "divcontainer";
         public const string RelativeText = "Relative Text";
+        public const string RelativeText2 = "Relative Text2";
+        public const string MultipleRelativeText = "Multiple Relative Text";
 
         public TargetsTests(WebDriverFixture fixture) : base(fixture, "Targets.html")
         {
@@ -75,7 +77,7 @@ namespace Tranquire.Selenium.Tests.Targets
         {
             var actual = Target.The("target by id")
                                .LocatedBy(By.CssSelector($"ul#{UlElement} li"))
-                               .ResoveAllFor(Fixture.WebDriver)
+                               .ResolveAllFor(Fixture.WebDriver)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent, actual);
         }
@@ -86,7 +88,7 @@ namespace Tranquire.Selenium.Tests.Targets
             var actual = Target.The("target by id")
                                .LocatedBy($"ul#{UlElement} li", s => By.CssSelector(s))
                                .Of()
-                               .ResoveAllFor(Fixture.WebDriver)
+                               .ResolveAllFor(Fixture.WebDriver)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent, actual);
         }
@@ -97,7 +99,7 @@ namespace Tranquire.Selenium.Tests.Targets
             var actual = Target.The("target by id")
                                .LocatedBy("ul#{0} li", s => By.CssSelector(s))
                                .Of(UlElement)
-                               .ResoveAllFor(Fixture.WebDriver)
+                               .ResolveAllFor(Fixture.WebDriver)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent, actual);
         }
@@ -108,7 +110,7 @@ namespace Tranquire.Selenium.Tests.Targets
             var actual = Target.The("target by id")
                                .LocatedBy("//ul[@id='{0}']/li[not(contains(@class, '{1}'))]", s => By.XPath(s))
                                .Of(UlElement, YellowClass)
-                               .ResoveAllFor(Fixture.WebDriver)
+                               .ResolveAllFor(Fixture.WebDriver)
                                .Select(w => w.Text);
             Assert.Equal(LiElementsContent.Where(s => s != YellowContent), actual);
         }
@@ -125,6 +127,41 @@ namespace Tranquire.Selenium.Tests.Targets
                                .ResolveFor(Fixture.WebDriver)
                                .Text;
             Assert.Equal(RelativeText, actual);
+        }
+               
+        [Fact]
+        public void ResolveFor_RelativeTo_WithMultipleTargets_ShouldReturnCorrectValue()
+        {
+            // use xpath so that targets are relative and not combined CSS selectors
+            var container1 = Target.The("container1").LocatedBy(By.XPath("//div[@class='relative1']"));
+            var container2 = Target.The("container2").LocatedBy(By.XPath("div[@class='relative2']"));
+            var container3 = Target.The("container3").LocatedBy(By.XPath("div[@class='relative3']"));
+            var actual = Target.The("relative text")
+                               .LocatedBy(By.XPath("p[@class='final']"))
+                               .RelativeTo(container3)
+                               .RelativeTo(container2)
+                               .RelativeTo(container1)
+                               .ResolveFor(Fixture.WebDriver)
+                               .Text;
+            Assert.Equal(RelativeText2, actual);
+        }
+
+        [Fact]
+        public void ResolveAllFor_RelativeTo_WithMultipleTargets_ShouldReturnCorrectValue()
+        {
+            // use xpath so that targets are relative and not combined CSS selectors
+            var container1 = Target.The("container1").LocatedBy(By.XPath("//div[@class='multiple-relative1']"));
+            var container2 = Target.The("container2").LocatedBy(By.XPath("div[@class='multiple-relative2']"));
+            var container3 = Target.The("container3").LocatedBy(By.XPath("div[@class='multiple-relative3']"));
+            var actual = Target.The("relative text")
+                               .LocatedBy(By.XPath("p[@class='final']"))
+                               .RelativeTo(container3)
+                               .RelativeTo(container2)
+                               .RelativeTo(container1)
+                               .ResolveAllFor(Fixture.WebDriver)
+                               .Select(e => e.Text)
+                               .ToArray();
+            Assert.Equal(Enumerable.Repeat(MultipleRelativeText, 4), actual);
         }
 
         [Fact]
@@ -148,7 +185,7 @@ namespace Tranquire.Selenium.Tests.Targets
             var sut = Target.The("element")
                             .LocatedByWebElement(element.Object);
             //act
-            var actual = sut.ResoveAllFor(Fixture.WebDriver);
+            var actual = sut.ResolveAllFor(Fixture.WebDriver);
             //assert
             var expected = new[] { element.Object };
             Assert.Equal(expected, actual);
