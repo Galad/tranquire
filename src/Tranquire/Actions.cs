@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Tranquire
 {
@@ -200,11 +202,61 @@ namespace Tranquire
         /// <param name="whenAction">The action that is executed when the <see cref="Tranquire.Action{TResult}.ExecuteWhenAs(IActor)"/> is called on the returned action</param>
         /// <returns>Test</returns>
         public static DispatchAction<T> CreateDispatched<T>(
-            string name, 
-            IAction<T> givenAction, 
+            string name,
+            IAction<T> givenAction,
             IAction<T> whenAction)
         {
             return new DispatchAction<T>(name, givenAction, whenAction);
+        }
+
+        /// <summary>
+        /// Creates an action that identifies the action to use based on a tag.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTag"></typeparam>
+        /// <param name="actions"></param>        
+        /// <returns></returns>
+#pragma warning disable CS0618 // Type or member is obsolete
+        public static IAction<IActionTags<TTag>, T> CreateTagged<T, TTag>(params (TTag tag, IAction<T> action)[] actions)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            if (actions == null)
+            {
+                throw new ArgumentNullException(nameof(actions));
+            }
+
+            return new TaggedAction<T, TTag>(actions.ToImmutableDictionary(t => t.tag, t => t.action));
+        }
+
+        /// <summary>
+        /// Represents an action that can be performed in different ways, depending on the context
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTag"></typeparam>
+        internal class TaggedAction<T, TTag> : Action<IActionTags<TTag>, T>
+        {
+            private readonly ImmutableDictionary<TTag, IAction<T>> _actions;
+
+            public TaggedAction(ImmutableDictionary<TTag, IAction<T>> actions)
+            {
+                _actions = actions;
+            }
+
+            public override string Name => $"Tagged action with {string.Join(", ", _actions.Keys.OrderBy(k => k))}";
+
+            protected override T ExecuteGiven(IActor actor, IActionTags<TTag> ability)
+            {
+                var bestTag = ability.FindBestGivenTag(_actions.Keys);
+                var action = _actions[bestTag];
+                return actor.Execute(action);
+            }
+
+            protected override T ExecuteWhen(IActor actor, IActionTags<TTag> ability)
+            {
+                var bestTag = ability.FindBestWhenTag(_actions.Keys);
+                var action = _actions[bestTag];
+                return actor.Execute(action);
+            }
         }
     }
 }
