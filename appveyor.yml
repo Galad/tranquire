@@ -43,3 +43,4 @@ deploy:
     secure: 55uxvHMTDwA2bAKpOX6Wjb/t5eTUsLhsZfJukyEyCboW3c/ZnWHJaz6UeRdPRKVX
   on:
     branch: master
+    branch: vnext
