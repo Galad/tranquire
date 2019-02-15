@@ -20,14 +20,10 @@ namespace Tranquire.Selenium.Questions
 
         protected WebBrowserQuestion(ITarget target, Func<IWebElement, TSource> webElementResolver, IConverter<TSource, TConverted> converter, CultureInfo culture)
         {
-            Guard.ForNull(target, nameof(target));
-            Guard.ForNull(webElementResolver, nameof(webElementResolver));
-            Guard.ForNull(converter, nameof(converter));
-            Guard.ForNull(culture, nameof(culture));
-            Target = target;
-            WebElementResolver = webElementResolver;
-            Converter = converter;
-            Culture = culture;
+            Target = target ?? throw new ArgumentNullException(nameof(target));
+            WebElementResolver = webElementResolver ?? throw new ArgumentNullException(nameof(webElementResolver));
+            Converter = converter ?? throw new ArgumentNullException(nameof(converter));
+            Culture = culture ?? throw new ArgumentNullException(nameof(culture));
         }
 
         protected TConverted Convert(TSource value)

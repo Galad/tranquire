@@ -19,7 +19,11 @@ namespace Tranquire.Selenium
         /// <returns>An new actor</returns>
         public static Actor HighlightTargets(this Actor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
             return new Actor(actor.Name, actor.Abilities, a => new HighlightTarget(actor.InnerActorBuilder(a)));
         }
 
@@ -31,7 +35,11 @@ namespace Tranquire.Selenium
         /// <returns>An new actor</returns>
         public static Actor SlowSelenium(this Actor actor, TimeSpan delay)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
             return new Actor(actor.Name, actor.Abilities, a => new SlowSelenium(actor.InnerActorBuilder(a), delay));
         }
 
@@ -95,6 +103,14 @@ namespace Tranquire.Selenium
             if (takeScreenshotStrategy == null)
             {
                 throw new ArgumentNullException(nameof(takeScreenshotStrategy));
+            }
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+            if (screenshotNameOrFormat == null)
+            {
+                throw new ArgumentNullException(nameof(screenshotNameOrFormat));
             }
 
             Guard.ForNull(actor, nameof(actor));

@@ -26,11 +26,9 @@
         /// <param name="content"></param>
         public ActionNotification(INamed action, int depth, IActionNotificationContent content)
         {
-            Guard.ForNull(action, nameof(action));
-            Guard.ForNull(content, nameof(content));
-            Action = action;
+            Action = action ?? throw new System.ArgumentNullException(nameof(action));
             Depth = depth;
-            Content = content;
+            Content = content ?? throw new System.ArgumentNullException(nameof(content));
         }
     }
 }

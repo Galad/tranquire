@@ -22,8 +22,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="target"></param>
         public JsClick(ITarget target)
         {
-            Guard.ForNull(target, nameof(target));
-            this.Target = target;
+            this.Target = target ?? throw new System.ArgumentNullException(nameof(target));
         }
 
         /// <summary>

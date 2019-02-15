@@ -27,8 +27,7 @@ namespace Tranquire.Selenium.Actions
         [Obsolete("This class will become static in a future version. Use Wait.Until(target).IsPresent instead")]
         public Wait(ITarget target, TimeSpan timeout)
         {
-            Guard.ForNull(target, nameof(target));
-            _target = target;
+            _target = target ?? throw new ArgumentNullException(nameof(target));
             _timeout = timeout;
         }
 

@@ -20,7 +20,7 @@ namespace Tranquire.Selenium.Targets
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new System.ArgumentException("Argument cannot be null or empty", nameof(name));
+                throw new System.ArgumentNullException(nameof(name), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
             }
 
             By = by ?? throw new System.ArgumentNullException(nameof(by));
@@ -43,7 +43,11 @@ namespace Tranquire.Selenium.Targets
         /// <returns></returns>
         public IWebElement ResolveFor(ISearchContext searchContext)
         {
-            Guard.ForNull(searchContext, nameof(searchContext));
+            if (searchContext == null)
+            {
+                throw new System.ArgumentNullException(nameof(searchContext));
+            }
+
             return searchContext.FindElement(By);
         }
 
@@ -54,7 +58,11 @@ namespace Tranquire.Selenium.Targets
         /// <returns></returns>
         public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
         {
-            Guard.ForNull(searchContext, nameof(searchContext));
+            if (searchContext == null)
+            {
+                throw new System.ArgumentNullException(nameof(searchContext));
+            }
+
             return searchContext.FindElements(By).ToImmutableArray();
         }
         

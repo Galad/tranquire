@@ -90,7 +90,7 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClauses(IFixture fixture)
         {
             var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof(ActionExecuteGiven).GetConstructors());
+            assertion.Verify(typeof(ActionExecuteGiven));
         }
 
         [Theory, DomainAutoData]
