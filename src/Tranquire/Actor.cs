@@ -37,12 +37,9 @@ namespace Tranquire
             IReadOnlyDictionary<Type, object> abilities,
             Func<IActor, IActor> innerActorBuilder)
         {
-            Guard.ForNull(name, nameof(name));
-            Guard.ForNull(abilities, nameof(abilities));
-            Guard.ForNull(innerActorBuilder, nameof(innerActorBuilder));
-            Name = name;
-            Abilities = abilities;
-            InnerActorBuilder = innerActorBuilder;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Abilities = abilities ?? throw new ArgumentNullException(nameof(abilities));
+            InnerActorBuilder = innerActorBuilder ?? throw new ArgumentNullException(nameof(innerActorBuilder));
         }
 
         /// <summary>
@@ -96,7 +93,11 @@ namespace Tranquire
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         public TResult When<TResult>(IWhenCommand<TResult> command)
         {
-            Guard.ForNull(command, nameof(command));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             return CreateWhenActor().Execute(command.AsAction());
         }
 
@@ -107,7 +108,11 @@ namespace Tranquire
         /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
         public TResult Given<TResult>(IGivenCommand<TResult> command)
         {
-            Guard.ForNull(command, nameof(command));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             var actor = CreateGivenActor();
             var commandAction = command.AsAction();
             return actor.Execute(commandAction);
@@ -137,7 +142,11 @@ namespace Tranquire
         /// <returns>A new actor with the given ability</returns>
         public IActorFacade CanUse<T>(T doSomething) where T : class
         {
-            Guard.ForNull(doSomething, nameof(doSomething));
+            if (doSomething == null)
+            {
+                throw new ArgumentNullException(nameof(doSomething));
+            }
+
             var abilities = Abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
                                       .ToDictionary(k => k.Key, k => k.Value);
             return new Actor(Name, abilities, InnerActorBuilder);
@@ -151,7 +160,11 @@ namespace Tranquire
         /// <returns>The answer to the question.</returns>
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
-            Guard.ForNull(question, nameof(question));
+            if (question == null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+
             return CreateWhenActor().AsksFor(question);
         }
 

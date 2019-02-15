@@ -30,10 +30,8 @@ namespace Tranquire.Selenium.Actions.Waiters
             Predicate<TAnswer> isAnswered,
             TimeSpan timeout)
         {
-            Guard.ForNull(question, nameof(question));
-            Guard.ForNull(isAnswered, nameof(isAnswered));
-            _question = question;
-            _isAnswered = isAnswered;
+            _question = question ?? throw new ArgumentNullException(nameof(question));
+            _isAnswered = isAnswered ?? throw new ArgumentNullException(nameof(isAnswered));
             _timeout = timeout;
         }
 

@@ -1,7 +1,6 @@
-﻿using OpenQA.Selenium;
-using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Collections.Immutable;
 using System.Linq;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
 {
@@ -42,6 +41,11 @@ namespace Tranquire.Selenium.Targets
         /// <inheritdoc />
         public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
         {
+            if (searchContext == null)
+            {
+                throw new System.ArgumentNullException(nameof(searchContext));
+            }
+
             var elements = TargetSource.ResolveAllFor(searchContext);
             return elements.SelectMany(e => Target.ResolveAllFor(e)).ToImmutableArray();
         }
@@ -49,6 +53,11 @@ namespace Tranquire.Selenium.Targets
         /// <inheritdoc />
         public IWebElement ResolveFor(ISearchContext searchContext)
         {
+            if (searchContext == null)
+            {
+                throw new System.ArgumentNullException(nameof(searchContext));
+            }
+
             var element = TargetSource.ResolveFor(searchContext);
             return Target.ResolveFor(element);
         }

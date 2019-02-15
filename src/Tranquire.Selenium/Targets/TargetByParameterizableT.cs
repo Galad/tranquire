@@ -20,7 +20,7 @@ namespace Tranquire.Selenium.Targets
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Argument cannot be null or empty", nameof(name));
+                throw new ArgumentNullException(nameof(name), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
             }
         }
 
