@@ -30,7 +30,11 @@ namespace Tranquire.Selenium.Questions
         /// <param name="culture">The CultureInfo of the value</param>
         public CssValue(string propertyName, ITarget target, CultureInfo culture) : base(target, culture)
         {
-            Guard.ForNullOrEmpty(propertyName, nameof(propertyName));
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new System.ArgumentException("The argument cannot be null or empty", nameof(propertyName));
+            }
+
             PropertyName = propertyName;
         }
 

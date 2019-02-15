@@ -14,8 +14,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="buildAction">A function used to build a new instance of the derived class</param>
         protected TargetableAction(Func<ITarget, TAction> buildAction)
         {
-            Guard.ForNull(buildAction, nameof(buildAction));
-            BuildAction = buildAction;
+            BuildAction = buildAction ?? throw new ArgumentNullException(nameof(buildAction));
         }
 
         /// <summary>
@@ -30,7 +29,11 @@ namespace Tranquire.Selenium.Actions
         /// <returns>A new action</returns>
         public TAction Into(ITarget target)
         {
-            Guard.ForNull(target, nameof(target));
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             return BuildAction(target);
         }
     }

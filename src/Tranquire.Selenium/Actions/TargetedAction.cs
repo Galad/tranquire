@@ -18,8 +18,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="target">The target into which the action is executed</param>
         protected TargetedAction(ITarget target)
         {
-            Guard.ForNull(target, nameof(target));
-            Target = target;
+            Target = target ?? throw new System.ArgumentNullException(nameof(target));
         }
 
         /// <summary>

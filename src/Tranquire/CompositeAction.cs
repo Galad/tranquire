@@ -40,7 +40,10 @@ namespace Tranquire
         /// <param name="actions">The actions executed by this composite action</param>
         protected CompositeAction(ImmutableArray<IAction<Unit>> actions)
         {
-            Guard.ForNull(actions, nameof(actions));
+            if (actions.IsDefault)
+            {
+                throw new ArgumentException("The argument must be initialized", nameof(actions));
+            }
             Actions = actions;
         }
 
@@ -62,7 +65,11 @@ namespace Tranquire
 
         private static ImmutableArray<IAction<Unit>> GetActionsFromCompositeActionBuilder(Func<CompositeAction, CompositeAction> compositeActionBuilder)
         {
-            Guard.ForNull(compositeActionBuilder, nameof(compositeActionBuilder));
+            if (compositeActionBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(compositeActionBuilder));
+            }
+
             return compositeActionBuilder(new EmptyCompositeAction()).Actions;
         }
 
@@ -86,7 +93,11 @@ namespace Tranquire
 
         private Unit ExecuteActions(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
             foreach (var action in Actions)
             {
                 actor.Execute(action);
@@ -101,7 +112,11 @@ namespace Tranquire
         /// <returns>A new instance of <see cref="CompositeAction"/> containing <paramref name="action"/></returns>
         public CompositeAction And(IAction<Unit> action)
         {
-            Guard.ForNull(action, nameof(action));
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return new AnonymousCompositeAction(Actions.Add(action));
         }
 

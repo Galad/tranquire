@@ -1,4 +1,7 @@
-﻿using AutoFixture.Xunit2;
+﻿using AutoFixture;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
 using Moq;
 using OpenQA.Selenium;
 using System;
@@ -14,6 +17,31 @@ namespace Tranquire.Selenium.Tests.Targets
 {
     public class TargetsUnitTests
     {
+        [Theory]
+        [DomainInlineAutoData(typeof(RelativeTarget))]
+        [DomainInlineAutoData(typeof(TargetBy))]
+        [DomainInlineAutoData(typeof(TargetByWebElement))]
+        [DomainInlineAutoData(typeof(TargetBuilder))]
+        [DomainInlineAutoData(typeof(TargetByParameterizable))]
+        [DomainInlineAutoData(typeof(TargetByParameterizable<string>))]
+        [DomainInlineAutoData(typeof(Target))]
+        public void Sut_VerifyGuardClauses(Type type, GuardClauseAssertion assertion)
+        {
+            assertion.Verify(type);
+        }
+
+        [Theory]
+        [DomainInlineAutoData(typeof(RelativeTarget))]
+        [DomainInlineAutoData(typeof(TargetBy))]
+        [DomainInlineAutoData(typeof(TargetByWebElement))]
+        public void ToString_ShouldContainName(Type type, IFixture fixture)
+        {
+            // act
+            var target = fixture.Create(type, new SpecimenContext(fixture)) as ITarget;
+            // assert
+            Assert.Contains(target.Name, target.ToString());
+        }
+
         [Fact]
         public void RelativeTo_LocatedByWebElement_ShouldReturnCorrectValue()
         {
@@ -62,6 +90,11 @@ namespace Tranquire.Selenium.Tests.Targets
             Assert.Equal(expected, actual.By);
         }
 
+        private class ByCustom : By
+        {
+            public override string ToString() => "By something else";
+        }
+
         public static IEnumerable<object[]> RelativeToNotComposableCss
         {
             get
@@ -75,7 +108,8 @@ namespace Tranquire.Selenium.Tests.Targets
                     new object[] { Target.The("source").LocatedBy(By.LinkText("a")), Target.The("relative").LocatedBy(By.Id("b")) },
                     new object[] { Target.The("source").LocatedBy(By.PartialLinkText("a")), Target.The("relative").LocatedBy(By.Id("b")) },
                     new object[] { Target.The("source").LocatedBy(By.XPath("a")), Target.The("relative").LocatedBy(By.Id("b")) },
-                    new object[] { Target.The("source").LocatedByWebElement(element), Target.The("relative").LocatedBy(By.Id("b")) }
+                    new object[] { Target.The("source").LocatedByWebElement(element), Target.The("relative").LocatedBy(By.Id("b")) },
+                    new object[] { Target.The("source").LocatedBy(new ByCustom()), Target.The("relative").LocatedBy(By.Id("a")) }
                 };
             }
         }

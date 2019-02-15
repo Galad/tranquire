@@ -33,10 +33,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Tranquire\Guard.cs" Link="Guard.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Selenium.Support" version="3.14.0" />
     <PackageReference Include="Selenium.WebDriver" version="3.14.0" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="7.9.0.7583">

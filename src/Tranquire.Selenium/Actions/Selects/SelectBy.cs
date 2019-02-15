@@ -27,11 +27,9 @@ namespace Tranquire.Selenium.Actions.Selects
             TValue value,
             ISelectStrategy<TValue> selectStrategy)
         {
-            Guard.ForNull(target, nameof(value));
-            Guard.ForNull(selectStrategy, nameof(selectStrategy));
-            _target = target;
+            _target = target ?? throw new System.ArgumentNullException(nameof(target));
             _value = value;
-            _selectStrategy = selectStrategy;
+            _selectStrategy = selectStrategy ?? throw new System.ArgumentNullException(nameof(selectStrategy));
         }
 
         /// <summary>

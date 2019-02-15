@@ -29,12 +29,14 @@ namespace Tranquire.Selenium.Actions.Selects
             IEnumerable<TValue> values,
             ISelectStrategy<TValue> selectStrategy)
         {
-            Guard.ForNull(values, nameof(values));
-            Guard.ForNull(target, nameof(target));
-            Guard.ForNull(selectStrategy, nameof(selectStrategy));
+            if (values == null)
+            {
+                throw new System.ArgumentNullException(nameof(values));
+            }
+
             _values = values.ToImmutableArray();
-            _target = target;
-            _selectStrategy = selectStrategy;
+            _target = target ?? throw new System.ArgumentNullException(nameof(target));
+            _selectStrategy = selectStrategy ?? throw new System.ArgumentNullException(nameof(selectStrategy));
         }
 
         /// <summary>

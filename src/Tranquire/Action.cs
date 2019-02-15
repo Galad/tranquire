@@ -16,8 +16,15 @@
         /// <param name="ability"></param>
         public TResult ExecuteGivenAs(IActor actor, T ability)
         {
-            Guard.ForNull(actor, nameof(actor));
-            Guard.ForNull(ability, nameof(ability));
+            if (actor == null)
+            {
+                throw new System.ArgumentNullException(nameof(actor));
+            }
+            if (ability == null)
+            {
+                throw new System.ArgumentNullException(nameof(ability));
+            }
+
             return ExecuteGiven(actor, ability);
         }
 
@@ -28,8 +35,15 @@
         /// <param name="ability"></param>
         public TResult ExecuteWhenAs(IActor actor, T ability)
         {
-            Guard.ForNull(actor, nameof(actor));
-            Guard.ForNull(ability, nameof(ability));
+            if (actor == null)
+            {
+                throw new System.ArgumentNullException(nameof(actor));
+            }
+            if (ability == null)
+            {
+                throw new System.ArgumentNullException(nameof(ability));
+            }
+
             return ExecuteWhen(actor, ability);
         }
 
@@ -82,7 +96,11 @@
 
         private TResult Execute(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new System.ArgumentNullException(nameof(actor));
+            }
+
 #pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<T, TResult>);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -103,7 +121,11 @@
         /// <param name="actor"></param>
         public TResult ExecuteGivenAs(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new System.ArgumentNullException(nameof(actor));
+            }
+
             return ExecuteGiven(actor);
         }
 
@@ -113,7 +135,11 @@
         /// <param name="actor"></param>
         public TResult ExecuteWhenAs(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new System.ArgumentNullException(nameof(actor));
+            }
+
             return ExecuteWhen(actor);
         }
 

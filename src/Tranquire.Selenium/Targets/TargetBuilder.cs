@@ -19,7 +19,7 @@ namespace Tranquire.Selenium.Targets
         /// <param name="friendlyName"></param>
         public TargetBuilder(string friendlyName)
         {
-            FriendlyName = friendlyName ?? string.Empty;
+            FriendlyName = friendlyName ?? throw new ArgumentNullException(nameof(friendlyName));
         }
 
         /// <summary>
@@ -29,21 +29,28 @@ namespace Tranquire.Selenium.Targets
         /// <returns></returns>
         public ITarget LocatedBy(By by)
         {
-            Guard.ForNull(by, nameof(by));
+            if (by == null)
+            {
+                throw new ArgumentNullException(nameof(by));
+            }
+
             return new TargetBy(by, FriendlyName);
         }
 
         /// <summary>
         /// Returns a target taking formatting parameters
         /// </summary>
-        /// <param name="formatValue">The format used to locate the target</param>
+        /// <param name="format">The format used to locate the target</param>
         /// <param name="createBy">A function taking the formatted located as input and returning the <see cref="By"/> object</param>
         /// <returns></returns>
-        public ITargetWithParameters LocatedBy(string formatValue, Func<string, By> createBy)
+        public ITargetWithParameters LocatedBy(string format, Func<string, By> createBy)
         {
-            Guard.ForNull(createBy, nameof(createBy));
-            Guard.ForNull(formatValue, nameof(formatValue));
-            return new TargetByParameterizable(FriendlyName, createBy, formatValue);
+            if (createBy == null)
+            {
+                throw new ArgumentNullException(nameof(createBy));
+            }
+
+            return new TargetByParameterizable(FriendlyName, createBy, format);
         }
 
         /// <summary>
@@ -68,7 +75,11 @@ namespace Tranquire.Selenium.Targets
         /// <returns></returns>
         public ITarget LocatedByWebElement(IWebElement webElement)
         {
-            Guard.ForNull(webElement, nameof(webElement));
+            if (webElement == null)
+            {
+                throw new ArgumentNullException(nameof(webElement));
+            }
+
             return new TargetByWebElement(webElement, FriendlyName);
         }
     }
