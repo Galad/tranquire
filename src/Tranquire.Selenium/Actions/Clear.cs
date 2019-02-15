@@ -22,8 +22,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="target">The target to clear the value from</param>
         public Clear(ITarget target)
         {
-            Guard.ForNull(target, nameof(target));
-            Target = target;
+            Target = target ?? throw new System.ArgumentNullException(nameof(target));
         }
 
         /// <summary>

@@ -29,8 +29,7 @@ namespace Tranquire.Selenium.Actions.Clicks
         /// <param name="timeout">The duration during which the action will be retried</param>
         public ClickOnActionWithRetry(IAction<Unit> innerAction, TimeSpan timeout)
         {
-            Guard.ForNull(innerAction, nameof(innerAction));
-            InnerAction = innerAction;
+            InnerAction = innerAction ?? throw new ArgumentNullException(nameof(innerAction));
             Timeout = timeout;
         }
 

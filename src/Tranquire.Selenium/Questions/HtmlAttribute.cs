@@ -31,7 +31,11 @@ namespace Tranquire.Selenium.Questions
         /// <param name="culture"></param>
         public HtmlAttribute(ITarget target, string attributeName, CultureInfo culture) : base(target, culture)
         {
-            Guard.ForNullOrEmpty(attributeName, nameof(attributeName));
+            if (string.IsNullOrEmpty(attributeName))
+            {
+                throw new System.ArgumentException("The argument cannot be null or empty", nameof(attributeName));
+            }
+
             AttributeName = attributeName;
         }
 

@@ -24,8 +24,7 @@ namespace Tranquire.Selenium.Actions.Enters
         public EnterValue(string value, ITarget target)
             : base(target)
         {
-            Guard.ForNull(value, nameof(value));
-            Value = value;
+            Value = value ?? throw new System.ArgumentNullException(nameof(value));
         }
 
         /// <summary>

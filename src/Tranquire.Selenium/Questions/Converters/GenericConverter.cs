@@ -16,7 +16,10 @@ namespace Tranquire.Selenium.Questions.Converters
         /// <param name="convertFunction">The function used to perform the conversion</param>
         public GenericConverter(Func<TSource, TConverted> convertFunction) : this((v, c) => convertFunction(v))
         {
-            Guard.ForNull(convertFunction, nameof(convertFunction));
+            if (convertFunction == null)
+            {
+                throw new ArgumentNullException(nameof(convertFunction));
+            }
         }
 
         /// <summary>
@@ -25,8 +28,7 @@ namespace Tranquire.Selenium.Questions.Converters
         /// <param name="convertFunction">The function used to perform the conversion with a <see cref="CultureInfo"/></param>
         public GenericConverter(Func<TSource, CultureInfo, TConverted> convertFunction)
         {
-            Guard.ForNull(convertFunction, nameof(convertFunction));
-            ConvertFunction = convertFunction;
+            ConvertFunction = convertFunction ?? throw new ArgumentNullException(nameof(convertFunction));
         }
 
         /// <summary>

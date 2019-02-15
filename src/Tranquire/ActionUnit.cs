@@ -1,4 +1,6 @@
-﻿namespace Tranquire
+﻿using System;
+
+namespace Tranquire
 {
 #pragma warning disable CS0618 // Type or member is obsolete
     /// <summary>
@@ -15,7 +17,15 @@
         /// <param name="ability"></param>
         public Unit ExecuteGivenAs(IActor actor, T ability)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+            if(ability == null)
+            {
+                throw new ArgumentNullException(nameof(ability));
+            }
+
             ExecuteGiven(actor, ability);
             return Unit.Default;
         }
@@ -27,7 +37,15 @@
         /// <param name="ability"></param>
         public Unit ExecuteWhenAs(IActor actor, T ability)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+            if (ability == null)
+            {
+                throw new ArgumentNullException(nameof(ability));
+            }
+
             ExecuteWhen(actor, ability);
             return Unit.Default;
         }
@@ -81,7 +99,11 @@
 
         private Unit Execute(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
 #pragma warning disable CS0618 // Type or member is obsolete
             return actor.ExecuteWithAbility(this as IAction<T, Unit>);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -99,7 +121,11 @@
         /// <param name="actor"></param>
         public Unit ExecuteGivenAs(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
             ExecuteGiven(actor);
             return Unit.Default;
         }
@@ -110,7 +136,11 @@
         /// <param name="actor"></param>
         public Unit ExecuteWhenAs(IActor actor)
         {
-            Guard.ForNull(actor, nameof(actor));
+            if (actor == null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+
             ExecuteWhen(actor);
             return Unit.Default;
         }

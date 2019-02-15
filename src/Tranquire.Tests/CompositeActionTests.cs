@@ -4,6 +4,7 @@ using AutoFixture.Idioms;
 using System;
 using System.Linq;
 using Xunit;
+using System.Collections.Immutable;
 
 namespace Tranquire.Tests
 {
@@ -19,6 +20,30 @@ namespace Tranquire.Tests
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
         {
             assertion.Verify(typeof(CompositeAction));
+        }
+
+        public class CompositeActionWithDefaultImmutableArray : CompositeAction
+        {
+            public CompositeActionWithDefaultImmutableArray():base(default(ImmutableArray<IAction<Unit>>))
+            {
+            }
+
+            public override string Name => throw new NotImplementedException();
+        }
+
+        public class CompositeActionWithNullActionBuilder : CompositeAction
+        {
+            public CompositeActionWithNullActionBuilder() : base(default(Func<CompositeAction, CompositeAction>))
+            {
+            }
+
+            public override string Name => throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Sut_VerifyGuardClauses_ImmutableArrayConstructor()
+        {
+            Assert.Throws<ArgumentException>(() => new CompositeActionWithDefaultImmutableArray());
         }
 
         [Theory, DomainAutoData]

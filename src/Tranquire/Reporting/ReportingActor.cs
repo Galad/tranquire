@@ -45,14 +45,10 @@ namespace Tranquire.Reporting
             IMeasureDuration measureTime,
             ICanNotify canNotify)
         {
-            Guard.ForNull(observer, nameof(observer));
-            Guard.ForNull(actor, nameof(actor));
-            Guard.ForNull(measureTime, nameof(measureTime));
-            Guard.ForNull(canNotify, nameof(canNotify));
-            Observer = observer;
-            Actor = actor;
-            MeasureTime = measureTime;
-            CanNotify = canNotify;
+            Observer = observer ?? throw new ArgumentNullException(nameof(observer));
+            Actor = actor ?? throw new ArgumentNullException(nameof(actor));
+            MeasureTime = measureTime ?? throw new ArgumentNullException(nameof(measureTime));
+            CanNotify = canNotify ?? throw new ArgumentNullException(nameof(canNotify));
         }
 
         private class CanAlwaysNotify : CanNotify { }
@@ -69,21 +65,33 @@ namespace Tranquire.Reporting
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
         {
-            Guard.ForNull(question, nameof(question));
+            if (question == null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+
             return ExecuteNotifyingAction(() => CanNotify.Question(question), () => Actor.AsksFor(question), question, CommandType.Question);
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
         public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
         {
-            Guard.ForNull(question, nameof(question));
+            if (question == null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+
             return Actor.AsksForWithAbility(question);
         }
 #pragma warning restore CS0618 // Type or member is obsolete
 
         public TResult Execute<TResult>(IAction<TResult> action)
         {
-            Guard.ForNull(action, nameof(action));
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             if (!CanNotify.Action(action))
             {
                 return Actor.Execute(action);
@@ -95,7 +103,10 @@ namespace Tranquire.Reporting
         public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
-            Guard.ForNull(action, nameof(action));
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
 #pragma warning disable CS0618 // Type or member is obsolete
             return Actor.ExecuteWithAbility(action);
 #pragma warning restore CS0618 // Type or member is obsolete

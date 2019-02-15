@@ -20,8 +20,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="target">The target representing the frame to switch to</param>
         public UsingIFrame(ITarget target)
         {
-            Guard.ForNull(target, "actor");
-            _target = target;
+            _target = target ?? throw new ArgumentNullException(nameof(target));
         }
 
         /// <summary>
