@@ -3,6 +3,9 @@ using Moq;
 using AutoFixture.Idioms;
 using System;
 using Xunit;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Tranquire.Tests
 {
@@ -412,6 +415,120 @@ namespace Tranquire.Tests
             //assert
             var expected = new DispatchAction<object>(name, givenAction, whenAction);
             actual.Should().BeEquivalentTo(expected);
+        }
+        #endregion
+
+        #region TaggedActions
+        [Theory]
+        [DomainInlineAutoData("tag1", 1)]
+        [DomainInlineAutoData("tag2", 2)]
+        [DomainInlineAutoData("tag3", 3)]
+        public void TaggedAction_When_ShouldReturnCorrectValue(
+            string tag,
+            int expected,
+            IActor actor,
+            Mock<IActionTags<string>> actionTags)
+        {
+            // arrange
+            Mock.Get(actor).Setup(a => a.Execute(It.IsAny<IAction<int>>()))
+                           .Returns((IAction<int> a) => a.ExecuteWhenAs(actor));
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };
+            var tags = actions.Select(aa => aa.tag).ToArray();
+            actionTags.Setup(a => a.FindBestWhenTag(It.IsAny<IEnumerable<string>>()))
+                      .Returns<IEnumerable<string>>(t => t.OrderBy(tt => tt).SequenceEqual(tags) ? tag : string.Empty);
+            var taggedAction = Actions.CreateTagged(actions);
+            // act
+            var actual = taggedAction.ExecuteWhenAs(actor, actionTags.Object);
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [DomainInlineAutoData("tag1", 1)]
+        [DomainInlineAutoData("tag2", 2)]
+        [DomainInlineAutoData("tag3", 3)]
+        public void TaggedAction_Given_ShouldReturnCorrectValue(
+            string tag,
+            int expected,
+            IActor actor,
+            Mock<IActionTags<string>> actionTags)
+        {
+            // arrange
+            Mock.Get(actor).Setup(a => a.Execute(It.IsAny<IAction<int>>()))
+                           .Returns((IAction<int> a) => a.ExecuteGivenAs(actor));
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };
+            var tags = actions.Select(aa => aa.tag).ToArray();
+            actionTags.Setup(a => a.FindBestGivenTag(It.IsAny<IEnumerable<string>>()))
+                      .Returns<IEnumerable<string>>(t => t.OrderBy(tt => tt).SequenceEqual(tags) ? tag : string.Empty);
+            var taggedAction = Actions.CreateTagged(actions);
+            // act
+            var actual = taggedAction.ExecuteGivenAs(actor, actionTags.Object);
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void TaggedAction_When_WhenTheTagFoundIsNotCorrect_ShouldThrow(
+            IActor actor,
+            Mock<IActionTags<string>> actionTags)
+        {
+            // arrange
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };
+            actionTags.Setup(a => a.FindBestWhenTag(It.IsAny<IEnumerable<string>>())).Returns("tag4");
+            var taggedAction = Actions.CreateTagged(actions);
+            // act and assert
+            Assert.Throws<KeyNotFoundException>(() => taggedAction.ExecuteWhenAs(actor, actionTags.Object));
+        }
+
+        [Theory, DomainAutoData]
+        public void TaggedAction_Given_WhenTheTagFoundIsNotCorrect_ShouldThrow(
+            IActor actor,
+            Mock<IActionTags<string>> actionTags)
+        {
+            // arrange
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };
+            actionTags.Setup(a => a.FindBestGivenTag(It.IsAny<IEnumerable<string>>())).Returns("tag4");
+            var taggedAction = Actions.CreateTagged(actions);
+            // act and assert
+            Assert.Throws<KeyNotFoundException>(() => taggedAction.ExecuteGivenAs(actor, actionTags.Object));
+        }
+               
+        [Fact]
+        public void TaggedAction_Name_ShouldReturnCorrectValue()
+        {
+            // arrange
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };            
+            var taggedAction = Actions.CreateTagged(actions);
+            // act
+            var actual = taggedAction.Name;
+            // assert
+            var expected = "Tagged action with tag1, tag2, tag3";
+            Assert.Equal(expected, actual);
         }
         #endregion
     }
