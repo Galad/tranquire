@@ -157,6 +157,7 @@ namespace Tranquire.Selenium.Tests
             string screenshotName,
             IObserver<string>[] observers)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var actual = ActorExtensions.WithSeleniumReporting(
                     actor,
                     screenshotDirectory,
@@ -164,6 +165,7 @@ namespace Tranquire.Selenium.Tests
                     out var actualSeleniumReporter,
                     observers
                     );
+#pragma warning restore CS0618 // Type or member is obsolete
             var canNotify = new CompositeCanNotify();
             TestWithSeleniumReporting(actualSeleniumReporter,
                                       actual,
@@ -185,6 +187,7 @@ namespace Tranquire.Selenium.Tests
             IObserver<string>[] observers,
             ICanNotify canNotify)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var actual = ActorExtensions.WithSeleniumReporting(
                     actor,
                     screenshotDirectory,
@@ -193,6 +196,7 @@ namespace Tranquire.Selenium.Tests
                     out var actualSeleniumReporter,
                     observers
                     );
+#pragma warning restore CS0618 // Type or member is obsolete
             TestWithSeleniumReporting(actualSeleniumReporter,
                                       actual,
                                       actor,

@@ -132,6 +132,7 @@ namespace Tranquire.Selenium
         /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>
         /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
         /// <returns></returns>
+        [Obsolete("This method will be removed in the next major version. Please use the overload taking a SeleniumReportingConfiguration instead", false)]
         public static Actor WithSeleniumReporting(
             this Actor actor,
             string screenshotDirectory,
@@ -156,6 +157,7 @@ namespace Tranquire.Selenium
         /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>
         /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
         /// <returns></returns>
+        [Obsolete("This method will be removed in the next major version. Please use the overload taking a SeleniumReportingConfiguration instead", false)]
         public static Actor WithSeleniumReporting(
             this Actor actor,
             string screenshotDirectory,
