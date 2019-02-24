@@ -10,4 +10,4 @@ Scenario: Remaining count when having items
 Scenario: Remaining count when adding an item
 	Given I have a list with the items "buy some milk,feed the dog,prepare the lunch"		
 	When I add the item "wash the dishes"
-	Then I should have 5 items remaining
+	Then I should have 4 items remaining

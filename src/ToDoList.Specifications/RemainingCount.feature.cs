@@ -108,7 +108,7 @@ this.ScenarioInitialize(scenarioInfo);
 #line 12
  testRunner.When("I add the item \"wash the dishes\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 13
- testRunner.Then("I should have 5 items remaining", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I should have 4 items remaining", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
