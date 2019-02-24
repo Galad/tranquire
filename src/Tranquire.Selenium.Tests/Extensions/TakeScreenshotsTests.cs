@@ -1,13 +1,8 @@
-﻿using AutoFixture;
+﻿using System;
 using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Moq;
-using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
 using Xunit;

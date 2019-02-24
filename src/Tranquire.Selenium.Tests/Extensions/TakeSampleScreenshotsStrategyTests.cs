@@ -1,9 +1,9 @@
-using AutoFixture.Idioms;
-using Moq;
-using OpenQA.Selenium;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoFixture.Idioms;
+using Moq;
+using OpenQA.Selenium;
 using Tranquire;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
