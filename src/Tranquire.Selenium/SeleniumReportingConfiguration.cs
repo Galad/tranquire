@@ -91,7 +91,7 @@ namespace Tranquire.Selenium
         /// </summary>
         /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
         /// <returns></returns>
-        public SeleniumReportingConfiguration AddTextObserver(params IObserver<string>[] textOutputObservers)
+        public SeleniumReportingConfiguration AddTextObservers(params IObserver<string>[] textOutputObservers)
         {
             if (textOutputObservers == null)
             {

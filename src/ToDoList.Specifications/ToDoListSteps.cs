@@ -49,7 +49,7 @@ namespace ToDoList.Specifications
                                 new SeleniumReportingConfiguration(
                                     Path.Combine(GetTestDirectory(), "Screenshots"),
                                     screenshotName)
-                                    .AddTextObserver(new DebugObserver())
+                                    .AddTextObservers(new DebugObserver())
                                     .WithTakeScreenshotStrategy(new AlwaysTakeScreenshotStrategy()),                                
                                 out var seleniumReporter)
                             .HighlightTargets()

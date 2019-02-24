@@ -231,7 +231,7 @@ namespace Tranquire.Selenium.Tests
                         {
                         fixture.Create<Actor>(),
                         fixture.Create<IActor>(),
-                        fixture.Create<SeleniumReportingConfiguration>().AddTextObserver(observers),
+                        fixture.Create<SeleniumReportingConfiguration>().AddTextObservers(observers),
                         observers,
                         new CompositeCanNotify(),
                         _defaultTakeScreenshotStrategy
@@ -271,7 +271,7 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<IActor>(),
                         fixture.Create<SeleniumReportingConfiguration>().WithTakeScreenshotStrategy(takeScreenshotStrategy)
                                                                         .WithCanNotify(canNotify)
-                                                                        .AddTextObserver(observers),
+                                                                        .AddTextObservers(observers),
                         observers,
                         canNotify,
                         takeScreenshotStrategy

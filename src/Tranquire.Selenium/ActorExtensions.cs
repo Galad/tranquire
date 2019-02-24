@@ -141,7 +141,7 @@ namespace Tranquire.Selenium
             params IObserver<string>[] textOutputObservers)
         {
             var configuration = new SeleniumReportingConfiguration(screenshotDirectory, screenshotNameOrFormat)
-                    .AddTextObserver(textOutputObservers);
+                    .AddTextObservers(textOutputObservers);
             return actor.WithSeleniumReporting(configuration, out seleniumReporter);
         }
 
@@ -167,7 +167,7 @@ namespace Tranquire.Selenium
             params IObserver<string>[] textOutputObservers)
         {
             var configuration = new SeleniumReportingConfiguration(screenshotDirectory, screenshotNameOrFormat)
-                    .AddTextObserver(textOutputObservers)
+                    .AddTextObservers(textOutputObservers)
                     .WithCanNotify(canNotify);
             return actor.WithSeleniumReporting(configuration, out seleniumReporter);
         }
