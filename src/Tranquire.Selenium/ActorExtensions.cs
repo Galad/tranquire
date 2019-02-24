@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using Tranquire.Reporting;
 using Tranquire.Selenium.Extensions;
@@ -33,7 +34,7 @@ namespace Tranquire.Selenium
             Guard.ForNull(actor, nameof(actor));
             return new Actor(actor.Name, actor.Abilities, a => new SlowSelenium(actor.InnerActorBuilder(a), delay));
         }
-                
+
         /// <summary>
         /// Add the ability to take screenshot on each action
         /// </summary>
@@ -55,7 +56,7 @@ namespace Tranquire.Selenium
         /// <param name="actor">The actor</param>        
         /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
         /// <param name="screenshotInfoObserver">An observer that is notify that screenshots were taken, and can be used to save them on the disk.
-        /// Use <see cref="SaveScreenshotsToFileOnComplete"/> or <see cref="SaveScreenshotsToFileOnNext"/></param>
+        /// Use <see cref="SaveScreenshotsToFileOnComplete"/> or <see cref="SaveScreenshotsToFileOnNext"/></param>        
         /// <example>
         /// actor.TakeScreenshots("Screenhshot_{0:000}", new SaveScreenshotsToFileOnComplete(@"C:\tests\screeshots"));
         /// </example>
@@ -65,13 +66,39 @@ namespace Tranquire.Selenium
             string screenshotNameOrFormat,
             IObserver<ScreenshotInfo> screenshotInfoObserver)
         {
+            return actor.TakeScreenshots(screenshotNameOrFormat, screenshotInfoObserver, new AlwaysTakeScreenshotStrategy());
+        }
+
+
+        /// <summary>
+        /// Add the ability to take screenshot on each action. The screenshots are saved using the given <see cref="ScreenshotInfo"/> observer.
+        /// </summary>
+        /// <param name="actor">The actor</param>        
+        /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
+        /// <param name="screenshotInfoObserver">An observer that is notify that screenshots were taken, and can be used to save them on the disk.
+        /// Use <see cref="SaveScreenshotsToFileOnComplete"/> or <see cref="SaveScreenshotsToFileOnNext"/></param>
+        /// <param name="takeScreenshotStrategy">The strategy used to create a screenshot</param>
+        /// <example>
+        /// actor.TakeScreenshots("Screenhshot_{0:000}", new SaveScreenshotsToFileOnComplete(@"C:\tests\screeshots"));
+        /// </example>
+        /// <returns>An new actor taking screenshots</returns>
+        public static Actor TakeScreenshots(
+            this Actor actor,
+            string screenshotNameOrFormat,
+            IObserver<ScreenshotInfo> screenshotInfoObserver,
+            ITakeScreenshotStrategy takeScreenshotStrategy)
+        {
             if (screenshotInfoObserver == null)
             {
                 throw new ArgumentNullException(nameof(screenshotInfoObserver));
             }
+            if (takeScreenshotStrategy == null)
+            {
+                throw new ArgumentNullException(nameof(takeScreenshotStrategy));
+            }
 
-            Guard.ForNull(actor, nameof(actor));            
-            Guard.ForNull(screenshotNameOrFormat, nameof(screenshotNameOrFormat));
+            Guard.ForNull(actor, nameof(actor));
+            Guard.ForNull(screenshotNameOrFormat, nameof(screenshotNameOrFormat));            
             var id = 0;
 
             string screenshotFormat;
@@ -83,18 +110,21 @@ namespace Tranquire.Selenium
             {
                 screenshotFormat = screenshotNameOrFormat;
             }
-                        
+
             string nextScreenshotName()
             {
                 return string.Format(CultureInfo.InvariantCulture, screenshotFormat, Interlocked.Increment(ref id));
-            }       
-            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a), nextScreenshotName, screenshotInfoObserver));
+            }
+            return new Actor(actor.Name, actor.Abilities, a => new TakeScreenshot(actor.InnerActorBuilder(a),
+                                                                                  nextScreenshotName,
+                                                                                  screenshotInfoObserver,
+                                                                                  takeScreenshotStrategy));
         }
 
         /// <summary>
         /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
         /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification})"/>
-        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo})"/>
+        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo}, ITakeScreenshotStrategy)"/>
         /// </summary>
         /// <param name="actor">The actor</param>
         /// <param name="screenshotDirectory">The directory where the screenshots are saved</param>
@@ -109,19 +139,15 @@ namespace Tranquire.Selenium
             out ISeleniumReporter seleniumReporter,
             params IObserver<string>[] textOutputObservers)
         {
-            return WithSeleniumReportingInternal(
-                actor, 
-                screenshotDirectory, 
-                screenshotNameOrFormat, 
-                out seleniumReporter, 
-                textOutputObservers,
-                (a, o) => a.WithReporting(o));
+            var configuration = new SeleniumReportingConfiguration(screenshotDirectory, screenshotNameOrFormat)
+                    .AddTextObserver(textOutputObservers);
+            return actor.WithSeleniumReporting(configuration, out seleniumReporter);
         }
 
         /// <summary>
         /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
         /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification}, ICanNotify)"/>
-        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo})"/>
+        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo}, ITakeScreenshotStrategy)"/>
         /// </summary>
         /// <param name="actor">The actor</param>
         /// <param name="screenshotDirectory">The directory where the screenshots are saved</param>
@@ -138,51 +164,48 @@ namespace Tranquire.Selenium
             out ISeleniumReporter seleniumReporter,
             params IObserver<string>[] textOutputObservers)
         {
-            return WithSeleniumReportingInternal(
-                actor,
-                screenshotDirectory,
-                screenshotNameOrFormat,
-                out seleniumReporter,
-                textOutputObservers,
-                (a, o) => a.WithReporting(o, canNotify));
+            var configuration = new SeleniumReportingConfiguration(screenshotDirectory, screenshotNameOrFormat)
+                    .AddTextObserver(textOutputObservers)
+                    .WithCanNotify(canNotify);
+            return actor.WithSeleniumReporting(configuration, out seleniumReporter);
         }
 
-        private static Actor WithSeleniumReportingInternal(
-            Actor actor, 
-            string screenshotDirectory, 
-            string screenshotNameOrFormat, 
-            out ISeleniumReporter seleniumReporter, 
-            IObserver<string>[] textOutputObservers,
-            Func<Actor, IObserver<ActionNotification>, Actor> applyWithReporting)
+        /// <summary>
+        /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
+        /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification}, ICanNotify)"/>
+        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo}, ITakeScreenshotStrategy)"/>
+        /// </summary>
+        /// <param name="actor">The actor</param>
+        /// <param name="configuration">The reporting configuration</param>
+        /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>        
+        /// <returns></returns>
+        public static Actor WithSeleniumReporting(
+            this Actor actor,
+            SeleniumReportingConfiguration configuration,
+            out ISeleniumReporter seleniumReporter)
         {
-            if (string.IsNullOrEmpty(screenshotDirectory))
+            if (configuration == null)
             {
-                throw new ArgumentNullException(nameof(screenshotDirectory));
-            }
-            if (string.IsNullOrEmpty(screenshotNameOrFormat))
-            {
-                throw new ArgumentNullException(nameof(screenshotNameOrFormat));
-            }
-            if (textOutputObservers == null)
-            {
-                throw new ArgumentNullException(nameof(textOutputObservers));
+                throw new ArgumentNullException(nameof(configuration));
             }
 
             var xmlDocumentObserver = new XmlDocumentObserver();
-            var textObservers = new CompositeObserver<string>(textOutputObservers);
+            var textObservers = new CompositeObserver<string>(configuration.TextOutputObservers.ToArray());
             var reportingObserver = new CompositeObserver<ActionNotification>(
                 xmlDocumentObserver,
                 new RenderedReportingObserver(textObservers, RenderedReportingObserver.DefaultRenderer)
                 );
-            var saveScreenshotObserver = new SaveScreenshotsToFileOnComplete(screenshotDirectory);
+            var saveScreenshotObserver = new SaveScreenshotsToFileOnComplete(configuration.ScreenshotDirectory);
             var screenshotObserver = new CompositeObserver<ScreenshotInfo>(
                 saveScreenshotObserver,
                 new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver),
                 new RenderedScreenshotInfoObserver(textObservers)
                 );
             seleniumReporter = new SeleniumReporter(xmlDocumentObserver, saveScreenshotObserver);
-            return applyWithReporting(actor, reportingObserver)
-                        .TakeScreenshots(screenshotNameOrFormat, screenshotObserver);
+            return configuration.ApplyWithReporting(actor, reportingObserver)
+                                .TakeScreenshots(configuration.ScreenshotNameOrFormat,
+                                                 screenshotObserver,
+                                                 configuration.TakeScreenshotStrategy);
         }
     }
 }
