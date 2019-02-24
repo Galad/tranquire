@@ -1,13 +1,8 @@
-﻿using AutoFixture;
+﻿using System;
 using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Moq;
-using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
 using Xunit;
@@ -25,188 +20,208 @@ namespace Tranquire.Selenium.Tests.Extensions
 
         #region Execute
         [Theory, DomainAutoData]
-        public void Execute_WithActionUnit_CallingGiven_ShouldNotCallObserver(
+        public void Execute_CallingGiven_ShouldCallTakeScreenshotStrategy(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
+            [Greedy]TakeScreenshot sut,
             IAction<object> action,
-            IActor otherActor
+            IActor otherActor,
+            object expected
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.Execute(action)).Callback((IAction<object> a) => a.ExecuteGivenAs(otherActor));
+            Mock.Get(action).Setup(q => q.ExecuteGivenAs(otherActor)).Returns(expected);            
+            Mock.Get(sut.Actor).Setup(a => a.Execute(It.IsAny<IAction<object>>())).Returns((IAction<object> a) => a.ExecuteGivenAs(otherActor));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(Unit.Default,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<Unit, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => execute());
             // act
-            sut.Execute(action);
-            // assert            
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.ExecuteGivenAs(otherActor));
+            var actual = sut.Execute(action);
+            // assert                        
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WithActionUnit_CallingWhen_ShouldNotCallObserver(
+        public void Execute_CallingWhen_ShouldCallTakeScreenshotStrategy(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
+            [Greedy]TakeScreenshot sut,
             IAction<object> action,
-            IActor otherActor
+            IActor otherActor,
+            object expected
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.Execute(action)).Callback((IAction<object> a) => a.ExecuteWhenAs(otherActor));
+            Mock.Get(action).Setup(q => q.ExecuteWhenAs(otherActor)).Returns(expected);
+            Mock.Get(sut.Actor).Setup(a => a.Execute(It.IsAny<IAction<object>>())).Returns((IAction<object> a) => a.ExecuteWhenAs(otherActor));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(Unit.Default,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<Unit, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => execute());
             // act
-            sut.Execute(action);
-            // assert            
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.ExecuteWhenAs(otherActor));
+            var actual = sut.Execute(action);
+            // assert                        
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WithActionWithoutWebBrowserAbility_CallingGiven_ShouldNotCallObserver(
+        public void ExecuteWithAbility_CallingGiven_ShouldCallTakeScreenshotStrategy(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
+            [Greedy]TakeScreenshot sut,
             IAction<object, object> action,
             IActor otherActor,
+            object expected,
             object ability
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>()))
-                               .Callback((IAction<object, object> a) => a.ExecuteGivenAs(otherActor, ability));
+            Mock.Get(action).Setup(q => q.ExecuteGivenAs(otherActor, ability)).Returns(expected);
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>())).Returns((IAction<object, object> a) => a.ExecuteGivenAs(otherActor, ability));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(ability,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<object, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => execute());
             // act
-            sut.ExecuteWithAbility(action);
-            // assert
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.ExecuteGivenAs(otherActor, ability));
+            var actual = sut.ExecuteWithAbility(action);
+            // assert                        
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void Execute_WithActionWithoutWebBrowserAbility_CallingWhen_ShouldNotCallObserver(
+        public void ExecuteWithAbility_CallingWhen_ShouldCallTakeScreenshotStrategy(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
+            [Greedy]TakeScreenshot sut,
             IAction<object, object> action,
             IActor otherActor,
+            object expected,
             object ability
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>()))
-                               .Callback((IAction<object, object> a) => a.ExecuteWhenAs(otherActor, ability));
+            Mock.Get(action).Setup(q => q.ExecuteWhenAs(otherActor, ability)).Returns(expected);
+            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<object, object>>())).Returns((IAction<object, object> a) => a.ExecuteWhenAs(otherActor, ability));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(ability,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<object, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => execute());
             // act
-            sut.ExecuteWithAbility(action);
-            // assert
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.ExecuteWhenAs(otherActor, ability));
-        }
-
-        [Theory, DomainAutoData]
-        public void Execute_WithActionWithWebBrowserAbility_CallingGiven_ShouldCallObserver(
-            [Frozen] string expectedName,
-            [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
-            IAction<WebBrowser, object> action,
-            IActor otherActor
-            )
-        {
-            // arrange            
-            var screenshot = new Screenshot("abcdefgskdjf");
-            var expected = new ScreenshotInfo(screenshot, expectedName);
-            var webDriver = new Mock<IWebDriver>();
-            webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
-            var ability = WebBrowser.With(webDriver.Object);
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<WebBrowser, object>>()))
-                .Callback((IAction<WebBrowser, object> a) => a.ExecuteGivenAs(otherActor, ability));
-            // act
-            sut.ExecuteWithAbility(action);
-            // assert
-            observer.Verify(CallOnNext(expected), Times.Once());
-            Mock.Get(action).Verify(a => a.ExecuteGivenAs(otherActor, ability));
-        }
-
-        [Theory, DomainAutoData]
-        public void Execute_WithActionWithWebBrowserAbility_CallingWhen_ShouldCallObserver(
-             [Frozen] string expectedName,
-             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-             TakeScreenshot sut,
-             IAction<WebBrowser, object> action,
-             IActor otherActor
-            )
-        {
-            // arrange            
-            var screenshot = new Screenshot("abcdefgskdjf");
-            var expected = new ScreenshotInfo(screenshot, expectedName);
-            var webDriver = new Mock<IWebDriver>();
-            webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
-            var ability = WebBrowser.With(webDriver.Object);
-            Mock.Get(sut.Actor).Setup(a => a.ExecuteWithAbility(It.IsAny<IAction<WebBrowser, object>>()))
-                               .Callback((IAction<WebBrowser, object> a) => a.ExecuteWhenAs(otherActor, ability));
-            // act
-            sut.ExecuteWithAbility(action);
-            // assert
-            observer.Verify(CallOnNext(expected), Times.Once());
-            Mock.Get(action).Verify(a => a.ExecuteWhenAs(otherActor, ability));
+            var actual = sut.ExecuteWithAbility(action);
+            // assert                        
+            Assert.Equal(expected, actual);
         }
         #endregion
 
         #region AskFor
         [Theory, DomainAutoData]
-        public void AsksFor_WithQuestion_CallingGiven_ShouldNotCallObserver(
+        public void AsksFor_ShouldCallTakeScreenshotStrategy(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
-            IQuestion<object> action,
-            IActor otherActor
-            )
-        {
-            // arrange
-            Mock.Get(sut.Actor).Setup(a => a.AsksFor(action)).Callback((IQuestion<object> a) => a.AnsweredBy(otherActor));
-            // act
-            sut.AsksFor(action);
-            // assert            
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.AnsweredBy(otherActor));
-        }
-
-        [Theory, DomainAutoData]
-        public void AsksFor_WithQuestionWithoutWebBrowserAbility_ShouldNotCallObserver(
-            [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
-            IQuestion<object, object> action,
+            [Greedy]TakeScreenshot sut,
+            IQuestion<object> question,
             IActor otherActor,
-            object ability
+            object expected
             )
         {
             // arrange
-            Mock.Get(sut.Actor).Setup(a => a.AsksForWithAbility(It.IsAny<IQuestion<object, object>>()))
-                .Callback((IQuestion<object, object> a) => a.AnsweredBy(otherActor, ability));
+            Mock.Get(question).Setup(q => q.AnsweredBy(otherActor)).Returns(expected);
+            Mock.Get(sut.Actor).Setup(a => a.AsksFor(It.IsAny<IQuestion<object>>())).Returns((IQuestion<object> a) => a.AnsweredBy(otherActor));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(Unit.Default,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<Unit, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => execute());
             // act
-            sut.AsksForWithAbility(action);
-            // assert            
-            observer.Verify(o => o.OnNext(It.IsAny<ScreenshotInfo>()), Times.Never());
-            Mock.Get(action).Verify(a => a.AnsweredBy(otherActor, ability));
+            var actual = sut.AsksFor(question);
+            // assert                        
+            Assert.Equal(expected, actual);
         }
 
         [Theory, DomainAutoData]
-        public void AsksFor_WithQuestionWithWebBrowserAbility_ShouldNotCallObserver(
-            [Frozen] string expectedName,
+        public void AsksFor_WhenQuestionNameIsWebBrowserQuestion_ShouldNotCallTakeScreenshotStrategy(
             [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
-            TakeScreenshot sut,
-            IQuestion<object, WebBrowser> action,
-            IActor otherActor
+            [Greedy]TakeScreenshot sut,
+            IQuestion<object> question,
+            IActor otherActor,
+            object expected,
+            object notExpected
             )
         {
             // arrange
-            var screenshot = new Screenshot("abcdefgskdjf");
-            var expected = new ScreenshotInfo(screenshot, expectedName);
-            var webDriver = new Mock<IWebDriver>();
-            webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
-            var ability = WebBrowser.With(webDriver.Object);
-            Mock.Get(sut.Actor).Setup(a => a.AsksForWithAbility(It.IsAny<IQuestion<object, WebBrowser>>()))
-                .Callback((IQuestion<object, WebBrowser> a) => a.AnsweredBy(otherActor, ability));
+            Mock.Get(question).Setup(q => q.AnsweredBy(otherActor)).Returns(expected);
+            Mock.Get(question).Setup(q => q.Name).Returns(TakeScreenshotOnErrorStrategy.GetWebBrowserQuestionName);
+            Mock.Get(sut.Actor).Setup(a => a.AsksFor(It.IsAny<IQuestion<object>>())).Returns((IQuestion<object> a) => a.AnsweredBy(otherActor));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(Unit.Default,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<Unit, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => notExpected);
             // act
-            sut.AsksForWithAbility(action);
-            // assert            
-            observer.Verify(CallOnNext(expected), Times.Once());
-            Mock.Get(action).Verify(a => a.AnsweredBy(otherActor, ability));
+            var actual = sut.AsksFor(question);
+            // assert                        
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void AsksForWithAbility_ShouldCallTakeScreenshotStrategy(
+            [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
+            [Greedy]TakeScreenshot sut,
+            IQuestion<object, object> question,
+            IActor otherActor,
+            object ability,
+            object expected
+            )
+        {
+            // arrange
+            Mock.Get(question).Setup(q => q.AnsweredBy(otherActor, ability)).Returns(expected);
+            Mock.Get(sut.Actor).Setup(a => a.AsksForWithAbility(It.IsAny<IQuestion<object, object>>())).Returns((IQuestion<object, object> a) => a.AnsweredBy(otherActor, ability));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(ability,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<object, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => execute());
+            // act
+            var actual = sut.AsksForWithAbility(question);
+            // assert                        
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void AsksForWithAbility_WhenQuestionNameIsWebBrowserQuestion_ShouldNotCallTakeScreenshotStrategy(
+            [Frozen]Mock<IObserver<ScreenshotInfo>> observer,
+            [Greedy]TakeScreenshot sut,
+            IQuestion<object, object> question,
+            IActor otherActor,
+            object ability,
+            object expected,
+            object notExpected
+            )
+        {
+            // arrange
+            Mock.Get(question).Setup(q => q.AnsweredBy(otherActor, ability)).Returns(expected);
+            Mock.Get(question).Setup(q => q.Name).Returns(TakeScreenshotOnErrorStrategy.GetWebBrowserQuestionName);
+            Mock.Get(sut.Actor).Setup(a => a.AsksForWithAbility(It.IsAny<IQuestion<object, object>>())).Returns((IQuestion<object, object> a) => a.AnsweredBy(otherActor, ability));
+            Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(ability,
+                                                                                    otherActor,
+                                                                                    It.IsAny<Func<object>>(),
+                                                                                    sut.NextScreenshotName,
+                                                                                    observer.Object))
+                                                .Returns<object, IActor, Func<object>, Func<string>, IObserver<ScreenshotInfo>>((a, b, execute, c, d) => notExpected);
+            // act
+            var actual = sut.AsksForWithAbility(question);
+            // assert                        
+            Assert.Equal(expected, actual);
         }
         #endregion
-           
+
         [Theory, DomainAutoData]
         public void QuestionName_ShouldReturnCorrectValue(
             TakeScreenshot sut,
@@ -273,12 +288,6 @@ namespace Tranquire.Selenium.Tests.Extensions
             // assert
             var expected = "[Take screenshot] " + action.Name;
             actual.Should().Be(expected);
-        }
-
-        private Expression<System.Action<IObserver<ScreenshotInfo>>> CallOnNext(ScreenshotInfo expected)
-        {
-            return o => o.OnNext(It.Is<ScreenshotInfo>(s => s.FileName == expected.FileName &&
-                                                            s.Screenshot.AsBase64EncodedString == expected.Screenshot.AsBase64EncodedString));
         }
     }
 }

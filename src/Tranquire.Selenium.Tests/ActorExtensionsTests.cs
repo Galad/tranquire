@@ -1,7 +1,11 @@
-﻿using AutoFixture.Idioms;
+﻿using AutoFixture;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Tranquire.Reporting;
 using Tranquire.Selenium.Extensions;
@@ -144,15 +148,34 @@ namespace Tranquire.Selenium.Tests
             actual.Should().BeOfType<SlowSelenium>().Which.Should().BeEquivalentTo(expected);
         }
 
+        private static readonly ITakeScreenshotStrategy _defaultTakeScreenshotStrategy = new AlwaysTakeScreenshotStrategy();
         [Theory, DomainAutoData]
         public void WithSeleniumReporting_ShouldReturnCorrectValue(
             [Modest]Actor actor,
             IActor iactor,
             string screenshotDirectory,
             string screenshotName,
-            IObserver<string> observers)
+            IObserver<string>[] observers)
         {
-            TestWithSeleniumReporting(actor, iactor, screenshotDirectory, screenshotName, observers);
+#pragma warning disable CS0618 // Type or member is obsolete
+            var actual = ActorExtensions.WithSeleniumReporting(
+                    actor,
+                    screenshotDirectory,
+                    screenshotName,
+                    out var actualSeleniumReporter,
+                    observers
+                    );
+#pragma warning restore CS0618 // Type or member is obsolete
+            var canNotify = new CompositeCanNotify();
+            TestWithSeleniumReporting(actualSeleniumReporter,
+                                      actual,
+                                      actor,
+                                      iactor,
+                                      screenshotDirectory,
+                                      screenshotName,
+                                      observers,
+                                      canNotify,
+                                      _defaultTakeScreenshotStrategy);
         }
 
         [Theory, DomainAutoData]
@@ -161,46 +184,138 @@ namespace Tranquire.Selenium.Tests
             IActor iactor,
             string screenshotDirectory,
             string screenshotName,
-            IObserver<string> observers,
+            IObserver<string>[] observers,
             ICanNotify canNotify)
         {
-            TestWithSeleniumReporting(actor, iactor, screenshotDirectory, screenshotName, observers, canNotify);
-        }
-
-        private static void TestWithSeleniumReporting(
-            Actor actor, 
-            IActor iactor, 
-            string screenshotDirectory, 
-            string screenshotName, 
-            IObserver<string> observers,
-            ICanNotify canNotify = null)
-        {
-            // arrange
-            // act
-            Actor actual;
-            ISeleniumReporter actualSeleniumReporter;
-            if (canNotify == null)
-            {
-                actual = ActorExtensions.WithSeleniumReporting(
-                    actor,
-                    screenshotDirectory,
-                    screenshotName,
-                    out actualSeleniumReporter,
-                    observers
-                    );
-                canNotify = new CompositeCanNotify();
-            }
-            else
-            {
-                actual = ActorExtensions.WithSeleniumReporting(
+#pragma warning disable CS0618 // Type or member is obsolete
+            var actual = ActorExtensions.WithSeleniumReporting(
                     actor,
                     screenshotDirectory,
                     screenshotName,
                     canNotify,
-                    out actualSeleniumReporter,
+                    out var actualSeleniumReporter,
                     observers
                     );
+#pragma warning restore CS0618 // Type or member is obsolete
+            TestWithSeleniumReporting(actualSeleniumReporter,
+                                      actual,
+                                      actor,
+                                      iactor,
+                                      screenshotDirectory,
+                                      screenshotName,
+                                      observers,
+                                      canNotify,
+                                      _defaultTakeScreenshotStrategy);
+        }
+
+        public static IEnumerable<object[]> ReportingConfigurations
+        {
+            get
+            {
+                var fixture = new Fixture().Customize(new DomainCustomization());
+                fixture.Customize<Actor>(c => c.FromFactory(new MethodInvoker(new ModestConstructorQuery())));
+                {
+                    yield return new object[]
+                    {
+                        fixture.Create<Actor>(),
+                        fixture.Create<IActor>(),
+                        fixture.Create<SeleniumReportingConfiguration>(),
+                        Array.Empty<IObserver<string>>(),
+                        new CompositeCanNotify(),
+                        _defaultTakeScreenshotStrategy
+                    };
+                }
+                {
+                    var observers = fixture.CreateMany<IObserver<string>>().ToArray();
+                    yield return new object[]
+                        {
+                        fixture.Create<Actor>(),
+                        fixture.Create<IActor>(),
+                        fixture.Create<SeleniumReportingConfiguration>().AddTextObserver(observers),
+                        observers,
+                        new CompositeCanNotify(),
+                        _defaultTakeScreenshotStrategy
+                        };
+                }
+                {
+                    var canNotify = fixture.Create<ICanNotify>();
+                    yield return new object[]
+                        {
+                        fixture.Create<Actor>(),
+                        fixture.Create<IActor>(),
+                        fixture.Create<SeleniumReportingConfiguration>().WithCanNotify(canNotify),
+                        Array.Empty<IObserver<string>>(),
+                        canNotify,
+                        _defaultTakeScreenshotStrategy
+                        };
+                }
+                {
+                    var takeScreenshotStrategy = fixture.Create<ITakeScreenshotStrategy>();
+                    yield return new object[]
+                        {
+                        fixture.Create<Actor>(),
+                        fixture.Create<IActor>(),
+                        fixture.Create<SeleniumReportingConfiguration>().WithTakeScreenshotStrategy(takeScreenshotStrategy),
+                        Array.Empty<IObserver<string>>(),
+                        new CompositeCanNotify(),
+                        takeScreenshotStrategy
+                        };
+                }
+                {
+                    var takeScreenshotStrategy = fixture.Create<ITakeScreenshotStrategy>();
+                    var canNotify = fixture.Create<ICanNotify>();
+                    var observers = fixture.CreateMany<IObserver<string>>().ToArray();
+                    yield return new object[]
+                        {
+                        fixture.Create<Actor>(),
+                        fixture.Create<IActor>(),
+                        fixture.Create<SeleniumReportingConfiguration>().WithTakeScreenshotStrategy(takeScreenshotStrategy)
+                                                                        .WithCanNotify(canNotify)
+                                                                        .AddTextObserver(observers),
+                        observers,
+                        canNotify,
+                        takeScreenshotStrategy
+                        };
+                }
             }
+        }
+
+        [Theory, MemberData(nameof(ReportingConfigurations))]
+        public void WithSeleniumReporting_WithConfiguration_ShouldReturnCorrectValue(
+            [Modest]Actor actor,
+            IActor iactor,
+            SeleniumReportingConfiguration configuration,
+            IObserver<string>[] observers,
+            ICanNotify canNotify,
+            ITakeScreenshotStrategy takeScreenshotStrategy)
+        {
+            var actual = ActorExtensions.WithSeleniumReporting(
+                    actor,
+                    configuration,                    
+                    out var actualSeleniumReporter                    
+                    );
+            TestWithSeleniumReporting(actualSeleniumReporter,
+                                      actual,
+                                      actor,
+                                      iactor,
+                                      configuration.ScreenshotDirectory,
+                                      configuration.ScreenshotNameOrFormat,
+                                      observers,
+                                      canNotify,
+                                      takeScreenshotStrategy);
+        }
+
+        private static void TestWithSeleniumReporting(
+            ISeleniumReporter actualSeleniumReporter,
+            Actor actual,
+            Actor actor, 
+            IActor iactor, 
+            string screenshotDirectory, 
+            string screenshotName, 
+            IObserver<string>[] observers,
+            ICanNotify canNotify,
+            ITakeScreenshotStrategy takeScreenshotStrategy)
+        {            
             // assert 
             var xmlDocumentObserver = new XmlDocumentObserver();
             var takeScreenshot = actual.InnerActorBuilder(iactor).Should().BeOfType<TakeScreenshot>().Which;
@@ -211,7 +326,8 @@ namespace Tranquire.Selenium.Tests
                     new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver),
                     new RenderedScreenshotInfoObserver(new CompositeObserver<string>(observers)),
                     new SaveScreenshotsToFileOnComplete(screenshotDirectory)
-                    )
+                    ),
+                takeScreenshotStrategy
                 )
                 .InnerActorBuilder(iactor) as TakeScreenshot;
             takeScreenshot.Should().BeEquivalentTo(expectedTakeScreenshot, o => o.Excluding(a => a.Actor)

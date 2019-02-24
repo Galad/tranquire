@@ -11,6 +11,7 @@ using ToDoList.Automation.Actions;
 using Tranquire;
 using Tranquire.Reporting;
 using Tranquire.Selenium;
+using Tranquire.Selenium.Extensions;
 
 namespace ToDoList.Specifications
 {
@@ -45,10 +46,12 @@ namespace ToDoList.Specifications
             }       
             var actor = new Actor("John")
                             .WithSeleniumReporting(
-                                Path.Combine(GetTestDirectory(), "Screenshots"),
-                                screenshotName,
-                                out var seleniumReporter,
-                                new DebugObserver())                           
+                                new SeleniumReportingConfiguration(
+                                    Path.Combine(GetTestDirectory(), "Screenshots"),
+                                    screenshotName)
+                                    .AddTextObserver(new DebugObserver())
+                                    .WithTakeScreenshotStrategy(new AlwaysTakeScreenshotStrategy()),                                
+                                out var seleniumReporter)
                             .HighlightTargets()
                             .SlowSelenium(delay)
                             .CanUse(WebBrowser.With(driver));
@@ -75,7 +78,8 @@ namespace ToDoList.Specifications
             Debug.WriteLine(_reportingStringBuilder.ToString());
             var seleniumReporter = Context.Get<ISeleniumReporter>();
             seleniumReporter.SaveScreenshots();
-            Debug.WriteLine(seleniumReporter.GetXmlDocument().ToString());            
+            Debug.WriteLine(seleniumReporter.GetXmlDocument().ToString());
+            File.WriteAllText(Path.Combine(GetTestDirectory(), "Screenshots", "Report.html"), seleniumReporter.GetHtmlDocument());
         }
 
         [Given(@"I have an empty to-do list")]
