@@ -5,7 +5,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Represent a click on a target with javascript
     /// </summary>
-    public class JsClick : ActionUnit<WebBrowser>, ITargeted
+    public class JsClick : ActionBaseUnit<WebBrowser>, ITargeted
     {
         /// <summary>
         /// Gets the target which will be clicked

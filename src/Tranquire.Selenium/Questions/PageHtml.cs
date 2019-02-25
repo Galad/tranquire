@@ -3,7 +3,7 @@
     /// <summary>
     /// Provide Html for a WebBrowser
     /// </summary>
-    internal class PageHtml : Question<string, WebBrowser>
+    internal class PageHtml : QuestionBase<string, WebBrowser>
     {
         /// <inheritsdoc />
         public override string Name => "What is the current page HTML ?";

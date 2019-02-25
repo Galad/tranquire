@@ -6,7 +6,7 @@ namespace Tranquire
     /// Represent an action for a given context (Given or When)
     /// </summary>
     /// <typeparam name="T">The return type</typeparam>
-    public class CommandAction<T> : Action<T>
+    public class CommandAction<T> : ActionBase<T>
     {
         /// <summary>
         /// Creates a new instance of <see cref="CommandAction{T}"/>

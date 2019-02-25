@@ -3,7 +3,7 @@
     /// <summary>
     /// A question returning the page title
     /// </summary>
-    public class PageTitle : Question<string, WebBrowser>
+    public class PageTitle : QuestionBase<string, WebBrowser>
     {
         /// <summary>
         /// Returns the page title

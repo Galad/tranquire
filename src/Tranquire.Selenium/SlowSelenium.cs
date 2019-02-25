@@ -48,7 +48,7 @@ namespace Tranquire.Selenium
             return Actor.AsksForWithAbility(question);
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer> : Question<TAnswer, WebBrowser>, ITargeted
+        private sealed class SlowSeleniumQuestion<TAnswer> : QuestionBase<TAnswer, WebBrowser>, ITargeted
         {
             private readonly int _delay;
             private readonly IQuestion<TAnswer, WebBrowser> _question;
@@ -91,7 +91,7 @@ namespace Tranquire.Selenium
             return Actor.ExecuteWithAbility(new SlowSeleniumAction<TAbility, TResult>(action, DelayMilliseconds, targeted));
         }
 
-        private sealed class SlowSeleniumAction<TAbility, TResult> : Action<TAbility, TResult>, ITargeted
+        private sealed class SlowSeleniumAction<TAbility, TResult> : ActionBase<TAbility, TResult>, ITargeted
         {
             private readonly IAction<TAbility, TResult> action;
             private readonly int _delay;

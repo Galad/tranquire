@@ -11,7 +11,7 @@ namespace Tranquire.Tests
 {
     public class ActionBuilderTests
     {
-        public class TestAction : ActionUnit
+        public class TestAction : ActionBaseUnit
         {
             public override string Name => "";
 
@@ -20,7 +20,7 @@ namespace Tranquire.Tests
             }
         }
 
-        public class NextAction : Action<object>
+        public class NextAction : ActionBase<object>
         {
             public override string Name => "";
 

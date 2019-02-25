@@ -29,7 +29,7 @@ namespace Tranquire
             return new FuncQuestions<TAnswer>(name, func);
         }
 
-        private class FuncQuestions<TAnswer> : Question<TAnswer>
+        private class FuncQuestions<TAnswer> : QuestionBase<TAnswer>
         {
             private readonly string name;
             private readonly Func<IActor, TAnswer> func;
@@ -70,7 +70,7 @@ namespace Tranquire
             return new FuncQuestions<TAnswer, TAbility>(name, func);
         }
 
-        private class FuncQuestions<TAnswer, TAbility> : Question<TAnswer, TAbility>
+        private class FuncQuestions<TAnswer, TAbility> : QuestionBase<TAnswer, TAbility>
         {
             private readonly string name;
             private readonly Func<IActor, TAbility, TAnswer> func;
@@ -100,7 +100,7 @@ namespace Tranquire
             return new ResultQuestion<TAnswer>(result);
         }
 
-        private class ResultQuestion<TAnswer> : Question<TAnswer>
+        private class ResultQuestion<TAnswer> : QuestionBase<TAnswer>
         {
             private readonly TAnswer result;
 

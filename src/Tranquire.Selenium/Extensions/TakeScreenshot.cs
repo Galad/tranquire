@@ -61,7 +61,7 @@ namespace Tranquire.Selenium.Extensions
             return Actor.AsksForWithAbility(new TakeScreenshotQuestion<TAnswer, TAbility>(question, this));
         }
 
-        private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : Question<TAnswer, TAbility>
+        private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : QuestionBase<TAnswer, TAbility>
         {
             private readonly IQuestion<TAnswer, TAbility> _question;
             private readonly TakeScreenshot _takeScreenshot;
@@ -97,7 +97,7 @@ namespace Tranquire.Selenium.Extensions
             return Actor.ExecuteWithAbility(new TakeScreenshotAction<TAbility, TResult>(action, this));
         }
 
-        private sealed class TakeScreenshotAction<TAbility, TResult> : Action<TAbility, TResult>
+        private sealed class TakeScreenshotAction<TAbility, TResult> : ActionBase<TAbility, TResult>
         {
             private readonly IAction<TAbility, TResult> _action;
             private readonly TakeScreenshot _takeScreenshot;

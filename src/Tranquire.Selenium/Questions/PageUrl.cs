@@ -3,7 +3,7 @@
     /// <summary>
     /// A question returning the page URL
     /// </summary>
-    public class PageUrl : Question<string, WebBrowser>
+    public class PageUrl : QuestionBase<string, WebBrowser>
     {
         /// <summary>
         ///  Returns the page URL
