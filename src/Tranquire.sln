@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BB557DCD-9C67-428C-B283-14F7681D357D}"
 EndProject
@@ -31,10 +31,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.NUnit", "Tranquire.NUnit\Tranquire.NUnit.csproj", "{92714D22-0803-454E-885B-A5CBC0F1A01E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.NUnit.Tests", "Tranquire.NUnit.Tests\Tranquire.NUnit.Tests.csproj", "{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tranquire.SpecFlow.Generation", "Tranquire.SpecFlow.Generation\Tranquire.SpecFlow.Generation.csproj", "{D99DCC20-71FE-4793-A098-EBB183F33452}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tranquire.SpecFlow.Generation.Tests", "Tranquire.SpecFlow.Generation.Tests\Tranquire.SpecFlow.Generation.Tests.csproj", "{A0A860B2-1D3A-403E-B82E-9AD6A0D489FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,14 +74,6 @@ Global
 		{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D99DCC20-71FE-4793-A098-EBB183F33452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D99DCC20-71FE-4793-A098-EBB183F33452}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D99DCC20-71FE-4793-A098-EBB183F33452}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D99DCC20-71FE-4793-A098-EBB183F33452}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0A860B2-1D3A-403E-B82E-9AD6A0D489FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0A860B2-1D3A-403E-B82E-9AD6A0D489FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0A860B2-1D3A-403E-B82E-9AD6A0D489FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0A860B2-1D3A-403E-B82E-9AD6A0D489FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,7 +85,6 @@ Global
 		{A8925A78-F467-4140-8740-F1BC4A87935B} = {D3AC275C-3A02-484D-9631-4944378BDEA5}
 		{1CF77FC5-941A-4258-B598-F558F10C9D48} = {D3AC275C-3A02-484D-9631-4944378BDEA5}
 		{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F} = {BB557DCD-9C67-428C-B283-14F7681D357D}
-		{A0A860B2-1D3A-403E-B82E-9AD6A0D489FF} = {BB557DCD-9C67-428C-B283-14F7681D357D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DE7AE28-21D3-4CC2-B47F-BB1F63D6D457}

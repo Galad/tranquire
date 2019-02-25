@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="SonarQube - Tranquire Tranquire-csharp" ToolsVersion="15.0">
-  <Include Path="..\sonarqube\tranquirecsharp.ruleset" Action="Default" />
-</RuleSet>
