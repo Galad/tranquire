@@ -30,12 +30,6 @@ namespace Tranquire.Selenium.Questions
         }
         
         /// <summary>
-        /// Gets a question which returns the state
-        /// </summary>
-        [Obsolete("This property will be removed in the future. Cast this class as a IQuestion<ImmutableArray<T>> in order to get a question")]
-        public IQuestion<ImmutableArray<T>> Value => _question.Value;
-        
-        /// <summary>
         /// Creates a question
         /// </summary>
         /// <typeparam name="TAnswer">The type of the answer elements</typeparam>
