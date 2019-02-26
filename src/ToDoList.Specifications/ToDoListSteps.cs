@@ -43,14 +43,14 @@ namespace ToDoList.Specifications
             if (IsLiveUnitTesting)
             {
                 delay = TimeSpan.Zero;
-            }       
+            }
             var actor = new Actor("John")
                             .WithSeleniumReporting(
                                 new SeleniumReportingConfiguration(
-                                    Path.Combine(GetTestDirectory(), "Screenshots"),
+                                    GetScreenshotsPath(),
                                     screenshotName)
                                     .AddTextObservers(new DebugObserver())
-                                    .WithTakeScreenshotStrategy(new AlwaysTakeScreenshotStrategy()),                                
+                                    .WithTakeScreenshotStrategy(new AlwaysTakeScreenshotStrategy()),
                                 out var seleniumReporter)
                             .HighlightTargets()
                             .SlowSelenium(delay)
@@ -61,6 +61,12 @@ namespace ToDoList.Specifications
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             actor.Given(Open.TheApplication());
         }
+
+        private string GetScreenshotsPath()
+        {
+            return Path.Combine(GetTestDirectory(), "Screenshots", Context.ScenarioInfo.Title);
+        }
+
         public static bool IsLiveUnitTesting => AppDomain.CurrentDomain.GetAssemblies()
             .Any(a => a.GetName().Name == "Microsoft.CodeAnalysis.LiveUnitTesting.Runtime");
 
@@ -79,7 +85,7 @@ namespace ToDoList.Specifications
             var seleniumReporter = Context.Get<ISeleniumReporter>();
             seleniumReporter.SaveScreenshots();
             Debug.WriteLine(seleniumReporter.GetXmlDocument().ToString());
-            File.WriteAllText(Path.Combine(GetTestDirectory(), "Screenshots", "Report.html"), seleniumReporter.GetHtmlDocument());
+            File.WriteAllText(Path.Combine(GetScreenshotsPath(), "Report.html"), seleniumReporter.GetHtmlDocument());
         }
 
         [Given(@"I have an empty to-do list")]
