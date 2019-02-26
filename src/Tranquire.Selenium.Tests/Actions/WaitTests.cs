@@ -17,42 +17,6 @@ namespace Tranquire.Selenium.Tests.Actions
         }
 
         [Theory, DomainAutoData]
-        public void Sut_IsAction(Wait sut)
-        {
-            Assert.IsAssignableFrom<ActionBaseUnit<WebBrowser>>(sut);
-        }
-
-        #region Obsolete
-        [Theory, DomainAutoData]
-        public void UntilTargetIsPresent_ShouldWait_Obsolete(string id)
-        {
-            //arrange
-            var target = Target.The("element to wait for").LocatedBy(By.Id(id));
-            InsertElementAfter1Second(id);
-            //act
-#pragma warning disable CS0618 // Type or member is obsolete
-            Fixture.Actor.When(Wait.UntilTargetIsPresent(target));
-#pragma warning restore CS0618 // Type or member is obsolete
-                              //assert
-            var actual = Answer(Presence.Of(target));
-            Assert.True(actual);
-        }
-        
-        [Theory, DomainAutoData]
-        public void UntilTargetIsPresent_WhenTimeout_ShouldThrow_Obsolete(string id)
-        {
-            //arrange
-            var target = Target.The("element to wait for").LocatedBy(By.Id(id));
-            InsertElementAfter1Second(id);
-            //act
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.Throws<TimeoutException>(() => Fixture.Actor.When(Wait.UntilTargetIsPresent(target).Timeout(TimeSpan.FromMilliseconds(100))));
-#pragma warning restore CS0618 // Type or member is obsolete
-        }
-        #endregion
-
-
-        [Theory, DomainAutoData]
         public void UntilTargetIsPresent_ShouldWait(string id)
         {
             //arrange
@@ -64,8 +28,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var actual = Answer(Presence.Of(target));
             Assert.True(actual);
         }
-
-
+        
         [Theory, DomainAutoData]
         public void UntilTargetIsPresent_WhenTimeout_ShouldThrow(string id)
         {
@@ -75,8 +38,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Assert.Throws<TimeoutException>(() => Fixture.Actor.When(Wait.Until(target).IsPresent.Timeout(TimeSpan.FromMilliseconds(100))));
         }
-
-
+        
         private void InsertElementAfter1Second(string id)
         {
             var js = "var element = document.createElement('div');" +
