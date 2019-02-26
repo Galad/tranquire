@@ -74,7 +74,7 @@ namespace Tranquire.Reporting
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question)
         {
             if (question == null)
             {

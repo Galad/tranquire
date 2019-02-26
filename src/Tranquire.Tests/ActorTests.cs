@@ -165,7 +165,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void AsksFor_WithAbility_ShouldReturnCorrectValue(
           Actor sut,
-          Mock<QuestionBase<object, Ability1>> question,
+          Mock<QuestionBase<Ability1, object>> question,
           object expected)
         {
             //arrange
@@ -246,7 +246,7 @@ namespace Tranquire.Tests
             {
                 return new System.Action<Actor, IFixture>[]
                 {
-                    (sut, fixture) => sut.AsksFor(fixture.Create<QuestionBase<string, AbilityTest>>()),
+                    (sut, fixture) => sut.AsksFor(fixture.Create<QuestionBase<AbilityTest, string>>()),
                     (sut, fixture) => sut.When(fixture.Create<ActionBase<AbilityTest, object>>()),
                     (sut, fixture) => sut.Given(fixture.Create<ActionBase<AbilityTest, object>>()),
                     //(sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest, object>>()),

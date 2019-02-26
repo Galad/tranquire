@@ -72,22 +72,22 @@ namespace Tranquire.Selenium.Extensions
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question)
         {
             if (question.Name == TakeScreenshotOnErrorStrategy.GetWebBrowserQuestionName)
             {
                 return Actor.AsksForWithAbility(question);
             }
-            return Actor.AsksForWithAbility(new TakeScreenshotQuestion<TAnswer, TAbility>(question, this));
+            return Actor.AsksForWithAbility(new TakeScreenshotQuestion<TAbility, TAnswer>(question, this));
         }
 
-        private sealed class TakeScreenshotQuestion<TAnswer, TAbility> : QuestionBase<TAnswer, TAbility>
+        private sealed class TakeScreenshotQuestion<TAbility, TAnswer> : QuestionBase<TAbility, TAnswer>
         {
-            private readonly IQuestion<TAnswer, TAbility> _question;
+            private readonly IQuestion<TAbility, TAnswer> _question;
             private readonly TakeScreenshot _takeScreenshot;
                         
             public TakeScreenshotQuestion(
-                IQuestion<TAnswer, TAbility> question, 
+                IQuestion<TAbility, TAnswer> question, 
                 TakeScreenshot takeScreenshot)
             {
                 _question = question;

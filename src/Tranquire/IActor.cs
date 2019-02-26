@@ -32,7 +32,7 @@ namespace Tranquire
         /// <param name = "question">A <see cref = "IQuestion{TAnswer}"/> instance representing the question to ask</param>
         /// <returns>The answer to the question.</returns>
         [Obsolete("Prefer using AsksFor<TResult>(IQuestion<TResult>). Implementors can ignore this warning.", false)]
-        TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question);
+        TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question);
 
         /// <summary>
         /// Gets the actor name
