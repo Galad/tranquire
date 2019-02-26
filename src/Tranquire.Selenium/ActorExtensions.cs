@@ -137,57 +137,6 @@ namespace Tranquire.Selenium
 
         /// <summary>
         /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
-        /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification})"/>
-        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo}, ITakeScreenshotStrategy)"/>
-        /// </summary>
-        /// <param name="actor">The actor</param>
-        /// <param name="screenshotDirectory">The directory where the screenshots are saved</param>
-        /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
-        /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>
-        /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
-        /// <returns></returns>
-        [Obsolete("This method will be removed in the next major version. Please use the overload taking a SeleniumReportingConfiguration instead", false)]
-        public static Actor WithSeleniumReporting(
-            this Actor actor,
-            string screenshotDirectory,
-            string screenshotNameOrFormat,
-            out ISeleniumReporter seleniumReporter,
-            params IObserver<string>[] textOutputObservers)
-        {
-            var configuration = new SeleniumReportingConfiguration(screenshotDirectory, screenshotNameOrFormat)
-                    .AddTextObservers(textOutputObservers);
-            return actor.WithSeleniumReporting(configuration, out seleniumReporter);
-        }
-
-        /// <summary>
-        /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
-        /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification}, ICanNotify)"/>
-        /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo}, ITakeScreenshotStrategy)"/>
-        /// </summary>
-        /// <param name="actor">The actor</param>
-        /// <param name="screenshotDirectory">The directory where the screenshots are saved</param>
-        /// <param name="screenshotNameOrFormat">A string containing a format for 0 or 1 format item, used to generate the screenshot names. If no format item is provided, the default format is "<paramref name="screenshotNameOrFormat"/>_{0:00}".</param>
-        /// <param name="canNotify">A <see cref="ICanNotify"/> instance that allows to control what actions and questions can send a notification</param>
-        /// <param name="seleniumReporter">A <see cref="ISeleniumReporter"/> object that can be used to save the screenshots and retrieve the report at the end of the run</param>
-        /// <param name="textOutputObservers">Additional observer that can be used to display the text report</param>
-        /// <returns></returns>
-        [Obsolete("This method will be removed in the next major version. Please use the overload taking a SeleniumReportingConfiguration instead", false)]
-        public static Actor WithSeleniumReporting(
-            this Actor actor,
-            string screenshotDirectory,
-            string screenshotNameOrFormat,
-            ICanNotify canNotify,
-            out ISeleniumReporter seleniumReporter,
-            params IObserver<string>[] textOutputObservers)
-        {
-            var configuration = new SeleniumReportingConfiguration(screenshotDirectory, screenshotNameOrFormat)
-                    .AddTextObservers(textOutputObservers)
-                    .WithCanNotify(canNotify);
-            return actor.WithSeleniumReporting(configuration, out seleniumReporter);
-        }
-
-        /// <summary>
-        /// Configure the actor for Selenium reporting and returns an object that allows to retrieve the report. This is similar to using:
         /// - <see cref="Tranquire.ActorExtensions.WithReporting(Actor, IObserver{Reporting.ActionNotification}, ICanNotify)"/>
         /// - <see cref="TakeScreenshots(Actor, string, IObserver{ScreenshotInfo}, ITakeScreenshotStrategy)"/>
         /// </summary>

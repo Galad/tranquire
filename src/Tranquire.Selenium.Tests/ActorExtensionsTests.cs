@@ -149,65 +149,7 @@ namespace Tranquire.Selenium.Tests
         }
 
         private static readonly ITakeScreenshotStrategy _defaultTakeScreenshotStrategy = new AlwaysTakeScreenshotStrategy();
-        [Theory, DomainAutoData]
-        public void WithSeleniumReporting_ShouldReturnCorrectValue(
-            [Modest]Actor actor,
-            IActor iactor,
-            string screenshotDirectory,
-            string screenshotName,
-            IObserver<string>[] observers)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var actual = ActorExtensions.WithSeleniumReporting(
-                    actor,
-                    screenshotDirectory,
-                    screenshotName,
-                    out var actualSeleniumReporter,
-                    observers
-                    );
-#pragma warning restore CS0618 // Type or member is obsolete
-            var canNotify = SeleniumReportingConfiguration.DefaultCanNotify;
-            TestWithSeleniumReporting(actualSeleniumReporter,
-                                      actual,
-                                      actor,
-                                      iactor,
-                                      screenshotDirectory,
-                                      screenshotName,
-                                      observers,
-                                      canNotify,
-                                      _defaultTakeScreenshotStrategy);
-        }
-
-        [Theory, DomainAutoData]
-        public void WithSeleniumReporting_WithCanNotify_ShouldReturnCorrectValue(
-            [Modest]Actor actor,
-            IActor iactor,
-            string screenshotDirectory,
-            string screenshotName,
-            IObserver<string>[] observers,
-            ICanNotify canNotify)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var actual = ActorExtensions.WithSeleniumReporting(
-                    actor,
-                    screenshotDirectory,
-                    screenshotName,
-                    canNotify,
-                    out var actualSeleniumReporter,
-                    observers
-                    );
-#pragma warning restore CS0618 // Type or member is obsolete
-            TestWithSeleniumReporting(actualSeleniumReporter,
-                                      actual,
-                                      actor,
-                                      iactor,
-                                      screenshotDirectory,
-                                      screenshotName,
-                                      observers,
-                                      new CompositeCanNotify(canNotify, SeleniumReportingConfiguration.DefaultCanNotify),
-                                      _defaultTakeScreenshotStrategy);
-        }
-
+        
         public static IEnumerable<object[]> ReportingConfigurations
         {
             get
