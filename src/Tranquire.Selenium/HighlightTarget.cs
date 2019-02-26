@@ -117,7 +117,7 @@ namespace Tranquire.Selenium
             return Actor.AsksForWithAbility(question);
         }
 
-        private sealed class HighlightedQuestion<TAnswer> : Question<TAnswer, WebBrowser>
+        private sealed class HighlightedQuestion<TAnswer> : QuestionBase<TAnswer, WebBrowser>
         {
             private readonly IQuestion<TAnswer, WebBrowser> question;
             private readonly HighlighActions _highlightActions;
@@ -151,7 +151,7 @@ namespace Tranquire.Selenium
             return Actor.ExecuteWithAbility(action);
         }
 
-        private sealed class HighlightedAction<TAbility, TResult> : Action<TAbility, TResult>
+        private sealed class HighlightedAction<TAbility, TResult> : ActionBase<TAbility, TResult>
         {
             private readonly IAction<TAbility, TResult> _action;
             private readonly HighlighActions _highlightActions;

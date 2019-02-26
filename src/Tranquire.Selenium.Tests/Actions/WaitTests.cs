@@ -19,7 +19,7 @@ namespace Tranquire.Selenium.Tests.Actions
         [Theory, DomainAutoData]
         public void Sut_IsAction(Wait sut)
         {
-            Assert.IsAssignableFrom<ActionUnit<WebBrowser>>(sut);
+            Assert.IsAssignableFrom<ActionBaseUnit<WebBrowser>>(sut);
         }
 
         #region Obsolete

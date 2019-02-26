@@ -7,7 +7,7 @@ namespace Tranquire
     /// Represent an action on the system returning no value
     /// </summary>
     /// <typeparam name="T">The ability type. It used for both When and Given contexts</typeparam>
-    public abstract class ActionUnit<T> : IAction<T, Unit>
+    public abstract class ActionBaseUnit<T> : IAction<T, Unit>
 #pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
@@ -113,7 +113,7 @@ namespace Tranquire
     /// <summary>
     /// Represent an action on the system returning no value
     /// </summary>
-    public abstract class ActionUnit : IAction<Unit>
+    public abstract class ActionBaseUnit : IAction<Unit>
     {
         /// <summary>
         /// Executes the action

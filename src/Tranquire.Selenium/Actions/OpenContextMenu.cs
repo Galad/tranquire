@@ -5,7 +5,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Opens the context menu on a target
     /// </summary>
-    public sealed class OpenContextMenu : ActionUnit<WebBrowser>
+    public sealed class OpenContextMenu : ActionBaseUnit<WebBrowser>
     {
         private readonly ITarget _target;
 

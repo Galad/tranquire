@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Tranquire.Tests
 {
-    public class Action1 : Tranquire.ActionUnit
+    public class Action1 : Tranquire.ActionBaseUnit
     {
         private readonly System.Action<string> _notify;
 
@@ -21,7 +21,7 @@ namespace Tranquire.Tests
         }
     }
 
-    public class Action2 : Tranquire.ActionUnit
+    public class Action2 : Tranquire.ActionBaseUnit
     {
         private readonly System.Action<string> _notify;
 
@@ -46,7 +46,7 @@ namespace Tranquire.Tests
     }
 
 
-    public class Action3 : Tranquire.ActionUnit
+    public class Action3 : Tranquire.ActionBaseUnit
     {
         private readonly System.Action<string> _notify;
 

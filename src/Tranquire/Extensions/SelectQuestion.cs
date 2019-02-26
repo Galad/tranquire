@@ -7,7 +7,7 @@ namespace Tranquire.Extensions
     /// </summary>
     /// <typeparam name="TSource">The result type of the source question</typeparam>
     /// <typeparam name="TResult">The result type of the selector function</typeparam>
-    public sealed class SelectQuestion<TSource, TResult> : Question<TResult>
+    public sealed class SelectQuestion<TSource, TResult> : QuestionBase<TResult>
     {
         /// <summary>
         /// Gets the question injected in the constructor
