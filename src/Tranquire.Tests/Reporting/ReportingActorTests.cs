@@ -105,7 +105,7 @@ namespace Tranquire.Tests.Reporting
 
         //Moq does not mock ToString if it is not overridden in the class
 #pragma warning disable CS0618 // Type or member is obsolete
-        public class MockToString : IQuestion<object>, IQuestion<object, Ability1>, IAction<object>, IAction<Ability2, object>
+        public class MockToString : IQuestion<object>, IQuestion<Ability1, object>, IAction<object>, IAction<Ability2, object>
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             public string ToStringValue { get; }
@@ -154,8 +154,8 @@ namespace Tranquire.Tests.Reporting
                     action => a => a.ExecuteWithAbility((IAction<Ability2, object>)action),
                     CommandType.Action);
                 yield return ExecutionTestCasesValues(
-                    (sut, action) => sut.AsksForWithAbility((IQuestion<object, Ability1>)action),
-                    action => a => a.AsksForWithAbility((IQuestion<object, Ability1>)action),
+                    (sut, action) => sut.AsksForWithAbility((IQuestion<Ability1, object>)action),
+                    action => a => a.AsksForWithAbility((IQuestion<Ability1, object>)action),
                     CommandType.Question);
 #pragma warning restore CS0618 // Type or member is obsolete
             }
@@ -379,7 +379,7 @@ namespace Tranquire.Tests.Reporting
             [Frozen]TestObserver<ActionNotification> observer,
             ReportingActor sut,
 #pragma warning disable CS0618 // Type or member is obsolete
-            IQuestion<object, Ability1> question)
+            IQuestion<Ability1, object> question)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             //arrange                                                      

@@ -55,7 +55,7 @@ namespace Tranquire
         /// <param name="func">The function to execute</param>
         /// <returns></returns>
 #pragma warning disable CS0618 // Type or member is obsolete
-        public static IQuestion<TAnswer, TAbility> Create<TAnswer, TAbility>(string name, Func<IActor, TAbility, TAnswer> func)
+        public static IQuestion<TAbility, TAnswer> Create<TAbility, TAnswer>(string name, Func<IActor, TAbility, TAnswer> func)
 #pragma warning restore CS0618 // Type or member is obsolete
         {
             if (string.IsNullOrEmpty(name))
@@ -67,10 +67,10 @@ namespace Tranquire
                 throw new ArgumentNullException(nameof(func));
             }
 
-            return new FuncQuestions<TAnswer, TAbility>(name, func);
+            return new FuncQuestions<TAbility, TAnswer>(name, func);
         }
 
-        private class FuncQuestions<TAnswer, TAbility> : QuestionBase<TAnswer, TAbility>
+        private class FuncQuestions<TAbility, TAnswer> : QuestionBase<TAbility, TAnswer>
         {
             private readonly string name;
             private readonly Func<IActor, TAbility, TAnswer> func;

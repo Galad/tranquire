@@ -38,23 +38,23 @@ namespace Tranquire.Selenium
         }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question)
         {
             var targeted = question as ITargeted;
-            if (question is IQuestion<TAnswer, WebBrowser> webBrowserQuestion && targeted != null)
+            if (question is IQuestion<WebBrowser, TAnswer> webBrowserQuestion && targeted != null)
             {
                 return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer>(webBrowserQuestion, DelayMilliseconds, targeted));
             }
             return Actor.AsksForWithAbility(question);
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer> : QuestionBase<TAnswer, WebBrowser>, ITargeted
+        private sealed class SlowSeleniumQuestion<TAnswer> : QuestionBase<WebBrowser, TAnswer>, ITargeted
         {
             private readonly int _delay;
-            private readonly IQuestion<TAnswer, WebBrowser> _question;
+            private readonly IQuestion<WebBrowser, TAnswer> _question;
             private readonly ITargeted _targeted;
 
-            public SlowSeleniumQuestion(IQuestion<TAnswer, WebBrowser> question, int delay, ITargeted targeted)
+            public SlowSeleniumQuestion(IQuestion<WebBrowser, TAnswer> question, int delay, ITargeted targeted)
             {
                 _question = question;
                 _delay = delay;

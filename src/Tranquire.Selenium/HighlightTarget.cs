@@ -80,23 +80,23 @@ namespace Tranquire.Selenium
         public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question) => Actor.AsksFor(question);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksForWithAbility<TAnswer, TAbility>(IQuestion<TAnswer, TAbility> question)
+        public TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question)
         {
             if (typeof(TAbility) == typeof(WebBrowser) && question is ITargeted)
             {
-                return Actor.AsksForWithAbility(new HighlightedQuestion<TAnswer>((IQuestion<TAnswer, WebBrowser>)question, _highlightActions));
+                return Actor.AsksForWithAbility(new HighlightedQuestion<TAnswer>((IQuestion<WebBrowser, TAnswer>)question, _highlightActions));
             }
             return Actor.AsksForWithAbility(question);
         }
 
-        private sealed class HighlightedQuestion<TAnswer> : QuestionBase<TAnswer, WebBrowser>
+        private sealed class HighlightedQuestion<TAnswer> : QuestionBase<WebBrowser, TAnswer>
         {
-            private readonly IQuestion<TAnswer, WebBrowser> question;
+            private readonly IQuestion<WebBrowser, TAnswer> question;
             private readonly HighlighActions _highlightActions;
             private ITargeted Targeted => (ITargeted)question;
             public override string Name => "[Highlighted] " + question.Name;
 
-            public HighlightedQuestion(IQuestion<TAnswer, WebBrowser> question, HighlighActions highlightActions)
+            public HighlightedQuestion(IQuestion<WebBrowser, TAnswer> question, HighlighActions highlightActions)
             {
                 this.question = question;
                 _highlightActions = highlightActions;

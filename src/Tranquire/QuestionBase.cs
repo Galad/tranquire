@@ -9,7 +9,7 @@ namespace Tranquire
     /// <typeparam name="TAnswer">The answer type</typeparam>
     /// <typeparam name="TAbility">The ability type</typeparam>
 #pragma warning disable CS0618 // Type or member is obsolete
-    public abstract class QuestionBase<TAnswer, TAbility> : IQuestion<TAnswer, TAbility>
+    public abstract class QuestionBase<TAbility, TAnswer> : IQuestion<TAbility, TAnswer>
 #pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
