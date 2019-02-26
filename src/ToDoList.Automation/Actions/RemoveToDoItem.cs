@@ -3,7 +3,7 @@ using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
-    public class RemoveToDoItem : Tranquire.ActionUnit
+    public class RemoveToDoItem : Tranquire.ActionBaseUnit
     {
         private readonly string item;
 

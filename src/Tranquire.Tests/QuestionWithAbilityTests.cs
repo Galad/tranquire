@@ -9,7 +9,7 @@ namespace Tranquire.Tests
 {
     public class QuestionWithAbilityTests
     {
-        public class TestQuestion : Question<object, Ability1>
+        public class TestQuestion : QuestionBase<object, Ability1>
         {
             public override string Name { get; }
 
@@ -27,18 +27,18 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause(GuardClauseAssertion assertion)
         {
-            assertion.Verify(typeof(Question<object, Ability1>));
+            assertion.Verify(typeof(QuestionBase<object, Ability1>));
         }
 
         [Theory, DomainAutoData]
         public void Sut_VerifyInitializedMembers(ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify(typeof(Question<object, Ability1>).GetConstructors());
+            assertion.Verify(typeof(QuestionBase<object, Ability1>).GetConstructors());
         }
 
         [Theory, DomainAutoData]
         public void AnswerBy_ShouldReturnCorrectValue(
-            Question<object, Ability1> sut,
+            QuestionBase<object, Ability1> sut,
             IActor actor,
             object expected)
         {
@@ -54,7 +54,7 @@ namespace Tranquire.Tests
 
         [Theory, DomainAutoData]
         public void AnswerByWithAbility_ShouldReturnCorrectValue(
-            Question<object, Ability1> sut,
+            QuestionBase<object, Ability1> sut,
             IActor actor,
             Ability1 ability,
             object expected)

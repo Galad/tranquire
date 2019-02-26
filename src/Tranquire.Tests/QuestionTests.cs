@@ -10,7 +10,7 @@ namespace Tranquire.Tests
 {
     public class QuestionTests
     {
-        public class TestQuestion : Question<object>
+        public class TestQuestion : QuestionBase<object>
         {
             public override string Name { get; }
 
@@ -28,12 +28,12 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause(GuardClauseAssertion assertion)
         {
-            assertion.Verify(typeof(Question<object>));
+            assertion.Verify(typeof(QuestionBase<object>));
         }
 
         [Theory, DomainAutoData]
         public void AnswerByWithAbility_ShouldReturnCorrectValue(
-            Question<object> sut,
+            QuestionBase<object> sut,
             IActor actor,
             object expected)
         {

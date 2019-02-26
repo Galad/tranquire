@@ -6,7 +6,7 @@
     /// <typeparam name="T">The ability required for the contexts</typeparam>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
 #pragma warning disable CS0618 // Type or member is obsolete
-    public abstract class Action<T, TResult> : IAction<T, TResult>
+    public abstract class ActionBase<T, TResult> : IAction<T, TResult>
 #pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>
@@ -112,7 +112,7 @@
     /// </summary>
     /// <typeparam name="TResult">The type returned by the action. Use the <see cref="Unit"/> to represent void actions</typeparam>
 #pragma warning disable CS0618 // Type or member is obsolete
-    public abstract class Action<TResult> : IAction<TResult>
+    public abstract class ActionBase<TResult> : IAction<TResult>
 #pragma warning restore CS0618 // Type or member is obsolete
     {
         /// <summary>

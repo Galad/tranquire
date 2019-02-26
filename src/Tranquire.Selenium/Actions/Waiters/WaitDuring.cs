@@ -10,7 +10,7 @@ namespace Tranquire.Selenium.Actions.Waiters
     /// <summary>
     /// Wait during the specified amount of time
     /// </summary>
-    public sealed class WaitDuring : ActionUnit
+    public sealed class WaitDuring : ActionBaseUnit
     {
         private readonly TimeSpan _timeToWait;
 

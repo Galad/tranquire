@@ -77,7 +77,7 @@ namespace Tranquire
             return new DiscardActionResult<TResult>(action);
         }
 
-        private sealed class DiscardActionResult<TResult> : ActionUnit
+        private sealed class DiscardActionResult<TResult> : ActionBaseUnit
         {
             private readonly IAction<TResult> _action;
 

@@ -7,7 +7,7 @@ using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.Questions
 {
-    public class DisplayedItems : Question<ImmutableArray<Model.ToDoItem>, WebBrowser>
+    public class DisplayedItems : QuestionBase<ImmutableArray<Model.ToDoItem>, WebBrowser>
     {
         protected override ImmutableArray<Model.ToDoItem> Answer(IActor actor, WebBrowser ability)
         {

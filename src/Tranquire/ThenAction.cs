@@ -8,7 +8,7 @@ namespace Tranquire
     /// Represent an action that verifies the answer of a question
     /// </summary>
     /// <typeparam name="T">The question answer type</typeparam>
-    public sealed class ThenAction<T> : Action<T>
+    public sealed class ThenAction<T> : ActionBase<T>
     {
         /// <summary>
         /// Gets the question

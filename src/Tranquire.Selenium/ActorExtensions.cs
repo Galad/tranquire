@@ -112,9 +112,7 @@ namespace Tranquire.Selenium
             {
                 throw new ArgumentNullException(nameof(screenshotNameOrFormat));
             }
-
-            Guard.ForNull(actor, nameof(actor));
-            Guard.ForNull(screenshotNameOrFormat, nameof(screenshotNameOrFormat));            
+            
             var id = 0;
 
             string screenshotFormat;

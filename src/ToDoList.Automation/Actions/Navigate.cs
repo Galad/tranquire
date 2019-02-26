@@ -3,7 +3,7 @@ using Tranquire.Selenium;
 
 namespace ToDoList.Automation.Actions
 {
-    public class Navigate : Tranquire.ActionUnit<WebBrowser>
+    public class Navigate : Tranquire.ActionBaseUnit<WebBrowser>
     {
         private readonly string _url;
 
