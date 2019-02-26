@@ -21,8 +21,8 @@ namespace Tranquire
     /// </summary>
     /// <typeparam name="TAnswer">The answer's type</typeparam>
     /// <typeparam name="TAbility">The type of the ability required to answer this question</typeparam>
-    [Obsolete("Prefer using IQuestion<TAnswer> when exposing a question, or inheriting the abstract class Question<TAnswer, TAbility> when implementing one.", false)]
-    public interface IQuestion<out TAnswer, in TAbility> : IQuestion<TAnswer>
+    [Obsolete("Prefer using IQuestion<TAnswer> when exposing a question, or inheriting the abstract class Question<TAbility, TAnswer> when implementing one.", false)]
+    public interface IQuestion<in TAbility, out TAnswer> : IQuestion<TAnswer>
     {
         /// <summary>
         /// Answers the question
