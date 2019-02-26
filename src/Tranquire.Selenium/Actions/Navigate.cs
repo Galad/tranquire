@@ -5,7 +5,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Navigate to an url
     /// </summary>
-    public sealed class Navigate : ActionUnit<WebBrowser>
+    public sealed class Navigate : ActionBaseUnit<WebBrowser>
     {
         /// <summary>
         /// Gets the Uri to navigate to 

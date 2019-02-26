@@ -12,7 +12,7 @@ namespace Tranquire.Tests
         {
         }
 
-        public class ActionExecuteWhen : Action<TestAbility, object>
+        public class ActionExecuteWhen : ActionBase<TestAbility, object>
         {
             public IActor Actor;
             private readonly IAction<object> _action;
@@ -38,7 +38,7 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteGiven : Action<TestAbility, object>
+        public class ActionExecuteGiven : ActionBase<TestAbility, object>
         {
             public IActor Actor;
             private readonly IAction<object> _action;
@@ -63,7 +63,7 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteWhenAndGivenNotOverridden : Action<TestAbility, object>
+        public class ActionExecuteWhenAndGivenNotOverridden : ActionBase<TestAbility, object>
         {
             private readonly IAction<object> _action;
             public override string Name => "";
@@ -80,7 +80,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Action<TestAbility, object> sut)
+        public void Sut_ShouldBeAction(ActionBase<TestAbility, object> sut)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             Assert.IsAssignableFrom<IAction<TestAbility, object>>(sut);

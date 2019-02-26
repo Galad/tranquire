@@ -117,7 +117,7 @@ namespace ToDoList.Specifications
             Context.Actor().When(ToDoItem.RemoveAToDoItem(item));
         }
 
-        private class ActorHtmlReportQuestion : Question<string, ISeleniumReporter>
+        private class ActorHtmlReportQuestion : QuestionBase<ISeleniumReporter, string>
         {
             public const string Id = "227F5D1E-F89D-455E-93B4-9A2A1D808545";
             public override string Name => Id;
@@ -125,7 +125,7 @@ namespace ToDoList.Specifications
             protected override string Answer(IActor actor, ISeleniumReporter ability) => ability.GetHtmlDocument();
         }
 
-        private sealed class SaveScreenshotsAction : ActionUnit<ISeleniumReporter>
+        private sealed class SaveScreenshotsAction : ActionBaseUnit<ISeleniumReporter>
         {
             public const string Id = "57BF81C4-26A6-45CD-8D70-6F50425CB578";
             public override string Name => Id;

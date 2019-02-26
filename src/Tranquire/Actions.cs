@@ -57,7 +57,7 @@ namespace Tranquire
             return new ResultAction<TResult>(result);
         }
 
-        private class DelegateAction : ActionUnit
+        private class DelegateAction : ActionBaseUnit
         {
             public override string Name { get; }
             public System.Action<IActor> Action { get; }
@@ -90,7 +90,7 @@ namespace Tranquire
             return new DelegateAction(name, action);
         }
 
-        private class DelegateAction<T> : ActionUnit<T>
+        private class DelegateAction<T> : ActionBaseUnit<T>
         {
             public override string Name { get; }
             public System.Action<IActor, T> Action { get; }
@@ -125,7 +125,7 @@ namespace Tranquire
             return new DelegateAction<T>(name, action);
         }
 
-        private class FuncAction<TResult> : Action<TResult>
+        private class FuncAction<TResult> : ActionBase<TResult>
         {
             public override string Name { get; }
             public Func<IActor, TResult> Action { get; }
@@ -158,7 +158,7 @@ namespace Tranquire
             return new FuncAction<T>(name, action);
         }
 
-        private class FuncAction<TAbility, TResult> : Action<TAbility, TResult>
+        private class FuncAction<TAbility, TResult> : ActionBase<TAbility, TResult>
         {
             public override string Name { get; }
             public Func<IActor, TAbility, TResult> Action { get; }
@@ -194,12 +194,12 @@ namespace Tranquire
         }
 
         /// <summary>
-        /// Create an action that use the <paramref name="givenAction"/> when it is called with <see cref="Tranquire.Action{TResult}.ExecuteGivenAs(IActor)"/>, and <paramref name="whenAction"/> when it is called with <see cref="Tranquire.Action{TResult}.ExecuteWhenAs(IActor)"/>
+        /// Create an action that use the <paramref name="givenAction"/> when it is called with <see cref="Tranquire.ActionBase{TResult}.ExecuteGivenAs(IActor)"/>, and <paramref name="whenAction"/> when it is called with <see cref="Tranquire.ActionBase{TResult}.ExecuteWhenAs(IActor)"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="name">The action name</param>
-        /// <param name="givenAction">The action that is executed when the <see cref="Tranquire.Action{TResult}.ExecuteGivenAs(IActor)"/> is called on the returned action</param>
-        /// <param name="whenAction">The action that is executed when the <see cref="Tranquire.Action{TResult}.ExecuteWhenAs(IActor)"/> is called on the returned action</param>
+        /// <param name="givenAction">The action that is executed when the <see cref="Tranquire.ActionBase{TResult}.ExecuteGivenAs(IActor)"/> is called on the returned action</param>
+        /// <param name="whenAction">The action that is executed when the <see cref="Tranquire.ActionBase{TResult}.ExecuteWhenAs(IActor)"/> is called on the returned action</param>
         /// <returns>Test</returns>
         public static DispatchAction<T> CreateDispatched<T>(
             string name,
@@ -233,7 +233,7 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TTag"></typeparam>
-        internal class TaggedAction<T, TTag> : Action<IActionTags<TTag>, T>
+        internal class TaggedAction<T, TTag> : ActionBase<IActionTags<TTag>, T>
         {
             private readonly ImmutableDictionary<TTag, IAction<T>> _actions;
 

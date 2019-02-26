@@ -6,7 +6,7 @@ namespace Tranquire.Selenium.Actions
     /// <summary>
     /// Allow to switch to a frame and go back to the parent frame
     /// </summary>
-    public class UsingIFrame : Action<WebBrowser, IDisposable>
+    public class UsingIFrame : ActionBase<WebBrowser, IDisposable>
     {
         private readonly ITarget _target;
         /// <summary>
@@ -76,7 +76,7 @@ namespace Tranquire.Selenium.Actions
             #endregion
         }
 
-        private class SwitchToParentIFrame : ActionUnit<WebBrowser>
+        private class SwitchToParentIFrame : ActionBaseUnit<WebBrowser>
         {
             protected override void ExecuteWhen(IActor actor, WebBrowser ability)
             {

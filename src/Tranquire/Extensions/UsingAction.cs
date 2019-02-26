@@ -6,7 +6,7 @@ namespace Tranquire.Extensions
     /// Represents an action that creates a <see cref="IDisposable"/> and executes the provided action. The <see cref="IDisposable"/> is finally disposed.
     /// </summary>
     /// <typeparam name="T">The action return type</typeparam>    
-    public sealed class UsingAction<T> : Action<T>
+    public sealed class UsingAction<T> : ActionBase<T>
     {
         /// <summary>
         /// Gets the action that creates the <see cref="IDisposable"/> instance that was provided in the constructor

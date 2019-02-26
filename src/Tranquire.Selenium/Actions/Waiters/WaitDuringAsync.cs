@@ -6,7 +6,7 @@ namespace Tranquire.Selenium.Actions.Waiters
     /// <summary>
     /// Wait during the specified amount of time
     /// </summary>
-    public sealed class WaitDuringAsync : Action<Task>
+    public sealed class WaitDuringAsync : ActionBase<Task>
     {
         private readonly TimeSpan _timeToWait;
 

@@ -6,7 +6,7 @@ namespace Tranquire.Extensions
     /// Allows to execute an action only if the result of the predicate is true
     /// </summary>
     /// <typeparam name="T">The return type of the action</typeparam>
-    public sealed class IfAction<T> : Action<T>
+    public sealed class IfAction<T> : ActionBase<T>
     {
         /// <summary>
         /// Gets the action to execute if the predicate is true
@@ -63,7 +63,7 @@ namespace Tranquire.Extensions
     /// </summary>
     /// <typeparam name="T">The return type of the action</typeparam>
     /// <typeparam name="TAbility">The predicate ability type</typeparam>
-    public sealed class IfAction<TAbility, T> : Action<TAbility, T>
+    public sealed class IfAction<TAbility, T> : ActionBase<TAbility, T>
     {
         /// <summary>
         /// Gets the action to execute if the predicate is true

@@ -7,7 +7,7 @@ namespace Tranquire.Extensions
     /// </summary>
     /// <typeparam name="TSource">The result type of the source question</typeparam>
     /// <typeparam name="TResult">The result type of the selector function</typeparam>
-    public sealed class SelectManyQuestion<TSource, TResult> : Question<TResult>
+    public sealed class SelectManyQuestion<TSource, TResult> : QuestionBase<TResult>
     {
         private readonly SelectMany<IQuestion<TSource>, TSource, IQuestion<TResult>, TResult> _selectMany;
 

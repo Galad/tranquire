@@ -8,7 +8,7 @@ namespace Tranquire.Selenium.Actions.Selects
     /// Represent an action used to select values on an element
     /// </summary>
     /// <typeparam name="TValue">The type of the value to select</typeparam>
-    public class SelectByMany<TValue> : ActionUnit<WebBrowser>
+    public class SelectByMany<TValue> : ActionBaseUnit<WebBrowser>
     {
         private readonly ISelectStrategy<TValue> _selectStrategy;
         private readonly ITarget _target;

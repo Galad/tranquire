@@ -7,7 +7,7 @@ namespace Tranquire.Selenium.Actions.Clicks
     /// <summary>
     /// Click on a target. If the click fails, it will be retried every 500ms until the timout expires
     /// </summary>
-    public sealed class ClickOnActionWithRetry : ActionUnit
+    public sealed class ClickOnActionWithRetry : ActionBaseUnit
     {
         /// <summary>
         /// Gets the action used to click on the target

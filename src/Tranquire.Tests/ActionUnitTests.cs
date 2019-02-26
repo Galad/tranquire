@@ -8,7 +8,7 @@ namespace Tranquire.Tests
 {
     public class ActionUnitTests
     {
-        public class ActionExecuteWhen : ActionUnit
+        public class ActionExecuteWhen : ActionBaseUnit
         {
             public IActor Actor;
             private readonly IAction<Unit> _action;
@@ -31,7 +31,7 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteGiven : ActionUnit
+        public class ActionExecuteGiven : ActionBaseUnit
         {
             public IActor Actor;
             private readonly IAction<Unit> _action;
@@ -53,7 +53,7 @@ namespace Tranquire.Tests
             }
         }
 
-        public class ActionExecuteWhenAndGivenNotOverridden : ActionUnit
+        public class ActionExecuteWhenAndGivenNotOverridden : ActionBaseUnit
         {
             private readonly IAction<Unit> _action;
             public override string Name => "";
@@ -70,7 +70,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(Action<object> sut)
+        public void Sut_ShouldBeAction(ActionBase<object> sut)
         {
             Assert.IsAssignableFrom<IAction<object>>(sut);
         }

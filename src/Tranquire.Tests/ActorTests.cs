@@ -86,7 +86,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void WhenWithAbility_ShouldCallExecuteWhen(
          [Greedy]Actor sut,
-         Mock<Action<Ability2, object>> action,
+         Mock<ActionBase<Ability2, object>> action,
          object expected)
         {
             //arrange
@@ -117,7 +117,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void GivenWithAbility_ShouldCallExecuteGiven(
           [Greedy]Actor sut,
-          Mock<Action<Ability2, object>> action,
+          Mock<ActionBase<Ability2, object>> action,
           object expected)
         {
             //arrange
@@ -165,7 +165,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void AsksFor_WithAbility_ShouldReturnCorrectValue(
           Actor sut,
-          Mock<Question<object, Ability1>> question,
+          Mock<QuestionBase<object, Ability1>> question,
           object expected)
         {
             //arrange
@@ -211,7 +211,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Name_WhenCallingGivenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
-            Mock<Action<Ability1, string>> command)
+            Mock<ActionBase<Ability1, string>> command)
         {
             //arrange
             var expected = sut.Name;
@@ -227,7 +227,7 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Name_WhenCallingWhenWithAbility_ShouldReturnTheCorrectValue(
             [Greedy]Actor sut,
-            Mock<Action<Ability1, string>> command)
+            Mock<ActionBase<Ability1, string>> command)
         {
             //arrange
             var expected = sut.Name;
@@ -246,9 +246,9 @@ namespace Tranquire.Tests
             {
                 return new System.Action<Actor, IFixture>[]
                 {
-                    (sut, fixture) => sut.AsksFor(fixture.Create<Question<string, AbilityTest>>()),
-                    (sut, fixture) => sut.When(fixture.Create<Action<AbilityTest, object>>()),
-                    (sut, fixture) => sut.Given(fixture.Create<Action<AbilityTest, object>>()),
+                    (sut, fixture) => sut.AsksFor(fixture.Create<QuestionBase<string, AbilityTest>>()),
+                    (sut, fixture) => sut.When(fixture.Create<ActionBase<AbilityTest, object>>()),
+                    (sut, fixture) => sut.Given(fixture.Create<ActionBase<AbilityTest, object>>()),
                     //(sut, fixture) => sut.Execute(fixture.Create<IAction<AbilityTest, AbilityTest, object>>()),
                 }
                 .Select(a => new object[] { a });
