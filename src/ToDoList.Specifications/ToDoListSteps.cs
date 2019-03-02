@@ -50,12 +50,13 @@ namespace ToDoList.Specifications
                                     GetScreenshotsPath(),
                                     screenshotName)
                                     .AddTextObservers(new DebugObserver())
-                                    .WithTakeScreenshotStrategy(new AlwaysTakeScreenshotStrategy()),
+                                    .WithCanNotify(new CanNotify())
+                                    .WithTakeScreenshotStrategy(new TakeScreenshotOnErrorStrategy()),                                
                                 out var seleniumReporter)
                             .HighlightTargets()
                             .SlowSelenium(delay)
-                            .CanUse(WebBrowser.With(driver));
-            Context.Set(seleniumReporter);
+                            .CanUse(WebBrowser.With(driver))
+                            .CanUse(seleniumReporter);            
             Context.Set(actor);
             Context.Set(driver);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
@@ -79,13 +80,12 @@ namespace ToDoList.Specifications
 
         [AfterScenario]
         public void After()
-        {
-            Context.Get<ChromeDriver>().Dispose();            
+        {        
             Debug.WriteLine(_reportingStringBuilder.ToString());
-            var seleniumReporter = Context.Get<ISeleniumReporter>();
-            seleniumReporter.SaveScreenshots();
-            Debug.WriteLine(seleniumReporter.GetXmlDocument().ToString());
-            File.WriteAllText(Path.Combine(GetScreenshotsPath(), "Report.html"), seleniumReporter.GetHtmlDocument());
+            Context.Actor().Given(new SaveScreenshotsAction());
+            var htmReport = Context.Actor().AsksFor(new ActorHtmlReportQuestion());
+            Context.Get<ChromeDriver>().Dispose();
+            File.WriteAllText(Path.Combine(GetScreenshotsPath(), "Report.html"), htmReport);
         }
 
         [Given(@"I have an empty to-do list")]
@@ -115,6 +115,35 @@ namespace ToDoList.Specifications
         public void WhenIRemoveTheItem(string item)
         {
             Context.Actor().When(ToDoItem.RemoveAToDoItem(item));
+        }
+
+        private class ActorHtmlReportQuestion : Question<string, ISeleniumReporter>
+        {
+            public const string Id = "227F5D1E-F89D-455E-93B4-9A2A1D808545";
+            public override string Name => Id;
+
+            protected override string Answer(IActor actor, ISeleniumReporter ability) => ability.GetHtmlDocument();
+        }
+
+        private sealed class SaveScreenshotsAction : ActionUnit<ISeleniumReporter>
+        {
+            public const string Id = "57BF81C4-26A6-45CD-8D70-6F50425CB578";
+            public override string Name => Id;
+
+            protected override void ExecuteWhen(IActor actor, ISeleniumReporter ability) => ability.SaveScreenshots();
+        }
+
+        private sealed class CanNotify : ICanNotify
+        {
+            public bool Action<TResult>(IAction<TResult> action)
+            {
+                return action == null || !action.Name.EndsWith(SaveScreenshotsAction.Id);
+            }
+
+            public bool Question<TResult>(IQuestion<TResult> question)
+            {
+                return question == null || !question.Name.EndsWith(ActorHtmlReportQuestion.Id);
+            }
         }
     }
 }
