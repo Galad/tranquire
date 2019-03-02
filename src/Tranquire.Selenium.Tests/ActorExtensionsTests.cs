@@ -56,7 +56,7 @@ namespace Tranquire.Selenium.Tests
             //assert
             actual.Should().BeOfType<TakeScreenshot>().Which.NextScreenshotName().Should().Be(expectedName + "_01");
         }
-        
+
         [Theory, DomainAutoData]
         public void TakeScreenshots_NextScreenshotName_CalledMultipleTimes_ShouldReturnCorrectValue(
             [Modest]Actor actor,
@@ -120,7 +120,7 @@ namespace Tranquire.Selenium.Tests
             //act
             new System.Action(() => ActorExtensions.TakeScreenshots(actor, directory, $"{startName}{{0:0000}}{endName}{{1}}"))
                       .Should().ThrowExactly<FormatException>();
-            
+
             //assert            
         }
 
@@ -166,7 +166,7 @@ namespace Tranquire.Selenium.Tests
                     observers
                     );
 #pragma warning restore CS0618 // Type or member is obsolete
-            var canNotify = new CompositeCanNotify();
+            var canNotify = SeleniumReportingConfiguration.DefaultCanNotify;
             TestWithSeleniumReporting(actualSeleniumReporter,
                                       actual,
                                       actor,
@@ -204,7 +204,7 @@ namespace Tranquire.Selenium.Tests
                                       screenshotDirectory,
                                       screenshotName,
                                       observers,
-                                      canNotify,
+                                      new CompositeCanNotify(canNotify, SeleniumReportingConfiguration.DefaultCanNotify),
                                       _defaultTakeScreenshotStrategy);
         }
 
@@ -221,7 +221,7 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<IActor>(),
                         fixture.Create<SeleniumReportingConfiguration>(),
                         Array.Empty<IObserver<string>>(),
-                        new CompositeCanNotify(),
+                        SeleniumReportingConfiguration.DefaultCanNotify,
                         _defaultTakeScreenshotStrategy
                     };
                 }
@@ -233,7 +233,7 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<IActor>(),
                         fixture.Create<SeleniumReportingConfiguration>().AddTextObservers(observers),
                         observers,
-                        new CompositeCanNotify(),
+                        SeleniumReportingConfiguration.DefaultCanNotify,
                         _defaultTakeScreenshotStrategy
                         };
                 }
@@ -245,7 +245,10 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<IActor>(),
                         fixture.Create<SeleniumReportingConfiguration>().WithCanNotify(canNotify),
                         Array.Empty<IObserver<string>>(),
-                        canNotify,
+                        new CompositeCanNotify(
+                            canNotify,
+                            SeleniumReportingConfiguration.DefaultCanNotify
+                        ),
                         _defaultTakeScreenshotStrategy
                         };
                 }
@@ -257,7 +260,7 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<IActor>(),
                         fixture.Create<SeleniumReportingConfiguration>().WithTakeScreenshotStrategy(takeScreenshotStrategy),
                         Array.Empty<IObserver<string>>(),
-                        new CompositeCanNotify(),
+                        SeleniumReportingConfiguration.DefaultCanNotify,
                         takeScreenshotStrategy
                         };
                 }
@@ -273,7 +276,10 @@ namespace Tranquire.Selenium.Tests
                                                                         .WithCanNotify(canNotify)
                                                                         .AddTextObservers(observers),
                         observers,
-                        canNotify,
+                        new CompositeCanNotify(
+                            canNotify,
+                            SeleniumReportingConfiguration.DefaultCanNotify
+                        ),
                         takeScreenshotStrategy
                         };
                 }
@@ -291,8 +297,8 @@ namespace Tranquire.Selenium.Tests
         {
             var actual = ActorExtensions.WithSeleniumReporting(
                     actor,
-                    configuration,                    
-                    out var actualSeleniumReporter                    
+                    configuration,
+                    out var actualSeleniumReporter
                     );
             TestWithSeleniumReporting(actualSeleniumReporter,
                                       actual,
@@ -308,14 +314,14 @@ namespace Tranquire.Selenium.Tests
         private static void TestWithSeleniumReporting(
             ISeleniumReporter actualSeleniumReporter,
             Actor actual,
-            Actor actor, 
-            IActor iactor, 
-            string screenshotDirectory, 
-            string screenshotName, 
+            Actor actor,
+            IActor iactor,
+            string screenshotDirectory,
+            string screenshotName,
             IObserver<string>[] observers,
             ICanNotify canNotify,
             ITakeScreenshotStrategy takeScreenshotStrategy)
-        {            
+        {
             // assert 
             var xmlDocumentObserver = new XmlDocumentObserver();
             var takeScreenshot = actual.InnerActorBuilder(iactor).Should().BeOfType<TakeScreenshot>().Which;
@@ -346,7 +352,7 @@ namespace Tranquire.Selenium.Tests
                         RenderedReportingObserver.DefaultRenderer
                         )
                     ),
-                canNotify
+                    canNotify
                 )
                 .InnerActorBuilder(iactor) as ReportingActor;
             reportingActor.Should().BeEquivalentTo(expectedReportingActor, o => o.Excluding(a => a.Actor)

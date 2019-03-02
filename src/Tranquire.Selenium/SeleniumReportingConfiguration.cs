@@ -11,6 +11,21 @@ namespace Tranquire.Selenium
     public sealed class SeleniumReportingConfiguration
     {
         private readonly ICanNotify _canNotify;
+        /// <summary>
+        /// Get the <see cref="ICanNotify"/> depe
+        /// </summary>
+        public static ICanNotify DefaultCanNotify { get; } = new CannotNotifyGetWebDriver();
+
+        private sealed class CannotNotifyGetWebDriver : ICanNotify
+        {
+            public bool Action<TResult>(IAction<TResult> action) => true;
+
+            public bool Question<TResult>(IQuestion<TResult> question)
+            {
+                return question == null ||
+                       question.Name != TakeScreenshotOnErrorStrategy.GetWebBrowserQuestionName;
+            }
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="SeleniumReportingConfiguration"/>
@@ -60,11 +75,8 @@ namespace Tranquire.Selenium
 
         internal Actor ApplyWithReporting(Actor actor, IObserver<ActionNotification> observer)
         {
-            if (_canNotify == null)
-            {
-                return actor.WithReporting(observer);
-            }
-            return actor.WithReporting(observer, _canNotify);
+            var canNotify = _canNotify == null ? DefaultCanNotify : new CompositeCanNotify(_canNotify, DefaultCanNotify);            
+            return actor.WithReporting(observer, canNotify);            
         }
 
         /// <summary>
