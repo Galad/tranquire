@@ -11,7 +11,10 @@ namespace Tranquire.Selenium
     public sealed class SeleniumReportingConfiguration
     {
         private readonly ICanNotify _canNotify;
-        private static readonly ICanNotify _cannotNotifyGetWebDriver = new CannotNotifyGetWebDriver();
+        /// <summary>
+        /// Get the <see cref="ICanNotify"/> depe
+        /// </summary>
+        public static ICanNotify DefaultCanNotify { get; } = new CannotNotifyGetWebDriver();
 
         private sealed class CannotNotifyGetWebDriver : ICanNotify
         {
@@ -72,11 +75,8 @@ namespace Tranquire.Selenium
 
         internal Actor ApplyWithReporting(Actor actor, IObserver<ActionNotification> observer)
         {
-            if (_canNotify == null)
-            {
-                return actor.WithReporting(observer);
-            }
-            return actor.WithReporting(observer, new CompositeCanNotify(_canNotify, _cannotNotifyGetWebDriver));            
+            var canNotify = _canNotify == null ? DefaultCanNotify : new CompositeCanNotify(_canNotify, DefaultCanNotify);            
+            return actor.WithReporting(observer, canNotify);            
         }
 
         /// <summary>

@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tranquire.Reporting
 {
     /// <summary>
     /// A composite implementation of <see cref="ICanNotify"/>, where the action or question can send a notifiy only if all the inner <see cref="ICanNotify"/> returns true
     /// </summary>
-    public class CompositeCanNotify : ICanNotify
+    public class CompositeCanNotify : ICanNotify, IEnumerable<ICanNotify>
     {
         private readonly ICanNotify[] _innerCanNotify;
 
@@ -20,7 +22,12 @@ namespace Tranquire.Reporting
 
         /// <inheritsdoc />
         public bool Action<TResult>(IAction<TResult> action) => _innerCanNotify.All(c => c.Action(action));
+
         /// <inheritsdoc />
         public bool Question<TResult>(IQuestion<TResult> question) => _innerCanNotify.All(c => c.Question(question));
+
+        IEnumerator IEnumerable.GetEnumerator() => _innerCanNotify.GetEnumerator();
+        /// <inheritdoc />
+        public IEnumerator<ICanNotify> GetEnumerator() => ((IEnumerable<ICanNotify>)_innerCanNotify).GetEnumerator();
     }
 }
