@@ -57,6 +57,12 @@ namespace Tranquire.Selenium.Tests.Questions
             TestQuestion("Integer", t => t.AsInteger(), 2016);
         }
 
+        [Fact]
+        public void DoubleQuestion_ShouldReturnCorrectValue()
+        {
+            TestQuestion("Double", t => t.AsDouble(), 9.5);
+        }
+
         [Theory, InlineData("BooleanUpperCase"), InlineData("BooleanLowerCase")]
         public void BooleanQuestion_ShouldReturnCorrectValue(string id)
         {
@@ -109,6 +115,13 @@ namespace Tranquire.Selenium.Tests.Questions
         {
             var expected = new[] { 2, 20, 99, 500 };
             TestQuestionMany("many-integer", t => t.Many().AsInteger(), expected);
+        }
+
+        [Fact]
+        public void DoubleQuestionMany_ShouldReturnCorrectValue()
+        {
+            var expected = new[] { 0, 9.5, 50, 500.99 };
+            TestQuestionMany("many-double", t => t.Many().AsDouble(), expected);
         }
 
         [Fact]
