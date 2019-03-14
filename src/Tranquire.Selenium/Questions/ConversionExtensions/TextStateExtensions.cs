@@ -14,7 +14,9 @@ namespace Tranquire.Selenium.Questions
         public static readonly IConverter<string, int> IntegerConverter = new GenericConverter<string, int>((s, c) => int.Parse(s, c));
         public static readonly IConverter<string, bool> BooleanConverter = new GenericConverter<string, bool>(s => bool.Parse(s));
         public static readonly IConverter<string, DateTime> DateTimeConverter = new GenericConverter<string, DateTime>((s, c) => DateTime.Parse(s, c));
+        public static readonly IConverter<string, double> DoubleConverter = new GenericConverter<string, double>((s, c) => double.Parse(s, c));
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         #region Single
 
         /// <summary>
@@ -37,6 +39,17 @@ namespace Tranquire.Selenium.Questions
         public static IQuestion<int> AsInteger<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
         {
             return state.As(IntegerConverter);
+        }
+
+        /// <summary>
+        /// Creates a question returning the string value as an integer
+        /// </summary>
+        /// <typeparam name="TState">The type of the state</typeparam>
+        /// <param name="state">The source state</param>
+        /// <returns></returns>
+        public static IQuestion<double> AsDouble<TState>(this SingleUIState<string, TState> state) where TState : SingleUIState<string, TState>
+        {
+            return state.As(DoubleConverter);
         }
 
         /// <summary>
@@ -95,6 +108,16 @@ namespace Tranquire.Selenium.Questions
         public static IQuestion<ImmutableArray<int>> AsInteger(this ManyUIState<string> state)
         {
             return state.As(IntegerConverter);
+        }
+
+        /// <summary>
+        /// Creates a question returning the string values as integers
+        /// </summary>
+        /// <param name="state">The source state</param>
+        /// <returns></returns>
+        public static IQuestion<ImmutableArray<double>> AsDouble(this ManyUIState<string> state)
+        {
+            return state.As(DoubleConverter);
         }
 
         /// <summary>
