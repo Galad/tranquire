@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tranquire.Reporting;
 using Tranquire.Selenium.Extensions;
+using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
 using Xunit;
 

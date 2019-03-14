@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>UIModels</title>
+</head>
+<body>
+    <div class="model1">
+        <span class="title">The title</span>
+        <span class="value">1</span>
+        <span class="bool">true</span>
+        <span id="date">01/01/2019 01:00:00</span>
+        <span id="double">9.5</span>
+        <span class="xpath">The XPath text</span>
+        <span class="css-selector">The CSS selector text</span>
+        <div>The tag name text</div>
+    </div>
+
+    <div class="model2">
+        <span id="text">The text</span>
+        <span id="classes" class="class1 class2 class3">text</span>
+        <span id="css-value" style="border-style: dashed"></span>
+        <input id="enabled" />
+        <input id="disabled" disabled />
+        <div id="html-attribute" title="the title" />
+        <span id="presence" />
+        <select>
+            <option selected="selected" id="selected">Some option</option>
+            <option id="not-selected">Some option</option>
+        </select>
+        <select id="selected-value">
+            <option value="1">Some value</option>
+            <option value="2" selected>Some other option</option>
+        </select>
+        <select id="selected-values" multiple>
+            <option value="1">Some value</option>
+            <option value="2" selected>Some other option</option>
+            <option value="3" selected>Some other option</option>
+            <option value="4">Some other option</option>
+        </select>
+        <input id="value" value="the value" />
+        <span id="visibility-visible">Some text</span>
+        <span id="visibility-none" style="display: none;">Some text</span>
+    </div>
+
+    <div class="modelContainer">
+        <div class="model2">
+            <span class="title">The title1</span>
+            <span class="value">1</span>
+            <input type="text" value="The text2" />
+        </div>
+
+        <div class="model2">
+            <span class="title">The title2</span>
+            <span class="value">2</span>
+            <input type="text" value="The text2" />
+        </div>
+
+        <div class="model2">
+            <span class="title">The title3</span>
+            <span class="value">3</span>
+            <input type="text" value="The text3" />
+        </div>
+    </div>
+</body>
+</html>

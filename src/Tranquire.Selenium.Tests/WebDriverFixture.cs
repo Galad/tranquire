@@ -1,6 +1,7 @@
 ﻿using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Hosting;
 using Microsoft.Owin.StaticFiles;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Owin;
 using System;
@@ -13,7 +14,7 @@ namespace Tranquire.Selenium.Tests
     {
         public static int Port = 30000;
         private readonly IDisposable _host;
-        public Actor Actor { get; }
+        public IActorFacade Actor { get; }
         private readonly int _port;
         public ChromeDriver WebDriver { get; }
 
