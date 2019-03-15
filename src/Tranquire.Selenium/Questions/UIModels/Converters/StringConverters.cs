@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Tranquire.Selenium.Questions.UIModels.Converters
 {
-    internal sealed class TextConverters : IConverters<string>
+    internal sealed class StringConverters : IConverters<string>
     {
         public string Convert(string value, CultureInfo culture)
         {

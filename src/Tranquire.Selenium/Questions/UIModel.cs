@@ -34,9 +34,21 @@ namespace Tranquire.Selenium.Questions
         /// Creates a question for the given model type
         /// </summary>
         /// <typeparam name="T">The model type that contains properties targeting UI elements</typeparam>
-        /// <param name="containerTarget">The target that describe the container for the data</param>
+        /// <param name="containerTarget">The target that describe the container for the data</param>        
         /// <returns></returns>
         public static UIModel<T> Of<T>(ITarget containerTarget) where T : new()
+        {
+            return Of<T>(containerTarget, $"Get the model of {typeof(T).Name}");
+        }
+
+        /// <summary>
+        /// Creates a question for the given model type
+        /// </summary>
+        /// <typeparam name="T">The model type that contains properties targeting UI elements</typeparam>
+        /// <param name="containerTarget">The target that describe the container for the data</param>
+        /// <param name="name">The question name</param>
+        /// <returns></returns>
+        public static UIModel<T> Of<T>(ITarget containerTarget, string name) where T : new()
         {
             if (containerTarget == null)
             {
@@ -44,7 +56,7 @@ namespace Tranquire.Selenium.Questions
             }
 
             var modelInfo = _containers.GetOrAdd(typeof(T), _ => GetUIModelInfo<T>());
-            return new UIModel<T>(modelInfo, containerTarget);
+            return new UIModel<T>(modelInfo, containerTarget, name);
         }
 
         private static UIModelInfo GetUIModelInfo<T>() where T : new()
@@ -53,7 +65,7 @@ namespace Tranquire.Selenium.Questions
             var setValues = type.GetProperties()
                                  .Select(pi => (pi, targetAttribute: GetTargetAttribute(pi), uiStateAttribute: GetUIStateAttribute(pi)))
                                  .Where(p => p.targetAttribute != null)
-                                 .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.uiStateAttribute ?? new TextContentAttribute())))
+                                 .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
                                  .Select(f => ExecuteQuestions(f.pi, f.retrieveValue))
                                  .ToArray();
 
@@ -69,7 +81,6 @@ namespace Tranquire.Selenium.Questions
         {
             return pi.GetCustomAttributes(typeof(UIStateAttribute), true).Cast<UIStateAttribute>().SingleOrDefault();
         }
-
 
         private sealed class ModelConverterBySettingValues<T> : IConverter<IWebElement, T>
             where T : new()
@@ -100,15 +111,15 @@ namespace Tranquire.Selenium.Questions
             return (actor, container, culture, model) => pi.SetValue(model, f(actor, container, culture));
         }
 
-        private static Func<IActor, ITarget, CultureInfo, object> RetrieveValue(PropertyInfo pi, By by, UIStateAttribute valueAttribute)
+        private static Func<IActor, ITarget, CultureInfo, object> RetrieveValue(PropertyInfo pi, By by, string name, UIStateAttribute valueAttribute)
         {
-            var target = Target.The(pi.Name).LocatedBy(by);
+            var target = Target.The(name ?? pi.Name).LocatedBy(by);
             return ApplyGetConverter(target, pi.PropertyType, valueAttribute);
         }
 
         private static readonly IntegerConverters _integerConverters = new IntegerConverters();
         private static readonly BooleanConverters _booleanConverters = new BooleanConverters();
-        private static readonly TextConverters _textConverters = new TextConverters();
+        private static readonly StringConverters _textConverters = new StringConverters();
         private static readonly DateTimeConverters _dateTimeConverters = new DateTimeConverters();
         private static readonly DoubleConverters _doubleConverters = new DoubleConverters();
         private static readonly StringArrayConverters _stringArrayConverters = new StringArrayConverters();
