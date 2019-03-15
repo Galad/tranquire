@@ -108,6 +108,18 @@ namespace Tranquire.Selenium.Tests.Questions
             Assert.Equal(expected, actual);
         }
 
+        [Theory, DomainAutoData]
+        public void Name_Many_ShouldReturnCorrectValue(string expected)
+        {
+            //arrange
+            var modelContainerTarget = Target.The("Model container").LocatedBy(By.ClassName("model1"));
+            var question = UIModel.Of<Model1>(modelContainerTarget, expected).Many();
+            // act
+            var actual = question.Name;
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
         public class Model2
         {
             [Target(ByMethod.Id, "text")]
