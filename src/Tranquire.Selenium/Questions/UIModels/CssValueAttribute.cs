@@ -16,7 +16,7 @@ namespace Tranquire.Selenium.Questions.UIModels
         {
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ArgumentException(ExceptionMessages.ArgumentCannotBeNullOrEmpty, nameof(propertyName));
+                throw new ArgumentNullException(nameof(propertyName), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
             }
 
             PropertyName = propertyName;
