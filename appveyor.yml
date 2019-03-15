@@ -22,7 +22,7 @@ before_build:
 - echo %APPVEYOR_REPO_BRANCH%
 - echo %APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH%
 - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.pullrequest.key=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.base=$env:APPVEYOR_REPO_BRANCH" /d:"sonar.pullrequest.branch=$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.language=cs" }
-- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml"}
+- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.branch.name=$env:APPVEYOR_REPO_BRANCH"}
 build_script:
 - msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
 - ps: 
