@@ -14,12 +14,15 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// </summary>
         /// <param name="by">Define the method used to locate the element</param>
         /// <param name="value">The By value</param>
-        /// <param name="name">The target name. The default is the property name</param>
-        public TargetAttribute(ByMethod by, string value, string name = null)
+        public TargetAttribute(ByMethod by, string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(nameof(value), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
+            }
+
             ByMethod = by;
             Value = value;
-            Name = name;
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// <summary>
         /// Gets the target name
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
 
         internal By GetSeleniumBy()
         {

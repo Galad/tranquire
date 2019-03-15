@@ -14,21 +14,17 @@ namespace Tranquire.Selenium.Questions.UIModels
         private readonly UIModel.UIModelInfo _uIModelInfo;
         private readonly ITarget _containerTarget;
         private readonly CultureInfo _culture;
-
-        internal UIModel(UIModel.UIModelInfo uIModelInfo, ITarget containerTarget, CultureInfo culture)
+                
+        internal UIModel(UIModel.UIModelInfo uIModelInfo, ITarget containerTarget, string name, CultureInfo culture = null)
         {
             _uIModelInfo = uIModelInfo ?? throw new ArgumentNullException(nameof(uIModelInfo));
             _containerTarget = containerTarget ?? throw new ArgumentNullException(nameof(containerTarget));
-            _culture = culture ?? throw new ArgumentNullException(nameof(culture));
-        }
-
-        internal UIModel(UIModel.UIModelInfo uIModelInfo, ITarget containerTarget)
-            : this(uIModelInfo, containerTarget, CultureInfo.CurrentCulture)
-        {
+            _culture = culture ?? CultureInfo.CurrentCulture;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
         /// <inheritdoc />
-        public override string Name => $"Get the model of {typeof(T).Name}";
+        public override string Name { get; }
 
         /// <inheritdoc />
         protected override T Answer(IActor actor)
@@ -43,6 +39,15 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// </summary>
         /// <param name="culture">The new culture</param>
         /// <returns></returns>
-        public UIModel<T> WithCulture(CultureInfo culture) => new UIModel<T>(_uIModelInfo, _containerTarget, culture);
+        public UIModel<T> WithCulture(CultureInfo culture) => new UIModel<T>(_uIModelInfo, _containerTarget, Name, culture);
+
+        /// <summary>
+        /// Configure the question so that it finds all the elements matching the container target
+        /// </summary>
+        /// <returns></returns>
+        public UIModelMany<T> Many()
+        {
+            return new UIModelMany<T>(_uIModelInfo, _containerTarget, _culture, Name);
+        }
     }
 }
