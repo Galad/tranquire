@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tranquire.Selenium.Questions.UIModels
 {
@@ -17,6 +14,11 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// <param name="attributeName">The attribute name to retrive the value from</param>
         public HtmlAttributeAttribute(string attributeName)
         {
+            if (string.IsNullOrEmpty(attributeName))
+            {
+                throw new ArgumentNullException(nameof(attributeName), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
+            }
+
             AttributeName = attributeName;
         }
 
