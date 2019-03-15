@@ -26,14 +26,6 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// <inheritdoc />
         public override string Name { get; }
 
-        /// <summary>
-        /// Specifiy a different culture
-        /// </summary>
-        /// <param name="culture">The new culture</param>
-        /// <returns></returns>
-        public UIModelMany<T> WithCulture(CultureInfo culture) => new UIModelMany<T>(_uIModelInfo, _containerTarget, culture, Name);
-
-
         /// <inheritdoc />
         protected override ImmutableArray<T> Answer(IActor actor)
         {
