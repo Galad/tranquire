@@ -36,7 +36,7 @@ namespace Tranquire.Selenium.Questions
         /// <typeparam name="T">The model type that contains properties targeting UI elements</typeparam>
         /// <param name="containerTarget">The target that describe the container for the data</param>        
         /// <returns></returns>
-        public static UIModel<T> Of<T>(ITarget containerTarget) where T : new()
+        public static UIModel<T> Of<T>(ITarget containerTarget)
         {
             return Of<T>(containerTarget, $"Get the model of {typeof(T).Name}");
         }
@@ -48,7 +48,7 @@ namespace Tranquire.Selenium.Questions
         /// <param name="containerTarget">The target that describe the container for the data</param>
         /// <param name="name">The question name</param>
         /// <returns></returns>
-        public static UIModel<T> Of<T>(ITarget containerTarget, string name) where T : new()
+        public static UIModel<T> Of<T>(ITarget containerTarget, string name)
         {
             if (containerTarget == null)
             {
@@ -59,17 +59,54 @@ namespace Tranquire.Selenium.Questions
             return new UIModel<T>(modelInfo, containerTarget, name);
         }
 
-        private static UIModelInfo GetUIModelInfo<T>() where T : new()
+        private static UIModelInfo GetUIModelInfo<T>()
         {
             var type = typeof(T);
             var setValues = type.GetProperties()
+                                 .Where(pi => pi.CanRead && pi.CanWrite)
                                  .Select(pi => (pi, targetAttribute: GetTargetAttribute(pi), uiStateAttribute: GetUIStateAttribute(pi)))
                                  .Where(p => p.targetAttribute != null)
                                  .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
                                  .Select(f => ExecuteQuestions(f.pi, f.retrieveValue))
                                  .ToArray();
+            var constructors = type.GetConstructors()
+                                   .Select(c => new HashSet<(string, Type)>(c.GetParameters()
+                                                                            .Select(pi => (pi.Name.ToUpper(), pi.ParameterType))))
+                                  .ToArray();
+            var readonlyProperties = type.GetProperties()
+                                         .Where(pi => pi.CanRead && !pi.CanWrite)
+                                         .Select(pi => (pi, targetAttribute: GetTargetAttribute(pi), uiStateAttribute: GetUIStateAttribute(pi)))
+                                         .Where(p => p.targetAttribute != null)
+                                         .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
+                                         .ToDictionary(p => p.pi.Name.ToUpper(), p => p);
+            var constructorValues = type.GetConstructors()
+                                        .Select(c => GetPropertiesFromConstructor(c))                                  
+                                        .FirstOrDefault(p => p != null);
+            if (constructorValues == null)
+            {
+                throw new InvalidOperationException("A suitable constructor was not found for the readonly properties\n" +
+                    "Please provide a constructor with the same type and parameter names than the following properties\n" +
+                    string.Join("\n", readonlyProperties.Select(p => "- " + p.Value.pi.Name + ": " + p.Value.pi.PropertyType.Name))
+                    );
+            }
 
-            return new UIModelInfo(actor => new ModelConverterBySettingValues<T>(actor, setValues));
+            Func<IActor, ITarget, CultureInfo, IEnumerable<object>> getConstructorValues = (actor, target, culture) =>
+                constructorValues.Select(c => c(actor, target, culture));
+            return new UIModelInfo(actor => new ModelConverterBySettingValues<T>(actor, setValues, getConstructorValues));
+
+            Func<IActor, ITarget, CultureInfo, object>[] GetPropertiesFromConstructor(ConstructorInfo c)
+            {
+                var parameters = c.GetParameters();
+                var properties = parameters
+                        .TakeWhile(pi => readonlyProperties.ContainsKey(pi.Name.ToUpper()))
+                        .Select(pi => readonlyProperties[pi.Name.ToUpper()].retrieveValue)
+                        .ToArray();
+                if(properties.Length == readonlyProperties.Count)
+                {
+                    return properties;
+                }
+                return null;
+            }
         }
 
         private static TargetAttribute GetTargetAttribute(PropertyInfo pi)
@@ -83,26 +120,30 @@ namespace Tranquire.Selenium.Questions
         }
 
         private sealed class ModelConverterBySettingValues<T> : IConverter<IWebElement, T>
-            where T : new()
         {
             private readonly IActor actor;
             private readonly IEnumerable<Action<IActor, ITarget, CultureInfo, object>> setValues;
+            private readonly Func<IActor, ITarget, CultureInfo, IEnumerable<object>> getConstructorValues;
 
-            public ModelConverterBySettingValues(IActor actor, IEnumerable<Action<IActor, ITarget, CultureInfo, object>> setValues)
+            public ModelConverterBySettingValues(IActor actor,
+                                                 IEnumerable<Action<IActor, ITarget, CultureInfo, object>> setValues,
+                                                 Func<IActor, ITarget, CultureInfo, IEnumerable<object>> getConstructorValues)
             {
                 this.actor = actor;
                 this.setValues = setValues;
+                this.getConstructorValues = getConstructorValues;
             }
 
             public T Convert(IWebElement value, CultureInfo culture)
             {
-                var model = new T();
                 var container = Target.The("container").LocatedByWebElement(value);
+                var constructorValues = getConstructorValues(actor, container, culture);
+                var model = Activator.CreateInstance(typeof(T), constructorValues.ToArray());
                 foreach (var setValue in setValues)
                 {
                     setValue(actor, container, culture, model);
                 }
-                return model;
+                return (T)model;
             }
         }
 
