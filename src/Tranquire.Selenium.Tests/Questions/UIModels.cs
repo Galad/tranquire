@@ -1,12 +1,10 @@
-﻿using AutoFixture;
-using AutoFixture.Idioms;
+﻿using AutoFixture.Idioms;
 using FluentAssertions;
 using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Linq;
+using System.Reflection;
 using Tranquire.Selenium.Questions;
 using Tranquire.Selenium.Questions.UIModels;
 using Tranquire.Tests;
@@ -85,8 +83,7 @@ namespace Tranquire.Selenium.Tests.Questions
             [Target(ByMethod.ClassName, "title")]
             public object Name { get; set; }
         }
-
-
+        
         [Fact]
         public void UnsupportedType_ShouldThrow()
         {
@@ -259,28 +256,151 @@ namespace Tranquire.Selenium.Tests.Questions
                 });
             actual.Should().BeEquivalentTo(expected);
         }
-    }
 
-    public class AttributesTests
-    {
-        public static IEnumerable<object[]> Attributes
+        public class Model4
         {
-            get
+            public Model4(string title, int value, bool boolean)
             {
-                return typeof(TargetAttribute)
-                    .Assembly
-                    .GetTypes()
-                    .Where(t => typeof(TargetAttribute).IsAssignableFrom(t) || typeof(UIStateAttribute).IsAssignableFrom(t))
-                    .Select(t => new object[] { t });
+                Title = title ?? throw new ArgumentNullException(nameof(title));
+                Value = value;
+                Boolean = boolean;
             }
+
+            [Target(ByMethod.ClassName, "title")]
+            public string Title { get; }
+
+            [Target(ByMethod.ClassName, "value")]
+            public int Value { get; }
+
+            [Target(ByMethod.ClassName, "bool")]
+            public bool Boolean { get; }            
         }
 
-        [Theory, MemberData(nameof(Attributes))]
-        public void VerifyAttributesGuardClauses(Type attributeType)
+        [Fact]
+        public void SingleModel_Immutable_ShouldReturnCorrectValue()
         {
-            var fixture = new Fixture();
-            var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(attributeType.GetConstructors());
+            //arrange
+            var modelContainerTarget = Target.The("Model container").LocatedBy(By.ClassName("model1"));
+            var question = UIModel.Of<Model4>(modelContainerTarget).WithCulture(CultureInfo.GetCultureInfo("en-US"));
+            //act
+            var actual = Answer(question);
+            //assert
+            var expected = new Model4("The title", 1, true);
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        public class Model5
+        {
+            public Model5(int value)
+            {
+                Value = value;
+            }
+
+            [Target(ByMethod.ClassName, "title")]
+            public string Title { get; set; }
+
+            [Target(ByMethod.ClassName, "value")]
+            public int Value { get; }
+
+            [Target(ByMethod.ClassName, "bool")]
+            public bool Boolean { get; set; }
+        }
+
+        [Fact]
+        public void SingleModel_WithReadonlyAndNonReadWriteProperties_ShouldReturnCorrectValue()
+        {
+            //arrange
+            var modelContainerTarget = Target.The("Model container").LocatedBy(By.ClassName("model1"));
+            var question = UIModel.Of<Model5>(modelContainerTarget).WithCulture(CultureInfo.GetCultureInfo("en-US"));
+            //act
+            var actual = Answer(question);
+            //assert
+            var expected = new Model5(1)
+            {
+                Boolean = true,
+                Title = "The title"
+            };
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        #region Non suitable constructor
+        public class Model6
+        {
+            public Model6()
+            {
+            }
+
+            [Target(ByMethod.ClassName, "title")]
+            public string Title { get; set; }
+
+            [Target(ByMethod.ClassName, "value")]
+            public int Value { get; }
+
+            [Target(ByMethod.ClassName, "bool")]
+            public bool Boolean { get; set; }
+        }
+
+        public class Model7
+        {
+            public Model7(string title, int value)
+            {
+                Title = title;
+                Value = value;
+            }
+
+            [Target(ByMethod.ClassName, "title")]
+            public string Title { get; }
+
+            [Target(ByMethod.ClassName, "value")]
+            public int Value { get; }
+
+            [Target(ByMethod.ClassName, "bool")]
+            public bool Boolean { get; }
+        }
+
+        public class Model8
+        {
+            public Model8(string title, int value)
+            {
+                Title = title;
+                Value = value;
+            }
+
+            public Model8(int value)
+            {
+                Value = value;
+            }
+            
+            public Model8(string title, int value, bool boolean2)
+            {
+                Title = title;
+                Value = value;
+                Boolean = boolean2;
+            }
+
+            [Target(ByMethod.ClassName, "title")]
+            public string Title { get; }
+
+            [Target(ByMethod.ClassName, "value")]
+            public int Value { get; }
+
+            [Target(ByMethod.ClassName, "bool")]
+            public bool Boolean { get; }
+        }
+        #endregion
+
+        [Theory]
+        [InlineData(typeof(Model6))]
+        [InlineData(typeof(Model7))]
+        [InlineData(typeof(Model8))]
+        public void NoSuitableConstructor_ShouldThrow(Type type)
+        {
+            //arrange
+            var modelContainerTarget = Target.The("Model container").LocatedBy(By.ClassName("model1"));
+            // act and assert
+            var ofMethod = typeof(UIModel).GetMethod("Of", new[] { typeof(ITarget) }).MakeGenericMethod(type);
+            Action action = () => ofMethod.Invoke(null, new object[] { modelContainerTarget });
+            action.Should().Throw<TargetInvocationException>().WithInnerException<InvalidOperationException>();
         }
     }
 }
