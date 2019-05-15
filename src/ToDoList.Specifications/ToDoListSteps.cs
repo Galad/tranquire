@@ -145,5 +145,21 @@ namespace ToDoList.Specifications
                 return question == null || !question.Name.EndsWith(ActorHtmlReportQuestion.Id);
             }
         }
+
+        private class DebugObserver : IObserver<string>
+        {
+            public void OnCompleted()
+            {
+            }
+
+            public void OnError(Exception error)
+            {
+            }
+
+            public void OnNext(string value)
+            {
+                Debug.Write(value);
+            }
+        }
     }
 }
