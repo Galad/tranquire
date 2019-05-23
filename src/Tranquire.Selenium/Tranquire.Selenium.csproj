@@ -12,7 +12,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl>https://github.com/Galad/tranquire/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</PackageTags>
     <IsPackable>true</IsPackable>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
