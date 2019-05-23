@@ -75,10 +75,10 @@ namespace Tranquire.Selenium.Questions
                                          .Where(p => p.targetAttribute != null)
                                          .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
                                          .ToDictionary(p => p.pi.Name.ToUpper(), p => p);
-            var constructorValues = type.GetConstructors()
-                                        .Select(c => GetPropertiesFromConstructor(c))                                  
-                                        .FirstOrDefault(p => p != null);
-            if (constructorValues == null)
+            var (ctorFound, constructorValues) = type.GetConstructors()
+                                                     .Select(c => GetPropertiesFromConstructor(c))
+                                                     .FirstOrDefault(p => p.Item1);
+            if (!ctorFound)
             {
                 throw new InvalidOperationException("A suitable constructor was not found for the readonly properties\n" +
                     "Please provide a constructor with the same type and parameter names than the following properties\n" +
@@ -90,7 +90,7 @@ namespace Tranquire.Selenium.Questions
                 constructorValues.Select(c => c(actor, target, culture));
             return new UIModelInfo(actor => new ModelConverterBySettingValues<T>(actor, setValues, getConstructorValues));
 
-            Func<IActor, ITarget, CultureInfo, object>[] GetPropertiesFromConstructor(ConstructorInfo c)
+            (bool, Func<IActor, ITarget, CultureInfo, object>[]) GetPropertiesFromConstructor(ConstructorInfo c)
             {
                 var parameters = c.GetParameters();
                 var properties = parameters
@@ -99,9 +99,9 @@ namespace Tranquire.Selenium.Questions
                         .ToArray();
                 if(properties.Length == readonlyProperties.Count)
                 {
-                    return properties;
+                    return (true, properties);
                 }
-                return null;
+                return (false, Array.Empty<Func<IActor, ITarget, CultureInfo, object>>());
             }
         }
 
