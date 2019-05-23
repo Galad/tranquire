@@ -3,8 +3,8 @@ using AutoFixture.Idioms;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Tranquire.Reporting;
@@ -357,10 +357,11 @@ namespace Tranquire.Selenium.Tests
                 .InnerActorBuilder(iactor) as ReportingActor;
             reportingActor.Should().BeEquivalentTo(expectedReportingActor, o => o.Excluding(a => a.Actor)
                                                                                  .Excluding(a => a.MeasureTime.Now)
+                                                                                 .Excluding((IMemberInfo m) => m.RuntimeType == typeof(DateTimeOffset))
                                                                                  .RespectingRuntimeTypes());
 
             var expectedSeleniumReporter = new SeleniumReporter(xmlDocumentObserver, new SaveScreenshotsToFileOnComplete(screenshotDirectory));
-            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter);
+            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter, o => o.Excluding((IMemberInfo m) => m.RuntimeType == typeof(DateTimeOffset)));
         }
     }
 }
