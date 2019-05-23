@@ -1,8 +1,26 @@
 <Project>
   <PropertyGroup>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IsPackable>false</IsPackable>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)\key.snk</AssemblyOriginatorKeyFile>
-    <CodeAnalysisRuleSet>$(SolutionDir)\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)key.snk</AssemblyOriginatorKeyFile>
+    <CodeAnalysisRuleSet>$(SolutionDir)SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+    <BaseOutputPath>$(SolutionDir)bin\$(MSBuildProjectName)</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(SolutionDir)obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <DocumentationFile>$(SolutionDir)bin\$(MSBuildProjectName)\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
+    <Copyright>Copyright 2017-2019</Copyright>
+    <PackageTags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</PackageTags>
+    <Authors>Lucas Loegel</Authors>
+    <Company />
+    <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageOutputPath>$(SolutionDir)Packages\$(Configuration)\</PackageOutputPath>
   </PropertyGroup>
 
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' == 'true' ">

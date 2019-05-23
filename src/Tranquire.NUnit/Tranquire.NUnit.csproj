@@ -2,25 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>Tranquire</RootNamespace>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
-    <Copyright>Copyright 2017</Copyright>
-    <PackageTags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</PackageTags>
-    <Authors>Lucas Loegel</Authors>
-    <Company />
     <Description>Provides integration of NUnit constraints with Tranquire.</Description>
-    <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <Version>1.0.0</Version>
     <IsPackable>true</IsPackable>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
     <CodeAnalysisRuleSet>Tranquire.NUnit.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.NUnit.xml</DocumentationFile>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 

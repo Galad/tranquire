@@ -1,25 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
-    <Copyright>Copyright 2017</Copyright>
-    <PackageTags>Selenium,BDD,Screenplay,Tests,Specification by example,SpecFlow</PackageTags>
-    <Authors>Lucas Loegel</Authors>
-    <Company />
-    <Description>Provides a framework for composing and executing reusable user actions during tests.</Description>
-    <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <Version>1.0.0</Version>
+    <TargetFramework>netstandard2.0</TargetFramework>    
+    <Description>Provides a framework for composing and executing reusable user actions during tests.</Description>        
     <IsPackable>true</IsPackable>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
-    <CodeAnalysisRuleSet>Tranquire.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.xml</DocumentationFile>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <CodeAnalysisRuleSet>Tranquire.ruleset</CodeAnalysisRuleSet>    
     <SignAssembly>true</SignAssembly>    
   </PropertyGroup>
 

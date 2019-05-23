@@ -4,7 +4,7 @@
     <TargetFramework>net462</TargetFramework>
     <SonarQubeExclude>true</SonarQubeExclude>
     <CodeAnalysisRuleSet>..\..\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>latest</LangVersion>
+    <DocumentationFile />
   </PropertyGroup>
 
   <ItemGroup>
