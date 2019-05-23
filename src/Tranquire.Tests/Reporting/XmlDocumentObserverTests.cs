@@ -427,7 +427,7 @@ namespace Tranquire.Tests.Reporting
             // arrange
             sut.OnNext(new ActionNotification(action, 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Action)));
             // act and assert
-            new Action(() => sut.GetHtmlDocument()).Should().ThrowExactly<InvalidOperationException>();
+            new Action(() => sut.GetXmlDocument()).Should().ThrowExactly<InvalidOperationException>();
         }
 
         [Theory, DomainAutoData]
@@ -536,6 +536,7 @@ namespace Tranquire.Tests.Reporting
         #endregion
 
         #region GetHtmlDocument
+#if NET462 || NETSTANDARD2_0
         [Theory, DomainAutoData]
         public void GetHtmlDocument_ShouldReturnCorrectValue(
             XmlDocumentObserver sut,
@@ -721,7 +722,8 @@ namespace Tranquire.Tests.Reporting
             titleCount.Should().Be(1);
             
         }
-        #endregion
+#endif
+#endregion
 
         private static int CountStringOccurences(string input, string value)
         {
