@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <SonarQubeTestProject>true</SonarQubeTestProject>
-    <CodeAnalysisRuleSet>..\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -101,9 +100,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tranquire.Selenium\Tranquire.Selenium.csproj" />
-    <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
-    <ProjectReference Include="..\ToDoList.Automation\ToDoList.Automation.csproj" />
+    <ProjectReference Include="..\..\src\Tranquire.Selenium\Tranquire.Selenium.csproj" />
+    <ProjectReference Include="..\..\src\Tranquire\Tranquire.csproj" />
+    <ProjectReference Include="..\..\src\ToDoList.Automation\ToDoList.Automation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

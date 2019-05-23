@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <SonarQubeTestProject>true</SonarQubeTestProject>
-    <CodeAnalysisRuleSet>..\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -14,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
+    <ProjectReference Include="..\..\src\Tranquire\Tranquire.csproj" />
   </ItemGroup>
 
   <ItemGroup>
