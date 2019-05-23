@@ -19,7 +19,7 @@ namespace Tranquire.Tests.Reporting
         {
             public void Customize(IFixture fixture)
             {
-                fixture.Register<ICanNotify>(() => new Mock<CanNotify>() { CallBase = true }.Object);
+                fixture.Register<ICanNotify>(() => new Mock<CanNotify>() { CallBase = true }.As<ICanNotify>().Object);
             }
         }
 
@@ -389,7 +389,7 @@ namespace Tranquire.Tests.Reporting
             observer.Values.Should().BeEmpty();
         }
 
-        [Theory, ReportingActorAutoDataAttribute]
+        [Theory, ReportingActorAutoData]
         public void Execute_WhenCanNotifyReturnsFalse_ShouldNotNotify(
             [Frozen]TestObserver<ActionNotification> observer,
             [Frozen]ICanNotify canNotify,
