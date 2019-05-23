@@ -70,8 +70,26 @@ namespace Tranquire.Selenium
 
         private static string SetBorderJsAction(Color color)
         {
-            var htmlColor = ColorTranslator.ToHtml(color);
+            var htmlColor = ToHtml(color);
             return $"arguments[0].style.border = 'thick solid {htmlColor}';";
+        }
+
+        private static string ToHtml(Color color)
+        {
+            if (color.IsNamedColor)
+            {
+                if (color == Color.LightGray)
+                {
+                    // special case due to mismatch between Html and enum spelling
+                    return "LightGrey";
+                }
+                return color.Name;
+            }
+            var colorString = "#" + color.R.ToString("X2", null) +
+                                    color.G.ToString("X2", null) +
+                                    color.B.ToString("X2", null);
+
+            return colorString;
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

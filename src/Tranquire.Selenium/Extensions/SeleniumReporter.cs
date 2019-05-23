@@ -29,11 +29,13 @@ namespace Tranquire.Selenium.Extensions
             ScreenshotInfoObserver = screenshotInfoObserver ?? throw new ArgumentNullException(nameof(screenshotInfoObserver));
         }
 
+#if NET45
         /// <inheritdoc />
         public string GetHtmlDocument()
         {
             return XmlDocumentObserver.GetHtmlDocument();
         }
+#endif
 
         /// <inheritdoc />
         public XDocument GetXmlDocument()

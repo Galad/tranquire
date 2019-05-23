@@ -1,4 +1,4 @@
-#if DEBUG
+#if DEBUG && NET462
 using System.Diagnostics;
 using System.IO;
 using System.Text;
