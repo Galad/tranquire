@@ -1,8 +1,7 @@
 version: '{build}'
 branches:
   only:
-  - master
-  - vnext
+  - v1-maintenance
 image: Visual Studio 2017
 configuration: Release
 environment:
@@ -43,4 +42,4 @@ deploy:
   api_key:
     secure: 55uxvHMTDwA2bAKpOX6Wjb/t5eTUsLhsZfJukyEyCboW3c/ZnWHJaz6UeRdPRKVX
   on:
-    branch: master
+    branch: v1-maintenance
