@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <SonarQubeExclude>true</SonarQubeExclude>
-    <LangVersion>latest</LangVersion>
+    <DocumentationFile />
   </PropertyGroup>
 
   <ItemGroup>    

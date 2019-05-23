@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <SonarQubeTestProject>true</SonarQubeTestProject>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

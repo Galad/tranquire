@@ -10,9 +10,7 @@ environment:
   tranquire_bot:
     secure: z9O00Ripejk/+QayghdxD4u5974h2DJgBuDCv0FGZPmFyRfak+fWj1DYHQT8zoaC
 before_build:
-- |- # Restore TWICE. See https://github.com/AArnott/Nerdbank.GitVersioning/issues/113#issuecomment-285903085
-  msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore > nul
-  msbuild src\Tranquire.sln /nologo /m /v:quiet /t:restore
+- msbuild Tranquire.sln /nologo /m /v:quiet /t:restore
 - choco install "msbuild-sonarqube-runner" -y
 - choco install "opencover.portable"  -y
 - choco install "saxonHE" -y
@@ -20,22 +18,19 @@ before_build:
 - echo %APPVEYOR_PULL_REQUEST_NUMBER%
 - echo %APPVEYOR_REPO_BRANCH%
 - echo %APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH%
-- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.pullrequest.key=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.base=$env:APPVEYOR_REPO_BRANCH" /d:"sonar.pullrequest.branch=$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.language=cs" }
-- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=src/**/obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.branch.name=$env:APPVEYOR_REPO_BRANCH"}
+- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=obj/**" /v:"$env:GitBuildVersion" /d:"sonar.pullrequest.key=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.base=$env:APPVEYOR_REPO_BRANCH" /d:"sonar.pullrequest.branch=$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.language=cs" }
+- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.branch.name=$env:APPVEYOR_REPO_BRANCH"}
 build_script:
-- msbuild src\Tranquire.sln /nologo /m /v:minimal /t:build,pack
+- msbuild Tranquire.sln /nologo /m /v:minimal /t:build,pack
 - ps: 
 test_script:
-- ps: OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:vstest.console.exe" "-targetargs:src\Tranquire.Tests\bin\Release\net462\Tranquire.Tests.dll src\Tranquire.Selenium.Tests\bin\Release\net462\Tranquire.Selenium.Tests.dll src\Tranquire.NUnit.Tests\bin\Release\net462\Tranquire.NUnit.Tests.dll src\ToDoList.Specifications\bin\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" "-mergebyhash" "-coverbytest:*"
+- ps: OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:vstest.console.exe" "-targetargs:bin\Tranquire.Tests\Release\net462\Tranquire.Tests.dll bin\Tranquire.Selenium.Tests\Release\net462\Tranquire.Selenium.Tests.dll bin\Tranquire.NUnit.Tests\Release\net462\Tranquire.NUnit.Tests.dll bin\ToDoList.Specifications\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" "-mergebyhash" "-coverbytest:*"
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
-- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER\src" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"
+- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
-  - path: opencover.xml
-  - path: TestResults-SonarFormat.xml
-  - path: .sonarqube
     
 deploy:
 - provider: NuGet

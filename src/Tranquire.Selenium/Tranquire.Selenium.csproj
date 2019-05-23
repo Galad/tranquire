@@ -1,25 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Tranquire.Selenium</PackageId>
-    <Authors>Lucas Loegel</Authors>
-    <Company />
+    <TargetFramework>netstandard2.0</TargetFramework>        
     <Description>Write maintainable UI tests with Selenium using Tranquire</Description>
-    <Copyright>Copyright 2017 Lucas Loegel</Copyright>
-    <PackageIconUrl>https://github.com/Galad/tranquire</PackageIconUrl>
-    <PackageProjectUrl>http://galad.github.io/tranquire/?utm_source=nuget&amp;utm_medium=referral</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/Galad/tranquire/gh-pages/Tranquire_128.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/Galad/tranquire</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>BDD,Screenplay,Tests,Specification by example,SpecFlow,UI automation</PackageTags>
     <IsPackable>true</IsPackable>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\Packages\$(Configuration)\</PackageOutputPath>
-    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>    
-    <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Tranquire.Selenium.xml</DocumentationFile>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <CodeAnalysisRuleSet>Tranquire.Selenium.ruleset</CodeAnalysisRuleSet>        
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">        
