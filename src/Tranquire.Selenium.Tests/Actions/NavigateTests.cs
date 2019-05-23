@@ -26,6 +26,23 @@ namespace Tranquire.Selenium.Tests.Actions
         }
 
         [Theory, DomainAutoData]
+        public void To_StringUrl_ShouldReturnCorrectValue(Uri uri)
+        {
+            var actual = Navigate.To(uri.ToString());
+            actual.Should().BeEquivalentTo(new Navigate(uri));
+        }
+
+        [Theory]
+        [DomainInlineAutoData("")]
+        [DomainInlineAutoData("invalid")]
+        [DomainInlineAutoData("/relative")]
+        public void To_StringUrl_WithInvalidUrl_ShouldReturnCorrectValue(string url)
+        {
+            var ex = Assert.Throws<ArgumentException>("url", () => Navigate.To(url));
+            Assert.StartsWith($"The URL {url} is invalid. The URL should be a valid absolute URL, such as http://localhost/myApp/", ex.Message);
+        }
+
+        [Theory, DomainAutoData]
         public void Name_ShouldReturnCorrectValue(Navigate sut)
         {
             sut.Name.Should().Be($"Navigate to {sut.Uri}");
