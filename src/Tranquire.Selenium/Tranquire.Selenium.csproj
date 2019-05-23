@@ -33,9 +33,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Selenium.Support" version="3.14.0" />
-    <PackageReference Include="Selenium.WebDriver" version="3.14.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.9.0.7583">
+    <PackageReference Include="Selenium.Support" />
+    <PackageReference Include="Selenium.WebDriver" />
+    <PackageReference Include="SonarAnalyzer.CSharp">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

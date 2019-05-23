@@ -39,10 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>   
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.9.0.7583">
+    <PackageReference Include="SonarAnalyzer.CSharp">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Collections.Immutable" version="1.5.0" />
+    <PackageReference Include="System.Collections.Immutable" />
   </ItemGroup>
 </Project>
