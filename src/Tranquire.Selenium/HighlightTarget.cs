@@ -74,8 +74,18 @@ namespace Tranquire.Selenium
             return $"arguments[0].style.border = 'thick solid {htmlColor}';";
         }
 
-        private static string ToHtml(Color color)
+        /// <summary>
+        /// Gets the HTML color code from a <see cref="Color"/> value
+        /// </summary>
+        /// <param name="color">The color</param>
+        /// <returns>The HTML encoded color (Ex: #DF0101)</returns>
+        public static string ToHtml(Color color)
         {
+            if (color.IsEmpty)
+            {
+                return string.Empty;
+            }
+
             if (color.IsNamedColor)
             {
                 if (color == Color.LightGray)
