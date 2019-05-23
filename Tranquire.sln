@@ -7,19 +7,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BB557DCD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{D3AC275C-3A02-484D-9631-4944378BDEA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire", "Tranquire\Tranquire.csproj", "{08831808-B81A-4153-8CA9-1ABD34959285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire", "src\Tranquire\Tranquire.csproj", "{08831808-B81A-4153-8CA9-1ABD34959285}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Selenium", "Tranquire.Selenium\Tranquire.Selenium.csproj", "{A4FAE459-E7D4-4CF0-A6F4-D12353187C85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Selenium", "src\Tranquire.Selenium\Tranquire.Selenium.csproj", "{A4FAE459-E7D4-4CF0-A6F4-D12353187C85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Tests", "Tranquire.Tests\Tranquire.Tests.csproj", "{3000E54C-40CC-4B53-A1A0-141FB861F90A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Tests", "tests\Tranquire.Tests\Tranquire.Tests.csproj", "{3000E54C-40CC-4B53-A1A0-141FB861F90A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Selenium.Tests", "Tranquire.Selenium.Tests\Tranquire.Selenium.Tests.csproj", "{D8674422-37DA-4462-B258-7A09D9803F89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.Selenium.Tests", "tests\Tranquire.Selenium.Tests\Tranquire.Selenium.Tests.csproj", "{D8674422-37DA-4462-B258-7A09D9803F89}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "Sandbox\Sandbox.csproj", "{07EA5CF3-2850-469F-AC69-97B3624E0ACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "src\Sandbox\Sandbox.csproj", "{07EA5CF3-2850-469F-AC69-97B3624E0ACD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Automation", "ToDoList.Automation\ToDoList.Automation.csproj", "{A8925A78-F467-4140-8740-F1BC4A87935B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Automation", "src\ToDoList.Automation\ToDoList.Automation.csproj", "{A8925A78-F467-4140-8740-F1BC4A87935B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Specifications", "ToDoList.Specifications\ToDoList.Specifications.csproj", "{1CF77FC5-941A-4258-B598-F558F10C9D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Specifications", "tests\ToDoList.Specifications\ToDoList.Specifications.csproj", "{1CF77FC5-941A-4258-B598-F558F10C9D48}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SonarQube", "SonarQube", "{D58E383A-988C-4A99-8D1A-FFB0CBBA696E}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,9 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SonarQube", "SonarQube", "{
 		SonarQube\TranquireCSharp.ruleset = SonarQube\TranquireCSharp.ruleset
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.NUnit", "Tranquire.NUnit\Tranquire.NUnit.csproj", "{92714D22-0803-454E-885B-A5CBC0F1A01E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.NUnit", "src\Tranquire.NUnit\Tranquire.NUnit.csproj", "{92714D22-0803-454E-885B-A5CBC0F1A01E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.NUnit.Tests", "Tranquire.NUnit.Tests\Tranquire.NUnit.Tests.csproj", "{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tranquire.NUnit.Tests", "tests\Tranquire.NUnit.Tests\Tranquire.NUnit.Tests.csproj", "{8BA1C869-8B58-4E9B-BFE9-2140F5A05E0F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{3AC61BED-E6D5-4284-A3F8-BDDEEA7D1C0F}"
 	ProjectSection(SolutionItems) = preProject

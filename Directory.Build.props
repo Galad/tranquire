@@ -1,6 +1,8 @@
 <Project>
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\key.snk</AssemblyOriginatorKeyFile>
+    <CodeAnalysisRuleSet>$(SolutionDir)\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' == 'true' ">

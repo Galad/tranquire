@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <SonarQubeExclude>true</SonarQubeExclude>
-    <CodeAnalysisRuleSet>..\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
