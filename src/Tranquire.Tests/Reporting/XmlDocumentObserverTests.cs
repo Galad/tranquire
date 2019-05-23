@@ -536,7 +536,6 @@ namespace Tranquire.Tests.Reporting
         #endregion
 
         #region GetHtmlDocument
-#if NET462 || NETSTANDARD2_0
         [Theory, DomainAutoData]
         public void GetHtmlDocument_ShouldReturnCorrectValue(
             XmlDocumentObserver sut,
@@ -722,7 +721,6 @@ namespace Tranquire.Tests.Reporting
             titleCount.Should().Be(1);
             
         }
-#endif
 #endregion
 
         private static int CountStringOccurences(string input, string value)

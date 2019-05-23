@@ -1,5 +1,4 @@
-﻿#if NET45 || NETSTANDARD2_0
-using System;
+﻿using System;
 
 namespace Tranquire.Reporting
 {
@@ -38,4 +37,4 @@ namespace Tranquire.Reporting
         }
     }
 }
-#endif
+

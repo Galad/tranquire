@@ -1,8 +1,4 @@
-﻿#if NET45 || NETSTANDARD2_0
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
@@ -30,4 +26,3 @@ namespace Tranquire.Reporting
         }
     }
 }
-#endif
