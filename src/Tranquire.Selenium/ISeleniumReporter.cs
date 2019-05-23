@@ -12,7 +12,7 @@ namespace Tranquire.Selenium
         /// </summary>
         /// <returns></returns>
         XDocument GetXmlDocument();
-#if NET45
+#if NET45 || NETSTANDARD2_0
         /// <summary>
         /// Returns a report in an HTML format
         /// </summary>

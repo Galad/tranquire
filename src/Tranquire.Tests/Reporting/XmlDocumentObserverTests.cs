@@ -536,7 +536,7 @@ namespace Tranquire.Tests.Reporting
         #endregion
 
         #region GetHtmlDocument
-#if NET462
+#if NET462 || NETSTANDARD2_0
         [Theory, DomainAutoData]
         public void GetHtmlDocument_ShouldReturnCorrectValue(
             XmlDocumentObserver sut,
