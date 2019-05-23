@@ -81,25 +81,20 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Albedo" Version="2.0.0" />
-    <PackageReference Include="AutoFixture.Xunit2" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Owin.SelfHost" Version="4.0.0" />
-    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="4.0.0" />
-    <PackageReference Include="AutoFixture" version="4.5.0" />
-    <PackageReference Include="AutoFixture.AutoMoq" version="4.5.0" />
-    <PackageReference Include="AutoFixture.Idioms" version="4.5.0" />
-    <PackageReference Include="Castle.Core" version="4.3.1" />
-    <PackageReference Include="FluentAssertions" version="5.4.1" />
-    <PackageReference Include="Moq" version="4.9.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="2.43.0" />
-    <PackageReference Include="System.Collections.Immutable" version="1.5.0" />
-    <PackageReference Include="Selenium.Support" version="3.14.0" />
-    <PackageReference Include="Selenium.WebDriver" version="3.14.0" />
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="SpecFlow" version="2.4.0" />
-    <PackageReference Include="SpecFlow.xUnit" version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0">
+  <ItemGroup>    
+    <PackageReference Include="AutoFixture.Xunit2" />
+    <PackageReference Include="Microsoft.Owin.SelfHost" />
+    <PackageReference Include="Microsoft.Owin.StaticFiles" />
+    <PackageReference Include="AutoFixture.AutoMoq" />
+    <PackageReference Include="AutoFixture.Idioms" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" />
+    <PackageReference Include="System.Collections.Immutable" />
+    <PackageReference Include="Selenium.Support" />
+    <PackageReference Include="Selenium.WebDriver" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="SpecFlow.xUnit" />
+    <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

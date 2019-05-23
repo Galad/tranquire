@@ -3,15 +3,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <NerdbankGitVersioningVersion>2.2.13</NerdbankGitVersioningVersion>
-  </PropertyGroup>
-
-  <!-- https://github.com/NuGet/Home/issues/4337 -->
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="all" />
-  </ItemGroup>
-
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' == 'true' ">
     <Import Project="$(UserProfile)\.nuget\packages\nerdbank.gitversioning\$(NerdbankGitVersioningVersion)\buildCrossTargeting\Nerdbank.GitVersioning.targets"
             Condition="Exists('$(UserProfile)\.nuget\packages\nerdbank.gitversioning\$(NerdbankGitVersioningVersion)\buildCrossTargeting\Nerdbank.GitVersioning.targets')" />
