@@ -1,4 +1,6 @@
-﻿using Tranquire;
+﻿using System;
+using Tranquire;
+using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.Actions
 {
@@ -9,7 +11,7 @@ namespace ToDoList.Automation.Actions
 
         public static IAction<Unit> TheApplication()
         {
-            return Navigate.To(SiteUrl);
+            return Navigate.To(new Uri(SiteUrl));
         }
     }
 }
