@@ -66,14 +66,14 @@ namespace Tranquire.Selenium.Questions
                                  .Where(pi => pi.CanRead && pi.CanWrite)
                                  .Select(pi => (pi, targetAttribute: GetTargetAttribute(pi), uiStateAttribute: GetUIStateAttribute(pi)))
                                  .Where(p => p.targetAttribute != null)
-                                 .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
+                                 .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.CreateTarget, p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
                                  .Select(f => ExecuteQuestions(f.pi, f.retrieveValue))
                                  .ToArray();
             var readonlyProperties = type.GetProperties()
                                          .Where(pi => pi.CanRead && !pi.CanWrite)
                                          .Select(pi => (pi, targetAttribute: GetTargetAttribute(pi), uiStateAttribute: GetUIStateAttribute(pi)))
                                          .Where(p => p.targetAttribute != null)
-                                         .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.GetSeleniumBy(), p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
+                                         .Select(p => (p.pi, retrieveValue: RetrieveValue(p.pi, p.targetAttribute.CreateTarget, p.targetAttribute.Name, p.uiStateAttribute ?? new TextContentAttribute())))
                                          .ToDictionary(p => p.pi.Name.ToUpper(), p => p);
             var (ctorFound, constructorValues) = type.GetConstructors()
                                                      .Select(c => GetPropertiesFromConstructor(c))
@@ -148,9 +148,9 @@ namespace Tranquire.Selenium.Questions
             return (actor, container, culture, model) => pi.SetValue(model, f(actor, container, culture));
         }
 
-        private static Func<IActor, ITarget, CultureInfo, object> RetrieveValue(PropertyInfo pi, By by, string name, UIStateAttribute valueAttribute)
+        private static Func<IActor, ITarget, CultureInfo, object> RetrieveValue(PropertyInfo pi, Func<string, ITarget> createTarget, string name, UIStateAttribute valueAttribute)
         {
-            var target = Target.The(name ?? pi.Name).LocatedBy(by);
+            var target = createTarget(name ?? pi.Name);
             return ApplyGetConverter(target, pi.PropertyType, valueAttribute);
         }
 
