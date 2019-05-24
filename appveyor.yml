@@ -6,7 +6,7 @@ image: Visual Studio 2017
 configuration: Release
 environment:
   sonarqube_token:
-    secure: +bTyY1Z6fmq32MMiKCXXmbMo1fTlP2AwbbOs7FaFKJJ13wcyTVP121vKX3OJITIt
+    secure: I0oozyZ8ukw55gxg2w7cP/CLBSWrb75iTERUzQSEuh1/+F2j4mQLZNVN7Q6adrF1
   tranquire_bot:
     secure: z9O00Ripejk/+QayghdxD4u5974h2DJgBuDCv0FGZPmFyRfak+fWj1DYHQT8zoaC
 before_build:
