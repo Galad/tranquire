@@ -198,7 +198,6 @@ namespace Tranquire.Selenium.Questions
                 return GetFunction(_doubleArrayConverters);
             }
 
-
             throw new NotSupportedException($"Type {type} is not supported");
 
             Func<IActor, ITarget, CultureInfo, object> GetFunction<T>(IConverters<T> converters)

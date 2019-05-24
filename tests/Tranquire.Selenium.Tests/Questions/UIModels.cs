@@ -93,6 +93,22 @@ namespace Tranquire.Selenium.Tests.Questions
             Assert.Throws<NotSupportedException>(() => UIModel.Of<ModelWithUnsupportedType>(modelContainerTarget));
         }
 
+        public class ModelWithCssClassesAndNonBooleanProperty
+        {
+            [Target(ByMethod.Id, "classes")]
+            [Classes(Contains = "class3")]
+            public string ClassesContains { get; set; }
+        }
+
+        [Fact]
+        public void CssClasses_WithNonBooleanProperty_ShouldThrow()
+        {
+            // arrange
+            var modelContainerTarget = Target.The("Model container").LocatedBy(By.ClassName("model2"));
+            // act and assert
+            Assert.Throws<NotSupportedException>(() => UIModel.Of<ModelWithUnsupportedType>(modelContainerTarget));
+        }
+
         [Theory, DomainAutoData]
         public void Name_ShouldReturnCorrectValue(string expected)
         {
@@ -126,6 +142,14 @@ namespace Tranquire.Selenium.Tests.Questions
             [Target(ByMethod.Id, "classes")]
             [Classes]
             public ImmutableArray<string> Classes { get; set; }
+
+            [Target(ByMethod.Id, "classes")]
+            [Classes(Contains = "class3")]
+            public bool ClassesContainsTrue { get; set; }
+            
+            [Target(ByMethod.Id, "classes")]
+            [Classes(Contains = "class4")]
+            public bool ClassesContainsFalse { get; set; }
 
             [Target(ByMethod.Id, "css-value")]
             [CssValue("border-style")]
@@ -197,6 +221,8 @@ namespace Tranquire.Selenium.Tests.Questions
             {
                 Text = "The text",
                 Classes = ImmutableArray.Create("class1", "class2", "class3"),
+                ClassesContainsTrue = true,
+                ClassesContainsFalse = false,
                 CssValue = "dashed",
                 EnabledTrue = true,
                 EnabledFalse = false,
