@@ -23,7 +23,7 @@ Solution overview
 The solution is composed by Tranquire as well as test projects.
 
 ### Tranquire
-* Tranquire : the core librairy
+* Tranquire : the core library
 * Tranquire.Selenium : contains the ui actions and questions used to automate a web UI with Selenium.
 
 ### Demo project
