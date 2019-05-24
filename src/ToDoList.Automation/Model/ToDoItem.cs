@@ -1,8 +1,14 @@
-﻿namespace ToDoList.Automation.Model
+﻿using Tranquire.Selenium.Questions.UIModels;
+
+namespace ToDoList.Automation.Model
 {
     public sealed class ToDoItem
     {
+        [Target(ByMethod.CssSelector, "div label")]
         public string Name { get; }
+
+        [Target]
+        [Classes(Contains = "completed")]
         public bool IsCompleted { get; }
 
         /// <summary>Record Constructor</summary>
