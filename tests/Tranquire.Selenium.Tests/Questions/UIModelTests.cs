@@ -12,9 +12,9 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests.Questions
 {
-    public class UIModels : WebDriverTest
+    public class UIModelTests : WebDriverTest
     {
-        public UIModels(WebDriverFixture fixture) : base(fixture, "UIModels.html")
+        public UIModelTests(WebDriverFixture fixture) : base(fixture, "UIModels.html")
         {
         }
 
@@ -52,6 +52,9 @@ namespace Tranquire.Selenium.Tests.Questions
 
             [Target(ByMethod.Name, "the-name")]
             public string Name { get; set; }
+
+            [Target, Classes]
+            public string Self { get; set; }
         }
 
         [Fact]
@@ -73,7 +76,8 @@ namespace Tranquire.Selenium.Tests.Questions
                 XPath = "The XPath text",
                 CssSelector = "The CSS selector text",
                 TagName = "The tag name text",
-                Name = "The name text"
+                Name = "The name text",
+                Self = "model1"
             };
             actual.Should().BeEquivalentTo(expected);
         }

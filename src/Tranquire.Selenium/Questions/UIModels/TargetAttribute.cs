@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Tranquire.Selenium.Questions.UIModels
 {
@@ -16,13 +18,20 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// <param name="value">The By value</param>
         public TargetAttribute(ByMethod by, string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (by != ByMethod.Self && string.IsNullOrEmpty(value))
             {
                 throw new ArgumentNullException(nameof(value), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
             }
 
             ByMethod = by;
             Value = value;
+        }
+
+        /// <summary>
+        /// Initialize a new instance of <see cref="TargetAttribute"/> that use the container as the element
+        /// </summary>
+        public TargetAttribute() : this(ByMethod.Self, null)
+        {
         }
 
         /// <summary>
@@ -38,24 +47,48 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// </summary>
         public string Name { get; set; }
 
-        internal By GetSeleniumBy()
+        private static readonly Dictionary<ByMethod, Func<string, By>> _byMethods = new Dictionary<ByMethod, Func<string, By>>()
         {
-            switch (ByMethod)
+            {ByMethod.CssSelector, By.CssSelector },
+            {ByMethod.Id, By.Id },
+            {ByMethod.Name, By.Name },
+            {ByMethod.ClassName, By.ClassName },
+            {ByMethod.TagName, By.TagName },
+            {ByMethod.XPath, By.XPath }
+        };
+
+        internal ITarget CreateTarget(string name)
+        {
+            if (ByMethod == ByMethod.Self)
             {
-                case ByMethod.CssSelector:
-                    return By.CssSelector(Value);
-                case ByMethod.Id:
-                    return By.Id(Value);
-                case ByMethod.Name:
-                    return By.Name(Value);
-                case ByMethod.ClassName:
-                    return By.ClassName(Value);
-                case ByMethod.TagName:
-                    return By.TagName(Value);
-                case ByMethod.XPath:
-                    return By.XPath(Value);
-                default:
-                    throw new ArgumentOutOfRangeException($"The By method {ByMethod} is not valid");
+                return new SelfTarget(name);
+            }
+
+            return Target.The(name).LocatedBy(_byMethods[ByMethod](Value));
+        }
+
+        private class SelfTarget : ITarget
+        {
+            public SelfTarget(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public ITarget RelativeTo(ITarget targetSource)
+            {
+                return targetSource;
+            }
+
+            public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
+            {
+                throw new InvalidOperationException();
+            }
+
+            public IWebElement ResolveFor(ISearchContext searchContext)
+            {
+                throw new InvalidOperationException();
             }
         }
     }

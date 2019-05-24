@@ -30,6 +30,10 @@ namespace Tranquire.Selenium.Questions.UIModels
         /// <summary>
         /// The <see cref="By.XPath(string)"/> method
         /// </summary>
-        XPath
+        XPath,
+        /// <summary>
+        /// Use the container element
+        /// </summary>
+        Self
     }
 }
