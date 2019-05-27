@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net462;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +16,7 @@
     <PackageReference Include="MSTest.TestFramework" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="System.Collections.Immutable" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
@@ -25,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tranquire.NUnit\Tranquire.NUnit.csproj" />
-    <ProjectReference Include="..\Tranquire.Tests\Tranquire.Tests.csproj" />
     <ProjectReference Include="..\..\src\Tranquire\Tranquire.csproj" />
+    <ProjectReference Include="..\Tranquire.Tests\Tranquire.Tests.csproj" />
   </ItemGroup>
 </Project>

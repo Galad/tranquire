@@ -14,7 +14,8 @@ namespace Tranquire.Reporting
         public string GetHtmlDocument()
         {
             var xmlDocument = GetXmlDocument();
-            var xslt = new XslCompiledTransform();
+            // enabling debug mode workaround an null reference exception occuring internally in .net core
+            var xslt = new XslCompiledTransform(true);
             var xmlReader = XmlReader.Create(typeof(XmlDocumentObserver).Assembly.GetManifestResourceStream("Tranquire.Reporting.XmlReport.xsl"));
             xslt.Load(xmlReader);
             var result = new StringBuilder();

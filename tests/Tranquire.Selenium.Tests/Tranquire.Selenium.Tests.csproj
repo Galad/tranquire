@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net462</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,6 +47,7 @@
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" />
     <PackageReference Include="System.Collections.Immutable" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" />
     <PackageReference Include="Selenium.Support" />
     <PackageReference Include="Selenium.WebDriver" />
     <PackageReference Include="xunit" />
