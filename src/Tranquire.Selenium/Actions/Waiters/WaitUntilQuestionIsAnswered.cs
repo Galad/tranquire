@@ -55,6 +55,7 @@ namespace Tranquire.Selenium.Actions.Waiters
         protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var wait = new WebDriverWait(ability.Driver, _timeout);
+            wait.PollingInterval = TimeSpan.FromMilliseconds(100);
             try
             {
                 wait.Until(_ => _isAnswered(actor.AsksFor(_question)));

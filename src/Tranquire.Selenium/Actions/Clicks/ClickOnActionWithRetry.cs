@@ -86,7 +86,7 @@ namespace Tranquire.Selenium.Actions.Clicks
                     {
                         throw;
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
                 catch (InvalidOperationException)
                 {
@@ -94,7 +94,7 @@ namespace Tranquire.Selenium.Actions.Clicks
                     {
                         throw;
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
             }
         }
