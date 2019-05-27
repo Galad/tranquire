@@ -17,6 +17,7 @@
 [Rr]eleases/
 x64/
 x86/
+build/
 bld/
 [Bb]in/
 [Oo]bj/
@@ -170,6 +171,7 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
+node_modules/
 orleans.codegen.cs
 
 # RIA/Silverlight projects
@@ -216,3 +218,4 @@ nuget.exe
 #SonarQube
 .sonar
 .sonarqube
+*.feature.cs

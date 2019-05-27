@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Bypass -NoProfile -NoLogo -Command "& \"%~dp0buildclean.ps1\" %*; exit $LastExitCode;"

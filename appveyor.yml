@@ -2,7 +2,7 @@ version: '{build}'
 branches:
   only:
   - master
-image: Visual Studio 2017
+image: Visual Studio 2019
 configuration: Release
 environment:
   sonarqube_token:
@@ -10,28 +10,31 @@ environment:
   tranquire_bot:
     secure: z9O00Ripejk/+QayghdxD4u5974h2DJgBuDCv0FGZPmFyRfak+fWj1DYHQT8zoaC
 before_build:
-- msbuild Tranquire.sln /nologo /m /v:quiet /t:restore
+- choco install "GoogleChrome" -y
 - choco install "msbuild-sonarqube-runner" -y
 - choco install "opencover.portable"  -y
 - choco install "saxonHE" -y
+- choco install "jre8" -y
 - refreshenv
-- echo %APPVEYOR_PULL_REQUEST_NUMBER%
-- echo %APPVEYOR_REPO_BRANCH%
-- echo %APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH%
+- set PATH=%PATH%;C:\Program Files\AppVeyor\BuildAgent
 - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=obj/**" /v:"$env:GitBuildVersion" /d:"sonar.pullrequest.key=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.base=$env:APPVEYOR_REPO_BRANCH" /d:"sonar.pullrequest.branch=$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.language=cs" }
 - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=obj/**" /v:"$env:GitBuildVersion" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.branch.name=$env:APPVEYOR_REPO_BRANCH"}
 build_script:
-- msbuild Tranquire.sln /nologo /m /v:minimal /t:build,pack
-- ps: 
+- dotnet build Tranquire.sln --configuration Release
+- cd src\ToDoList\ClientApp
+- npm ci
+- npm run-script build
+- cd ..\..\..
 test_script:
-- ps: OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:vstest.console.exe" "-targetargs:bin\Tranquire.Tests\Release\net462\Tranquire.Tests.dll bin\Tranquire.Selenium.Tests\Release\net462\Tranquire.Selenium.Tests.dll bin\Tranquire.NUnit.Tests\Release\net462\Tranquire.NUnit.Tests.dll bin\ToDoList.Specifications\Release\net462\ToDoList.Specifications.dll /Logger:trx /Logger:AppVeyor" "-mergebyhash" "-coverbytest:*"
+- ps: C:\ProgramData\chocolatey\bin\OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Tranquire.sln --logger trx --no-build --configuration Release --results-directory $env:APPVEYOR_BUILD_FOLDER\TestResults" "-mergebyhash" "-coverbytest:*" -oldstyle
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
-- ps: transform -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"
+- ps: C:\ProgramData\chocolatey\bin\SaxonHE\bin\transform.exe -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
+- dotnet pack Tranquire.sln --configuration Release --no-build
 artifacts:  
   - path: Packages\$(configuration)\*.nupkg
-    
+
 deploy:
 - provider: NuGet
   api_key:

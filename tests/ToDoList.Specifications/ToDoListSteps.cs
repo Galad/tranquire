@@ -28,12 +28,13 @@ namespace ToDoList.Specifications
         [BeforeScenario]
         public void Before()
         {
+            var service = ChromeDriverService.CreateDefaultService(Path.GetDirectoryName(typeof(ToDoListSteps).Assembly.Location));
             var options = new ChromeOptions();
             if (IsLiveUnitTesting)
             {
                 options.AddArguments("--headless", "--disable-gpu");
             }
-            var driver = new ChromeDriver(options);
+            var driver = new ChromeDriver(service, options);
             var screenshotName = Context.ScenarioInfo.Title;
 #if DEBUG
             var delay = IsLiveUnitTesting ? TimeSpan.Zero : TimeSpan.FromSeconds(1);
@@ -51,6 +52,7 @@ namespace ToDoList.Specifications
                                     screenshotName)
                                     .AddTextObservers(new DebugObserver())
                                     .WithCanNotify(new CanNotify())
+                                    .WithScreenshotPng()
                                     .WithTakeScreenshotStrategy(new TakeScreenshotOnErrorStrategy()),                                
                                 out var seleniumReporter)
                             .HighlightTargets()
