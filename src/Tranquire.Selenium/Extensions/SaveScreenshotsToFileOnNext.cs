@@ -15,7 +15,8 @@ namespace Tranquire.Selenium.Extensions
         /// Creates a new instance of <see cref="SaveScreenshotsToFileOnNext"/>
         /// </summary>
         /// <param name="directory">The directory where the screenshots will be saved</param>
-        public SaveScreenshotsToFileOnNext(string directory)
+        /// <param name="format">The format which the screenshots are saved</param>
+        public SaveScreenshotsToFileOnNext(string directory, ScreenshotFormat format)
         {
             if (string.IsNullOrEmpty(directory))
             {
@@ -23,12 +24,18 @@ namespace Tranquire.Selenium.Extensions
             }
 
             Directory = directory;
+            Format = format ?? throw new ArgumentNullException(nameof(format));
         }
 
         /// <summary>
         /// Gets the directory
         /// </summary>
         public string Directory { get; }
+
+        /// <summary>
+        /// Gets the format which the screenshots are saved
+        /// </summary>
+        public ScreenshotFormat Format { get; }
 
         /// <inheritsdoc />
         public void OnCompleted()
@@ -58,8 +65,8 @@ namespace Tranquire.Selenium.Extensions
             {
                 System.IO.Directory.CreateDirectory(Directory);
             }
-            var filename = Path.Combine(Directory, value.FileName + ".jpg");
-            value.Screenshot.SaveAsFile(filename, ScreenshotImageFormat.Jpeg);
+            var filename = Path.Combine(Directory, value.FileName + Format.Extension);
+            value.Screenshot.SaveAsFile(filename, Format.Format);
         }
     }
 }

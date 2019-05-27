@@ -8,18 +8,25 @@ namespace Tranquire.Selenium.Extensions
     public sealed class RenderedScreenshotInfoObserver : IObserver<ScreenshotInfo>
     {
         /// <summary>
+        /// Creates a new instance of <see cref="RenderedScreenshotInfoObserver"/>
+        /// </summary>
+        /// <param name="observer">The observer to render to</param>
+        /// <param name="format">The format which the screenshots are saved</param>
+        public RenderedScreenshotInfoObserver(IObserver<string> observer, ScreenshotFormat format)
+        {
+            this.Observer = observer ?? throw new ArgumentNullException(nameof(observer));
+            Format = format ?? throw new ArgumentNullException(nameof(format));
+        }
+
+        /// <summary>
         /// Gets the observer
         /// </summary>
         public IObserver<string> Observer { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="RenderedScreenshotInfoObserver"/>
+        /// The format which the screenshots are saved
         /// </summary>
-        /// <param name="observer">The observer to render to</param>
-        public RenderedScreenshotInfoObserver(IObserver<string> observer)
-        {
-            this.Observer = observer ?? throw new ArgumentNullException(nameof(observer));
-        }
+        public ScreenshotFormat Format { get; }
 
         /// <inheritdoc />
         public void OnNext(ScreenshotInfo value)
@@ -29,7 +36,7 @@ namespace Tranquire.Selenium.Extensions
                 throw new ArgumentNullException(nameof(value));
             }
 
-            Observer.OnNext(value.FileName + ".jpg");
+            Observer.OnNext(value.FileName + Format.Extension);
         }
 
         /// <inheritdoc />

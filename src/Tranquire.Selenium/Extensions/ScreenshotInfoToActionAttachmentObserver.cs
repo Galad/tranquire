@@ -13,18 +13,25 @@ namespace Tranquire.Selenium.Extensions
     public sealed class ScreenshotInfoToActionAttachmentObserverAdapter : IObserver<ScreenshotInfo>
     {
         /// <summary>
+        /// Creates a new instance of<see cref="ScreenshotInfoToActionAttachmentObserverAdapter"/>
+        /// </summary>
+        /// <param name="attachmentObserver"></param>
+        /// <param name="format">The format which the screenshots are saved</param>
+        public ScreenshotInfoToActionAttachmentObserverAdapter(IObserver<ActionFileAttachment> attachmentObserver, ScreenshotFormat format)
+        {
+            AttachmentObserver = attachmentObserver ?? throw new ArgumentNullException(nameof(attachmentObserver));
+            Format = format ?? throw new ArgumentNullException(nameof(format));
+        }
+
+        /// <summary>
         /// Gets the attachment observer to adapt the notifications
         /// </summary>
         public IObserver<ActionFileAttachment> AttachmentObserver { get; }
 
         /// <summary>
-        /// Creates a new instance of<see cref="ScreenshotInfoToActionAttachmentObserverAdapter"/>
+        /// Gets the format which the screenshots are saved
         /// </summary>
-        /// <param name="attachmentObserver"></param>
-        public ScreenshotInfoToActionAttachmentObserverAdapter(IObserver<ActionFileAttachment> attachmentObserver)
-        {
-            AttachmentObserver = attachmentObserver ?? throw new ArgumentNullException(nameof(attachmentObserver));
-        }
+        public ScreenshotFormat Format { get; }
 
         /// <inheritdoc />
         public void OnCompleted()
@@ -51,7 +58,7 @@ namespace Tranquire.Selenium.Extensions
                 throw new ArgumentNullException(nameof(value));
             }
 
-            AttachmentObserver.OnNext(new ActionFileAttachment(value.FileName + ".jpg", string.Empty));
+            AttachmentObserver.OnNext(new ActionFileAttachment(value.FileName + Format.Extension, string.Empty));
         }
     }
 }

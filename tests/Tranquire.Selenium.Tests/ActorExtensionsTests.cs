@@ -37,7 +37,7 @@ namespace Tranquire.Selenium.Tests
             string directory)
         {
             //arrange       
-            expected = new TakeScreenshot(expected.Actor, expected.NextScreenshotName, new SaveScreenshotsToFileOnNext(directory));
+            expected = new TakeScreenshot(expected.Actor, expected.NextScreenshotName, new SaveScreenshotsToFileOnNext(directory, ScreenshotFormat.Jpeg));
             //act
             var actual = ActorExtensions.TakeScreenshots(actor, directory, name).InnerActorBuilder(expected.Actor);
             //assert
@@ -165,7 +165,8 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<SeleniumReportingConfiguration>(),
                         Array.Empty<IObserver<string>>(),
                         SeleniumReportingConfiguration.DefaultCanNotify,
-                        _defaultTakeScreenshotStrategy
+                        _defaultTakeScreenshotStrategy,
+                        ScreenshotFormat.Jpeg
                     };
                 }
                 {
@@ -177,7 +178,8 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<SeleniumReportingConfiguration>().AddTextObservers(observers),
                         observers,
                         SeleniumReportingConfiguration.DefaultCanNotify,
-                        _defaultTakeScreenshotStrategy
+                        _defaultTakeScreenshotStrategy,
+                        ScreenshotFormat.Jpeg
                         };
                 }
                 {
@@ -192,7 +194,8 @@ namespace Tranquire.Selenium.Tests
                             canNotify,
                             SeleniumReportingConfiguration.DefaultCanNotify
                         ),
-                        _defaultTakeScreenshotStrategy
+                        _defaultTakeScreenshotStrategy,
+                        ScreenshotFormat.Jpeg
                         };
                 }
                 {
@@ -204,7 +207,8 @@ namespace Tranquire.Selenium.Tests
                         fixture.Create<SeleniumReportingConfiguration>().WithTakeScreenshotStrategy(takeScreenshotStrategy),
                         Array.Empty<IObserver<string>>(),
                         SeleniumReportingConfiguration.DefaultCanNotify,
-                        takeScreenshotStrategy
+                        takeScreenshotStrategy,
+                        ScreenshotFormat.Jpeg
                         };
                 }
                 {
@@ -223,8 +227,21 @@ namespace Tranquire.Selenium.Tests
                             canNotify,
                             SeleniumReportingConfiguration.DefaultCanNotify
                         ),
-                        takeScreenshotStrategy
+                        takeScreenshotStrategy,
+                        ScreenshotFormat.Jpeg
                         };
+                }
+                {
+                    yield return new object[]
+                    {
+                        fixture.Create<Actor>(),
+                        fixture.Create<IActor>(),
+                        fixture.Create<SeleniumReportingConfiguration>().WithScreenshotFormat(ScreenshotFormat.Png),
+                        Array.Empty<IObserver<string>>(),
+                        SeleniumReportingConfiguration.DefaultCanNotify,
+                        _defaultTakeScreenshotStrategy,
+                        ScreenshotFormat.Png
+                    };
                 }
             }
         }
@@ -236,7 +253,8 @@ namespace Tranquire.Selenium.Tests
             SeleniumReportingConfiguration configuration,
             IObserver<string>[] observers,
             ICanNotify canNotify,
-            ITakeScreenshotStrategy takeScreenshotStrategy)
+            ITakeScreenshotStrategy takeScreenshotStrategy,
+            ScreenshotFormat format)
         {
             var actual = ActorExtensions.WithSeleniumReporting(
                     actor,
@@ -251,7 +269,8 @@ namespace Tranquire.Selenium.Tests
                                       configuration.ScreenshotNameOrFormat,
                                       observers,
                                       canNotify,
-                                      takeScreenshotStrategy);
+                                      takeScreenshotStrategy,
+                                      format);
         }
 
         private static void TestWithSeleniumReporting(
@@ -263,7 +282,8 @@ namespace Tranquire.Selenium.Tests
             string screenshotName,
             IObserver<string>[] observers,
             ICanNotify canNotify,
-            ITakeScreenshotStrategy takeScreenshotStrategy)
+            ITakeScreenshotStrategy takeScreenshotStrategy,
+            ScreenshotFormat format)
         {
             // assert 
             var xmlDocumentObserver = new XmlDocumentObserver();
@@ -272,19 +292,22 @@ namespace Tranquire.Selenium.Tests
                 actor,
                 screenshotName,
                 new CompositeObserver<ScreenshotInfo>(
-                    new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver),
-                    new RenderedScreenshotInfoObserver(new CompositeObserver<string>(observers)),
-                    new SaveScreenshotsToFileOnComplete(screenshotDirectory)
+                    new SaveScreenshotsToFileOnComplete(screenshotDirectory, format),
+                    new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver, format),
+                    new RenderedScreenshotInfoObserver(new CompositeObserver<string>(observers), format)
                     ),
                 takeScreenshotStrategy
                 )
                 .InnerActorBuilder(iactor) as TakeScreenshot;
-            takeScreenshot.Should().BeEquivalentTo(expectedTakeScreenshot, o => o.Excluding(a => a.Actor)
-                                                                                 .Excluding(a => a.NextScreenshotName)
-                                                                                 .RespectingRuntimeTypes());
+            takeScreenshot.Should().BeEquivalentTo(expectedTakeScreenshot,
+                                                   o => o.Excluding(a => a.Actor)
+                                                         .Excluding(a => a.NextScreenshotName)
+                                                         .ExcludingDateTimeOffset()
+                                                         .RespectingRuntimeTypes(),
+                                                   "Take screenshot");
             var actualScreenshotNames = Enumerable.Range(0, 10).Select(_ => takeScreenshot.NextScreenshotName());
             var expectedScreenshotNames = Enumerable.Range(0, 10).Select(_ => expectedTakeScreenshot.NextScreenshotName());
-            actualScreenshotNames.Should().BeEquivalentTo(expectedScreenshotNames);
+            actualScreenshotNames.Should().BeEquivalentTo(expectedScreenshotNames, "Screenshot names");
 
             var reportingActor = takeScreenshot.Actor.Should().BeOfType<ReportingActor>().Which;
             var expectedReportingActor = actor.WithReporting(
@@ -298,13 +321,16 @@ namespace Tranquire.Selenium.Tests
                     canNotify
                 )
                 .InnerActorBuilder(iactor) as ReportingActor;
-            reportingActor.Should().BeEquivalentTo(expectedReportingActor, o => o.Excluding(a => a.Actor)
-                                                                                 .Excluding(a => a.MeasureTime.Now)
-                                                                                 .Excluding((IMemberInfo m) => m.RuntimeType == typeof(DateTimeOffset))
-                                                                                 .RespectingRuntimeTypes());
+            reportingActor.Should().BeEquivalentTo(expectedReportingActor,
+                                                   o => o.Excluding(a => a.Actor)                                                         
+                                                         .ExcludingDateTimeOffset()
+                                                         .RespectingRuntimeTypes(),
+                                                   "Reporting actor") ;
 
-            var expectedSeleniumReporter = new SeleniumReporter(xmlDocumentObserver, new SaveScreenshotsToFileOnComplete(screenshotDirectory));
-            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter, o => o.Excluding((IMemberInfo m) => m.RuntimeType == typeof(DateTimeOffset)));
+            var expectedSeleniumReporter = new SeleniumReporter(xmlDocumentObserver, new SaveScreenshotsToFileOnComplete(screenshotDirectory, format));
+            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter, 
+                                                           o => o.ExcludingDateTimeOffset(),
+                                                           "Selenium reporter");
         }
     }
 }
