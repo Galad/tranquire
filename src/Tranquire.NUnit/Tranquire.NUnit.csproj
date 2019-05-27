@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>    
     <RootNamespace>Tranquire</RootNamespace>
     <Description>Provides integration of NUnit constraints with Tranquire.</Description>
     <IsPackable>true</IsPackable>
@@ -29,5 +29,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tranquire\Tranquire.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectCapability Remove="TestContainer" />
   </ItemGroup>
 </Project>
