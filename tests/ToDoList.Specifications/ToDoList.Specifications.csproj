@@ -1,133 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="ToDo\index.html" />
-    <None Remove="ToDo\js\app.jsx" />
-    <None Remove="ToDo\js\footer.jsx" />
-    <None Remove="ToDo\js\todoItem.jsx" />
-    <None Remove="ToDo\js\todoModel.js" />
-    <None Remove="ToDo\js\utils.js" />
-    <None Remove="ToDo\node_modules\classnames\index.js" />
-    <None Remove="ToDo\node_modules\director\build\director.js" />
-    <None Remove="ToDo\node_modules\react\dist\JSXTransformer.js" />
-    <None Remove="ToDo\node_modules\react\dist\react-with-addons.js" />
-    <None Remove="ToDo\node_modules\todomvc-app-css\index.css" />
-    <None Remove="ToDo\node_modules\todomvc-common\base.css" />
-    <None Remove="ToDo\node_modules\todomvc-common\base.js" />
-    <None Remove="ToDo\package.json" />
-    <None Remove="ToDo\Web.config" />
-    <None Remove="ToDo\Web.Debug.config" />
-    <None Remove="ToDo\Web.Release.config" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="ToDo\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\js\app.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\js\footer.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\js\todoItem.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\js\todoModel.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\js\utils.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\classnames\index.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\director\build\director.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\react\dist\JSXTransformer.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\react\dist\react-with-addons.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\todomvc-app-css\index.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\todomvc-common\base.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\node_modules\todomvc-common\base.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\package.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\Web.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\Web.Debug.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ToDo\Web.Release.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>    
     <PackageReference Include="AutoFixture.Xunit2" />
-    <PackageReference Include="Microsoft.Owin.SelfHost" />
-    <PackageReference Include="Microsoft.Owin.StaticFiles" />
     <PackageReference Include="AutoFixture.AutoMoq" />
     <PackageReference Include="AutoFixture.Idioms" />
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" />
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="Selenium.Support" />
     <PackageReference Include="Selenium.WebDriver" />
     <PackageReference Include="xunit" />
+    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" />
     <PackageReference Include="SpecFlow.xUnit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.ComponentModel.TypeConverter" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tranquire.Selenium\Tranquire.Selenium.csproj" />
     <ProjectReference Include="..\..\src\Tranquire\Tranquire.csproj" />
     <ProjectReference Include="..\..\src\ToDoList.Automation\ToDoList.Automation.csproj" />
+    <ProjectReference Include="..\..\src\ToDoList\ToDoList.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="AddToDoItems.feature.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AddToDoItems.feature</DependentUpon>
-    </Compile>
-    <Compile Update="RemainingCount.feature.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RemainingCount.feature</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="AddToDoItems.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>AddToDoItems.feature.cs</LastGenOutput>
-    </None>
-    <None Update="RemainingCount.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>RemainingCount.feature.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+  
+  <Target Name="AfterUpdateFeatureFilesInProject">
+    <!-- include any generated SpecFlow files in the compilation of the project if not included yet -->
+    <ItemGroup>
+      <Compile Include="**\*.feature.cs" Exclude="@(Compile)" />
+    </ItemGroup>
+  </Target>
 </Project>

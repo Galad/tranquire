@@ -1,39 +1,37 @@
-﻿using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.Hosting;
-using Microsoft.Owin.StaticFiles;
-using Owin;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Immutable;
 using System.IO;
 using TechTalk.SpecFlow;
-using ToDoList.Automation.Actions;
 
 namespace ToDoList.Specifications
 {
     [Binding]
     public class Setup
     {
-        private static IDisposable _webServer;
-
+        private static IWebHost _webServer;
+        
         [BeforeTestRun]
         public static void StartWebServer()
         {
-            _webServer = WebApp.Start(Open.RootUrl, BuildHost);
+            var testAssemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            // Remove the "\\bin\\Debug\\netcoreapp2.1"
+            var solutionPath = testAssemblyPath.Substring(0, testAssemblyPath.LastIndexOf(@"\bin\", StringComparison.Ordinal));            
+
+            // Important to ensure that npm loads and is pointing to correct directory
+            Directory.SetCurrentDirectory(Path.Join(solutionPath, @"src\ToDoList"));
+            var webHostBuilder = WebHost.CreateDefaultBuilder()
+                                        .UseUrls("http://localhost:5000/")
+                                        .UseStartup<Startup>();
+            _webServer = webHostBuilder.Build();
+            _webServer.Start();            
         }
 
         [AfterTestRun]
         public static void StopWebServer()
         {
             _webServer.Dispose();
-        }
-
-        private static void BuildHost(IAppBuilder builder)
-        {
-            builder.UseFileServer(new FileServerOptions()
-            {
-                FileSystem = new PhysicalFileSystem(Path.GetDirectoryName(typeof(Setup).Assembly.Location)),
-                EnableDirectoryBrowsing = true
-            });
         }
 
         [StepArgumentTransformation]

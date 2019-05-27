@@ -6,7 +6,6 @@
     <CodeAnalysisRuleSet>$(SolutionDir)SonarQube\DisableSonarRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <BaseOutputPath>$(SolutionDir)bin\$(MSBuildProjectName)</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(SolutionDir)obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <DocumentationFile>$(SolutionDir)bin\$(MSBuildProjectName)\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
   </PropertyGroup>
 
