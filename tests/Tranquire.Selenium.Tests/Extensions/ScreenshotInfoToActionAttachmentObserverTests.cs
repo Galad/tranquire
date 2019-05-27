@@ -69,7 +69,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             // assert
             var expected = new ActionFileAttachment(filename, string.Empty);
             Mock.Get(sut.AttachmentObserver).Verify(o => o.OnNext(It.Is<ActionFileAttachment>(a => 
-                    a.FilePath == filename + ".jpg" &&
+                    a.FilePath == filename + sut.Format.Extension &&
                     a.Description == string.Empty)));
         }
     }

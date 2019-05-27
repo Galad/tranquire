@@ -55,7 +55,7 @@ namespace Tranquire.Selenium
         /// <returns>An new actor taking screenshots</returns>
         public static Actor TakeScreenshots(this Actor actor, string directory, string screenshotNameOrFormat)
         {
-            return actor.TakeScreenshots(screenshotNameOrFormat, new SaveScreenshotsToFileOnNext(directory));
+            return actor.TakeScreenshots(screenshotNameOrFormat, new SaveScreenshotsToFileOnNext(directory, ScreenshotFormat.Jpeg));
         }
 
         /// <summary>
@@ -160,11 +160,11 @@ namespace Tranquire.Selenium
                 xmlDocumentObserver,
                 new RenderedReportingObserver(textObservers, RenderedReportingObserver.DefaultRenderer)
                 );
-            var saveScreenshotObserver = new SaveScreenshotsToFileOnComplete(configuration.ScreenshotDirectory);
+            var saveScreenshotObserver = new SaveScreenshotsToFileOnComplete(configuration.ScreenshotDirectory, configuration.ScreenshotFormat);
             var screenshotObserver = new CompositeObserver<ScreenshotInfo>(
                 saveScreenshotObserver,
-                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver),
-                new RenderedScreenshotInfoObserver(textObservers)
+                new ScreenshotInfoToActionAttachmentObserverAdapter(xmlDocumentObserver, configuration.ScreenshotFormat),
+                new RenderedScreenshotInfoObserver(textObservers, configuration.ScreenshotFormat)
                 );
             seleniumReporter = new SeleniumReporter(xmlDocumentObserver, saveScreenshotObserver);
             return configuration.ApplyWithReporting(actor, reportingObserver)

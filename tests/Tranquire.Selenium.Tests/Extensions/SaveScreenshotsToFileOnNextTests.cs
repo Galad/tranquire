@@ -59,19 +59,21 @@ namespace Tranquire.Selenium.Tests.Extensions
         {
             // arrange
             fixture.Inject(CreateTestDirectoryPath());
-            var sut = fixture.Create<SaveScreenshotsToFileOnNext>();
-            ScreenshotInfo GetScreenshotInfo()
-            {
-                var screenshot = ((ITakesScreenshot)base.Fixture.WebDriver).GetScreenshot();
-                return new ScreenshotInfo(screenshot, Guid.NewGuid().ToString());
-            }
+            var sut = fixture.Create<SaveScreenshotsToFileOnNext>();            
             var screenshotInfo = GetScreenshotInfo();
             // act
             sut.OnNext(screenshotInfo);
             var actual = Directory.GetFiles(sut.Directory).Select(Path.GetFileName);
             // assert
-            var expected = new[] { screenshotInfo.FileName + ".jpg" };
+            var expected = new[] { screenshotInfo.FileName + sut.Format.Extension };
             actual.Should().BeEquivalentTo(expected);
+            // the actual format which the screenshot is saved to is not covered by a test
+
+            ScreenshotInfo GetScreenshotInfo()
+            {
+                var screenshot = ((ITakesScreenshot)base.Fixture.WebDriver).GetScreenshot();
+                return new ScreenshotInfo(screenshot, Guid.NewGuid().ToString());
+            }
         }
     }
 }

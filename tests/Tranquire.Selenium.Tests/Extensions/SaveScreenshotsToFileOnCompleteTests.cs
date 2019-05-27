@@ -80,7 +80,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             sut.OnCompleted();
             var actual = Directory.GetFiles(sut.Directory).Select(Path.GetFileName);
             // assert
-            var expected = screenshots.Select(s => s.FileName + ".jpg");
+            var expected = screenshots.Select(s => s.FileName + sut.Format.Extension);
             actual.Should().BeEquivalentTo(expected);
         }
     }

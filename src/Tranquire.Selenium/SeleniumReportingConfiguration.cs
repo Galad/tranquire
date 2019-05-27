@@ -37,15 +37,17 @@ namespace Tranquire.Selenium
                                                                                     screenshotNameOrFormat,
                                                                                     null,
                                                                                     ImmutableArray<IObserver<string>>.Empty,
-                                                                                    new AlwaysTakeScreenshotStrategy())
-        {            
+                                                                                    new AlwaysTakeScreenshotStrategy(),
+                                                                                    ScreenshotFormat.Jpeg)
+        {
         }
 
         private SeleniumReportingConfiguration(string screenshotDirectory,
                                                string screenshotNameOrFormat,
                                                ICanNotify canNotify,
                                                ImmutableArray<IObserver<string>> textOutputObservers,
-                                               ITakeScreenshotStrategy takeScreenshotStrategy)
+                                               ITakeScreenshotStrategy takeScreenshotStrategy,
+                                               ScreenshotFormat screenshotFormat)
         {
             if (string.IsNullOrEmpty(screenshotDirectory))
             {
@@ -60,6 +62,7 @@ namespace Tranquire.Selenium
             _canNotify = canNotify;
             TextOutputObservers = textOutputObservers;
             TakeScreenshotStrategy = takeScreenshotStrategy;
+            ScreenshotFormat = screenshotFormat ?? throw new ArgumentNullException(nameof(screenshotFormat));
         }
 
         /// <summary>
@@ -72,11 +75,12 @@ namespace Tranquire.Selenium
         public string ScreenshotNameOrFormat { get; }
         internal ImmutableArray<IObserver<string>> TextOutputObservers { get; }
         internal ITakeScreenshotStrategy TakeScreenshotStrategy { get; }
+        internal ScreenshotFormat ScreenshotFormat { get; }
 
         internal Actor ApplyWithReporting(Actor actor, IObserver<ActionNotification> observer)
         {
-            var canNotify = _canNotify == null ? DefaultCanNotify : new CompositeCanNotify(_canNotify, DefaultCanNotify);            
-            return actor.WithReporting(observer, canNotify);            
+            var canNotify = _canNotify == null ? DefaultCanNotify : new CompositeCanNotify(_canNotify, DefaultCanNotify);
+            return actor.WithReporting(observer, canNotify);
         }
 
         /// <summary>
@@ -95,7 +99,8 @@ namespace Tranquire.Selenium
                                                       ScreenshotNameOrFormat,
                                                       canNotify,
                                                       TextOutputObservers,
-                                                      TakeScreenshotStrategy);
+                                                      TakeScreenshotStrategy,
+                                                      ScreenshotFormat);
         }
 
         /// <summary>
@@ -114,7 +119,8 @@ namespace Tranquire.Selenium
                                                       ScreenshotNameOrFormat,
                                                       _canNotify,
                                                       TextOutputObservers.AddRange(textOutputObservers),
-                                                      TakeScreenshotStrategy);
+                                                      TakeScreenshotStrategy,
+                                                      ScreenshotFormat);
         }
 
         /// <summary>
@@ -126,7 +132,23 @@ namespace Tranquire.Selenium
                                                       ScreenshotNameOrFormat,
                                                       _canNotify,
                                                       TextOutputObservers,
-                                                      takeScreenshotStrategy);
+                                                      takeScreenshotStrategy,
+                                                      ScreenshotFormat);
+        }
+
+        /// <summary>
+        /// Save the screeshots in the specified format
+        /// </summary>
+        /// <param name="screenshotFormat">The format</param>
+        /// <returns></returns>
+        public SeleniumReportingConfiguration WithScreenshotFormat(ScreenshotFormat screenshotFormat)
+        {
+            return new SeleniumReportingConfiguration(ScreenshotDirectory,
+                                                      ScreenshotNameOrFormat,
+                                                      _canNotify,
+                                                      TextOutputObservers,
+                                                      TakeScreenshotStrategy,
+                                                      screenshotFormat);
         }
     }
 }

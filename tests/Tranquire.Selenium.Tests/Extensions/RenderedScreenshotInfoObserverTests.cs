@@ -60,7 +60,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             // act
             sut.OnNext(screenshotInfo);
             // assert
-            Mock.Get(sut.Observer).Verify(o => o.OnNext(screenshotInfo.FileName + ".jpg"));
+            Mock.Get(sut.Observer).Verify(o => o.OnNext(screenshotInfo.FileName + sut.Format.Extension));
         }
     }
 }
