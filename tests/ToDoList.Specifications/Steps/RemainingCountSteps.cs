@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using TechTalk.SpecFlow;
-using ToDoList.Automation.Questions;
+using ToDoList.Automation;
 
 namespace ToDoList.Specifications
 {
@@ -14,7 +14,7 @@ namespace ToDoList.Specifications
         [Then(@"I should have (.*) items remaining")]
         public void ThenIShouldHaveItemsRemaining(int expectedCount)
         {
-            Context.Actor().Then(TheItems.Remaining(), items => items.Should().Be(expectedCount));
+            Context.Actor().Then(Get.RemainingItems, items => items.Should().Be(expectedCount));
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using ToDoList.Domain;
 
 namespace ToDoList
 {
@@ -28,6 +29,7 @@ namespace ToDoList
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddSingleton<IToDoItemRepository>(new InMemoryToDoItemRepository());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

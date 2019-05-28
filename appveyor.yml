@@ -26,7 +26,11 @@ build_script:
 - npm run-script build
 - cd ..\..\..
 test_script:
-- ps: C:\ProgramData\chocolatey\bin\OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Tranquire.sln --logger trx --no-build --configuration Release --results-directory $env:APPVEYOR_BUILD_FOLDER\TestResults" "-mergebyhash" "-coverbytest:*" -oldstyle
+- ps: C:\ProgramData\chocolatey\bin\OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Tranquire.sln --logger trx --no-build --configuration Release --results-directory $env:APPVEYOR_BUILD_FOLDER\TestResults --filter Category!=UI&Category!=Api" "-mergebyhash" "-coverbytest:*" -oldstyle
+- set TEST_LEVEL=Api
+- ps: C:\ProgramData\chocolatey\bin\OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Tranquire.sln --logger trx --no-build --configuration Release --results-directory $env:APPVEYOR_BUILD_FOLDER\TestResults --filter Category=Api" "-mergebyhash" "-coverbytest:*" -oldstyle -mergeoutput
+- set TEST_LEVEL=UI
+- ps: C:\ProgramData\chocolatey\bin\OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Tranquire.sln --logger trx --no-build --configuration Release --results-directory $env:APPVEYOR_BUILD_FOLDER\TestResults --filter Category=UI" "-mergebyhash" "-coverbytest:*" -oldstyle -mergeoutput
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
 - ps: C:\ProgramData\chocolatey\bin\SaxonHE\bin\transform.exe -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"

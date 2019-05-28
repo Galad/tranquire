@@ -44,5 +44,18 @@ namespace Tranquire.Tests
             actual.Should().BeOfType<SelectManyQuestionToAction<string, object>>();
             actual.Should().BeEquivalentTo(expected);
         }
+
+        #region Tagged
+        [Theory, DomainAutoData]
+        public void Tagged_ShouldReturnCorrectValue(IQuestion<object> question, string tag)
+        {
+            // arrange
+            // act
+            var actual = question.Tagged(tag);
+            // assert
+            var expected = Questions.CreateTagged(question.Name, (tag, question));
+            actual.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+        }
+        #endregion
     }
 }

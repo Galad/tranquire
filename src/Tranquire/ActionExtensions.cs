@@ -146,5 +146,25 @@ namespace Tranquire
             return new SelectAction<TSource, TResult>(action, selector);
         }
         #endregion
+
+        #region Tagged
+        /// <summary>
+        /// Create a tagged action from the current action.
+        /// </summary>
+        /// <typeparam name="T">The action type</typeparam>
+        /// <typeparam name="TTag">The tag type</typeparam>
+        /// <param name="action">The action to tag</param>
+        /// <param name="tag">The tag to apply to the action</param>
+        /// <returns>An action with a single tag <paramref name="tag"/></returns>
+        public static IAction<T> Tagged<T, TTag>(this IAction<T> action, TTag tag)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return Actions.CreateTagged(action.Name, (tag, action));
+        }
+        #endregion
     }
 }

@@ -265,7 +265,7 @@ namespace Tranquire
                 Name = name ?? $"Tagged action with {string.Join(", ", Actions.Keys.OrderBy(k => k))}";
             }
 
-            private ImmutableDictionary<TTag, IAction<T>> Actions { get; }
+            public ImmutableDictionary<TTag, IAction<T>> Actions { get; }
 
             public override string Name { get; }
 

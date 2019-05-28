@@ -1,45 +1,17 @@
 import _ from "lodash";
 
-const storagekey = "todos::data";
+export default class TodoList {  
 
-export default class TodoList {
-  constructor() {
-    this.load();
+  load() {    
+    return fetch("api/todoitem").then(res => res.json());
   }
 
-  load() {
-    const data = window.localStorage.getItem(storagekey);
-    if (data != null) {
-      this.items = JSON.parse(data);
-    } else {
-      this.items = [];
-    }
-    this.maxId = _.isEmpty(this.items) ? 0 : _.maxBy(this.items, "id").id;
-  }
-
-  save() {
-    window.localStorage.setItem(storagekey, JSON.stringify(this.items));
-  }
-
-  newId() {
-    this.maxId += 1;
-    return this.maxId;
-  }
-
-  add(name) {
-    const item = {
-      id: this.newId(),
-      name,
-      completed: false,
-      createdAt: Date.now(),
-    };
-    this.items.unshift(item);
-    this.save();
+  add(name) {    
+    return fetch("api/todoitem", { method: "POST", body: JSON.stringify(name), headers: {'Content-Type': 'application/json'}});
   }
 
   delete(todo) {
-    this.items = this.items.filter(item => item.id !== todo.id);
-    this.save();
+    return fetch("api/todoitem/" + todo.id, { method: "DELETE"});
   }
 
   toggle(todo) {
@@ -49,27 +21,25 @@ export default class TodoList {
       if (item.completed) {
         item.completedAt = Date.now();
       }
-      this.save();
     }
   }
 
   rename(id, newName) {
     let item = _.find(this.items, it => it.id === id);
     if (item) {
-      item.name = newName;
-      this.save();
+      item.name = newName;      
     }
   }
 
-  filter(status) {
+  filter(status, items) {
     switch (status) {
       case "active":
-        return this.items.filter(item => item.completed === false);
+        return items.filter(item => item.completed === false);
       case "completed":
-        return this.items.filter(item => item.completed === true);
+        return items.filter(item => item.completed === true);
       case "all":
       default:
-        return this.items;
+        return items;
     }
   }
 }

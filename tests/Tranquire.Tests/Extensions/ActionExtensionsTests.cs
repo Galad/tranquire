@@ -121,5 +121,18 @@ namespace Tranquire.Tests.Extensions
             actual.Should().BeEquivalentTo(expected);
         }
         #endregion
+
+        #region Tagged
+        [Theory, DomainAutoData]
+        public void Tagged_ShouldReturnCorrectValue(IAction<object> action, string tag)
+        {
+            // arrange
+            // act
+            var actual = action.Tagged(tag);
+            // assert
+            var expected = Actions.CreateTagged(action.Name, (tag, action));
+            actual.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+        }
+        #endregion
     }
 }

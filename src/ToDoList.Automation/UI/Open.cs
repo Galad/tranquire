@@ -1,8 +1,7 @@
-﻿using System;
-using Tranquire;
+﻿using Tranquire;
 using Tranquire.Selenium.Actions;
 
-namespace ToDoList.Automation.Actions
+namespace ToDoList.Automation.UI
 {
     public static class Open
     {

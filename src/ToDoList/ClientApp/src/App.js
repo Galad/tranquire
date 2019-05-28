@@ -99,20 +99,22 @@ const TodoList = styled.ul`
 `;
 
 class App extends React.Component {
-  state = {
-    newTodo: "",
-    filter: getHashPath() || "active",
-    items: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newTodo: "",
+      filter: getHashPath() || "active",
+      items: [],
+      isLoaded: false
+    };
+  }
 
   todos = new Todos();
 
-  loadItems(filter) {
-    if (filter === null || filter === this.state.filter) {
-      this.setState({ items: this.todos.filter(this.state.filter) });
-    } else {
-      this.setState({ filter, items: this.todos.filter(filter) });
-    }
+  loadItems() {
+    this.todos.load().then(result => this.setState(
+      {items: this.todos.filter(this.state.filter, result),
+       isLoaded: true }));
   }
 
   inputText = event => {
@@ -124,17 +126,17 @@ class App extends React.Component {
       event.preventDefault();
       var title = this.state.newTodo.trim();
       if (title) {
-        this.todos.add(title);
-        this.setState({ newTodo: "" });
-        const filter =
-          this.state.filter === "completed" ? "active" : this.state.filter;
-        this.loadItems(filter);
+        this.todos.add(title)
+          .then(() => this.todos.load())
+          .then(result => this.setState(
+              {items: this.todos.filter(this.state.filter, result),
+               newTodo: ""}));
       }
     }
   };
 
   toggle = todo => {
-    return () => {
+    return () => {      
       this.todos.toggle(todo);
       this.loadItems();
     };
@@ -149,8 +151,7 @@ class App extends React.Component {
 
   destroy = todo => {
     return () => {
-      this.todos.delete(todo);
-      this.loadItems();
+      this.todos.delete(todo).then(() => this.loadItems());
     };
   };
 
@@ -173,30 +174,32 @@ class App extends React.Component {
       <Page>
         <GlobalStyle />
         <Title>todos</Title>
-        <TodoApp>
-          <label className="indicator">❯</label>
-          <Input
-            placeholder="What needs to be done?"
-            id="new-todo"
-            value={newTodo}
-            onChange={this.inputText}
-            onKeyDown={this.newTodoKeyDown}
-            autoFocus={true}
-          />
-          <TodoList className="todo-list">
-            {items.map((todo, index) => (
-              <TodoItem
-                key={index}
-                todo={todo}
-                filter={filter}
-                onToggle={this.toggle(todo)}
-                onUpdate={this.update(todo)}
-                onDestroy={this.destroy(todo)}
-              />
-            ))}
-          </TodoList>
-          <Footer filter={filter} itemCount={items.length} />
-        </TodoApp>
+        {this.state.isLoaded ?
+          <TodoApp>
+            <label className="indicator">❯</label>
+            <Input
+              placeholder="What needs to be done?"
+              id="new-todo"
+              value={newTodo}
+              onChange={this.inputText}
+              onKeyDown={this.newTodoKeyDown}
+              autoFocus={true}
+            />
+            <TodoList className="todo-list">
+              {items.map((todo, index) => (
+                <TodoItem
+                  key={index}
+                  todo={todo}
+                  filter={filter}
+                  onToggle={this.toggle(todo)}
+                  onUpdate={this.update(todo)}
+                  onDestroy={this.destroy(todo)}
+                />
+              ))}
+            </TodoList>
+            <Footer filter={filter} itemCount={items.length} />
+          </TodoApp>
+          : "Loading..."}
         <footer className="info">
           <p>Double-click to edit a todo</p>
           <p>
