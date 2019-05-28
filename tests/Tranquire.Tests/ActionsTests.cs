@@ -530,6 +530,40 @@ namespace Tranquire.Tests
             var expected = "Tagged action with tag1, tag2, tag3";
             Assert.Equal(expected, actual);
         }
+
+        [Theory, DomainAutoData]
+        public void TaggedAction_OverridingName_ShouldReturnCorrectValue(string expected)
+        {
+            // arrange
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };
+            var taggedAction = Actions.CreateTagged(expected, actions);
+            // act
+            var actual = taggedAction.Name;
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void TaggedAction_OverloadsShouldReturnSameAction()
+        {
+            // arrange
+            var actions = new (string tag, IAction<int> action)[]
+            {
+                ("tag1", Actions.FromResult(1)),
+                ("tag2", Actions.FromResult(2)),
+                ("tag3", Actions.FromResult(3))
+            };
+            // act
+            var action1 = Actions.CreateTagged(actions);
+            var action2 = Actions.CreateTagged(action1.Name, actions);
+            // assert
+            action1.Should().BeEquivalentTo(action2, o => o.RespectingRuntimeTypes());
+        }
         #endregion
     }
 }
