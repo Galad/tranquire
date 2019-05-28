@@ -12,6 +12,11 @@ namespace ToDoList.Domain
             _items.Add(toDoItem.Id, toDoItem);
         }
 
+        public void Clear()
+        {
+            _items.Clear();
+        }
+
         public void Delete(Guid id)
         {
             _items.Remove(id);

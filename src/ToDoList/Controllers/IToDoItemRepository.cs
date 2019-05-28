@@ -10,5 +10,6 @@ namespace ToDoList.Domain
         void Update(ToDoItem toDoItem);
         void Add(ToDoItem toDoItem);
         void Delete(Guid id);
+        void Clear();
     }
 }

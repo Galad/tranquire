@@ -46,5 +46,25 @@ namespace Tranquire
         {
             return new SelectManyQuestionToAction<TSource, TResult>(question, selector);
         }
+
+        #region Tagged
+        /// <summary>
+        /// Create a tagged question from the current question.
+        /// </summary>
+        /// <typeparam name="T">The question type</typeparam>
+        /// <typeparam name="TTag">The tag type</typeparam>
+        /// <param name="question">The question to tag</param>
+        /// <param name="tag">The tag to apply to the question</param>
+        /// <returns>A question with a single tag <paramref name="tag"/></returns>
+        public static IQuestion<T> Tagged<T, TTag>(this IQuestion<T> question, TTag tag)
+        {
+            if (question is null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+
+            return Questions.CreateTagged(question.Name, (tag, question));
+        }
+        #endregion
     }
 }

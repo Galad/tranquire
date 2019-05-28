@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using Tranquire.Selenium;
 
-namespace ToDoList.Automation.Actions
+namespace ToDoList.Automation.UI
 {
     public static class ToDoPage
     {

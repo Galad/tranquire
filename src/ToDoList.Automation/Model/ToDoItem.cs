@@ -1,23 +1,55 @@
-﻿using Tranquire.Selenium.Questions.UIModels;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ToDoList.Automation.Model
 {
-    public sealed class ToDoItem
+    /// <summary>
+    /// Represents a to do item
+    /// </summary>
+    public sealed class ToDoItem : IEquatable<ToDoItem>
     {
-        [Target(ByMethod.CssSelector, "div label")]
+        public ToDoItem(Guid id, string name, bool completed)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Completed = completed;
+            Id = id;
+        }
+
         public string Name { get; }
 
-        [Target]
-        [Classes(Contains = "completed")]
-        public bool IsCompleted { get; }
+        public bool Completed { get; }
 
-        /// <summary>Record Constructor</summary>
-        /// <param name="name"><see cref="Name"/></param>
-        /// <param name="isCompleted"><see cref="IsCompleted"/></param>
-        public ToDoItem(string name, bool isCompleted)
+        public Guid Id { get; }
+
+        public override bool Equals(object obj)
         {
-            Name = name;
-            IsCompleted = isCompleted;
+            return Equals(obj as ToDoItem);
+        }
+
+        public bool Equals(ToDoItem other)
+        {
+            return other != null &&
+                   Name == other.Name &&
+                   Completed == other.Completed;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1092317192;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + Completed.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(ToDoItem left, ToDoItem right)
+        {
+            return EqualityComparer<ToDoItem>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(ToDoItem left, ToDoItem right)
+        {
+            return !(left == right);
         }
     }
 }

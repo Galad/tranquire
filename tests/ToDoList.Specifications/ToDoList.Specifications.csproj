@@ -31,7 +31,13 @@
     <ProjectReference Include="..\..\src\ToDoList.Automation\ToDoList.Automation.csproj" />
     <ProjectReference Include="..\..\src\ToDoList\ToDoList.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="AfterUpdateFeatureFilesInProject">
     <!-- include any generated SpecFlow files in the compilation of the project if not included yet -->
     <ItemGroup>
