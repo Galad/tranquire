@@ -48,33 +48,21 @@ namespace ToDoList.Specifications
         [Then(@"the to-do items list should contain ""(.*)""")]
         public async Task ThenTheTo_DoItemsListShouldContain(string item)
         {
-            await Context.Actor().Then(Get.ToDoItems, async itemsTask =>
-            {
-                var items = await itemsTask;
-                items.Should().Contain(i => i.Name == item);
-            });
+            await Context.Actor().Then(Get.ToDoItems, items => items.Should().Contain(i => i.Name == item));
         }
 
         [Then(@"the to-do items list should not contain ""(.*)""")]
         public async Task ThenTheTo_DoItemsListShouldNotContain(string item)
         {
-            await Context.Actor().Then(Get.ToDoItems, async itemsTask =>
-            {
-                var items = await itemsTask;
-                items.Should().NotContain(i => i.Name == item);
-            });
+            await Context.Actor().Then(Get.ToDoItems, items => items.Should().NotContain(i => i.Name == item));
         }
 
         [Then(@"the to-do items list should contain ""(.*)"" (.*) times")]
         public async Task ThenTheTo_DoItemsListShouldContainTimes(string item, int times)
         {
-            await Context.Actor().Then(Get.ToDoItems, async itemsTask =>
-            {
-                var items = await itemsTask;
-                items.Where(i => i.Name == item)
-                     .Should()
-                     .HaveCount(times, "Expected to have {0} items in collection", times);
-            });
+            await Context.Actor().Then(Get.ToDoItems, items => items.Where(i => i.Name == item)
+                                                                    .Should()
+                                                                    .HaveCount(times, "Expected to have {0} items in collection", times));
         }
     }
 }

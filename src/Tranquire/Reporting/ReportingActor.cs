@@ -149,11 +149,11 @@ namespace Tranquire.Reporting
             )
             GetNotificationContentFactories<T>(INamed action, CommandType commandType)
         {
-            if (action is ThenAction<T> thenAction)
+            if (action is IThenAction<T> thenAction)
             {
                 return
                 (
-                    date => new BeforeThenNotificationContent<T>(date, thenAction.Question),
+                    date => new BeforeThenNotificationContent(date, thenAction.Question),
                     time => new AfterThenNotificationContent(time, ThenOutcome.Pass),
                     (error, duration) => new AfterThenNotificationContent(duration, GetOutcome(error), error)
                 );

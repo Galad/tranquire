@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Tranquire
 {
@@ -78,6 +79,67 @@ namespace Tranquire
             }
 
             return actor;
+        }
+
+        /// <summary>
+        /// Verifies the answer of the given question
+        /// </summary>
+        /// <typeparam name="TAnswer">The answer type</typeparam>
+        /// <param name="actor">The actor</param>
+        /// <param name="question">The question to verify the answer from</param>
+        /// <param name="verifyAction">The action that verifies the answer. This action can throw assertion exceptions (using the Assert of a unit test framework) to indicates that the verification fails.</param>
+        /// <returns>The answer, when the verification succeeds</returns>
+        public static TAnswer Then<TAnswer>(this IVerifies actor, IQuestion<TAnswer> question, Action<TAnswer> verifyAction)
+        {
+            if (actor is null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+            if (question is null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+            if (verifyAction is null)
+            {
+                throw new ArgumentNullException(nameof(verifyAction));
+            }
+
+            return actor.Then(question, result =>
+            {
+                verifyAction(result);
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// Verifies the answer of the given asynchronous question
+        /// </summary>
+        /// <typeparam name="TAnswer">The answer type</typeparam>
+        /// <param name="actor">The actor</param>
+        /// <param name="question">The question to verify the answer from</param>
+        /// <param name="verifyAction">The action that verifies the answer. This action can throw assertion exceptions (using the Assert of a unit test framework) to indicates that the verification fails.</param>
+        /// <returns>The answer, when the verification succeeds</returns>
+        public static Task<TAnswer> Then<TAnswer>(this IVerifies actor, IQuestion<Task<TAnswer>> question, Action<TAnswer> verifyAction)
+        {
+            if (actor is null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+            if (question is null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+            if (verifyAction is null)
+            {
+                throw new ArgumentNullException(nameof(verifyAction));
+            }
+
+            return actor.Then(question, async resultTask =>
+            {
+                var result = await resultTask;
+                verifyAction(result);
+                return result;
+            });
         }
     }
 }

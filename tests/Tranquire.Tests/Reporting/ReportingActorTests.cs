@@ -426,16 +426,16 @@ namespace Tranquire.Tests.Reporting
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
             TimeSpan expectedDuration,
-            ThenAction<object> thenAction
+            ThenAction<object, string> thenAction
             )
         {
             //arrange                              
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object(), null));
+            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>())).Returns((expectedDuration, string.Empty, null));
             //act
             sut.Execute(thenAction);
             //assert
             var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
+                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Pass))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -447,13 +447,13 @@ namespace Tranquire.Tests.Reporting
             [Frozen]DateTimeOffset date,
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
-            ThenAction<object> thenAction,
+            ThenAction<object, string> thenAction,
             Exception error,
             TimeSpan expectedDuration
             )
         {
             //arrange                
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>()))
+            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>()))
                                      .Returns((expectedDuration, null, error));
             //act
             try
@@ -465,7 +465,7 @@ namespace Tranquire.Tests.Reporting
             }
             //assert
             var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
+                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Error, error))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
@@ -490,13 +490,13 @@ namespace Tranquire.Tests.Reporting
             [Frozen]DateTimeOffset date,
             [Frozen]IMeasureDuration measureDuration,
             ReportingActor sut,
-            ThenAction<object> thenAction,
+            ThenAction<object, string> thenAction,
             TimeSpan expectedDuration
             )
         {
             //arrange                
             Exception expectedException = null;
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<object>>()))
+            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>()))
                                      .Returns(() =>
                                      {
                                          try
@@ -506,7 +506,7 @@ namespace Tranquire.Tests.Reporting
                                          catch (Exception ex)
                                          {
                                              expectedException = ex;
-                                             return (expectedDuration, new object(), ex);
+                                             return (expectedDuration, string.Empty, ex);
                                          }
                                          throw new InvalidOperationException("Should not happen as the assertions actions should throw an exception");
                                      });
@@ -520,7 +520,7 @@ namespace Tranquire.Tests.Reporting
             }
             //assert
             var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(date, thenAction.Question)),
+                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Failed, expectedException))
             };
             observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());

@@ -104,7 +104,7 @@ namespace Tranquire.Reporting
             item.Error = afterThenNotificationContent.Exception;
         }
 
-        internal void HandleBeforeThen<T>(BeforeThenNotificationContent<T> beforeThen, INamed named)
+        internal void HandleBeforeThen(BeforeThenNotificationContent beforeThen, INamed named)
         {
             var currentItem = CurrentItem;
             var newItem = new TranquireXmlReportThen()

@@ -1,30 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tranquire
 {
+
     /// <summary>
     /// Represent an action that verifies the answer of a question
     /// </summary>
     /// <typeparam name="T">The question answer type</typeparam>
-    public sealed class ThenAction<T> : ActionBase<T>
+    /// <typeparam name="TResult">The result type</typeparam>
+    public sealed class ThenAction<T, TResult> : ActionBase<TResult>, IThenAction<TResult>
     {
         /// <summary>
         /// Gets the question
         /// </summary>
+        INamed IThenAction<TResult>.Question => Question;   
+        
+        /// <summary>
+        /// Gets the question
+        /// </summary>
         public IQuestion<T> Question { get; }
+
         /// <summary>
         /// Gets the action that verifies the outcome
         /// </summary>
-        public System.Action<T> VerifyAction { get; }
+        public Func<T, TResult> VerifyAction { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ThenAction{T}"/>
+        /// Creates a new instance of <see cref="ThenAction{T, TResult}"/>
         /// </summary>
         /// <param name="question">The question</param>
         /// <param name="verifyAction">The action that verifies the outcome</param>
-        public ThenAction(IQuestion<T> question, System.Action<T> verifyAction)
+        public ThenAction(IQuestion<T> question, Func<T, TResult> verifyAction)
         {
             Question = question ?? throw new ArgumentNullException(nameof(question));
             VerifyAction = verifyAction ?? throw new ArgumentNullException(nameof(verifyAction));
@@ -34,11 +40,10 @@ namespace Tranquire
         public override string Name => "Then verifies the answer of " + Question.Name;
 
         /// <inheritdoc />
-        protected override T ExecuteWhen(IActor actor)
+        protected override TResult ExecuteWhen(IActor actor)
         {
             var answer = actor.AsksFor(Question);
-            VerifyAction(answer);
-            return answer;
+            return VerifyAction(answer);
         }
     }
 }

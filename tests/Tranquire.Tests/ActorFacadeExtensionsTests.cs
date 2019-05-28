@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Tranquire;
 using Xunit;
 
@@ -80,6 +81,49 @@ namespace Tranquire.Tests
             var actual = actor.CanUseIf(() => capability, false);
             // assert
             Assert.Equal(actor, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public async Task Then_Async_ShouldExecuteAction(
+            IVerifies verifies,
+            IActor actor,
+            object expected)
+        {
+            // arrange
+            var mockAction = new Mock<Action<object>>();
+            var task = Task.FromResult(expected);
+            var question = Questions.FromResult(task);
+            Mock.Get(verifies).Setup(a => a.Then(It.IsAny<IQuestion<Task<object>>>(), It.IsAny<Func<Task<object>, Task<object>>>()))
+                           .Returns((IQuestion<Task<object>> q, Func<Task<object>, Task<object>> f) =>
+                           {
+                               return f(q.AnsweredBy(actor));
+                           });
+            // act
+            var actual = await verifies.Then(question, mockAction.Object);
+            // assert
+            Assert.Equal(expected, actual);
+            mockAction.Verify(a => a(expected));
+        }
+
+        [Theory, DomainAutoData]
+        public void Then_ShouldCallAction(
+            IVerifies verifies,
+            IActor actor,
+            object expected)
+        {
+            // arrange
+            var verification = new Mock<Action<object>>();
+            var question = Questions.FromResult(expected);
+            Mock.Get(verifies).Setup(a => a.Then(It.IsAny<IQuestion<object>>(), It.IsAny<Func<object, object>>()))
+                           .Returns((IQuestion<object> q, Func<object, object> f) =>
+                           {
+                               return f(q.AnsweredBy(actor));
+                           });
+            // act
+            var actual = verifies.Then(question, verification.Object);
+            // assert
+            Assert.Equal(expected, actual);
+            verification.Verify(v => v(expected));
         }
     }
 }
