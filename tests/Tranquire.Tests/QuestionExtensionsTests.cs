@@ -4,6 +4,7 @@ using System;
 using Tranquire.Extensions;
 using Xunit;
 using Moq;
+using System.Threading.Tasks;
 
 namespace Tranquire.Tests
 {
@@ -11,7 +12,8 @@ namespace Tranquire.Tests
     {
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion) => assertion.Verify(typeof(QuestionExtensions));
-
+        
+        #region Select
         [Theory, DomainAutoData]
         public void Select_ShouldReturnCorrectResult(IQuestion<string> question, Func<string, object> selector)
         {
@@ -22,6 +24,33 @@ namespace Tranquire.Tests
             actual.Should().BeOfType<SelectQuestion<string, object>>();
             actual.Should().BeEquivalentTo(expected);
         }
+
+        [Theory, DomainAutoData]
+        public async Task Select_Async_ShouldReturnCorrectResult(IQuestion<Task<string>> question, string value, object expected)
+        {
+            // arrange
+            var selector = new Mock<Func<string, object>>();
+            selector.Setup(s => s(value)).Returns(expected);
+            // act
+            var actual = question.Select(selector.Object);
+            // assert            
+            var selectQuestion = actual.Should().BeOfType<SelectQuestionAsync<string, object>>().Which;
+            selectQuestion.Question.Should().Be(question);
+            var actualSelected = await selectQuestion.Selector(value);
+            Assert.Equal(expected, actualSelected);
+        }
+
+        [Theory, DomainAutoData]
+        public void Select_Async_WithAsyncFunc_ShouldReturnCorrectResult(IQuestion<Task<string>> question, Func<string, Task<object>> selector)
+        {
+            // act
+            var actual = question.Select(selector);
+            // assert
+            var expected = new SelectQuestionAsync<string, object>(question, selector);
+            actual.Should().BeOfType<SelectQuestionAsync<string, object>>();
+            actual.Should().BeEquivalentTo(expected);
+        }
+        #endregion
 
         [Theory, DomainAutoData]
         public void SelectMany_ShouldReturnCorrectResult(IQuestion<string> question, Func<string, IQuestion<object>> selector)

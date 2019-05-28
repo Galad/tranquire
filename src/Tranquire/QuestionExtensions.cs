@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Tranquire.Extensions;
 
 namespace Tranquire
@@ -8,6 +9,7 @@ namespace Tranquire
     /// </summary>
     public static class QuestionExtensions
     {
+        #region Select
         /// <summary>
         /// Projects the result of a question into a new form.
         /// </summary>
@@ -22,6 +24,38 @@ namespace Tranquire
         }
 
         /// <summary>
+        /// Projects the result of a question into a new form.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="question">The question which result is transformed</param>
+        /// <param name="selector">A transform function to the question answer.</param>
+        /// <returns></returns>
+        public static IQuestion<Task<TResult>> Select<TSource, TResult>(this IQuestion<Task<TSource>> question, Func<TSource, TResult> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return new SelectQuestionAsync<TSource, TResult>(question, result => Task.FromResult(selector(result)));
+        }
+
+        /// <summary>
+        /// Projects the result of a question into a new form.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="question">The question which result is transformed</param>
+        /// <param name="selector">A transform function to the question answer.</param>
+        /// <returns></returns>
+        public static IQuestion<Task<TResult>> Select<TSource, TResult>(this IQuestion<Task<TSource>> question, Func<TSource, Task<TResult>> selector)
+        {
+            return new SelectQuestionAsync<TSource, TResult>(question, selector);
+        }
+        #endregion
+
+        /// <summary>
         /// Projects the result of a question into a new question.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
@@ -30,7 +64,7 @@ namespace Tranquire
         /// <param name="selector">A transform function that returns a new question.</param>
         /// <returns></returns>
         public static IQuestion<TResult> SelectMany<TSource, TResult>(this IQuestion<TSource> question, Func<TSource, IQuestion<TResult>> selector)
-        {            
+        {
             return new SelectManyQuestion<TSource, TResult>(question, selector);
         }
 
