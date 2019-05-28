@@ -131,5 +131,20 @@ namespace Tranquire
             return new SelectManyActionToQuestion<TSource, TResult>(action, selector);
         }
         #endregion
+
+        #region Select
+        /// <summary>
+        /// Projects the result of an action into a new form.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function to the action result.</param>
+        /// <returns></returns>
+        public static IAction<TResult> Select<TSource, TResult>(this IAction<TSource> action, Func<TSource, TResult> selector)
+        {
+            return new SelectAction<TSource, TResult>(action, selector);
+        }
+        #endregion
     }
 }

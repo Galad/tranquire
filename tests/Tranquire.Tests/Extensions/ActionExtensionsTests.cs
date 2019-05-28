@@ -108,5 +108,18 @@ namespace Tranquire.Tests.Extensions
             actual.Should().BeEquivalentTo(expected);
         }
         #endregion
+
+        #region Select
+        [Theory, DomainAutoData]
+        public void Select_ShouldReturnCorrectResult(IAction<string> action, Func<string, object> selector)
+        {
+            // act
+            var actual = action.Select(selector);
+            // assert
+            var expected = new SelectAction<string, object>(action, selector);
+            actual.Should().BeOfType<SelectAction<string, object>>();
+            actual.Should().BeEquivalentTo(expected);
+        }
+        #endregion
     }
 }
