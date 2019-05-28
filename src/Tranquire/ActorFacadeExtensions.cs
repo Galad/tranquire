@@ -52,5 +52,32 @@ namespace Tranquire
 
             return commands.Select(c => actor.When(c)).ToImmutableArray();
         }
+
+        /// <summary>
+        /// Give an ability to the actor if the predicate is true
+        /// </summary>
+        /// <typeparam name="T">The type of the ability</typeparam>
+        /// <param name="actor"></param>
+        /// <param name="doSomething">Ability</param>
+        /// <param name="predicate">A value indicating if the ability should be added</param>
+        /// <returns>A new actor with the given ability</returns>
+        public static IActorFacade CanUseIf<T>(this IActorFacade actor, Func<T> doSomething, bool predicate)
+            where T : class
+        {
+            if (actor is null)
+            {
+                throw new ArgumentNullException(nameof(actor));
+            }
+            if (doSomething is null)
+            {
+                throw new ArgumentNullException(nameof(doSomething));
+            }
+            if (predicate)
+            {
+                return actor.CanUse(doSomething());
+            }
+
+            return actor;
+        }
     }
 }
