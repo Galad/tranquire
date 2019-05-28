@@ -11,10 +11,6 @@ namespace ToDoList.Automation.Api
     {
         public static IQuestion<Task<ImmutableArray<ToDoItem>>> TheToDoItems { get; } = new QueryToDoItems();
         public static IQuestion<Task<ToDoItem>> TheToDoItem(string title) =>
-            TheToDoItems.Select(async itemsTask =>
-            {
-                var items = await itemsTask;
-                return items.FirstOrDefault(i => i.Name == title);
-            });
+            TheToDoItems.Select(items => items.FirstOrDefault(i => i.Name == title));
     }
 }

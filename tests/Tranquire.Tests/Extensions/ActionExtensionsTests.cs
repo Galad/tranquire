@@ -5,6 +5,7 @@ using AutoFixture.Idioms;
 using System;
 using Tranquire.Extensions;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Tranquire.Tests.Extensions
 {
@@ -118,6 +119,32 @@ namespace Tranquire.Tests.Extensions
             // assert
             var expected = new SelectAction<string, object>(action, selector);
             actual.Should().BeOfType<SelectAction<string, object>>();
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [Theory, DomainAutoData]
+        public async Task Select_Async_ShouldReturnCorrectResult(IAction<Task<string>> action, string value, object expected)
+        {
+            // arrange
+            var selector = new Mock<Func<string, object>>();
+            selector.Setup(s => s(value)).Returns(expected);
+            // act
+            var actual = action.Select(selector.Object);
+            // assert            
+            var selectAction = actual.Should().BeOfType<SelectActionAsync<string, object>>().Which;
+            selectAction.Action.Should().Be(action);
+            var actualSelected = await selectAction.Selector(value);
+            Assert.Equal(expected, actualSelected);
+        }
+
+        [Theory, DomainAutoData]
+        public void Select_Async_WithAsyncFunc_ShouldReturnCorrectResult(IAction<Task<string>> action, Func<string, Task<object>> selector)
+        {
+            // act
+            var actual = action.Select(selector);
+            // assert
+            var expected = new SelectActionAsync<string, object>(action, selector);
+            actual.Should().BeOfType<SelectActionAsync<string, object>>();
             actual.Should().BeEquivalentTo(expected);
         }
         #endregion

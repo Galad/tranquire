@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Tranquire.Extensions;
 
 namespace Tranquire
@@ -144,6 +145,37 @@ namespace Tranquire
         public static IAction<TResult> Select<TSource, TResult>(this IAction<TSource> action, Func<TSource, TResult> selector)
         {
             return new SelectAction<TSource, TResult>(action, selector);
+        }
+
+        /// <summary>
+        /// Projects the result of an action into a new form.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function to the action result.</param>
+        /// <returns></returns>
+        public static IAction<Task<TResult>> Select<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, TResult> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return new SelectActionAsync<TSource, TResult>(action, s => Task.FromResult(selector(s)));
+        }
+
+        /// <summary>
+        /// Projects the result of an action into a new form.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function to the action result.</param>
+        /// <returns></returns>
+        public static IAction<Task<TResult>> Select<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, Task<TResult>> selector)
+        {
+            return new SelectActionAsync<TSource, TResult>(action, selector);
         }
         #endregion
 
