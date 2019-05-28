@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 
 namespace Tranquire
@@ -113,5 +115,75 @@ namespace Tranquire
 
             protected override TAnswer Answer(IActor actor) => result;
         }
+
+        #region Tagged question
+        /// <summary>
+        /// Creates an action that identifies the action to use based on a tag.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTag"></typeparam>
+        /// <param name="questions"></param>  
+        /// <returns></returns>
+#pragma warning disable CS0618 // Type or member is obsolete
+        public static IQuestion<IActionTags<TTag>, T> CreateTagged<T, TTag>(params (TTag tag, IQuestion<T> question)[] questions)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            if (questions == null)
+            {
+                throw new ArgumentNullException(nameof(questions));
+            }
+            
+            return new TaggedQuestion<T, TTag>(null, questions.ToImmutableDictionary(t => t.tag, t => t.question));
+        }
+
+        /// <summary>
+        /// Creates an action that identifies the action to use based on a tag.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTag"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="questions"></param>      
+        /// <returns></returns>
+#pragma warning disable CS0618 // Type or member is obsolete
+        public static IQuestion<IActionTags<TTag>, T> CreateTagged<T, TTag>(string name, params (TTag tag, IQuestion<T> question)[] questions)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (questions == null)
+            {
+                throw new ArgumentNullException(nameof(questions));
+            }
+
+            return new TaggedQuestion<T, TTag>(name, questions.ToImmutableDictionary(t => t.tag, t => t.question));
+        }
+
+        /// <summary>
+        /// Represents a question that can be performed in different ways, depending on the context
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTag"></typeparam>
+        private class TaggedQuestion<T, TTag> : QuestionBase<IActionTags<TTag>, T>
+        {
+            public TaggedQuestion(string name, ImmutableDictionary<TTag, IQuestion<T>> questions)
+            {
+                Question = questions;
+                Name = name ?? $"Tagged question with {string.Join(", ", Question.Keys.OrderBy(k => k))}";
+            }
+
+            public ImmutableDictionary<TTag, IQuestion<T>> Question { get; }
+
+            public override string Name { get; }
+
+            protected override T Answer(IActor actor, IActionTags<TTag> ability)
+            {
+                var bestTag = ability.FindBestWhenTag(Question.Keys);
+                var action = Question[bestTag];
+                return actor.AsksFor(action);
+            }
+        }
+        #endregion
     }
 }

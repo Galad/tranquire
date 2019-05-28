@@ -225,7 +225,31 @@ namespace Tranquire
                 throw new ArgumentNullException(nameof(actions));
             }
 
-            return new TaggedAction<T, TTag>(actions.ToImmutableDictionary(t => t.tag, t => t.action));
+            return new TaggedAction<T, TTag>(null, actions.ToImmutableDictionary(t => t.tag, t => t.action));
+        }
+
+        /// <summary>
+        /// Creates an action that identifies the action to use based on a tag.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTag"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="actions"></param>        
+        /// <returns></returns>
+#pragma warning disable CS0618 // Type or member is obsolete
+        public static IAction<IActionTags<TTag>, T> CreateTagged<T, TTag>(string name, params (TTag tag, IAction<T> action)[] actions)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (actions == null)
+            {
+                throw new ArgumentNullException(nameof(actions));
+            }
+
+            return new TaggedAction<T, TTag>(name, actions.ToImmutableDictionary(t => t.tag, t => t.action));
         }
 
         /// <summary>
@@ -233,28 +257,29 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TTag"></typeparam>
-        internal class TaggedAction<T, TTag> : ActionBase<IActionTags<TTag>, T>
+        private class TaggedAction<T, TTag> : ActionBase<IActionTags<TTag>, T>
         {
-            private readonly ImmutableDictionary<TTag, IAction<T>> _actions;
-
-            public TaggedAction(ImmutableDictionary<TTag, IAction<T>> actions)
+            public TaggedAction(string name, ImmutableDictionary<TTag, IAction<T>> actions)
             {
-                _actions = actions;
+                Actions = actions;
+                Name = name ?? $"Tagged action with {string.Join(", ", Actions.Keys.OrderBy(k => k))}";
             }
 
-            public override string Name => $"Tagged action with {string.Join(", ", _actions.Keys.OrderBy(k => k))}";
+            private ImmutableDictionary<TTag, IAction<T>> Actions { get; }
+
+            public override string Name { get; }
 
             protected override T ExecuteGiven(IActor actor, IActionTags<TTag> ability)
             {
-                var bestTag = ability.FindBestGivenTag(_actions.Keys);
-                var action = _actions[bestTag];
+                var bestTag = ability.FindBestGivenTag(Actions.Keys);
+                var action = Actions[bestTag];
                 return actor.Execute(action);
             }
 
             protected override T ExecuteWhen(IActor actor, IActionTags<TTag> ability)
             {
-                var bestTag = ability.FindBestWhenTag(_actions.Keys);
-                var action = _actions[bestTag];
+                var bestTag = ability.FindBestWhenTag(Actions.Keys);
+                var action = Actions[bestTag];
                 return actor.Execute(action);
             }
         }
