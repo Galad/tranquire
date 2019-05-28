@@ -185,9 +185,9 @@ namespace Tranquire
         }
 
         /// <inheritdoc />
-        public TAnswer Then<TAnswer>(IQuestion<TAnswer> question, System.Action<TAnswer> verifyAction)
+        public TResult Then<TAnswer, TResult>(IQuestion<TAnswer> question, Func<TAnswer, TResult> verifyAction)
         {
-            return CreateWhenActor().Execute(new ThenAction<TAnswer>(question, verifyAction));            
+            return CreateWhenActor().Execute(new ThenAction<TAnswer, TResult>(question, verifyAction));
         }
 
         private class WhenInnerActor : InnerActor

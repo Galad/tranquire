@@ -13,13 +13,13 @@ namespace Tranquire.Tests
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClause(GuardClauseAssertion assertion)
         {
-            assertion.Verify(typeof(ThenAction<object>));
+            assertion.Verify(typeof(ThenAction<object, string>));
         }
 
         [Theory, DomainAutoData]
         public void Sut_ConstructorInitializedMember(ConstructorInitializedMemberAssertion assertion)
         {
-            assertion.Verify<ThenAction<object>>(a => new object[]
+            assertion.Verify<ThenAction<object, string>>(a => new object[]
             {
                 a.Question,
                 a.VerifyAction
@@ -28,7 +28,7 @@ namespace Tranquire.Tests
         
         [Theory, DomainAutoData]
         public void Name_ShouldReturnCorrectValue(
-            ThenAction<object> sut)
+            ThenAction<object, string> sut)
         {
             // arrange
             // act

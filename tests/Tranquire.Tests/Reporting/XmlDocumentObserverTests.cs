@@ -284,12 +284,12 @@ namespace Tranquire.Tests.Reporting
 
                 {
                     var question = fixture.Create<IQuestion<object>>();
-                    var thenAction = new ThenAction<object>(question, _ => { });
+                    var thenAction = new ThenAction<object, string>(question, _ => string.Empty);
                     yield return new object[]
                     {
                         "Verification",
                         new ActionNotification[]{
-                            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, question)),
+                            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(DateTimeOffset.MinValue, question)),
                             new ActionNotification(question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)),
                             new ActionNotification(question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))),
                             new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), ThenOutcome.Pass))
@@ -318,13 +318,13 @@ namespace Tranquire.Tests.Reporting
                 object[] createThenWithException(ThenOutcome outcome, XmlReportThenOutcome expectedOutcome)
                 {
                     var question = fixture.Create<IQuestion<object>>();
-                    var thenAction = new ThenAction<object>(question, _ => { });
+                    var thenAction = new ThenAction<object, string>(question, _ => string.Empty);
                     var exception = fixture.Create<Exception>();
                     return new object[]
                     {
                         "Verification with failure (" + outcome.ToString() + ")",
                         new ActionNotification[]{
-                            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, question)),
+                            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(DateTimeOffset.MinValue, question)),
                             new ActionNotification(question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)),
                             new ActionNotification(question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))),
                             new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), outcome, exception))
@@ -639,10 +639,10 @@ namespace Tranquire.Tests.Reporting
         [DomainAutoData]
         public void GetHtmlDocument_WithPassingVerification_ShouldContainImgElement(
             XmlDocumentObserver sut,
-            ThenAction<object> thenAction)
+            ThenAction<object, string> thenAction)
         {
             //arrange  
-            sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)));
+            sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(DateTimeOffset.MinValue, thenAction.Question)));
             sut.OnNext(new ActionNotification(thenAction.Question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)));
             sut.OnNext(new ActionNotification(thenAction.Question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))));
             sut.OnNext(new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), ThenOutcome.Pass)));
@@ -662,10 +662,10 @@ namespace Tranquire.Tests.Reporting
             ThenOutcome outcome,
             Exception exception,
             XmlDocumentObserver sut,
-            ThenAction<object> thenAction)
+            ThenAction<object, string> thenAction)
         {
             //arrange  
-            sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent<object>(DateTimeOffset.MinValue, thenAction.Question)));
+            sut.OnNext(new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(DateTimeOffset.MinValue, thenAction.Question)));
             sut.OnNext(new ActionNotification(thenAction.Question, 2, new BeforeActionNotificationContent(DateTimeOffset.MinValue, CommandType.Question)));
             sut.OnNext(new ActionNotification(thenAction.Question, 2, new AfterActionNotificationContent(TimeSpan.FromSeconds(1))));
             sut.OnNext(new ActionNotification(thenAction, 1, new AfterThenNotificationContent(TimeSpan.FromSeconds(1), outcome, exception)));

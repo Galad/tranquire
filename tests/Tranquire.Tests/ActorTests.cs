@@ -330,29 +330,17 @@ namespace Tranquire.Tests
         public void Then_ShouldCallAction(
             [Greedy]Actor sut,
             IQuestion<object> question,
-            object answer)
+            object answer,
+            string expected)
         {
             // arrange
-            var action = new Mock<System.Action<object>>();
+            var verification = new Mock<Func<object, string>>();
+            verification.Setup(f => f(answer)).Returns(expected);
             Mock.Get(question).Setup(q => q.AnsweredBy(It.IsAny<IActor>())).Returns(answer);
             // act
-            sut.Then(question, action.Object);
+            var actual = sut.Then(question, verification.Object);
             // assert
-            action.Verify(a => a(answer));
-        }
-        
-        [Theory, DomainAutoData]
-        public void Then_ReturnCorrectValue(
-            [Greedy]Actor sut,
-            IQuestion<object> question,            
-            object expected)
-        {
-            // arrange            
-            Mock.Get(question).Setup(q => q.AnsweredBy(It.IsAny<IActor>())).Returns(expected);
-            // act
-            var actual = sut.Then(question, _ => { });
-            // assert
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         #region Abilities
