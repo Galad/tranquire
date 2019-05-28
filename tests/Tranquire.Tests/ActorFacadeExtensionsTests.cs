@@ -61,5 +61,25 @@ namespace Tranquire.Tests
             // assert            
             actual.Should().BeEquivalentTo(expected);
         }
+
+        [Theory, DomainAutoData]
+        public void CanUseIf_WhenPredicateIsTrue_ShouldAddCapability(IActorFacade actor, IActorFacade expected, object capability)
+        {
+            // arrange
+            Mock.Get(actor).Setup(a => a.CanUse(capability)).Returns(expected);
+            // act
+            var actual = actor.CanUseIf(() => capability, true);
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void CanUseIf_WhenPredicateIsFalse_ShouldNotAddCapability(IActorFacade actor, object capability)
+        {
+            // act
+            var actual = actor.CanUseIf(() => capability, false);
+            // assert
+            Assert.Equal(actor, actual);
+        }
     }
 }
