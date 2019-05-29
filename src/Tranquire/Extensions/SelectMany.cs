@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 
 namespace Tranquire.Extensions
 {
-    internal class SelectMany<TActionSource, TSource, TActionResult, TResult>
+
+    internal class SelectMany<TActionSource, TSource, TActionResult, TResult> : ISelectMany<TResult>
         where TActionSource : class, INamed
         where TActionResult : class
     {
@@ -37,7 +38,7 @@ namespace Tranquire.Extensions
 
     internal static class SelectMany
     {
-        public static SelectMany<TActionSource, TSource, TActionResult, TResult> Create<TActionSource, TSource, TActionResult, TResult>(
+        public static ISelectMany<TResult> Create<TActionSource, TSource, TActionResult, TResult>(
             TActionSource source,
             Func<IActor, TActionSource, TSource> applySource,
             Func<TSource, TActionResult> selector,
@@ -49,7 +50,7 @@ namespace Tranquire.Extensions
             return new SelectMany<TActionSource, TSource, TActionResult, TResult>(source, applySource, selector, applyResult);
         }
 
-        public static SelectMany<TActionSource, Task<TSource>, Task<TActionResult>, Task<TResult>> Create<TActionSource, TSource, TActionResult, TResult>(
+        public static ISelectMany<Task<TResult>> Create<TActionSource, TSource, TActionResult, TResult>(
             TActionSource source,
             Func<IActor, TActionSource, Task<TSource>> applySource,
             Func<TSource, TActionResult> selector,

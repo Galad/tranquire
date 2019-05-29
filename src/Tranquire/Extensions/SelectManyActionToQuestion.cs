@@ -9,7 +9,7 @@ namespace Tranquire.Extensions
     /// <typeparam name="TResult">The result type of the selector function</typeparam>
     internal sealed class SelectManyActionToQuestion<TSource, TResult> : QuestionBase<TResult>
     {
-        private readonly SelectMany<IAction<TSource>, TSource, IQuestion<TResult>, TResult> _selectMany;        
+        private readonly ISelectMany<TResult> _selectMany;        
 
         /// <summary>Creates a new instance of <see cref="SelectManyActionToQuestion{TSource, TResult}"/></summary>
         /// <param name="action">The action to get the result from</param>
