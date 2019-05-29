@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Tranquire.Extensions
 {
@@ -7,27 +8,31 @@ namespace Tranquire.Extensions
     /// </summary>
     /// <typeparam name="TSource">The result type of the source question</typeparam>
     /// <typeparam name="TResult">The result type of the selector function</typeparam>
-    internal sealed class SelectManyQuestion<TSource, TResult> : QuestionBase<TResult>
+    internal sealed class SelectManyQuestionAsyncToAction<TSource, TResult> : Tranquire.ActionBase<Task<TResult>>
     {
-        private readonly SelectMany<IQuestion<TSource>, TSource, IQuestion<TResult>, TResult> _selectMany;
+        private readonly SelectMany<IQuestion<Task<TSource>>, Task<TSource>, Task<IAction<TResult>>, Task<TResult>> _selectMany;
 
         /// <summary>Record Constructor</summary>
         /// <param name="question">The question to get the result from</param>
         /// <param name="selector">The function to apply of the question result.</param>
-        public SelectManyQuestion(IQuestion<TSource> question, Func<TSource, IQuestion<TResult>> selector)
+        public SelectManyQuestionAsyncToAction(IQuestion<Task<TSource>> question, Func<TSource, IAction<TResult>> selector)
         {
             if (question == null)
             {
                 throw new ArgumentNullException(nameof(question));
             }
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
 
-            _selectMany = SelectMany.Create(question, SelectMany.AsksFor<TSource>(), selector, SelectMany.AsksFor<TResult>());
+            _selectMany = SelectMany.Create(question, SelectMany.AsksFor<Task<TSource>>(), selector, SelectMany.ExecuteAsync<TResult>());
         }
 
         /// <inheritsdoc />
         public override string Name => _selectMany.Name;
 
         /// <inheritsdoc />
-        protected override TResult Answer(IActor actor) => _selectMany.Apply(actor);
+        protected override Task<TResult>ExecuteWhen(IActor actor) => _selectMany.Apply(actor);
     }
 }

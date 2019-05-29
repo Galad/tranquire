@@ -4,29 +4,29 @@ using System.Threading.Tasks;
 namespace Tranquire.Extensions
 {
     /// <summary>
-    /// Represents an asynchronous action which result is transform by the given selector function
+    /// Represents a question which result is transform by the given selector function
     /// </summary>
     /// <typeparam name="TSource">The result type of the source question</typeparam>
     /// <typeparam name="TResult">The result type of the selector function</typeparam>
-    internal sealed class SelectManyActionAsyncReturningAsync<TSource, TResult> : ActionBase<Task<TResult>>
+    internal sealed class SelectManyQuestionAsyncToActionAsync<TSource, TResult> : Tranquire.ActionBase<Task<TResult>>
     {
-        private readonly SelectMany<IAction<Task<TSource>>, Task<TSource>, Task<IAction<Task<TResult>>>, Task<Task<TResult>>> _selectMany;
+        private readonly SelectMany<IQuestion<Task<TSource>>, Task<TSource>, Task<IAction<Task<TResult>>>, Task<Task<TResult>>> _selectMany;
 
         /// <summary>Record Constructor</summary>
-        /// <param name="action">The question to get the result from</param>
+        /// <param name="question">The question to get the result from</param>
         /// <param name="selector">The function to apply of the question result.</param>
-        public SelectManyActionAsyncReturningAsync(IAction<Task<TSource>> action, Func<TSource, IAction<Task<TResult>>> selector)
+        public SelectManyQuestionAsyncToActionAsync(IQuestion<Task<TSource>> question, Func<TSource, IAction<Task<TResult>>> selector)
         {
-            if (action == null)
+            if (question == null)
             {
-                throw new ArgumentNullException(nameof(action));
+                throw new ArgumentNullException(nameof(question));
             }
-            if (selector == null)
+            if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            _selectMany = SelectMany.Create(action, SelectMany.Execute<Task<TSource>>(), selector, SelectMany.ExecuteAsync<Task<TResult>>());
+            _selectMany = SelectMany.Create(question, SelectMany.AsksFor<Task<TSource>>(), selector, SelectMany.ExecuteAsync<Task<TResult>>());
         }
 
         /// <inheritsdoc />

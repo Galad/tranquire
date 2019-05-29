@@ -49,6 +49,23 @@ namespace Tranquire.Extensions
             return new SelectMany<TActionSource, TSource, TActionResult, TResult>(source, applySource, selector, applyResult);
         }
 
+        public static SelectMany<TActionSource, Task<TSource>, Task<TActionResult>, Task<TResult>> Create<TActionSource, TSource, TActionResult, TResult>(
+            TActionSource source,
+            Func<IActor, TActionSource, Task<TSource>> applySource,
+            Func<TSource, TActionResult> selector,
+            Func<IActor, Task<TActionResult>, Task<TResult>> applyResult
+            )
+            where TActionSource : class, INamed
+            where TActionResult : class
+        {
+            Func<Task<TSource>, Task<TActionResult>> selectorAsync = async sourceTask =>
+            {
+                var s = await sourceTask;
+                return selector(s);
+            };
+            return Create(source, applySource, selectorAsync, applyResult);
+        }
+
         public static Func<IActor, IQuestion<T>, T> AsksFor<T>() => (actor, q) => actor.AsksFor(q);
         public static Func<IActor, Task<IQuestion<T>>, Task<T>> AsksForAsync<T>() => async (actor, questionTask) =>
         {
