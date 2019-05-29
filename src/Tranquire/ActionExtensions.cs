@@ -131,6 +131,58 @@ namespace Tranquire
         {
             return new SelectManyActionToQuestion<TSource, TResult>(action, selector);
         }
+
+        /// <summary>
+        /// Projects the result of an asynchronous action into a new action.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function that returns a new action.</param>
+        /// <returns></returns>
+        public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, IAction<TResult>> selector)
+        {
+            return new SelectManyActionAsync<TSource, TResult>(action, selector);
+        }
+
+        /// <summary>
+        /// Projects the result of an asynchronous action into a new asynchronous action.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function that returns a new action.</param>
+        /// <returns></returns>
+        public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, IAction<Task<TResult>>> selector)
+        {
+            return new SelectManyActionAsyncReturningAsync<TSource, TResult>(action, selector);
+        }
+
+        /// <summary>
+        /// Projects the result of an asynchronous action into a new question
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function that returns a new action.</param>
+        /// <returns></returns>
+        public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, IQuestion<TResult>> selector)
+        {
+            return new SelectManyActionAsyncToQuestion<TSource, TResult>(action, selector);
+        }
+
+        /// <summary>
+        /// Projects the result of an action into a new asynchronous question.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="action">The action which result is transformed</param>
+        /// <param name="selector">A transform function that returns a new action.</param>
+        /// <returns></returns>
+        public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, IQuestion<Task<TResult>>> selector)
+        {
+            return new SelectManyActionAsyncToQuestionAsync<TSource, TResult>(action, selector);
+        }
         #endregion
 
         #region Select

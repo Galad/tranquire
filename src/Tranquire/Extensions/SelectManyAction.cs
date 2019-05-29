@@ -3,23 +3,13 @@
 namespace Tranquire.Extensions
 {
     /// <summary>
-    /// Represents a question which result is transform by the given selector function
+    /// Represents an action which result is transform by the given selector function
     /// </summary>
     /// <typeparam name="TSource">The result type of the source question</typeparam>
     /// <typeparam name="TResult">The result type of the selector function</typeparam>
-    public sealed class SelectManyAction<TSource, TResult> : Tranquire.ActionBase<TResult>
+    internal sealed class SelectManyAction<TSource, TResult> : ActionBase<TResult>
     {
         private readonly SelectMany<IAction<TSource>, TSource, IAction<TResult>, TResult> _selectMany;
-
-        /// <summary>
-        /// Gets the question injected in the constructor
-        /// </summary>
-        public Func<TSource, IAction<TResult>> Selector => _selectMany.Selector;
-        /// <summary>
-        /// Gets the question injected in the constructor
-        /// </summary>
-        public IAction<TSource> Action => _selectMany.Source;
-
 
         /// <summary>Record Constructor</summary>
         /// <param name="action">The question to get the result from</param>
