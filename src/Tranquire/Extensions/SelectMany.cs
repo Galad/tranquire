@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Tranquire.Extensions
 {
@@ -49,6 +50,17 @@ namespace Tranquire.Extensions
         }
 
         public static Func<IActor, IQuestion<T>, T> AsksFor<T>() => (actor, q) => actor.AsksFor(q);
+        public static Func<IActor, Task<IQuestion<T>>, Task<T>> AsksForAsync<T>() => async (actor, questionTask) =>
+        {
+            var question = await questionTask;
+            return actor.AsksFor(question);
+        };
+
         public static Func<IActor, IAction<T>, T> Execute<T>() => (actor, q) => actor.Execute(q);
+        public static Func<IActor, Task<IAction<T>>, Task<T>> ExecuteAsync<T>() => async (actor, actionTask) =>
+        {
+            var action = await actionTask;
+            return actor.Execute(action);
+        };
     }
 }
