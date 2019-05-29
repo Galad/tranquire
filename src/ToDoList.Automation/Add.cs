@@ -13,14 +13,6 @@ namespace ToDoList.Automation
             (TestLevel.Api, Api.Add.TheToDoItem(title))
             );
 
-        public static IAction<Task> TheToDoItems(IEnumerable<string> titles) => Actions.Create(
-            "Add to-do items",
-            async actor =>
-            {
-                foreach (var title in titles)
-                {
-                    await actor.Execute(TheToDoItem(title));
-                }
-            });
+        public static IAction<Task> TheToDoItems(IEnumerable<string> titles) => titles.Select(TheToDoItem).ToAction("Add to-do items");
     }
 }
