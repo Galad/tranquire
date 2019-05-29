@@ -13,6 +13,7 @@ using System.Linq;
 
 namespace Tranquire.NUnit.Tests
 {
+    [Trait("Category", "")]
     public class VerifiesExtensionsTests
     {
         [Theory, DomainAutoData]
