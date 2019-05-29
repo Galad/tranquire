@@ -26,12 +26,7 @@ namespace Tranquire.Extensions
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            Func<Task<TSource>, Task<IQuestion<Task<TResult>>>> selectorAsync = async sourceTask =>
-            {
-                var source = await sourceTask;
-                return selector(source);
-            };
-            _selectMany = SelectMany.Create(action, SelectMany.Execute<Task<TSource>>(), selectorAsync, SelectMany.AsksForAsync<Task<TResult>>());
+            _selectMany = SelectMany.Create(action, SelectMany.Execute<Task<TSource>>(), selector, SelectMany.AsksForAsync<Task<TResult>>());
         }
 
         /// <inheritdoc />

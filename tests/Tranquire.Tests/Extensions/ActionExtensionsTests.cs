@@ -226,8 +226,8 @@ namespace Tranquire.Tests.Extensions
         {
             // arrange
             var actor = new Actor("John");
-            var action = Actions.Create("action1", _ => Task.FromResult(value1))
-                                .SelectMany(v => Actions.Create("action2", _ => Task.FromResult(v + value2)));
+            var action = Actions.FromResult(Task.FromResult(value1))
+                                .SelectMany(v => Actions.FromResult(Task.FromResult(v + value2)));
             // act
             var actual = await actor.When(action);
             // assert
@@ -243,9 +243,9 @@ namespace Tranquire.Tests.Extensions
         {
             // arrange
             var actor = new Actor("John");
-            var action = Actions.Create("action1", _ => Task.FromResult(value1))
-                                .SelectMany(v => Actions.Create("action2", _ => Task.FromResult(v + value2)))
-                                .SelectMany(v => Actions.Create("action3", _ => Task.FromResult(v + value3)));
+            var action = Actions.FromResult(Task.FromResult(value1))
+                                .SelectMany(v => Actions.FromResult(Task.FromResult(v + value2)))
+                                .SelectMany(v => Actions.FromResult(Task.FromResult(v + value3)));
             // act
             var actual = await actor.When(action);
             // assert
@@ -300,7 +300,7 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action async returning async action
+        #region SelectMany - action async returning async question
         [Theory, DomainAutoData]
         public async Task SelectMany_Async_ReturningAsyncQuestion_ShouldReturnCorrectResult(
             int value1,
