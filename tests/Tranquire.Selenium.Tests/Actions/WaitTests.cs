@@ -21,7 +21,7 @@ namespace Tranquire.Selenium.Tests.Actions
         {
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id(id));
-            InsertElementAfter1Second(id);
+            InsertElementAfter2Second(id);
             //act
             Fixture.Actor.When(Wait.Until(target).IsPresent);
             //assert
@@ -34,18 +34,18 @@ namespace Tranquire.Selenium.Tests.Actions
         {
             //arrange
             var target = Target.The("element to wait for").LocatedBy(By.Id(id));
-            InsertElementAfter1Second(id);
+            InsertElementAfter2Second(id);
             //act
             Assert.Throws<TimeoutException>(() => Fixture.Actor.When(Wait.Until(target).IsPresent.Timeout(TimeSpan.FromMilliseconds(100))));
         }
         
-        private void InsertElementAfter1Second(string id)
+        private void InsertElementAfter2Second(string id)
         {
             var js = "var element = document.createElement('div');" +
                                  "element.id = '" + id + "';" +
                                  "element.innerText = '" + id + "';" +
                                  "document.body.appendChild(element)";
-            js = "setTimeout(function(){" + js + "}, 1000);";
+            js = "setTimeout(function(){" + js + "}, 2000);";
             Fixture.WebDriver.ExecuteScript(js);
         }
 
