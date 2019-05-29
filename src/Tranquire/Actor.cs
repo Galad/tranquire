@@ -83,7 +83,13 @@ namespace Tranquire
             {
                 throw new InvalidOperationException($"The ability {abilityType.Name} was requested but the actor {Name} does not have it.");
             }
-            return Abilities[abilityType];
+
+            var type = ability.GetType();
+            if (IsLazyType(type))
+            {
+                return type.GetProperty("Value").GetValue(ability);
+            }
+            return ability;
         }
 
         /// <summary>
@@ -147,9 +153,19 @@ namespace Tranquire
                 throw new ArgumentNullException(nameof(doSomething));
             }
 
-            var abilities = Abilities.Concat(new[] { new KeyValuePair<Type, object>(typeof(T), doSomething) })
-                                      .ToDictionary(k => k.Key, k => k.Value);
+            var abilities = Abilities.Concat(new[] { new KeyValuePair<Type, object>(GetAbilityType(), doSomething) })
+                                     .ToDictionary(k => k.Key, k => k.Value);
             return new Actor(Name, abilities, InnerActorBuilder);
+
+            Type GetAbilityType()
+            {
+                var type = typeof(T);
+                if (IsLazyType(type))
+                {
+                    return type.GetGenericArguments()[0];
+                }
+                return type;
+            }
         }
 
         /// <summary>
@@ -228,6 +244,11 @@ namespace Tranquire
             public abstract TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action);
 #pragma warning restore CS0618 // Type or member is obsolete
             public abstract TResult Execute<TResult>(IAction<TResult> action);
+        }
+
+        private static bool IsLazyType(Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Lazy<>);
         }
     }
 }
