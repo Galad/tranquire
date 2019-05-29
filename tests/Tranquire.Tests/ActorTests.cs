@@ -67,6 +67,65 @@ namespace Tranquire.Tests
             //assert
             actual.Should().BeOfType<Actor>().Which.Abilities.Values.Should().Equal(expected);
         }
+
+        [Theory, DomainAutoData]
+        public void CanUse_WithLazyAbility_ShouldNotMaterializeValue(
+           [Modest]Actor sut,
+           AbilityTest ability)
+        {
+            var lazyAbility = new Lazy<AbilityTest>(() => ability);
+            //act
+            var actual = sut.CanUse(ability);
+            //assert
+            Assert.False(lazyAbility.IsValueCreated);
+        }
+
+        [Theory, DomainAutoData]
+        public void CanUse_WithLazyAbility_ExecutingWhen_WithOtherAbility_ShouldNotMaterializeValue(
+           [Modest]Actor sut,
+           AbilityTest ability,
+           object otherAbility,
+           IWhenCommand<object, Unit> whenCommand)
+        {
+            var lazyAbility = new Lazy<AbilityTest>(() => ability);
+            var actual = sut.CanUse(ability).CanUse(otherAbility);
+            //act            
+            actual.When(whenCommand);
+            //assert
+            Assert.False(lazyAbility.IsValueCreated);
+        }
+
+        [Theory, DomainAutoData]
+        public void CanUse_WithLazyAbility_ExecutingGiven_WithOtherAbility_ShouldNotMaterializeValue(
+           [Modest]Actor sut,
+           AbilityTest ability,
+           object otherAbility,
+           IGivenCommand<object, Unit> givenCommand)
+        {
+            var lazyAbility = new Lazy<AbilityTest>(() => ability);
+            var actual = sut.CanUse(ability).CanUse(otherAbility);
+            //act            
+            actual.Given(givenCommand);
+            //assert
+            Assert.False(lazyAbility.IsValueCreated);
+        }
+
+        [Theory, DomainAutoData]
+        public void CanUse_WithLazyAbility_ExecutingAskFor_WithOtherAbility_ShouldNotMaterializeValue(
+           [Modest]Actor sut,
+           AbilityTest ability,
+           object otherAbility,
+#pragma warning disable CS0618 // Type or member is obsolete
+           IQuestion<object, Unit> question)
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+            var lazyAbility = new Lazy<AbilityTest>(() => ability);
+            var actual = sut.CanUse(ability).CanUse(otherAbility);
+            //act            
+            actual.AsksFor(question);
+            //assert
+            Assert.False(lazyAbility.IsValueCreated);
+        }
         #endregion
 
         #region When
@@ -294,5 +353,46 @@ namespace Tranquire.Tests
             // assert
             actual.Should().Be(expected);
         }
+
+        #region Abilities
+        [Theory, DomainAutoData]
+        public void ActorCanUseLazyAbilities_OnWhen(object ability)
+        {
+            // arrange
+            var lazyAbility = new Lazy<object>(() => ability);
+            var sut = new Actor("John").CanUse(lazyAbility);
+            var action = Actions.Create("action", (IActor _, object a) => a);
+            // act
+            var actual = sut.When(action);
+            // assert
+            Assert.Equal(ability, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void ActorCanUseLazyAbilities_OnGiven(object ability)
+        {
+            // arrange
+            var lazyAbility = new Lazy<object>(() => ability);
+            var sut = new Actor("John").CanUse(lazyAbility);
+            var action = Actions.Create("action", (IActor _, object a) => a);
+            // act
+            var actual = sut.Given(action);
+            // assert
+            Assert.Equal(ability, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void ActorCanUseLazyAbilities_OnAskFor(object ability)
+        {
+            // arrange
+            var lazyAbility = new Lazy<object>(() => ability);
+            var sut = new Actor("John").CanUse(lazyAbility);
+            var action = Questions.Create("action", (IActor _, object a) => a);
+            // act
+            var actual = sut.AsksFor(action);
+            // assert
+            Assert.Equal(ability, actual);
+        }
+        #endregion
     }
 }
