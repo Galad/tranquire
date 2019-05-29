@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Tranquire.Selenium.Tests.Targets
 {
+    [Trait("Category", "")]
     public class TargetsTests : WebDriverTest
     {
         public const string PElementId = "pelement";

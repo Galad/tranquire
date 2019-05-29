@@ -12,6 +12,7 @@ using Xunit;
 
 namespace Tranquire.Tests
 {
+    [Trait("Category", "")]
     public class ActorTests
     {
         public class AbilityTest
