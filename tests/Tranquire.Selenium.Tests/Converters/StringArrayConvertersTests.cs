@@ -1,9 +1,9 @@
-﻿using Xunit;
-using Tranquire.Tests;
-using Tranquire.Selenium.Questions.UIModels.Converters;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.Generic;
+using System.Globalization;
+using Tranquire.Selenium.Questions.UIModels.Converters;
+using Tranquire.Tests;
+using Xunit;
 
 namespace Tranquire.Selenium.Tests.Converters
 {

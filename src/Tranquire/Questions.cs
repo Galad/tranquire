@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
 namespace Tranquire
 {
@@ -132,7 +130,7 @@ namespace Tranquire
             {
                 throw new ArgumentNullException(nameof(questions));
             }
-            
+
             return new TaggedQuestion<T, TTag>(null, questions.ToImmutableDictionary(t => t.tag, t => t.question));
         }
 

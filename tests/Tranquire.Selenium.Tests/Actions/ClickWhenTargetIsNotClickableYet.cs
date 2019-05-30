@@ -1,5 +1,5 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Tranquire.Tests;

@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Tranquire.Selenium.Questions.UIModels
 {
@@ -16,7 +15,7 @@ namespace Tranquire.Selenium.Questions.UIModels
 
         internal override IQuestion<T> CreateQuestion<T>(ITarget target, IConverters<T> converters, CultureInfo culture)
         {
-            if(typeof(T) == typeof(bool) && Contains != null)
+            if (typeof(T) == typeof(bool) && Contains != null)
             {
                 return Classes.Of(target).WithCulture(culture).Select(c => (T)(object)c.Contains(Contains));
             }

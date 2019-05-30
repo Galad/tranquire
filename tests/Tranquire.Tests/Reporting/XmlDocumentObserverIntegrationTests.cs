@@ -70,8 +70,7 @@ namespace Tranquire.Tests.Reporting
 
         private T CreateItem<T>(string name, bool hasError = false) where T : XmlReportItem, new()
         {
-            return new T()
-            {
+            return new T() {
                 StartDate = StartDate,
                 EndDate = typeof(T) == typeof(XmlReportRoot) ? StartDate : EndDate, // because XmlReportRoot uses IMeasureDuration.Now to get the end date, instead of using IMeasureDuration.Measure
                 Duration = typeof(T) == typeof(XmlReportRoot) ? 0 : Duration,

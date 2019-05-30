@@ -1,6 +1,6 @@
-﻿using AutoFixture;
-using System;
+﻿using System;
 using System.Globalization;
+using AutoFixture;
 using Tranquire.Selenium.Questions.UIModels.Converters;
 using Tranquire.Tests;
 using Xunit;

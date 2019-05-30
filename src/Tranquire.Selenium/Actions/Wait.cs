@@ -1,9 +1,5 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Globalization;
+﻿using System;
 using Tranquire.Selenium.Actions.Waiters;
-using Tranquire.Selenium.Questions;
 
 namespace Tranquire.Selenium.Actions
 {
@@ -23,7 +19,7 @@ namespace Tranquire.Selenium.Actions
         {
             return new WaitUntilQuestionIsAnswered<TAnswer>(question, isAnswered);
         }
-                
+
         /// <summary>
         /// Wait until the given target is visible
         /// </summary>

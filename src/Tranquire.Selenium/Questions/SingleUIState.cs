@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Globalization;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
@@ -93,12 +93,12 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"What is the state of the element identified by {Target.ToString()} ?";
-        
+
         string INamed.Name => _question.Value.Name;
 
         T IQuestion<T>.AnsweredBy(IActor actor)
         {
             return _question.Value.AnsweredBy(actor);
         }
-    }    
+    }
 }

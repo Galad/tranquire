@@ -10,9 +10,9 @@ namespace Tranquire.Extensions
         where TActionResult : class
     {
         public SelectMany(
-            TActionSource source, 
-            Func<IActor, TActionSource, TSource> applySource, 
-            Func<TSource, TActionResult> selector, 
+            TActionSource source,
+            Func<IActor, TActionSource, TSource> applySource,
+            Func<TSource, TActionResult> selector,
             Func<IActor, TActionResult, TResult> applyResult)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));

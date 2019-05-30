@@ -1,5 +1,4 @@
 ﻿using System;
-using Tranquire.Reporting;
 
 namespace Tranquire.Reporting
 {

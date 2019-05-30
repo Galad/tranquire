@@ -21,7 +21,7 @@ namespace Tranquire
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-            if(ability == null)
+            if (ability == null)
             {
                 throw new ArgumentNullException(nameof(ability));
             }

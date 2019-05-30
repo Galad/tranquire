@@ -8,7 +8,7 @@
         /// <summary>
         /// Represent an action (see <see cref="IAction{TResult}"/>)
         /// </summary>
-        Action,        
+        Action,
         /// <summary>
         /// Represent a question (see <see cref="IQuestion{TAnswer}"/>
         /// </summary>

@@ -1,8 +1,8 @@
-﻿using OpenQA.Selenium;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
 {
@@ -35,7 +35,7 @@ namespace Tranquire.Selenium.Targets
         /// Gets the target name
         /// </summary>
         public string Name { get; }
-        
+
         /// <summary>
         /// Returns a <see cref="IWebElement"/> corresponding to the target
         /// </summary>
@@ -65,13 +65,13 @@ namespace Tranquire.Selenium.Targets
 
             return searchContext.FindElements(By).ToImmutableArray();
         }
-        
+
         /// <summary>
         /// Returns the action's name
         /// </summary>
         /// <returns></returns>
         public override string ToString() => Name + $" ({By.ToString()})";
-        
+
         /// <inheritdoc />
         public ITarget RelativeTo(ITarget targetSource)
         {
@@ -111,7 +111,7 @@ namespace Tranquire.Selenium.Targets
                 }
             }
         }
-               
+
         private enum ByType
         {
             Id,

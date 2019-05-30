@@ -17,7 +17,7 @@ namespace Tranquire.Selenium.Extensions
         /// Gets the screenshots observer
         /// </summary>
         public IObserver<ScreenshotInfo> ScreenshotInfoObserver { get; }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="SeleniumReporter"/>
         /// </summary>

@@ -1,10 +1,10 @@
-﻿using AutoFixture.Idioms;
-using FluentAssertions;
-using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Reflection;
+using AutoFixture.Idioms;
+using FluentAssertions;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions;
 using Tranquire.Selenium.Questions.UIModels;
 using Tranquire.Tests;
@@ -66,8 +66,7 @@ namespace Tranquire.Selenium.Tests.Questions
             //act
             var actual = Answer(question);
             //assert
-            var expected = new Model1()
-            {
+            var expected = new Model1() {
                 Title = "The title",
                 Value = 1,
                 Boolean = true,
@@ -87,7 +86,7 @@ namespace Tranquire.Selenium.Tests.Questions
             [Target(ByMethod.ClassName, "title")]
             public object Name { get; set; }
         }
-        
+
         [Fact]
         public void UnsupportedType_ShouldThrow()
         {
@@ -150,7 +149,7 @@ namespace Tranquire.Selenium.Tests.Questions
             [Target(ByMethod.Id, "classes")]
             [Classes(Contains = "class3")]
             public bool ClassesContainsTrue { get; set; }
-            
+
             [Target(ByMethod.Id, "classes")]
             [Classes(Contains = "class4")]
             public bool ClassesContainsFalse { get; set; }
@@ -221,8 +220,7 @@ namespace Tranquire.Selenium.Tests.Questions
             //act
             var actual = Answer(question);
             //assert
-            var expected = new Model2()
-            {
+            var expected = new Model2() {
                 Text = "The text",
                 Classes = ImmutableArray.Create("class1", "class2", "class3"),
                 ClassesContainsTrue = true,
@@ -266,20 +264,17 @@ namespace Tranquire.Selenium.Tests.Questions
             var actual = Answer(question);
             //assert
             var expected = ImmutableArray.Create(
-                new Model3()
-                {
+                new Model3() {
                     Text = "The text1",
                     Value = 1,
                     Title = "The title1"
                 },
-                new Model3()
-                {
+                new Model3() {
                     Text = "The text2",
                     Value = 2,
                     Title = "The title2"
                 },
-                new Model3()
-                {
+                new Model3() {
                     Text = "The text3",
                     Value = 3,
                     Title = "The title3"
@@ -303,7 +298,7 @@ namespace Tranquire.Selenium.Tests.Questions
             public int Value { get; }
 
             [Target(ByMethod.ClassName, "bool")]
-            public bool Boolean { get; }            
+            public bool Boolean { get; }
         }
 
         [Fact]
@@ -345,8 +340,7 @@ namespace Tranquire.Selenium.Tests.Questions
             //act
             var actual = Answer(question);
             //assert
-            var expected = new Model5(1)
-            {
+            var expected = new Model5(1) {
                 Boolean = true,
                 Title = "The title"
             };
@@ -400,7 +394,7 @@ namespace Tranquire.Selenium.Tests.Questions
             {
                 Value = value;
             }
-            
+
             public Model8(string title, int value, bool boolean2)
             {
                 Title = title;

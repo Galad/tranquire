@@ -1,11 +1,11 @@
-﻿using AutoFixture;
-using AutoFixture.Idioms;
-using FluentAssertions;
-using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using AutoFixture;
+using AutoFixture.Idioms;
+using FluentAssertions;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
 using Xunit;
@@ -59,7 +59,7 @@ namespace Tranquire.Selenium.Tests.Extensions
         {
             // arrange
             fixture.Inject(CreateTestDirectoryPath());
-            var sut = fixture.Create<SaveScreenshotsToFileOnNext>();            
+            var sut = fixture.Create<SaveScreenshotsToFileOnNext>();
             var screenshotInfo = GetScreenshotInfo();
             // act
             sut.OnNext(screenshotInfo);

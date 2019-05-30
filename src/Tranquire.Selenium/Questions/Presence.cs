@@ -1,9 +1,9 @@
-﻿using OpenQA.Selenium;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Questions
 {

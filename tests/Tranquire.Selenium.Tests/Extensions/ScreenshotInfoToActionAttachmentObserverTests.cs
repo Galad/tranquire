@@ -1,9 +1,8 @@
+using System;
 using AutoFixture;
 using AutoFixture.Idioms;
 using FluentAssertions;
 using Moq;
-using System;
-using System.IO;
 using Tranquire.Reporting;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
@@ -15,7 +14,7 @@ namespace Tranquire.Selenium.Tests.Extensions
     {
         public ScreenshotInfoToActionAttachmentObserverAdapterTests(WebDriverFixture fixture) : base(fixture, "Actions.html")
         {
-            
+
         }
 
         [Theory, DomainAutoData]
@@ -46,7 +45,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             // assert
             Mock.Get(sut.AttachmentObserver).Verify(o => o.OnCompleted());
         }
-        
+
         [Theory, DomainAutoData]
         public void OnError_ShouldCallOnError(
             ScreenshotInfoToActionAttachmentObserverAdapter sut, Exception exception)
@@ -68,7 +67,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             sut.OnNext(screenshotInfo);
             // assert
             var expected = new ActionFileAttachment(filename, string.Empty);
-            Mock.Get(sut.AttachmentObserver).Verify(o => o.OnNext(It.Is<ActionFileAttachment>(a => 
+            Mock.Get(sut.AttachmentObserver).Verify(o => o.OnNext(It.Is<ActionFileAttachment>(a =>
                     a.FilePath == filename + sut.Format.Extension &&
                     a.Description == string.Empty)));
         }

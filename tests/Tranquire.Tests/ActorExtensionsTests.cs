@@ -1,7 +1,7 @@
-﻿using AutoFixture.Idioms;
+﻿using System;
+using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using System;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -22,7 +22,7 @@ namespace Tranquire.Tests
         }
 
         [Theory, DomainAutoData]
-        public void WithReporting_ShouldDecorateActor(            
+        public void WithReporting_ShouldDecorateActor(
             [Modest]Actor actor,
             ReportingActor expected)
         {
@@ -61,7 +61,7 @@ namespace Tranquire.Tests
             var actual = ActorExtensions.WithReporting(actor, observer, canNotify).InnerActorBuilder(expected.Actor);
             //assert
             var actorAssertion = actual.Should().BeOfType<ReportingActor>();
-            actorAssertion.Which.Observer.Should().BeOfType<RenderedReportingObserver>()                
+            actorAssertion.Which.Observer.Should().BeOfType<RenderedReportingObserver>()
                           .Which.Observer.Should().Be(observer);
             actorAssertion.Which.CanNotify.Should().Be(canNotify);
         }

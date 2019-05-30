@@ -1,7 +1,7 @@
-﻿using AutoFixture.Idioms;
-using FluentAssertions;
-using System;
+﻿using System;
 using System.Threading;
+using AutoFixture.Idioms;
+using FluentAssertions;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -43,7 +43,7 @@ namespace Tranquire.Tests.Reporting
             //assert
             actual.Should().BeGreaterOrEqualTo(wait);
         }
-        
+
         [Theory, DomainAutoData]
         public void MeasureTime_WhenFuncThrows_ShouldReturnCorrectDuration(
             DefaultMeasureDuration sut,

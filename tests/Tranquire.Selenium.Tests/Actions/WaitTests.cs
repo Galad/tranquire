@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
-using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using FluentAssertions;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
@@ -28,7 +28,7 @@ namespace Tranquire.Selenium.Tests.Actions
             var actual = Answer(Presence.Of(target));
             Assert.True(actual);
         }
-        
+
         [Theory, DomainAutoData]
         public void UntilTargetIsPresent_WhenTimeout_ShouldThrow(string id)
         {
@@ -38,7 +38,7 @@ namespace Tranquire.Selenium.Tests.Actions
             //act
             Assert.Throws<TimeoutException>(() => Fixture.Actor.When(Wait.Until(target).IsPresent.Timeout(TimeSpan.FromMilliseconds(100))));
         }
-        
+
         private void InsertElementAfter2Second(string id)
         {
             var js = "var element = document.createElement('div');" +
@@ -128,7 +128,7 @@ namespace Tranquire.Selenium.Tests.Actions
 
         [Theory]
         [DomainInlineAutoData(VisibilityVisible)]
-        [DomainInlineAutoData(DisplayBlock)]        
+        [DomainInlineAutoData(DisplayBlock)]
         public void UntilTargetIsNotVisible_WhenTimeout_ShouldThrow(string state, string id)
         {
             // arrange

@@ -1,14 +1,11 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Collections.Generic;
+using AutoFixture;
 using AutoFixture.Idioms;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 using Moq;
 using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Selenium.Targets;
 using Tranquire.Tests;
 using Xunit;
@@ -70,7 +67,7 @@ namespace Tranquire.Selenium.Tests.Targets
                     new object[] { By.CssSelector("#a .b c"), By.ClassName("d"), "#a .b c .d" },
                     new object[] { By.CssSelector("#a .b c"), By.CssSelector("d #e .f"), "#a .b c d #e .f" },
                     new object[] { By.Name("a"), By.Id("b"), "[name=a] #b" },
-                    new object[] { By.TagName("a"), By.Id("b"), "a #b" }                    
+                    new object[] { By.TagName("a"), By.Id("b"), "a #b" }
                 };
             }
         }

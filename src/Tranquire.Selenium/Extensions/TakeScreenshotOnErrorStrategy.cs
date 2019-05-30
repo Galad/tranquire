@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Extensions
             {
                 return execute();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 var name = nextScreenshotName();
                 var screenshot = ((ITakesScreenshot)webBrowser.Driver).GetScreenshot();

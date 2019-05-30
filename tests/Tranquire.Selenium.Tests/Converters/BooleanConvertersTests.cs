@@ -1,9 +1,9 @@
-﻿using Xunit;
-using System;
-using Tranquire.Tests;
-using Tranquire.Selenium.Questions.UIModels.Converters;
-using System.Globalization;
+﻿using System;
 using System.Collections.Immutable;
+using System.Globalization;
+using Tranquire.Selenium.Questions.UIModels.Converters;
+using Tranquire.Tests;
+using Xunit;
 
 namespace Tranquire.Selenium.Tests.Converters
 {
@@ -22,7 +22,7 @@ namespace Tranquire.Selenium.Tests.Converters
 
         [Theory, DomainAutoData]
         internal void FromString(BooleanConverters sut)
-        {            
+        {
             // act
             var actual = sut.Convert("true", CultureInfo.InvariantCulture);
             // assert

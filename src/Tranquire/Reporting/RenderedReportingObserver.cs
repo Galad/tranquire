@@ -13,7 +13,7 @@ namespace Tranquire.Reporting
         /// Gets the observer
         /// </summary>
         public IObserver<string> Observer { get; }
-               
+
         /// <summary>
         /// Gets the rendered
         /// </summary>
@@ -71,7 +71,7 @@ namespace Tranquire.Reporting
             {
                 throw new ArgumentNullException(nameof(notification));
             }
-            
+
             switch (notification.Content.NotificationContentType)
             {
                 case ActionNotificationContentType.BeforeActionExecution:

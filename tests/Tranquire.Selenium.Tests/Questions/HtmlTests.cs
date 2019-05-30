@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Tranquire.Selenium.Questions;
@@ -17,7 +16,7 @@ namespace Tranquire.Selenium.Tests.Questions
         public async Task PageHtml_ShouldReturnCorrectValue()
         {
             // arrange
-            var expected = normalizeHtml(await GetExpectedHtml()); 
+            var expected = normalizeHtml(await GetExpectedHtml());
             // act
             var actual = Answer(Page.Html());
             // assert
@@ -33,7 +32,7 @@ namespace Tranquire.Selenium.Tests.Questions
 
         private async Task<string> GetExpectedHtml()
         {
-            using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Tranquire.Selenium.Tests.Html.html"))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Tranquire.Selenium.Tests.Html.html"))
             {
                 var sr = new StreamReader(stream);
                 return await sr.ReadToEndAsync();

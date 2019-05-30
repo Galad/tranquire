@@ -1,11 +1,10 @@
-﻿using FluentAssertions;
-using Moq;
-using AutoFixture.Idioms;
-using System;
-using Xunit;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AutoFixture.Idioms;
+using FluentAssertions;
+using Moq;
+using Xunit;
 
 namespace Tranquire.Tests
 {
@@ -512,7 +511,7 @@ namespace Tranquire.Tests
             // act and assert
             Assert.Throws<KeyNotFoundException>(() => taggedAction.ExecuteGivenAs(actor, actionTags.Object));
         }
-               
+
         [Fact]
         public void TaggedAction_Name_ShouldReturnCorrectValue()
         {
@@ -522,7 +521,7 @@ namespace Tranquire.Tests
                 ("tag1", Actions.FromResult(1)),
                 ("tag2", Actions.FromResult(2)),
                 ("tag3", Actions.FromResult(3))
-            };            
+            };
             var taggedAction = Actions.CreateTagged(actions);
             // act
             var actual = taggedAction.Name;

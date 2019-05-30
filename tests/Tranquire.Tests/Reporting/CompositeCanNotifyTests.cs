@@ -1,11 +1,7 @@
-﻿using AutoFixture;
+﻿using System.Linq;
+using AutoFixture;
 using AutoFixture.Idioms;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -29,8 +25,8 @@ namespace Tranquire.Tests.Reporting
         [DomainInlineAutoData(new bool[] { false, false, true }, false)]
         [DomainInlineAutoData(new bool[] { true, true, true }, true)]
         public void Action_ShouldReturnCorrectValue(
-            bool[] innerResults, 
-            bool expected, 
+            bool[] innerResults,
+            bool expected,
             IFixture fixture,
             IAction<Unit> action)
         {

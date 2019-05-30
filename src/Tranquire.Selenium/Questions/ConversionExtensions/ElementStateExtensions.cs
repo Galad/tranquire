@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Immutable;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions

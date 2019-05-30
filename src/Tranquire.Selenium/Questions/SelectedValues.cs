@@ -1,8 +1,8 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace Tranquire.Selenium.Questions
 {

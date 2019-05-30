@@ -1,7 +1,7 @@
-﻿using Moq;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
+using Moq;
 using Xunit;
 
 namespace Tranquire.Tests

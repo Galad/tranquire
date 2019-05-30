@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -48,8 +46,8 @@ namespace Tranquire
         /// <param name="getExceptionMessage">A function that returns the message to return when the assertion fails</param>        
         /// <returns>The answer, when the verification succeeds</returns>
         public static T Then<T>(
-            this IVerifies verifies, 
-            IQuestion<T> question, 
+            this IVerifies verifies,
+            IQuestion<T> question,
             IResolveConstraint constraint,
             Func<string> getExceptionMessage)
         {

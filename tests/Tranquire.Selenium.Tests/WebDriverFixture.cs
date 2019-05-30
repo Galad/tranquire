@@ -1,12 +1,11 @@
-﻿using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.Hosting;
-using Microsoft.Owin.StaticFiles;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using Owin;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.Hosting;
+using Microsoft.Owin.StaticFiles;
+using OpenQA.Selenium.Chrome;
+using Owin;
 
 namespace Tranquire.Selenium.Tests
 {
@@ -24,7 +23,7 @@ namespace Tranquire.Selenium.Tests
             _host = WebApp.Start(RootUrl, BuildHost);
             var options = new ChromeOptions();
             if (IsLiveUnitTesting)
-            {                
+            {
                 options.AddArguments("--headless", "--disable-gpu");
             }
             WebDriver = new ChromeDriver(options);
@@ -43,8 +42,7 @@ namespace Tranquire.Selenium.Tests
 
         private void BuildHost(IAppBuilder builder)
         {
-            builder.UseFileServer(new FileServerOptions()
-            {
+            builder.UseFileServer(new FileServerOptions() {
                 FileSystem = new EmbeddedResourceFileSystem(typeof(WebDriverFixture).Assembly),
                 EnableDirectoryBrowsing = true
             });

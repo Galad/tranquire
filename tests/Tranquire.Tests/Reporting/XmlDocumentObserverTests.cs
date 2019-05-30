@@ -1,9 +1,4 @@
-﻿using AutoFixture;
-using AutoFixture.Idioms;
-using AutoFixture.Kernel;
-using AutoFixture.Xunit2;
-using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -11,6 +6,11 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using AutoFixture;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
+using FluentAssertions;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -141,8 +141,7 @@ namespace Tranquire.Tests.Reporting
                     List<XmlReportItem> children = null,
                     string error = null) where T : XmlReportItem, new()
                 {
-                    return new T()
-                    {
+                    return new T() {
                         Name = name,
                         Duration = duration,
                         StartDate = startDate.ToString(CultureInfo.InvariantCulture),
@@ -441,8 +440,7 @@ namespace Tranquire.Tests.Reporting
             var xmlDocument = sut.GetXmlDocument();
             //assert
             var actual = DeserializeXmlDocument(xmlDocument);
-            AssertRootAreEqual(new XmlReportRoot()
-            {
+            AssertRootAreEqual(new XmlReportRoot() {
                 Name = "Test",
                 StartDate = date.ToString(CultureInfo.InvariantCulture),
                 EndDate = date.ToString(CultureInfo.InvariantCulture)
@@ -462,8 +460,7 @@ namespace Tranquire.Tests.Reporting
             var xmlDocument = sut.GetXmlDocument();
             //assert
             var actual = DeserializeXmlDocument(xmlDocument);
-            AssertRootAreEqual(new XmlReportRoot()
-            {
+            AssertRootAreEqual(new XmlReportRoot() {
                 Name = "Test",
                 StartDate = date.ToString(CultureInfo.InvariantCulture),
                 EndDate = date.ToString(CultureInfo.InvariantCulture)
@@ -500,8 +497,7 @@ namespace Tranquire.Tests.Reporting
             }
             sut.OnNext(new ActionNotification(named, 1, new AfterActionNotificationContent(TimeSpan.Zero)));
             // assert
-            var expected = new XmlReportRoot()
-            {
+            var expected = new XmlReportRoot() {
                 Name = "Test",
                 StartDate = date.ToString(CultureInfo.InvariantCulture),
                 EndDate = date.ToString(CultureInfo.InvariantCulture),
@@ -690,7 +686,7 @@ namespace Tranquire.Tests.Reporting
             IFixture fixture)
         {
             // arrange
-            var actions = fixture.CreateMany<IAction<Unit>>(3)                                 
+            var actions = fixture.CreateMany<IAction<Unit>>(3)
                                  .ToArray();
             var notifications = actions
                                .Select((a, i) => (action: a, i: i + 1))
@@ -717,11 +713,11 @@ namespace Tranquire.Tests.Reporting
             var expectedClass = actionContext.ToString().ToLower();
             var classesCount = CountStringOccurences(actual, $"class=\"action-context first-action-{expectedClass}\"");
             classesCount.Should().Be(1);
-            var titleCount = CountStringOccurences(actual, firstAction.Name);            
+            var titleCount = CountStringOccurences(actual, firstAction.Name);
             titleCount.Should().Be(1);
-            
+
         }
-#endregion
+        #endregion
 
         private static int CountStringOccurences(string input, string value)
         {

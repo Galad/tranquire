@@ -106,7 +106,7 @@
 #pragma warning restore CS0618 // Type or member is obsolete
         }
     }
-    
+
     /// <summary>
     /// Represent an action on the system
     /// </summary>

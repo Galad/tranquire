@@ -1,10 +1,10 @@
-﻿using FluentAssertions;
-using Moq;
-using AutoFixture.Idioms;
-using System;
-using System.Linq;
-using Xunit;
+﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
+using AutoFixture.Idioms;
+using FluentAssertions;
+using Moq;
+using Xunit;
 
 namespace Tranquire.Tests
 {
@@ -24,7 +24,7 @@ namespace Tranquire.Tests
 
         public class CompositeActionWithDefaultImmutableArray : CompositeAction
         {
-            public CompositeActionWithDefaultImmutableArray():base(default(ImmutableArray<IAction<Unit>>))
+            public CompositeActionWithDefaultImmutableArray() : base(default(ImmutableArray<IAction<Unit>>))
             {
             }
 

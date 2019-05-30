@@ -1,8 +1,7 @@
-﻿using FluentAssertions;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using TechTalk.SpecFlow;
 using ToDoList.Automation;
 using Tranquire;

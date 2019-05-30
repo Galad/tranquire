@@ -1,6 +1,6 @@
-﻿using AutoFixture.Idioms;
-using System;
+﻿using System;
 using System.Text;
+using AutoFixture.Idioms;
 using Xunit;
 
 namespace Tranquire.Tests.Reporting

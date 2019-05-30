@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Drawing;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium
 {

@@ -1,15 +1,13 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoFixture;
 using AutoFixture.Idioms;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using FluentAssertions.Equivalency;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Tranquire.Reporting;
 using Tranquire.Selenium.Extensions;
-using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
 using Xunit;
 
@@ -150,7 +148,7 @@ namespace Tranquire.Selenium.Tests
         }
 
         private static readonly ITakeScreenshotStrategy _defaultTakeScreenshotStrategy = new AlwaysTakeScreenshotStrategy();
-        
+
         public static IEnumerable<object[]> ReportingConfigurations
         {
             get
@@ -322,13 +320,13 @@ namespace Tranquire.Selenium.Tests
                 )
                 .InnerActorBuilder(iactor) as ReportingActor;
             reportingActor.Should().BeEquivalentTo(expectedReportingActor,
-                                                   o => o.Excluding(a => a.Actor)                                                         
+                                                   o => o.Excluding(a => a.Actor)
                                                          .ExcludingDateTimeOffset()
                                                          .RespectingRuntimeTypes(),
-                                                   "Reporting actor") ;
+                                                   "Reporting actor");
 
             var expectedSeleniumReporter = new SeleniumReporter(xmlDocumentObserver, new SaveScreenshotsToFileOnComplete(screenshotDirectory, format));
-            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter, 
+            actualSeleniumReporter.Should().BeEquivalentTo(expectedSeleniumReporter,
                                                            o => o.ExcludingDateTimeOffset(),
                                                            "Selenium reporter");
         }

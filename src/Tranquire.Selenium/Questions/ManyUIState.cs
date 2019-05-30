@@ -1,8 +1,8 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions
@@ -28,7 +28,7 @@ namespace Tranquire.Selenium.Questions
             Resolve = resolve;
             _question = new Lazy<IQuestion<ImmutableArray<T>>>(() => CreateQuestion(new GenericConverter<T, T>(t => t)));
         }
-        
+
         /// <summary>
         /// Creates a question
         /// </summary>
@@ -83,7 +83,7 @@ namespace Tranquire.Selenium.Questions
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"What are the state of the elements identified by {Target.ToString()} ?";
-        
+
         string INamed.Name => _question.Value.Name;
 
         ImmutableArray<T> IQuestion<ImmutableArray<T>>.AnsweredBy(IActor actor) => _question.Value.AnsweredBy(actor);

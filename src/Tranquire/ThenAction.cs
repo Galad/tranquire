@@ -13,8 +13,8 @@ namespace Tranquire
         /// <summary>
         /// Gets the question
         /// </summary>
-        INamed IThenAction<TResult>.Question => Question;   
-        
+        INamed IThenAction<TResult>.Question => Question;
+
         /// <summary>
         /// Gets the question
         /// </summary>

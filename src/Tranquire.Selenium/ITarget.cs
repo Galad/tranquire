@@ -1,5 +1,5 @@
-﻿using OpenQA.Selenium;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium
 {

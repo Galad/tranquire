@@ -1,8 +1,6 @@
 using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
 using Moq;
-using System;
-using Tranquire;
 using Xunit;
 
 namespace Tranquire.Tests

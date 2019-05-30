@@ -1,8 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Tranquire.Selenium.Extensions;
 
 namespace Tranquire.Selenium.Extensions
 {
@@ -47,7 +45,7 @@ namespace Tranquire.Selenium.Extensions
             {
                 System.IO.Directory.CreateDirectory(Directory);
             }
-            foreach(var screenshot in screenshots)
+            foreach (var screenshot in screenshots)
             {
                 var filename = Path.Combine(Directory, screenshot.FileName + Format.Extension);
                 screenshot.Screenshot.SaveAsFile(filename, Format.Format);

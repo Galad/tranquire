@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             )
         {
             // arrange
-            Mock.Get(action).Setup(q => q.ExecuteGivenAs(otherActor)).Returns(expected);            
+            Mock.Get(action).Setup(q => q.ExecuteGivenAs(otherActor)).Returns(expected);
             Mock.Get(sut.Actor).Setup(a => a.Execute(It.IsAny<IAction<object>>())).Returns((IAction<object> a) => a.ExecuteGivenAs(otherActor));
             Mock.Get(sut.TakeScreenshotStrategy).Setup(t => t.ExecuteTakeScreenshot(Unit.Default,
                                                                                     otherActor,

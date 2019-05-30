@@ -1,8 +1,8 @@
-﻿using AutoFixture;
-using AutoFixture.Idioms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
+using AutoFixture.Idioms;
 using Tranquire.Selenium.Questions.UIModels;
 using Xunit;
 

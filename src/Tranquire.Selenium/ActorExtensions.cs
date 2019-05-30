@@ -112,7 +112,7 @@ namespace Tranquire.Selenium
             {
                 throw new ArgumentNullException(nameof(screenshotNameOrFormat));
             }
-            
+
             var id = 0;
 
             string screenshotFormat;

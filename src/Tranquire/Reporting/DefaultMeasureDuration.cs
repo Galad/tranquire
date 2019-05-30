@@ -31,7 +31,7 @@ namespace Tranquire.Reporting
             {
                 sw.Stop();
                 return (sw.Elapsed, default, ex);
-            }            
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using System;
 using AutoFixture;
 using AutoFixture.Idioms;
-using System;
+using FluentAssertions;
+using Moq;
 using Tranquire.Extensions;
 using Xunit;
 

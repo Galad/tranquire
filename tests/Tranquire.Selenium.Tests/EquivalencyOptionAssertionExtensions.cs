@@ -1,5 +1,5 @@
-﻿using FluentAssertions.Equivalency;
-using System;
+﻿using System;
+using FluentAssertions.Equivalency;
 
 namespace Tranquire.Selenium.Tests
 {

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain;
 
 namespace ToDoList.Controllers
@@ -37,12 +37,12 @@ namespace ToDoList.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            if(id == Guid.Empty)
+            if (id == Guid.Empty)
             {
                 return BadRequest();
             }
             toDoItemRepository.Delete(id);
             return Ok();
         }
-    }    
+    }
 }

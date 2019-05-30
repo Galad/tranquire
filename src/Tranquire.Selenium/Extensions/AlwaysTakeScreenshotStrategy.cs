@@ -31,7 +31,7 @@ namespace Tranquire.Selenium.Extensions
             {
                 throw new ArgumentNullException(nameof(screenshotObserver));
             }
-            
+
             if (!(actionAbility is WebBrowser webBrowser))
             {
                 return execute();
@@ -39,7 +39,7 @@ namespace Tranquire.Selenium.Extensions
 
             try
             {
-                return execute();    
+                return execute();
             }
             finally
             {

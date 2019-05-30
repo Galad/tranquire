@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using Moq;
-using OpenQA.Selenium;
+﻿using System;
 using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
-using System;
+using FluentAssertions;
+using Moq;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Actions;
 using Tranquire.Tests;
 using Xunit;

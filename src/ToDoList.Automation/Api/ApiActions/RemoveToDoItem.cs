@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Tranquire;
 
@@ -21,7 +19,7 @@ namespace ToDoList.Automation.Api.ApiActions
         protected async override Task ExecuteWhen(IActor actor, HttpClient ability)
         {
             var result = await ability.DeleteAsync("api/todoitem/" + Uri.EscapeUriString(Id.ToString())).ConfigureAwait(false);
-            result.EnsureSuccessStatusCode();            
+            result.EnsureSuccessStatusCode();
         }
     }
 }
