@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +18,6 @@ using Tranquire;
 using Tranquire.Reporting;
 using Tranquire.Selenium;
 using Tranquire.Selenium.Extensions;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace ToDoList.Specifications
 {

@@ -1,12 +1,11 @@
-﻿using FluentAssertions;
-using Moq;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.Idioms;
+using FluentAssertions;
+using Moq;
 using System;
+using System.Threading.Tasks;
 using Tranquire.Extensions;
 using Xunit;
-using System.Threading.Tasks;
-using System.Reactive.Linq;
 
 namespace Tranquire.Tests.Extensions
 {
