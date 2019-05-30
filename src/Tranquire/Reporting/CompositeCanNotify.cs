@@ -16,7 +16,7 @@ namespace Tranquire.Reporting
         /// </summary>
         /// <param name="innerCanNotify"></param>
         public CompositeCanNotify(params ICanNotify[] innerCanNotify)
-        {            
+        {
             _innerCanNotify = innerCanNotify ?? throw new System.ArgumentNullException(nameof(innerCanNotify));
         }
 

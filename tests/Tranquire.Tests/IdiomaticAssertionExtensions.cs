@@ -1,7 +1,7 @@
-﻿using AutoFixture.Idioms;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using AutoFixture.Idioms;
 
 namespace Tranquire.Tests
 {
@@ -33,7 +33,7 @@ namespace Tranquire.Tests
 
         private static void VerifyExpression(IIdiomaticAssertion assertion, Expression expression)
         {
-            switch(expression)
+            switch (expression)
             {
                 case MemberExpression memberExpression:
                     VerifyMemberExpression(assertion, memberExpression);
@@ -43,7 +43,7 @@ namespace Tranquire.Tests
                     break;
                 default:
                     throw new ArgumentException("The expression is not a valid member selector");
-            }            
+            }
         }
 
         private static void VerifyArrayExpression(IIdiomaticAssertion assertion, NewArrayExpression arrayExpression)

@@ -186,8 +186,8 @@ namespace Tranquire
         /// <param name="canNotify">A <see cref="ICanNotify"/> instance that is used to filter actions that should not send a notification</param>        
         /// <returns>An new actor</returns>
         public static Actor WithReporting(
-            this Actor actor, 
-            IObserver<string> observer, 
+            this Actor actor,
+            IObserver<string> observer,
             ICanNotify canNotify)
         {
             return actor.WithReporting(observer, canNotify, new DefaultMeasureDuration());

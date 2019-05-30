@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Idioms;
-using AutoFixture.Xunit2;
 using Xunit;
 
 namespace Tranquire.Tests

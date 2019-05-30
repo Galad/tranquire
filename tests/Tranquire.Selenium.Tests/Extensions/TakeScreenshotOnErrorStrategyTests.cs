@@ -96,7 +96,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             Mock.Get(actor).Setup(a => a.AsksFor(It.IsAny<IQuestion<WebBrowser, WebBrowser>>()))
                            .Returns<IQuestion<WebBrowser, WebBrowser>>(q => q.AnsweredBy(actor, webBrowser));
 #pragma warning restore CS0618 // Type or member is obsolete
-                              // act
+            // act
             Assert.Throws<Exception>(() => sut.ExecuteTakeScreenshot(new object(), actor, Throws, () => expectedName, observer));
             // assert
             Mock.Get(observer).Verify(CallOnNext(expected), Times.Once());

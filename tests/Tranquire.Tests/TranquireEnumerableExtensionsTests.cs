@@ -1,12 +1,9 @@
-using AutoFixture;
-using AutoFixture.Idioms;
-using FluentAssertions;
-using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Tranquire.Tests;
+using AutoFixture.Idioms;
+using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -18,10 +15,10 @@ namespace Tranquire.Tests
         {
             assertion.Verify(typeof(TranquireEnumerableExtensions));
         }
-        
+
         [Theory, DomainAutoData]
-        public void ToAction_ShouldBeActionThatCallsAllActions(            
-            IAction<Unit>[] actions, 
+        public void ToAction_ShouldBeActionThatCallsAllActions(
+            IAction<Unit>[] actions,
             string name,
             Mock<IActor> actor)
         {
@@ -39,7 +36,7 @@ namespace Tranquire.Tests
 
         #region ToAction async
         [Theory, DomainAutoData]
-        public async Task ToAction_Async_ShouldBeActionThatCallsAllActionsSequentially(            
+        public async Task ToAction_Async_ShouldBeActionThatCallsAllActionsSequentially(
             string name)
         {
             //arrange

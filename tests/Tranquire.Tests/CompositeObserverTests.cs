@@ -1,8 +1,8 @@
+using System;
+using System.Linq;
 using AutoFixture;
 using AutoFixture.Idioms;
 using Moq;
-using System;
-using System.Linq;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -41,7 +41,7 @@ namespace Tranquire.Tests
                 mock.Verify(o => o.OnCompleted());
             }
         }
-        
+
         [Theory, DomainAutoData]
         public void OnError_ShouldCallOnErrorOnAllObservers(CompositeObserver<object> sut, Exception exception)
         {

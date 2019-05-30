@@ -1,10 +1,10 @@
-﻿using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.Kernel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Kernel;
 using Tranquire.Selenium.Questions;
 using Tranquire.Tests;
 using Xunit;

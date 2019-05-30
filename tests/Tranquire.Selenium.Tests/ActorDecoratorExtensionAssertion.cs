@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using AutoFixture.Idioms;
-using AutoFixture.Kernel;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
+using FluentAssertions;
 
 namespace Tranquire.Tests
 {

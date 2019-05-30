@@ -1,7 +1,5 @@
-﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Extensions
 {

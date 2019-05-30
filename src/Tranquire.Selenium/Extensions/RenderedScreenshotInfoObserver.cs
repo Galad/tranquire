@@ -52,7 +52,7 @@ namespace Tranquire.Selenium.Extensions
 
         /// <inheritdoc />
         public void OnCompleted()
-        {           
+        {
             Observer.OnCompleted();
         }
     }

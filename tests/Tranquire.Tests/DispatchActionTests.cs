@@ -1,10 +1,6 @@
-using AutoFixture;
 using AutoFixture.Idioms;
-using AutoFixture.Xunit2;
 using FluentAssertions;
 using Moq;
-using System;
-using Tranquire;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -31,7 +27,7 @@ namespace Tranquire.Tests
         {
             assertion.Verify(typeof(TSut).GetProperty(nameof(DispatchAction<T>.Name)));
         }
-        
+
         [Theory, DomainAutoData]
         public void Sut_VerifyConstructorInitializedMembers(ConstructorInitializedMemberAssertion assertion)
         {
@@ -44,7 +40,7 @@ namespace Tranquire.Tests
 
 
         [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldReturnCorrectValue(            
+        public void ExecuteGivenAs_ShouldReturnCorrectValue(
             TSut sut,
             T expected,
             IActor actor)

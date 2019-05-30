@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Diagnostics;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Targets
 {
@@ -16,7 +16,7 @@ namespace Tranquire.Selenium.Targets
         /// <param name="name">The target name</param>
         /// <param name="createBy">A function that creates the By instance</param>
         public TargetByParameterizable(string name, Func<T, By> createBy)
-            :this(_ => name, createBy)
+            : this(_ => name, createBy)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -52,7 +52,7 @@ namespace Tranquire.Selenium.Targets
         /// <returns></returns>
         public ITarget Of(T parameter)
         {
-            if(parameter == null)
+            if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }

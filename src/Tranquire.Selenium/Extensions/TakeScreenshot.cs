@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Extensions
         /// <param name="nextScreenshotName">A function returning the name of the next screenshot. Each name should be different.</param>
         /// <param name="screenshotsObserver">An observer that can be used to notify that a screenshot was taken</param>
         public TakeScreenshot(IActor actor, Func<string> nextScreenshotName, IObserver<ScreenshotInfo> screenshotsObserver)
-            :this(actor, nextScreenshotName, screenshotsObserver, new AlwaysTakeScreenshotStrategy())
+            : this(actor, nextScreenshotName, screenshotsObserver, new AlwaysTakeScreenshotStrategy())
         {
 
         }
@@ -65,7 +65,7 @@ namespace Tranquire.Selenium.Extensions
 
             return Actor.AsksFor(
                 Tranquire.Questions.Create<TAnswer>(
-                    question.Name, 
+                    question.Name,
                     a => ExecuteTakeScreenshot(Unit.Default, a, () => question.AnsweredBy(a), this)
                     )
                 );
@@ -85,13 +85,13 @@ namespace Tranquire.Selenium.Extensions
         {
             private readonly IQuestion<TAbility, TAnswer> _question;
             private readonly TakeScreenshot _takeScreenshot;
-                        
+
             public TakeScreenshotQuestion(
-                IQuestion<TAbility, TAnswer> question, 
+                IQuestion<TAbility, TAnswer> question,
                 TakeScreenshot takeScreenshot)
             {
                 _question = question;
-                _takeScreenshot = takeScreenshot;                
+                _takeScreenshot = takeScreenshot;
             }
 
             protected override TAnswer Answer(IActor actor, TAbility ability)
@@ -123,7 +123,7 @@ namespace Tranquire.Selenium.Extensions
             private readonly TakeScreenshot _takeScreenshot;
 
             public TakeScreenshotAction(
-                IAction<TAbility, TResult> action, 
+                IAction<TAbility, TResult> action,
                 TakeScreenshot takeScreenshot)
             {
                 _action = action;

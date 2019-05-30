@@ -1,9 +1,5 @@
-using AutoFixture;
 using AutoFixture.Idioms;
 using FluentAssertions;
-using Moq;
-using System;
-using Tranquire;
 using Xunit;
 
 namespace Tranquire.Tests
@@ -25,7 +21,7 @@ namespace Tranquire.Tests
                 a.VerifyAction
             });
         }
-        
+
         [Theory, DomainAutoData]
         public void Name_ShouldReturnCorrectValue(
             ThenAction<object, string> sut)

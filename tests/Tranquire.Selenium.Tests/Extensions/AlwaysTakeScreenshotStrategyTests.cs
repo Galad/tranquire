@@ -24,7 +24,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             IActor actor,
             object expected,
             Func<string> nextScreenshotName)
-        {            
+        {
             // Act
             var actual = sut.ExecuteTakeScreenshot(
                 Unit.Default,

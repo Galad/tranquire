@@ -1,6 +1,6 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using OpenQA.Selenium;
-using System;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Xunit;

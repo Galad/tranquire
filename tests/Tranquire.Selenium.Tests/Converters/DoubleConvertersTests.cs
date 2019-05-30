@@ -1,9 +1,9 @@
-﻿using Xunit;
-using AutoFixture;
-using System;
-using Tranquire.Tests;
-using Tranquire.Selenium.Questions.UIModels.Converters;
+﻿using System;
 using System.Globalization;
+using AutoFixture;
+using Tranquire.Selenium.Questions.UIModels.Converters;
+using Tranquire.Tests;
+using Xunit;
 
 namespace Tranquire.Selenium.Tests.Converters
 {

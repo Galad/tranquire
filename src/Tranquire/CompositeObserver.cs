@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Tranquire
 {
@@ -37,7 +36,7 @@ namespace Tranquire
             foreach (var observer in _observers)
             {
                 observer.OnError(error);
-            }            
+            }
         }
 
         /// <inheritdoc />

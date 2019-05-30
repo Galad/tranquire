@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Globalization;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions.UIModels

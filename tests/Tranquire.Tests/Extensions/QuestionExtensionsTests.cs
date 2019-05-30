@@ -1,8 +1,8 @@
-﻿using AutoFixture.Idioms;
+﻿using System;
+using System.Threading.Tasks;
+using AutoFixture.Idioms;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Tranquire.Extensions;
 using Xunit;
 
@@ -12,7 +12,7 @@ namespace Tranquire.Tests.Extensions
     {
         [Theory, DomainAutoData]
         public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion) => assertion.Verify(typeof(QuestionExtensions));
-        
+
         #region Select
         [Theory, DomainAutoData]
         public void Select_ShouldReturnCorrectResult(IQuestion<string> question, Func<string, object> selector)
@@ -101,7 +101,7 @@ namespace Tranquire.Tests.Extensions
             Assert.Equal(expected, actual);
         }
         #endregion
-        
+
         #region SelectMany: IQuestion<T> -> IQuestion<Task<U>>
         [Theory, DomainAutoData]
         public async Task SelectMany_ReturningAsyncQuestion_ShouldReturnCorrectResult(

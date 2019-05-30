@@ -1,8 +1,6 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Linq;
 using Moq;
 using OpenQA.Selenium;
-using System.Linq;
-using Tranquire.Tests;
 using Xunit;
 
 namespace Tranquire.Selenium.Tests.Targets
@@ -139,7 +137,7 @@ namespace Tranquire.Selenium.Tests.Targets
                                .Text;
             Assert.Equal(RelativeText, actual);
         }
-               
+
         [Fact]
         public void ResolveFor_RelativeTo_WithMultipleTargets_ShouldReturnCorrectValue()
         {

@@ -1,9 +1,9 @@
-﻿using AutoFixture;
-using AutoFixture.Kernel;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using AutoFixture;
+using AutoFixture.Kernel;
 
 namespace Tranquire.Tests
 {

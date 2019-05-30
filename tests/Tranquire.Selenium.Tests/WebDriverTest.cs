@@ -13,7 +13,7 @@ namespace Tranquire.Selenium.Tests
             {
                 throw new System.ArgumentNullException(nameof(page));
             }
-                        
+
             Fixture = fixture;
             this._page = page;
             ReloadPage();

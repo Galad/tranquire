@@ -57,7 +57,7 @@ namespace Tranquire.Selenium.Tests.Extensions
         {
             // arrange
             var sut = new TakeSampleScreenshotsStrategy(sampleSize);
-            var screenshot = new Screenshot("abcdefgskdjf");            
+            var screenshot = new Screenshot("abcdefgskdjf");
             var webDriver = new Mock<IWebDriver>();
             webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
             var webBrowser = WebBrowser.With(webDriver.Object);
@@ -100,7 +100,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             webDriver.As<ITakesScreenshot>().Setup(t => t.GetScreenshot()).Returns(screenshot);
             var webBrowser = WebBrowser.With(webDriver.Object);
             // act
-            foreach(var (useWebBrowser, i) in useWebBrowsers.Select((useWebBrowser, i) => (useWebBrowser, i + 1)))
+            foreach (var (useWebBrowser, i) in useWebBrowsers.Select((useWebBrowser, i) => (useWebBrowser, i + 1)))
             {
                 var ability = useWebBrowser ? webBrowser : new object();
                 sut.ExecuteTakeScreenshot(ability, actor, () => new object(), () => expectedName + i.ToString(), observer);

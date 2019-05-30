@@ -1,7 +1,7 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Globalization;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Questions
 {

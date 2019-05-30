@@ -1,8 +1,8 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions;
 using Xunit;
 

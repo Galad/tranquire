@@ -1,11 +1,10 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Idioms;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Tranquire;
 using Xunit;
 
 namespace Tranquire.Tests

@@ -1,12 +1,9 @@
-using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.Idioms;
-using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Tranquire.Selenium;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Idioms;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
 using Xunit;

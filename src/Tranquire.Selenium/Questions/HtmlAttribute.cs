@@ -1,5 +1,5 @@
-﻿using OpenQA.Selenium;
-using System.Globalization;
+﻿using System.Globalization;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Builders;
 
 namespace Tranquire.Selenium.Questions

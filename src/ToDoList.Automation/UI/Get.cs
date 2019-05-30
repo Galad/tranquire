@@ -1,8 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Linq;
 using ToDoList.Automation.Model;
 using Tranquire;
-using Tranquire.Selenium.Questions;
 
 namespace ToDoList.Automation.UI
 {

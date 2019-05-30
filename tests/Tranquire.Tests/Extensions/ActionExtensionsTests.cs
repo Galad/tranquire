@@ -1,9 +1,9 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Threading.Tasks;
+using AutoFixture;
 using AutoFixture.Idioms;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Tranquire.Extensions;
 using Xunit;
 

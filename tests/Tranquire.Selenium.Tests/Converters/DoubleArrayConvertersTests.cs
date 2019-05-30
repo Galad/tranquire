@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using AutoFixture;
-using System;
-using Tranquire.Tests;
 using Tranquire.Selenium.Questions.UIModels.Converters;
-using System.Globalization;
-using System.Collections.Immutable;
+using Tranquire.Tests;
+using Xunit;
 
 namespace Tranquire.Selenium.Tests.Converters
 {

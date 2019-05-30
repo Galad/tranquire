@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using System.Globalization;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System.Globalization;
 
 namespace Tranquire.Selenium.Questions
 {

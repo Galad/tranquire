@@ -1,11 +1,11 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Converters;
 using Tranquire.Selenium.Questions.UIModels;
 using Tranquire.Selenium.Questions.UIModels.Converters;
@@ -97,7 +97,7 @@ namespace Tranquire.Selenium.Questions
                         .TakeWhile(pi => readonlyProperties.ContainsKey(pi.Name.ToUpper()))
                         .Select(pi => readonlyProperties[pi.Name.ToUpper()].retrieveValue)
                         .ToArray();
-                if(properties.Length == readonlyProperties.Count)
+                if (properties.Length == readonlyProperties.Count)
                 {
                     return (true, properties);
                 }

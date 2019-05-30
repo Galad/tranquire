@@ -1,10 +1,9 @@
-using AutoFixture;
-using AutoFixture.Idioms;
-using FluentAssertions;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture.Idioms;
+using FluentAssertions;
+using Moq;
 using Tranquire;
 using Xunit;
 
@@ -30,7 +29,7 @@ namespace Tranquire.Tests
             // assert
             actual.Should().Be(expected);
         }
-        
+
         [Theory, DomainAutoData]
         public void Create_Name_ShouldReturnCorrectValue(string expected)
         {
@@ -41,12 +40,12 @@ namespace Tranquire.Tests
             // assert
             actual.Should().Be(expected);
         }
-        
+
         [Theory, DomainAutoData]
         public void CreateWithAbility_ShouldReturnCorrectValue(
-            IActor actor, 
+            IActor actor,
             object ability,
-            object expected, 
+            object expected,
             string name)
         {
             // arrange
@@ -69,7 +68,7 @@ namespace Tranquire.Tests
             // assert
             actual.Should().Be(expected);
         }
-        
+
         [Theory, DomainAutoData]
         public void FromResult_ShouldReturnCorrectValue(IActor actor, object expected)
         {

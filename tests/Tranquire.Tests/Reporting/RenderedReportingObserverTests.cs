@@ -1,12 +1,8 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Globalization;
+using AutoFixture;
 using AutoFixture.Idioms;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tranquire.Reporting;
 using Xunit;
 
@@ -41,7 +37,7 @@ namespace Tranquire.Tests.Reporting
             // act
             sut.OnCompleted();
             // assert
-            Mock.Get(sut.Observer).Verify(o => o.OnCompleted()); 
+            Mock.Get(sut.Observer).Verify(o => o.OnCompleted());
         }
 
         [Theory, DomainAutoData]
@@ -54,7 +50,7 @@ namespace Tranquire.Tests.Reporting
             var renderer = new Mock<Func<ActionNotification, string>>();
             renderer.Setup(r => r(notification)).Returns(expected);
             fixture.Inject(renderer.Object);
-            var sut = fixture.Create<RenderedReportingObserver>();            
+            var sut = fixture.Create<RenderedReportingObserver>();
             // act
             sut.OnNext(notification);
             // assert
@@ -66,7 +62,7 @@ namespace Tranquire.Tests.Reporting
         [DomainInlineAutoData(1, "---")]
         [DomainInlineAutoData(2, "   |--")]
         [DomainInlineAutoData(10, "                           |--")]
-        public void DefaultRenderer_WithBeforeNotification_ShouldReturnCorrectValue(  
+        public void DefaultRenderer_WithBeforeNotification_ShouldReturnCorrectValue(
             int depth,
             string prefix,
             BeforeActionNotificationContent notificationContent,
@@ -78,7 +74,7 @@ namespace Tranquire.Tests.Reporting
             // assert
             var expected = prefix + " Starting " + named.Name;
         }
-        
+
         [Theory]
         [DomainInlineAutoData(0, " ")]
         [DomainInlineAutoData(1, "---")]

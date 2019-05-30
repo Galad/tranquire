@@ -1,9 +1,6 @@
-using Moq;
-using OpenQA.Selenium;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Extensions;
 using Xunit;
 
@@ -44,20 +41,20 @@ namespace Tranquire.Selenium.Tests.Extensions
         [Theory, MemberData(nameof(Formats))]
         public void GetHashCode_WithDifferentFormat_ReturnDifferentValue(ScreenshotFormat sut)
         {
-            if(sut.Format == ScreenshotImageFormat.Bmp)
+            if (sut.Format == ScreenshotImageFormat.Bmp)
             {
                 return;
             }
 
             Assert.NotEqual(ScreenshotFormat.Bmp.GetHashCode(), sut.GetHashCode());
         }
-        
+
         [Theory, MemberData(nameof(Formats))]
         public void Equals_WithSameFormat_ReturnsTrue(ScreenshotFormat sut)
         {
             Assert.True(((object)sut).Equals(sut));
         }
-        
+
         [Theory, MemberData(nameof(Formats))]
         public void Equals_WithDifferentFormat_ReturnsFalse(ScreenshotFormat sut)
         {

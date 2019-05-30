@@ -138,7 +138,7 @@ namespace Tranquire.Reporting
                 _depth--;
                 throw exception;
             }
-            
+
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -158,7 +158,7 @@ namespace Tranquire.Reporting
                     (error, duration) => new AfterThenNotificationContent(duration, GetOutcome(error), error)
                 );
             }
-            if(action is CommandAction<T> commandAction)
+            if (action is CommandAction<T> commandAction)
             {
                 return
                 (

@@ -1,9 +1,9 @@
-﻿using AutoFixture;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using AutoFixture;
 using Tranquire.Selenium.Questions.UIModels.Converters;
 using Tranquire.Tests;
 using Xunit;

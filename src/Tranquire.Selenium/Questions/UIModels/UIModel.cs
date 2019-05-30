@@ -1,6 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Globalization;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.Converters;
 
 namespace Tranquire.Selenium.Questions.UIModels
@@ -14,7 +14,7 @@ namespace Tranquire.Selenium.Questions.UIModels
         private readonly UIModel.UIModelInfo _uIModelInfo;
         private readonly ITarget _containerTarget;
         private readonly CultureInfo _culture;
-                
+
         internal UIModel(UIModel.UIModelInfo uIModelInfo, ITarget containerTarget, string name, CultureInfo culture = null)
         {
             _uIModelInfo = uIModelInfo ?? throw new ArgumentNullException(nameof(uIModelInfo));

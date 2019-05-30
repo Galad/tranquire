@@ -1,5 +1,5 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
+using OpenQA.Selenium;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;
 using Xunit;
@@ -70,7 +70,7 @@ namespace Tranquire.Selenium.Tests.Actions
         [InlineData(1, new string[] { "1", "3" })]
         public void SelectByValuesAction_ShouldSelectCorrectElement(
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-            int dummy, 
+            int dummy,
             string[] expected)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
@@ -166,8 +166,8 @@ namespace Tranquire.Selenium.Tests.Actions
             var actual = Answer(Value.Of(target));
             Assert.Equal(string.Empty, actual);
         }
-        
-        [Fact]     
+
+        [Fact]
         public void ClearValue_WhenCursorIsNotAtTheEnd_ShouldClearTheValue()
         {
             //arrange

@@ -1,7 +1,7 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Questions.UIModels
 {

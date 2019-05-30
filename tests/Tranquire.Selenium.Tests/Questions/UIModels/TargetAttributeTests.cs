@@ -1,9 +1,7 @@
-using AutoFixture;
-using Moq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
 using Tranquire.Selenium.Questions.UIModels;
 using Xunit;
 

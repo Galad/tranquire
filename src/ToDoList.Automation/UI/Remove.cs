@@ -1,5 +1,4 @@
 ﻿using Tranquire;
-using Tranquire.Selenium.Actions;
 
 namespace ToDoList.Automation.UI
 {

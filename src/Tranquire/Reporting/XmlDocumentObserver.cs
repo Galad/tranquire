@@ -22,7 +22,7 @@ namespace Tranquire.Reporting
         /// <summary>
         /// Creates a new instance of <see cref="XmlDocumentObserver"/>
         /// </summary>
-        public XmlDocumentObserver():this(new DefaultMeasureDuration())
+        public XmlDocumentObserver() : this(new DefaultMeasureDuration())
         {
         }
 
@@ -34,8 +34,7 @@ namespace Tranquire.Reporting
             {
                 if (_items.Count == 0)
                 {
-                    _items.Push(new TranquireXmlReportDocument()
-                    {
+                    _items.Push(new TranquireXmlReportDocument() {
                         StartDate = MeasureDuration.Now,
                         Name = "Test"
                     });
@@ -107,10 +106,9 @@ namespace Tranquire.Reporting
         internal void HandleBeforeThen(BeforeThenNotificationContent beforeThen, INamed named)
         {
             var currentItem = CurrentItem;
-            var newItem = new TranquireXmlReportThen()
-            {
+            var newItem = new TranquireXmlReportThen() {
                 StartDate = beforeThen.StartDate,
-                Name = named.Name                
+                Name = named.Name
             };
             currentItem.Children.Add(newItem);
             _items.Push(newItem);
@@ -191,28 +189,28 @@ namespace Tranquire.Reporting
         }
 
         private XElement GetElement(TranquireXmlReportItem item)
-        {            
+        {
             var content = new List<object>()
             {
                 new XAttribute("start-date", item.StartDate.ToString(CultureInfo.InvariantCulture)),
                 new XAttribute("end-date", item.EndDate.ToString(CultureInfo.InvariantCulture)),
                 new XAttribute("duration", (int)item.Duration.TotalMilliseconds),
                 new XAttribute("name", item.Name),
-                new XAttribute("has-error", item.HasError),                
+                new XAttribute("has-error", item.HasError),
                 item.Children.Select(GetElement)
-            };           
-            if(item.Attachments.Count > 0)
+            };
+            if (item.Attachments.Count > 0)
             {
                 content.Add(new XElement("attachments", item.Attachments.Select(getAttachment)));
             }
-            if(item is TranquireXmlReportThen then)
+            if (item is TranquireXmlReportThen then)
             {
                 content.Add(new XAttribute("outcome", then.Outcome.ToString().ToLower()));
                 if (then.Outcome != ThenOutcome.Pass)
                 {
                     content.Add(new XElement("outcomeDetail", new XCData(then.Error.Message)));
                 }
-            }            
+            }
             else if (item.HasError && !hasExceptionInChildren(item.Error, item.Children))
             {
                 content.Add(new XElement("error", new XCData(item.Error.ToString())));
@@ -256,7 +254,7 @@ namespace Tranquire.Reporting
                 return items.Any(i => i.Error == ex || hasExceptionInChildren(ex, i.Children));
             }
         }
-        
+
         /// <inheritdoc />
         public void OnNext(ActionFileAttachment value)
         {
@@ -264,7 +262,7 @@ namespace Tranquire.Reporting
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             CurrentItem.Attachments.Add(value);
         }
     }

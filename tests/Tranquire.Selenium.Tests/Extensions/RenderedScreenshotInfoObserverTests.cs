@@ -1,8 +1,8 @@
+using System;
 using AutoFixture;
 using AutoFixture.Idioms;
 using FluentAssertions;
 using Moq;
-using System;
 using Tranquire.Selenium.Extensions;
 using Tranquire.Tests;
 using Xunit;
@@ -27,11 +27,11 @@ namespace Tranquire.Selenium.Tests.Extensions
         {
             assertion.Verify<RenderedScreenshotInfoObserver>(o => o.Observer);
         }
-        
+
         [Theory, DomainAutoData]
         public void Sut_ShouldBeObserverOfScreenshotInfo(RenderedScreenshotInfoObserver sut)
         {
-            sut.Should().BeAssignableTo<IObserver<ScreenshotInfo>>(); 
+            sut.Should().BeAssignableTo<IObserver<ScreenshotInfo>>();
         }
 
         [Theory, DomainAutoData]
@@ -51,7 +51,7 @@ namespace Tranquire.Selenium.Tests.Extensions
             // assert
             Mock.Get(sut.Observer).Verify(o => o.OnError(exception));
         }
-        
+
         [Theory, DomainAutoData]
         public void OnNext_ShouldCallOnNext(RenderedScreenshotInfoObserver sut, string expected)
         {

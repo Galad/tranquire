@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using OpenQA.Selenium.Chrome;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +6,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
 using ToDoList.Automation;
 using ToDoList.Automation.UI;
@@ -52,7 +52,7 @@ namespace ToDoList.Specifications
             {
                 var webServer = webHostBuilder.Build();
                 webServer.Start();
-                WebServer = Host = webServer;                
+                WebServer = Host = webServer;
                 ClientFactory = () => new HttpClient() { BaseAddress = new Uri("http://localhost:5000/", UriKind.Absolute) };
             }
             else if (TestLevel == TestLevel.Api)
@@ -75,13 +75,13 @@ namespace ToDoList.Specifications
         {
             return commaSeparatedList.Split(',').ToImmutableArray();
         }
-        
+
         [Before(Order = 99)]
         public void Before()
         {
             var screenshotName = Context.ScenarioInfo.Title;
 #if DEBUG
-            var delay = IsLiveUnitTesting ? TimeSpan.Zero : TimeSpan.FromSeconds(1);            
+            var delay = IsLiveUnitTesting ? TimeSpan.Zero : TimeSpan.FromSeconds(1);
 #else
             var delay = TimeSpan.Zero;
 #endif
@@ -222,7 +222,7 @@ namespace ToDoList.Specifications
                 {
                     return TestLevel.UI;
                 }
-                
+
                 return Enum.Parse<TestLevel>(level);
             }
         }

@@ -1,7 +1,4 @@
-using AutoFixture;
 using AutoFixture.Idioms;
-using Moq;
-using System;
 using Tranquire.Reporting;
 using Xunit;
 

@@ -1,13 +1,13 @@
-﻿using FluentAssertions;
-using Moq;
-using Moq.Protected;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using FluentAssertions;
+using Moq;
+using Moq.Protected;
 using Xunit;
 
 namespace Tranquire.Tests
