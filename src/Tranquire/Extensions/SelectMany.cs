@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Tranquire.Extensions
@@ -38,6 +39,7 @@ namespace Tranquire.Extensions
 
     internal static class SelectMany
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ISelectMany<TResult> Create<TActionSource, TSource, TActionResult, TResult>(
             TActionSource source,
             Func<IActor, TActionSource, TSource> applySource,
@@ -47,9 +49,19 @@ namespace Tranquire.Extensions
             where TActionSource : class, INamed
             where TActionResult : class
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
             return new SelectMany<TActionSource, TSource, TActionResult, TResult>(source, applySource, selector, applyResult);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ISelectMany<Task<TResult>> Create<TActionSource, TSource, TActionResult, TResult>(
             TActionSource source,
             Func<IActor, TActionSource, Task<TSource>> applySource,
@@ -59,6 +71,15 @@ namespace Tranquire.Extensions
             where TActionSource : class, INamed
             where TActionResult : class
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
             Func<Task<TSource>, Task<TActionResult>> selectorAsync = async sourceTask =>
             {
                 var s = await sourceTask;
@@ -67,18 +88,101 @@ namespace Tranquire.Extensions
             return Create(source, applySource, selectorAsync, applyResult);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ISelectMany<Task<TResult>> Create<TActionSource, TActionResult, TResult>(
+            TActionSource source,
+            Func<IActor, TActionSource, Task> applySource,
+            Func<TActionResult> selector,
+            Func<IActor, Task<TActionResult>, Task<TResult>> applyResult
+            )
+            where TActionSource : class, INamed
+            where TActionResult : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            Func<Task, Task<TActionResult>> selectorAsync = async sourceTask =>
+            {
+                await sourceTask;
+                return selector();
+            };
+            return Create(source, applySource, selectorAsync, applyResult);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<IActor, IQuestion<T>, T> AsksFor<T>() => (actor, q) => actor.AsksFor(q);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<IActor, Task<IQuestion<T>>, Task<T>> AsksForAsync<T>() => async (actor, questionTask) =>
         {
             var question = await questionTask;
             return actor.AsksFor(question);
         };
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<IActor, IAction<T>, T> Execute<T>() => (actor, q) => actor.Execute(q);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Func<IActor, Task<IAction<T>>, Task<T>> ExecuteAsync<T>() => async (actor, actionTask) =>
         {
             var action = await actionTask;
             return actor.Execute(action);
         };
+    }
+
+    internal static class SelectManyExtensions
+    {
+        public static IAction<TResult> ToAction<TResult>(this ISelectMany<TResult> selectMany)
+        {
+            return Actions.Create(
+                selectMany.Name,
+                actor => selectMany.Apply(actor));
+        }
+
+        public static IAction<Task<TResult>> ToAction<TResult>(this ISelectMany<Task<Task<TResult>>> selectMany)
+        {
+            return Actions.Create(
+                selectMany.Name,
+                async actor =>
+                {
+                    var task = await selectMany.Apply(actor);
+                    return await task;
+                });
+        }
+
+        public static IAction<Task> ToAction(this ISelectMany<Task<Task>> selectMany)
+        {
+            return Actions.Create(
+                selectMany.Name,
+                async actor =>
+                {
+                    var task = await selectMany.Apply(actor);
+                    await task;
+                });
+        }
+
+        public static IQuestion<TResult> ToQuestion<TResult>(this ISelectMany<TResult> selectMany)
+        {
+            return Questions.Create(
+                selectMany.Name,
+                actor => selectMany.Apply(actor));
+        }
+
+        public static IQuestion<Task<TResult>> ToQuestion<TResult>(this ISelectMany<Task<Task<TResult>>> selectMany)
+        {
+            return Questions.Create(
+                selectMany.Name,
+                async actor =>
+                {
+                    var task = await selectMany.Apply(actor);
+                    return await task;
+                });
+        }
     }
 }

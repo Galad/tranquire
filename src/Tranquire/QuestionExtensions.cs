@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Tranquire.Extensions;
+using SM = Tranquire.Extensions.SelectMany;
 
 namespace Tranquire
 {
@@ -61,12 +62,13 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="question">The question which result is transformed</param>
+        /// <param name="source">The question which result is transformed</param>
         /// <param name="selector">A transform function that returns a new question.</param>
         /// <returns></returns>
-        public static IQuestion<TResult> SelectMany<TSource, TResult>(this IQuestion<TSource> question, Func<TSource, IQuestion<TResult>> selector)
+        public static IQuestion<TResult> SelectMany<TSource, TResult>(this IQuestion<TSource> source, Func<TSource, IQuestion<TResult>> selector)
         {
-            return new SelectManyQuestion<TSource, TResult>(question, selector);
+            var selectMany = SM.Create(source, SM.AsksFor<TSource>(), selector, SM.AsksFor<TResult>());
+            return selectMany.ToQuestion();
         }
 
         /// <summary>
@@ -74,12 +76,13 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="question">The question which result is transformed</param>
+        /// <param name="source">The question which result is transformed</param>
         /// <param name="selector">A transform function that returns a new action.</param>
         /// <returns></returns>
-        public static IAction<TResult> SelectMany<TSource, TResult>(this IQuestion<TSource> question, Func<TSource, IAction<TResult>> selector)
+        public static IAction<TResult> SelectMany<TSource, TResult>(this IQuestion<TSource> source, Func<TSource, IAction<TResult>> selector)
         {
-            return new SelectManyQuestionToAction<TSource, TResult>(question, selector);
+            var selectMany = SM.Create(source, SM.AsksFor<TSource>(), selector, SM.Execute<TResult>());
+            return selectMany.ToAction();
         }
 
         /// <summary>
@@ -87,12 +90,13 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="question">The question which result is transformed</param>
+        /// <param name="source">The question which result is transformed</param>
         /// <param name="selector">A transform function that returns a new question.</param>
         /// <returns></returns>
-        public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> question, Func<TSource, IQuestion<TResult>> selector)
+        public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> source, Func<TSource, IQuestion<TResult>> selector)
         {
-            return new SelectManyQuestionAsync<TSource, TResult>(question, selector);
+            var selectMany = SM.Create(source, SM.AsksFor<Task<TSource>>(), selector, SM.AsksForAsync<TResult>());
+            return selectMany.ToQuestion();
         }
 
         /// <summary>
@@ -100,12 +104,13 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="question">The question which result is transformed</param>
+        /// <param name="source">The question which result is transformed</param>
         /// <param name="selector">A transform function that returns a new question.</param>
         /// <returns></returns>
-        public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> question, Func<TSource, IQuestion<Task<TResult>>> selector)
+        public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> source, Func<TSource, IQuestion<Task<TResult>>> selector)
         {
-            return new SelectManyQuestionAsyncReturningAsync<TSource, TResult>(question, selector);
+            var selectMany = SM.Create(source, SM.AsksFor<Task<TSource>>(), selector, SM.AsksForAsync<Task<TResult>>());
+            return selectMany.ToQuestion();
         }
 
         /// <summary>
@@ -113,12 +118,13 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="question">The question which result is transformed</param>
+        /// <param name="source">The question which result is transformed</param>
         /// <param name="selector">A transform function that returns a new action.</param>
         /// <returns></returns>
-        public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> question, Func<TSource, IAction<TResult>> selector)
+        public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> source, Func<TSource, IAction<TResult>> selector)
         {
-            return new SelectManyQuestionAsyncToAction<TSource, TResult>(question, selector);
+            var selectMany = SM.Create(source, SM.AsksFor<Task<TSource>>(), selector, SM.ExecuteAsync<TResult>());
+            return selectMany.ToAction();
         }
 
         /// <summary>
@@ -126,12 +132,26 @@ namespace Tranquire
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="question">The question which result is transformed</param>
+        /// <param name="source">The question which result is transformed</param>
         /// <param name="selector">A transform function that returns a new action.</param>
         /// <returns></returns>
-        public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> question, Func<TSource, IAction<Task<TResult>>> selector)
+        public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IQuestion<Task<TSource>> source, Func<TSource, IAction<Task<TResult>>> selector)
         {
-            return new SelectManyQuestionAsyncToActionAsync<TSource, TResult>(question, selector);
+            var selectMany = SM.Create(source, SM.AsksFor<Task<TSource>>(), selector, SM.ExecuteAsync<Task<TResult>>());
+            return selectMany.ToAction();
+        }
+
+        /// <summary>
+        /// Projects the result of an asynchronous question into a new asynchronous action.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source">The question which result is transformed</param>
+        /// <param name="selector">A transform function that returns a new action.</param>
+        /// <returns></returns>
+        public static IAction<Task> SelectMany<TSource>(this IQuestion<Task<TSource>> source, Func<TSource, IAction<Task>> selector)
+        {
+            var selectMany = SM.Create(source, SM.AsksFor<Task<TSource>>(), selector, SM.ExecuteAsync<Task>());
+            return selectMany.ToAction();
         }
         #endregion
 
