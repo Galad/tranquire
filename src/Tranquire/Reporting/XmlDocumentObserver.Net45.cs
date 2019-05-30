@@ -14,16 +14,16 @@ namespace Tranquire.Reporting
         public string GetHtmlDocument()
         {
             var xmlDocument = GetXmlDocument();
-            // enabling debug mode workaround an null reference exception occuring internally in .net core
-            var xslt = new XslCompiledTransform(true);
+            var xslt = new XslCompiledTransform(false);
             var xmlReader = XmlReader.Create(typeof(XmlDocumentObserver).Assembly.GetManifestResourceStream("Tranquire.Reporting.XmlReport.xsl"));
             xslt.Load(xmlReader);
             var result = new StringBuilder();
             var xmlWriter = XmlWriter.Create(result);
-            xslt.Transform(xmlDocument.CreateNavigator(), xmlWriter);
+            xslt.Transform(xmlDocument.CreateReader(), xmlWriter);
             return result.ToString()
                          .Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<!DOCTYPE html>")
                          .Replace("<span class=\"glyphicon then-icon\" />", "<span class=\"glyphicon then-icon\"></span>");
         }
     }
 }
+    
