@@ -1,11 +1,11 @@
-﻿using FluentAssertions;
-using Moq;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.Idioms;
+using FluentAssertions;
+using Moq;
 using System;
+using System.Threading.Tasks;
 using Tranquire.Extensions;
 using Xunit;
-using System.Threading.Tasks;
 
 namespace Tranquire.Tests.Extensions
 {
@@ -86,7 +86,7 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action
+        #region SelectMany: IAction<T> -> IAction<U>
         [Theory, DomainAutoData]
         public void SelectMany_ShouldReturnCorrectResult(
             int value1,
@@ -136,7 +136,7 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action to question
+        #region SelectMany: IAction<T> -> IQuestion<U>
         [Theory, DomainAutoData]
         public void SelectMany_ReturningQuestion_ShouldReturnCorrectResult(
             int value1,
@@ -168,7 +168,7 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action async
+        #region SelectMany: IAction<Task<T>> -> IAction<U>
         [Theory, DomainAutoData]
         public async Task SelectMany_Async_ShouldReturnCorrectResult(
             int value1,
@@ -218,7 +218,7 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action async returning async action
+        #region SelectMany: IAction<Task<T>> -> IAction<Task<U>>
         [Theory, DomainAutoData]
         public async Task SelectMany_Async_ReturningAsyncAction_ShouldReturnCorrectResult(
             int value1,
@@ -268,7 +268,41 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action to question async
+        #region SelectMany: IAction<Task<T>> -> IAction<Task>
+        [Theory, DomainAutoData]
+        public async Task SelectMany_Async_ReturningAsyncTaskAction_ShouldReturnCorrectResult(
+            int value1,
+            int value2)
+        {
+            // arrange
+            var actor = new Actor("John");
+            var actual = 0;
+            var action = Actions.FromResult(Task.FromResult(value1))
+                                .SelectMany(v => Actions.Create("set result", _ => Delay(() => { actual = v + value2; })));
+            // act
+            var task = actor.When(action);
+            await task;
+            // assert            
+            var expected = value1 + value2;
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_Async_Name_ReturningAsyncTaskAction_ShouldReturnCorrectResult(
+            IAction<Task<int>> action1,
+            IAction<Task> action2)
+        {
+            // arrange
+            var action = action1.SelectMany<int>(_ => action2);
+            // act
+            var actual = action.Name;
+            // assert
+            var expected = "[SelectMany] " + action1.Name;
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region SelectMany: IAction<Task<T>> -> IQuestion<T>
         [Theory, DomainAutoData]
         public async Task SelectMany_Async_ReturningQuestion_ShouldReturnCorrectResult(
             int value1,
@@ -300,7 +334,7 @@ namespace Tranquire.Tests.Extensions
         }
         #endregion
 
-        #region SelectMany - action async returning async question
+        #region SelectMany: IAction<Task<T>> -> IQuestion<Task<T>>
         [Theory, DomainAutoData]
         public async Task SelectMany_Async_ReturningAsyncQuestion_ShouldReturnCorrectResult(
             int value1,
@@ -331,6 +365,185 @@ namespace Tranquire.Tests.Extensions
             Assert.Equal(expected, actual);
         }
         #endregion
+
+        #region SelectMany: IAction<Task> -> IAction<U>
+        [Theory, DomainAutoData]
+        public async Task SelectMany_AsyncTask_ShouldReturnCorrectResult(
+            int value1,
+            int value2)
+        {
+            // arrange
+            var actor = new Actor("John");
+            var currentValue = 0;
+            var action = Actions.Create("set value", _ => Delay(() => currentValue = value1))
+                                .SelectMany(() => Actions.FromResult(currentValue + value2));
+            // act
+            var actual = await actor.When(action);
+            // assert
+            var expected = value1 + value2;
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_AsyncTask_Name_ShouldReturnCorrectResult(
+            IAction<Task> action1,
+            IAction<int> action2)
+        {
+            // arrange
+            var action = action1.SelectMany(() => action2);
+            // act
+            var actual = action.Name;
+            // assert
+            var expected = "[SelectMany] " + action1.Name;
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region SelectMany: IAction<Task> -> IAction<Task<T>>
+        [Theory, DomainAutoData]
+        public async Task SelectMany_Async_Task_ReturningAsyncAction_ShouldReturnCorrectResult(
+            int value1,
+            int value2)
+        {
+            // arrange
+            var actor = new Actor("John");
+            var currentResult = 0;
+            var action = Actions.FromResult(Delay(() => { currentResult = value1; }))
+                                .SelectMany(() => Actions.FromResult(Task.FromResult(currentResult + value2)));
+            // act
+            var actual = await actor.When(action);
+            // assert
+            var expected = value1 + value2;
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_Async_Task_Name_ReturningAsyncAction_ShouldReturnCorrectResult(
+            IAction<Task> action1,
+            IAction<Task<int>> action2)
+        {
+            // arrange
+            var action = action1.SelectMany(() => action2);
+            // act
+            var actual = action.Name;
+            // assert
+            var expected = "[SelectMany] " + action1.Name;
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region SelectMany: IAction<Task> -> IAction<Task>
+        [Theory, DomainAutoData]
+        public async Task SelectMany_Async_Task_ReturningAsyncTaskAction_ShouldReturnCorrectResult(
+            int value1,
+            int value2)
+        {
+            // arrange
+            var actor = new Actor("John");
+            var result = 0;
+            var action = Actions.FromResult(Delay(() => { result = value1; }))
+                                .SelectMany(() => Actions.FromResult(Delay(() => { result += value2; })));
+            // act
+            var task = actor.When(action);
+            await task;
+            var actual = result;
+            // assert
+            var expected = value1 + value2;
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_Async_Task_Name_ReturningAsyncTaskAction_ShouldReturnCorrectResult(
+            IAction<Task> action1,
+            IAction<Task> action2)
+        {
+            // arrange
+            var action = action1.SelectMany(() => action2);
+            // act
+            var actual = action.Name;
+            // assert
+            var expected = "[SelectMany] " + action1.Name;
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region SelectMany: IAction<Task> -> IQuestion<T>
+        [Theory, DomainAutoData]
+        public async Task SelectMany_Async_Task_ReturningQuestion_ShouldReturnCorrectResult(
+            int value1,
+            int value2)
+        {
+            // arrange
+            var actor = new Actor("John");
+            var currentResult = 0;
+            var question = Actions.FromResult(Delay(() => { currentResult = value1; }))
+                                  .SelectMany(() => Questions.FromResult(currentResult + value2));
+            // act
+            var actual = await actor.AsksFor(question);
+            // assert
+            var expected = value1 + value2;
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_Async_Task_Name_ReturningQuestion_ShouldReturnCorrectResult(
+            IAction<Task> action1,
+            IQuestion<int> question2)
+        {
+            // arrange
+            var question = action1.SelectMany(() => question2);
+            // act
+            var actual = question.Name;
+            // assert
+            var expected = "[SelectMany] " + action1.Name;
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        #region SelectMany: IAction<Task> -> IQuestion<Task<T>>
+        [Theory, DomainAutoData]
+        public async Task SelectMany_Async_Task_ReturningQuestionAsync_ShouldReturnCorrectResult(
+            int value1,
+            int value2)
+        {
+            // arrange
+            var actor = new Actor("John");
+            var currentResult = 0;
+            var question = Actions.FromResult(Delay(() => { currentResult = value1; }))
+                                  .SelectMany(() => Questions.FromResult(Delay(() => currentResult + value2)));
+            // act
+            var actual = await actor.AsksFor(question);
+            // assert
+            var expected = value1 + value2;
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory, DomainAutoData]
+        public void SelectMany_Async_Task_Name_ReturningQuestionAsync_ShouldReturnCorrectResult(
+            IAction<Task> action1,
+            IQuestion<Task<int>> question2)
+        {
+            // arrange
+            var question = action1.SelectMany(() => question2);
+            // act
+            var actual = question.Name;
+            // assert
+            var expected = "[SelectMany] " + action1.Name;
+            Assert.Equal(expected, actual);
+        }
+        #endregion
+
+        private static async Task Delay(Action action)
+        {
+            await Task.Delay(1);
+            action();
+        }
+
+        private static async Task<T> Delay<T>(Func<T> action)
+        {
+            await Task.Delay(1);
+            return action();
+        }
 
         #region Select
         [Theory, DomainAutoData]
