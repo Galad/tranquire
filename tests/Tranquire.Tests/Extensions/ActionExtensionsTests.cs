@@ -596,5 +596,36 @@ namespace Tranquire.Tests.Extensions
             actual.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
         }
         #endregion
+
+        #region Named
+        [Theory, DomainAutoData]
+        public void Named_ExecuteShouldCallExecuteOnAction(
+            IActor actor1,
+            IActor actor2,
+            IAction<object> action, 
+            string name,
+            object expected1,
+            object expected2)
+        {
+            // arrange
+            var actorAction = Mock.Get(action);
+            actorAction.Setup(a => a.ExecuteGivenAs(actor1)).Returns(expected1);
+            actorAction.Setup(a => a.ExecuteWhenAs(actor2)).Returns(expected2);
+            // act
+            var actual = action.Named(name);
+            var actualValue = (actual.ExecuteGivenAs(actor1), actual.ExecuteWhenAs(actor2));
+            // assert
+            Assert.Equal((expected1, expected2), actualValue);
+        }
+
+        [Theory, DomainAutoData]
+        public void Named_NameShouldReturnCorrectValue(IAction<string> action, string expected)
+        {
+            // act
+            var actual = action.Named(expected).Name;
+            // assert
+            Assert.Equal(expected, actual);
+        }
+        #endregion
     }
 }
