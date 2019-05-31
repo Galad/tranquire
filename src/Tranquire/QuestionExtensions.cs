@@ -174,5 +174,46 @@ namespace Tranquire
             return Questions.CreateTagged(question.Name, (tag, question));
         }
         #endregion
+
+        #region Named
+        /// <summary>
+        /// Change the named of the action
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="question"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static IQuestion<T> Named<T>(this IQuestion<T> question, string name)
+        {
+            if (question is null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new NamedQuestion<T>(question, name);
+        }
+
+        private class NamedQuestion<T> : IQuestion<T>
+        {
+            private readonly IQuestion<T> _question;
+
+            public NamedQuestion(IQuestion<T> question, string name)
+            {
+                _question = question;
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public T AnsweredBy(IActor actor)
+            {
+                return _question.AnsweredBy(actor);
+            }
+        }
+        #endregion
     }
 }

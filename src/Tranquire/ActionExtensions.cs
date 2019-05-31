@@ -334,5 +334,51 @@ namespace Tranquire
             return Actions.CreateTagged(action.Name, (tag, action));
         }
         #endregion
+
+        #region Named
+        /// <summary>
+        /// Change the named of the action
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static IAction<T> Named<T>(this IAction<T> action, string name)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new NamedAction<T>(action, name);
+        }
+
+        private class NamedAction<T> : IAction<T>
+        {
+            private readonly IAction<T> _action;
+
+            public NamedAction(IAction<T> action, string name)
+            {
+                _action = action;
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public T ExecuteGivenAs(IActor actor)
+            {
+                return _action.ExecuteGivenAs(actor);
+            }
+
+            public T ExecuteWhenAs(IActor actor)
+            {
+                return _action.ExecuteWhenAs(actor);
+            }
+        }
+        #endregion
     }
 }
