@@ -235,7 +235,11 @@ namespace Tranquire.Tests.Reporting
             //act
             executeAction(sut, actions[0]);
             //assert
-            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(date, commandType);
+            BeforeActionNotificationContent before()
+            {
+                return new BeforeActionNotificationContent(date, commandType);
+            }
+
             var expected = new[]{
                 new ActionNotification(actions[0], 1, before()),
                 new ActionNotification(actions[1], 2, before()),
@@ -345,7 +349,11 @@ namespace Tranquire.Tests.Reporting
             //act
             new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
             //assert
-            BeforeActionNotificationContent before() => new BeforeActionNotificationContent(date, commandType);
+            BeforeActionNotificationContent before()
+            {
+                return new BeforeActionNotificationContent(date, commandType);
+            }
+
             var expected = new[]{
                 new ActionNotification(actions[0], 1, before()),
                 new ActionNotification(actions[1], 2, before()),

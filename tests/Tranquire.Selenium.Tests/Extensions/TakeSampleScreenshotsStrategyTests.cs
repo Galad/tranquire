@@ -138,7 +138,10 @@ namespace Tranquire.Selenium.Tests.Extensions
             var expected = new ScreenshotInfo(screenshot, expectedName);
             Mock.Get(observer).Verify(CallOnNext(expected), Times.Once());
 
-            object Throws() => throw new Exception();
+            object Throws()
+            {
+                throw new Exception();
+            }
         }
 
         [Theory, DomainAutoData]
@@ -165,7 +168,10 @@ namespace Tranquire.Selenium.Tests.Extensions
             var expected = new ScreenshotInfo(screenshot, expectedName);
             Mock.Get(observer).Verify(CallOnNext(expected), Times.Once());
 
-            object Throws() => throw new Exception();
+            object Throws()
+            {
+                throw new Exception();
+            }
         }
 
         private Expression<System.Action<IObserver<ScreenshotInfo>>> CallOnNext(ScreenshotInfo expected)
