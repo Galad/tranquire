@@ -74,7 +74,10 @@ namespace Tranquire.Selenium.Tests.Extensions
             // assert
             Mock.Get(observer).Verify(CallOnNext(expected), Times.Once());
 
-            object Throws() => throw new Exception();
+            object Throws()
+            {
+                throw new Exception();
+            }
         }
 
         [Theory, DomainAutoData]
