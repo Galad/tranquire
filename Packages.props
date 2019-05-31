@@ -4,6 +4,8 @@
     <PackageReference Update="AutoFixture.AutoMoq" Version="4.8.0" />
     <PackageReference Update="AutoFixture.Idioms" Version="4.8.0" />
     <PackageReference Update="AutoFixture.Xunit2" Version="4.8.0" />
+    <PackageReference Update="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Update="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
     <PackageReference Update="FluentAssertions" Version="5.6.0" />
     <PackageReference Update="Microsoft.AspNetCore.App">
       <Version>$(AspNetCoreAllRuntimeFrameworkVersion)</Version>
