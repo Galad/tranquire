@@ -52,11 +52,6 @@ namespace Tranquire.Reporting
         /// <inheritsdoc />
         public void OnNext(ActionNotification value)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
             Observer.OnNext(Renderer(value));
         }
 
@@ -67,9 +62,9 @@ namespace Tranquire.Reporting
         /// <returns></returns>
         public static string DefaultRenderer(ActionNotification notification)
         {
-            if (notification == null)
+            if (notification.Content == null)
             {
-                throw new ArgumentNullException(nameof(notification));
+                return "Unknown action";
             }
 
             switch (notification.Content.NotificationContentType)

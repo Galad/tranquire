@@ -231,7 +231,8 @@ namespace Tranquire.Tests.Reporting
                                     (notifications, a) => notifications
                                         .Insert(0, new ActionNotification(a.action, a.i + 1, new BeforeActionNotificationContent(DateTimeOffset.MinValue, a.commandType)))
                                         .Add(new ActionNotification(a.action, a.i + 1, new AfterActionNotificationContent(TimeSpan.FromSeconds(a.i))))
-                                ),
+                                )
+                                .ToArray(),
                         actions.Select((a,i) => (a.action, a.commandType, i))
                                                   .Select(a => createItem(a.commandType, a.action.Name, DateTimeOffset.MinValue, a.i * 1000))
                                                   .Reverse()
@@ -260,7 +261,8 @@ namespace Tranquire.Tests.Reporting
                                         .Add(new ActionNotification(a.action, a.i + 1,
                                                     new ExecutionErrorNotificationContent(a.exception, TimeSpan.FromSeconds(a.i))
                                                     ))
-                                ),
+                                )
+                                .ToArray(),
                         actions.Select((a,i) => (a.action, a.commandType, exception, i))
                                                   .Select(a =>
                                                     createItem(

@@ -17,7 +17,6 @@ namespace Tranquire.Tests
         {
             assertion.Verify<ThenAction<object, string>>(a => new object[]
             {
-                a.Question,
                 a.VerifyAction
             });
         }

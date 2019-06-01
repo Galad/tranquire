@@ -67,9 +67,9 @@ namespace Tranquire.Reporting
         /// <inheritsdoc />
         public void OnNext(ActionNotification value)
         {
-            if (value == null)
+            if (value.Content == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                return;
             }
 
             switch (value.Content.NotificationContentType)
