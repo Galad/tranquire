@@ -21,7 +21,7 @@ namespace Tranquire.Reporting
 
         public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
         {
-            return new BeforeThenNotificationContent(date, (action as IThenAction<T>).Question);
+            return new BeforeThenNotificationContent(date, (action as ThenAction<T>).Question);
         }
 
         public IActionNotificationContent CreateError(Exception error, TimeSpan time)

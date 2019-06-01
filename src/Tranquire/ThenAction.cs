@@ -2,28 +2,36 @@
 
 namespace Tranquire
 {
+    /// <summary>
+    /// Represent the base class for an action that verifies the answer of a question
+    /// </summary>
+    /// <typeparam name="TResult">The result type</typeparam>
+    public abstract class ThenAction<TResult> : ActionBase<TResult>
+    {
+        /// <summary>
+        /// Gets the question
+        /// </summary>
+        public abstract INamed Question { get; }
+    }
 
     /// <summary>
     /// Represent an action that verifies the answer of a question
     /// </summary>
     /// <typeparam name="T">The question answer type</typeparam>
     /// <typeparam name="TResult">The result type</typeparam>
-    public sealed class ThenAction<T, TResult> : ActionBase<TResult>, IThenAction<TResult>
-    {
+    public sealed class ThenAction<T, TResult> : ThenAction<TResult>
+    {        
         /// <summary>
         /// Gets the question
         /// </summary>
-        INamed IThenAction<TResult>.Question => Question;
-
-        /// <summary>
-        /// Gets the question
-        /// </summary>
-        public IQuestion<T> Question { get; }
+        public override INamed Question { get; }
 
         /// <summary>
         /// Gets the action that verifies the outcome
         /// </summary>
         public Func<T, TResult> VerifyAction { get; }
+
+        private readonly IQuestion<T> _question;
 
         /// <summary>
         /// Creates a new instance of <see cref="ThenAction{T, TResult}"/>
@@ -34,6 +42,7 @@ namespace Tranquire
         {
             Question = question ?? throw new ArgumentNullException(nameof(question));
             VerifyAction = verifyAction ?? throw new ArgumentNullException(nameof(verifyAction));
+            _question = question;
         }
 
         /// <inheritdoc />
@@ -42,7 +51,7 @@ namespace Tranquire
         /// <inheritdoc />
         protected override TResult ExecuteWhen(IActor actor)
         {
-            var answer = actor.AsksFor(Question);
+            var answer = actor.AsksFor(_question);
             return VerifyAction(answer);
         }
     }
