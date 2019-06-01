@@ -195,7 +195,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
                 new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
 
         [Theory, MemberData(nameof(NotifyingTestCases))]
@@ -250,7 +250,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(actions[1], 2, new AfterActionNotificationContent(expectedDurations[1])),
                 new ActionNotification(actions[0], 1, new AfterActionNotificationContent(expectedDurations[0]))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
 
         [Theory, MemberData(nameof(ExecutionTestCases))]
@@ -305,7 +305,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
                 new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
 
         [Theory, MemberData(nameof(NotifyingTestCases))]
@@ -364,7 +364,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception, expectedDuration)),
                 new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
 
         [Theory, ReportingActorAutoData]
@@ -446,7 +446,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Pass))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
 
         [Theory, ReportingActorAutoData]
@@ -476,7 +476,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Error, error))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
 
         private static System.Action[] _assertions = new System.Action[]
@@ -531,7 +531,7 @@ namespace Tranquire.Tests.Reporting
                 new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
                 new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Failed, expectedException))
             };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes());
+            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
         }
     }
 }

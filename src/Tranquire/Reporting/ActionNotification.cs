@@ -3,7 +3,7 @@
     /// <summary>
     /// Represent informations about the action execution
     /// </summary>
-    public class ActionNotification
+    public struct ActionNotification
     {
         /// <summary>
         /// The action that trigerred the notification
