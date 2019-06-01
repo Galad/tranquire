@@ -9,6 +9,10 @@ namespace Tranquire.Reporting
     /// </summary>
     public class ReportingActor : IActor
     {
+        private static INotificationContentFactory _thenNotificationContentFactory = new ThenNotificationContentFactory();
+        private static INotificationContentFactory _commandNotificationContentFactory = new CommandNotificationContentfactory();
+        private static INotificationContentFactory _defaultNotificationContentFactory = new DefaultNotificationContentFactory();
+
         /// <summary>
         /// Gets the actor
         /// </summary>
@@ -123,18 +127,18 @@ namespace Tranquire.Reporting
                 return executeAction();
             }
             _depth++;
-            var (createBefore, createAfter, createError) = GetNotificationContentFactories<TResult>(action, commandType);
-            Observer.OnNext(new ActionNotification(action, _depth, createBefore(MeasureTime.Now)));
+            var notificationFactory = GetNotificationContentFactories<TResult>(action);
+            Observer.OnNext(new ActionNotification(action, _depth, notificationFactory.CreateBefore<TResult>(action, MeasureTime.Now, commandType)));
             var (duration, result, exception) = MeasureTime.Measure(executeAction);
             if (exception == null)
             {
-                Observer.OnNext(new ActionNotification(action, _depth, createAfter(duration)));
+                Observer.OnNext(new ActionNotification(action, _depth, notificationFactory.CreateAfter(duration)));
                 _depth--;
                 return result;
             }
             else
             {
-                Observer.OnNext(new ActionNotification(action, _depth, createError(exception, duration)));
+                Observer.OnNext(new ActionNotification(action, _depth, notificationFactory.CreateError(exception, duration)));
                 _depth--;
                 throw exception;
             }
@@ -142,53 +146,17 @@ namespace Tranquire.Reporting
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
-        private static (
-            Func<DateTimeOffset, IActionNotificationContent>,
-            Func<TimeSpan, IActionNotificationContent>,
-            Func<Exception, TimeSpan, IActionNotificationContent>
-            )
-            GetNotificationContentFactories<T>(INamed action, CommandType commandType)
+        private static INotificationContentFactory GetNotificationContentFactories<T>(INamed action)
         {
-            if (action is IThenAction<T> thenAction)
+            if (action is IThenAction<T>)
             {
-                return
-                (
-                    date => new BeforeThenNotificationContent(date, thenAction.Question),
-                    time => new AfterThenNotificationContent(time, ThenOutcome.Pass),
-                    (error, duration) => new AfterThenNotificationContent(duration, GetOutcome(error), error)
-                );
+                return _thenNotificationContentFactory;
             }
-            if (action is CommandAction<T> commandAction)
+            if (action is CommandAction<T>)
             {
-                return
-                (
-                    date => new BeforeFirstActionNotificationContent(date, commandAction.ActionContext),
-                    time => new AfterActionNotificationContent(time),
-                    (error, duration) => new ExecutionErrorNotificationContent(error, duration)
-                );
+                return _commandNotificationContentFactory;
             }
-            return
-                (
-                    date => new BeforeActionNotificationContent(date, commandType),
-                    time => new AfterActionNotificationContent(time),
-                    (error, duration) => new ExecutionErrorNotificationContent(error, duration)
-                );
-        }
-
-        private static readonly string[] _knownNamespaces = new[]
-        {
-            "Xunit.Sdk.",
-            "NUnit.Framework.",
-            "Microsoft.VisualStudio.TestTools.UnitTesting."
-        };
-
-        private static ThenOutcome GetOutcome(Exception error)
-        {
-            if (_knownNamespaces.Any(error.GetType().FullName.StartsWith))
-            {
-                return ThenOutcome.Failed;
-            }
-            return ThenOutcome.Error;
+            return _defaultNotificationContentFactory;
         }
     }
 }
