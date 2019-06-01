@@ -1,18 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Tranquire.Reporting
 {
     internal abstract class TranquireXmlReportItem
     {
+        private ImmutableList<TranquireXmlReportItem> _children = ImmutableList<TranquireXmlReportItem>.Empty;
+        private ImmutableList<ActionFileAttachment> _attachments = ImmutableList<ActionFileAttachment>.Empty;
+
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
         public TimeSpan Duration => EndDate.Subtract(StartDate);
         public string Name { get; set; }
         public Exception Error { get; set; }
         public bool HasError => Error != null;
-        public List<TranquireXmlReportItem> Children { get; } = new List<TranquireXmlReportItem>();
-        public List<ActionFileAttachment> Attachments { get; } = new List<ActionFileAttachment>();
+        public ImmutableList<TranquireXmlReportItem> Children => _children;
+        public ImmutableList<ActionFileAttachment> Attachments => _attachments;
+
+        public void Add(TranquireXmlReportItem item) => _children = Children.Add(item);
+
+        public void Add(ActionFileAttachment item) => _attachments = _attachments.Add(item);
     }
 
     internal class TranquireXmlReportDocument : TranquireXmlReportItem { }

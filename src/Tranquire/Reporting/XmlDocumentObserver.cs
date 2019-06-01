@@ -110,7 +110,7 @@ namespace Tranquire.Reporting
                 StartDate = beforeThen.StartDate,
                 Name = named.Name
             };
-            currentItem.Children.Add(newItem);
+            currentItem.Add(newItem);
             _items.Push(newItem);
         }
 
@@ -133,7 +133,7 @@ namespace Tranquire.Reporting
             var newItem = CreateItem(beforeActionNotificationContent.CommandType);
             newItem.StartDate = beforeActionNotificationContent.StartDate;
             newItem.Name = named.Name;
-            currentItem.Children.Add(newItem);
+            currentItem.Add(newItem);
             _items.Push(newItem);
         }
 
@@ -156,7 +156,7 @@ namespace Tranquire.Reporting
             var newItem = CreateItem(beforeFirstActionNotificationContent.ActionContext);
             newItem.StartDate = beforeFirstActionNotificationContent.StartDate;
             newItem.Name = named.Name;
-            currentItem.Children.Add(newItem);
+            currentItem.Add(newItem);
             _items.Push(newItem);
         }
 
@@ -262,8 +262,8 @@ namespace Tranquire.Reporting
             {
                 throw new ArgumentNullException(nameof(value));
             }
-
-            CurrentItem.Attachments.Add(value);
+            
+            CurrentItem.Add(value);
         }
     }
 }
