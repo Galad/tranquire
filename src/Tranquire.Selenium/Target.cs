@@ -1,4 +1,5 @@
-﻿using Tranquire.Selenium.Targets;
+﻿using OpenQA.Selenium;
+using Tranquire.Selenium.Targets;
 
 namespace Tranquire.Selenium
 {
@@ -16,5 +17,17 @@ namespace Tranquire.Selenium
         {
             return new TargetBuilder(friendlyName);
         }
+
+        /// <summary>
+        /// A target that locates the page
+        /// </summary>
+        /// <returns></returns>
+        public static ITarget ThePage { get; } = Target.The("Page").LocatedBy(By.TagName("html"));
+
+        /// <summary>
+        /// A target that locates the page
+        /// </summary>
+        /// <returns></returns>
+        public static ITarget TheBody { get; } = Target.The("Page").LocatedBy(By.TagName("body"));
     }
 }
