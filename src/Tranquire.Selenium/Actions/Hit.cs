@@ -10,7 +10,10 @@ namespace Tranquire.Selenium.Actions
         /// <summary>
         /// Gets the keys to hit
         /// </summary>
-        public string Keys { get; }
+        public string HitKeys { get; }
+
+        /// <inheritdoc />
+        public string Name => $"Hit the keys {HitKeys}";
 
         /// <summary>
         /// Creates a new instance of <see cref="Hit"/>
@@ -18,7 +21,7 @@ namespace Tranquire.Selenium.Actions
         /// <param name="keys">The keys to hit</param>
         public Hit(string keys) : base(t => new EnterValue(keys, t))
         {
-            Keys = keys;
+            HitKeys = keys;
         }
 
         /// <summary>
@@ -28,6 +31,24 @@ namespace Tranquire.Selenium.Actions
         public static Hit Enter()
         {
             return new Hit(OpenQA.Selenium.Keys.Enter);
+        }
+
+        /// <summary>
+        /// Creates an action which hit the Enter key
+        /// </summary>
+        /// <returns></returns>
+        public static Hit Escape()
+        {
+            return new Hit(OpenQA.Selenium.Keys.Escape);
+        }
+
+        /// <summary>
+        /// Creates an action which hit the Enter key
+        /// </summary>
+        /// <returns></returns>
+        public static Hit Keys(string keys)
+        {
+            return new Hit(keys);
         }
     }
 }
