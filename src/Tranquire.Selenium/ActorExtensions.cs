@@ -115,15 +115,11 @@ namespace Tranquire.Selenium
 
             var id = 0;
 
-            string screenshotFormat;
-            if (string.Format(screenshotNameOrFormat, 1) == screenshotNameOrFormat)
-            {
-                screenshotFormat = screenshotNameOrFormat + "_" + "{0:00}";
-            }
-            else
-            {
-                screenshotFormat = screenshotNameOrFormat;
-            }
+#pragma warning disable S1854 // Unused assignments should be removed. False positive
+            var screenshotFormat = string.Format(screenshotNameOrFormat, 1) == screenshotNameOrFormat
+#pragma warning restore S1854 // Unused assignments should be removed
+                ? screenshotNameOrFormat + "_" + "{0:00}"
+                : screenshotNameOrFormat;
 
             string nextScreenshotName()
             {

@@ -163,7 +163,14 @@ namespace Tranquire.Selenium.Questions
         private static readonly IntegerArrayConverters _integerArrayConverters = new IntegerArrayConverters();
         private static readonly DoubleArrayConverters _doubleArrayConverters = new DoubleArrayConverters();
 
-        private static Func<IActor, ITarget, CultureInfo, object> ApplyGetConverter(ITarget target, Type type, UIStateAttribute uiStateAttribute)
+        private static Func<IActor, ITarget, CultureInfo, object> ApplyGetConverter(
+#pragma warning disable S1172 // Unused method parameters should be removed. False positive
+            ITarget target,
+#pragma warning restore S1172 // Unused method parameters should be removed
+            Type type,
+#pragma warning disable S1172 // Unused method parameters should be removed. False positive
+            UIStateAttribute uiStateAttribute)
+#pragma warning restore S1172 // Unused method parameters should be removed
         {
             if (type == typeof(int))
             {
