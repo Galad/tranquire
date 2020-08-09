@@ -23,8 +23,8 @@
     <PackageReference Update="Selenium.WebDriver" Version="3.14.0" />
     <PackageReference Update="Selenium.WebDriver.ChromeDriver" Version="2.43.0" />
     <PackageReference Update="SonarAnalyzer.CSharp" Version="8.10.0.19839" />
-    <PackageReference Update="SpecFlow.Tools.MsBuild.Generation" Version="3.0.213" />
-    <PackageReference Update="SpecFlow.xUnit" version="3.0.213" />
+    <PackageReference Update="SpecFlow.Tools.MsBuild.Generation" Version="3.3.74" />
+    <PackageReference Update="SpecFlow.xUnit" version="3.3.74" />
     <PackageReference Update="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageReference Update="NUnit" Version="3.10.1" />
     <PackageReference Update="System.Collections.Immutable" Version="1.5.0" />

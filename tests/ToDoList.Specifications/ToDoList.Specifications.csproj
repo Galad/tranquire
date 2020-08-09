@@ -37,11 +37,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Target Name="AfterUpdateFeatureFilesInProject">
-    <!-- include any generated SpecFlow files in the compilation of the project if not included yet -->
-    <ItemGroup>
-      <Compile Include="**\*.feature.cs" Exclude="@(Compile)" />
-    </ItemGroup>
-  </Target>
 </Project>
