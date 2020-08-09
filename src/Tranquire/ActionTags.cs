@@ -67,7 +67,11 @@ namespace Tranquire
             return GetBestTag(GivenTags, tags);
         }
 
-        private TTag GetBestTag(ImmutableDictionary<TTag, int> orderedTags, IEnumerable<TTag> tags)
+        private TTag GetBestTag(
+#pragma warning disable S1172 // Unused method parameters should be removed. False positive
+            ImmutableDictionary<TTag, int> orderedTags,
+#pragma warning restore S1172 // Unused method parameters should be removed
+            IEnumerable<TTag> tags)
         {
             if (tags == null)
             {

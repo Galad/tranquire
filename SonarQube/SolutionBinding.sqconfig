@@ -5,10 +5,11 @@
     "Name": "Lucas Loegel"
   },
   "ProjectKey": "Tranquire",
+  "ProjectName": "Tranquire",
   "Profiles": {
     "CSharp": {
       "ProfileKey": "AWLo_hSnX0BbYiea--EJ",
-      "ProfileTimestamp": "2018-04-21T18:21:41+02:00"
+      "ProfileTimestamp": "2018-04-21T16:21:41Z"
     }
   }
 }
