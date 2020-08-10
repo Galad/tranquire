@@ -17,6 +17,7 @@
 		<None Remove="Targets.html" />
 		<None Remove="UIModels.html" />
 		<None Remove="Wait.html" />
+		<None Remove="Window.html" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -24,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="Window.html" />
 		<EmbeddedResource Include="Hit.html" />
 		<EmbeddedResource Include="UIModels.html" />
 		<EmbeddedResource Include="Actions.html" />
