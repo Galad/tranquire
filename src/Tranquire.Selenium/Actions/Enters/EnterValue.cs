@@ -27,12 +27,8 @@ namespace Tranquire.Selenium.Actions.Enters
             Value = value ?? throw new System.ArgumentNullException(nameof(value));
         }
 
-        /// <summary>
-        /// Enter the value
-        /// </summary>        
-        /// <param name="actor"></param>
-        /// <param name="element"></param>
-        protected override void ExecuteAction(IActor actor, IWebElement element)
+        /// <inheritdoc />
+        protected override void ExecuteAction(IActor actor, IWebElement element, IWebDriver webDriver)
         {
             element.SendKeys(Value);
         }

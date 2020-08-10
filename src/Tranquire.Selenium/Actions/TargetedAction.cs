@@ -29,7 +29,7 @@ namespace Tranquire.Selenium.Actions
         protected override void ExecuteWhen(IActor actor, WebBrowser ability)
         {
             var element = Target.ResolveFor(ability.Driver);
-            ExecuteAction(actor, element);
+            ExecuteAction(actor, element, ability.Driver);
         }
 
         /// <summary>
@@ -37,6 +37,7 @@ namespace Tranquire.Selenium.Actions
         /// </summary>        
         /// <param name="actor"></param>
         /// <param name="element"></param>
-        protected abstract void ExecuteAction(IActor actor, IWebElement element);
+        /// <param name="webDriver"></param>
+        protected abstract void ExecuteAction(IActor actor, IWebElement element, IWebDriver webDriver);
     }
 }

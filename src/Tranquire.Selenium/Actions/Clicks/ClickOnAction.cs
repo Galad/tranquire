@@ -19,12 +19,8 @@ namespace Tranquire.Selenium.Actions.Clicks
         {
         }
 
-        /// <summary>
-        /// Click on the target
-        /// </summary>        
-        /// <param name="actor"></param>
-        /// <param name="element"></param>
-        protected override void ExecuteAction(IActor actor, IWebElement element)
+        /// <inheritdoc />
+        protected override void ExecuteAction(IActor actor, IWebElement element, IWebDriver webDriver)
         {
             element.Click();
         }
