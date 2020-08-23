@@ -3,7 +3,7 @@ tranquire
 
 [![Build status](https://ci.appveyor.com/api/projects/status/qmv6y5576jyvra1q/branch/master?svg=true)](https://ci.appveyor.com/project/Galad/tranquire/branch/master)
 [![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=Tranquire&metric=alert_status)](https://sonarcloud.io/dashboard?id=Tranquire)
-[![NuGet](https://img.shields.io/nuget/v/Tranquire.svg)](https://www.nuget.org/packages/Tranquire/)
+[![NuGet](https://img.shields.io/nuget/v/Tranquire.svg)](https://www.nuget.org/packages/Tranquire/) [![Join the chat at https://gitter.im/tranquire/community](https://badges.gitter.im/tranquire/community.svg)](https://gitter.im/tranquire/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 
