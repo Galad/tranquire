@@ -13,8 +13,7 @@ before_build:
 - choco install "GoogleChrome" -y
 - choco install "msbuild-sonarqube-runner" -y
 - choco install "opencover.portable"  -y
-- choco install "saxonHE" -y
-- choco install "jre8" -y
+- choco install "openjdk11" -y
 - refreshenv
 - set PATH=%PATH%;C:\Program Files\AppVeyor\BuildAgent
 - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarScanner.MSBuild.exe begin /d:"sonar.login=$env:sonarqube_token" /o:"galad-github" /k:"Tranquire" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.exclusions=obj/**" /v:"$env:GitBuildVersion" /d:"sonar.pullrequest.key=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.pullrequest.base=$env:APPVEYOR_REPO_BRANCH" /d:"sonar.pullrequest.branch=$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH" /d:"sonar.testExecutionReportPaths=$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" /d:"sonar.cs.opencover.reportsPaths=opencover.xml" /d:"sonar.language=cs" }
@@ -33,7 +32,6 @@ test_script:
 - ps: C:\ProgramData\chocolatey\bin\OpenCover.Console.exe "-output:opencover.xml" "-register:user" "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Tranquire.sln --logger trx --no-build --configuration Release --results-directory $env:APPVEYOR_BUILD_FOLDER\TestResults --filter Category=UI" "-mergebyhash" "-coverbytest:*" -oldstyle -mergeoutput
 after_test:
 - ps: $item = (Get-ChildItem TestResults | Select-Object -First 1).FullName
-- ps: C:\ProgramData\chocolatey\bin\SaxonHE\bin\transform.exe -s:$item -xsl:"https://raw.githubusercontent.com/Galad/trxToSonarQubeXslt/master/trxToSonarQubeGenericTestData.xsl" -o:"$env:APPVEYOR_BUILD_FOLDER\TestResults-SonarFormat.xml" solutionFolder="$env:APPVEYOR_BUILD_FOLDER" projectNames="Tranquire.Tests,Tranquire.Selenium.Tests,Tranquire.NUnit.Tests,ToDoList.Specifications"
 - ps: SonarScanner.MSBuild.exe end /d:"sonar.login=$env:sonarqube_token"
 - dotnet pack Tranquire.sln --configuration Release --no-build
 artifacts:  
@@ -42,6 +40,6 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: 55uxvHMTDwA2bAKpOX6Wjb/t5eTUsLhsZfJukyEyCboW3c/ZnWHJaz6UeRdPRKVX
+    secure: 4JI3f9DbyDKJG6cb34h1drV/pGvW51qEDrEjt7k7d0NHMtywGGzOEwQt6xWwpvfQ
   on:
     branch: master
