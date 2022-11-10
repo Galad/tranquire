@@ -8,7 +8,7 @@
     "lodash": "^4.17.11",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "reboot.css": "^1.0.1",
     "styled-components": "^4.0.3"
   },
