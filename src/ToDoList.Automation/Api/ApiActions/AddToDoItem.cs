@@ -4,23 +4,22 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Tranquire;
 
-namespace ToDoList.Automation.Api.ApiActions
+namespace ToDoList.Automation.Api.ApiActions;
+
+public class AddToDoItem : ActionBase<HttpClient, Task>
 {
-    public class AddToDoItem : ActionBase<HttpClient, Task>
+    public AddToDoItem(string title)
     {
-        public AddToDoItem(string title)
-        {
-            Title = title;
-        }
+        Title = title;
+    }
 
-        public override string Name => $"Add the to-do item {Title}";
+    public override string Name => $"Add the to-do item {Title}";
 
-        public string Title { get; }
+    public string Title { get; }
 
-        protected override async Task ExecuteWhen(IActor actor, HttpClient ability)
-        {
-            var response = await ability.PostAsync("api/todoitem", new StringContent(JsonConvert.SerializeObject(Title), Encoding.UTF8, "application/json"));
-            response.EnsureSuccessStatusCode();
-        }
+    protected override async Task ExecuteWhen(IActor actor, HttpClient ability)
+    {
+        var response = await ability.PostAsync("api/todoitem", new StringContent(JsonConvert.SerializeObject(Title), Encoding.UTF8, "application/json"));
+        response.EnsureSuccessStatusCode();
     }
 }

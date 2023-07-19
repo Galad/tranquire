@@ -2,55 +2,54 @@
 using System.Text;
 using Xunit.Abstractions;
 
-namespace ToDoList.Specifications
+namespace ToDoList.Specifications;
+
+public class XUnitObserver : IObserver<string>
 {
-    public class XUnitObserver : IObserver<string>
+    private readonly Lazy<ITestOutputHelper> _helper;
+
+    public XUnitObserver(Func<ITestOutputHelper> helper)
     {
-        private readonly Lazy<ITestOutputHelper> _helper;
-
-        public XUnitObserver(Func<ITestOutputHelper> helper)
-        {
-            _helper = new Lazy<ITestOutputHelper>(helper);
-        }
-
-        public void OnCompleted()
-        {
-            _helper.Value.WriteLine("Completed");
-        }
-
-        public void OnError(Exception error)
-        {
-            _helper.Value.WriteLine("Error " + error.Message);
-        }
-
-        public void OnNext(string value)
-        {
-            _helper.Value.WriteLine(value);
-        }
+        _helper = new Lazy<ITestOutputHelper>(helper);
     }
 
-    public class InMemoryObserver : IObserver<string>
+    public void OnCompleted()
     {
-        private readonly StringBuilder _builder;
+        _helper.Value.WriteLine("Completed");
+    }
 
-        public InMemoryObserver(StringBuilder builder)
-        {
-            _builder = builder;
-        }
+    public void OnError(Exception error)
+    {
+        _helper.Value.WriteLine("Error " + error.Message);
+    }
 
-        public void OnCompleted()
-        {
-            _builder.AppendLine("On completed");
-        }
+    public void OnNext(string value)
+    {
+        _helper.Value.WriteLine(value);
+    }
+}
 
-        public void OnError(Exception error)
-        {
-            _builder.AppendLine("Error " + error.Message);
-        }
+public class InMemoryObserver : IObserver<string>
+{
+    private readonly StringBuilder _builder;
 
-        public void OnNext(string value)
-        {
-            _builder.AppendLine(value);
-        }
+    public InMemoryObserver(StringBuilder builder)
+    {
+        _builder = builder;
+    }
+
+    public void OnCompleted()
+    {
+        _builder.AppendLine("On completed");
+    }
+
+    public void OnError(Exception error)
+    {
+        _builder.AppendLine("Error " + error.Message);
+    }
+
+    public void OnNext(string value)
+    {
+        _builder.AppendLine(value);
     }
 }

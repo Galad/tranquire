@@ -1,35 +1,34 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Tranquire.Selenium.Questions.UIModels
+namespace Tranquire.Selenium.Questions.UIModels;
+
+/// <summary>
+/// Retrieve the value using <see cref="CssValue"/>
+/// </summary>
+public sealed class CssValueAttribute : UIStateAttribute
 {
     /// <summary>
-    /// Retrieve the value using <see cref="CssValue"/>
+    /// Initialize a new instance of <see cref="CssValueAttribute"/>
     /// </summary>
-    public sealed class CssValueAttribute : UIStateAttribute
+    /// <param name="propertyName">The CSS property name to retrieve the value from</param>
+    public CssValueAttribute(string propertyName)
     {
-        /// <summary>
-        /// Initialize a new instance of <see cref="CssValueAttribute"/>
-        /// </summary>
-        /// <param name="propertyName">The CSS property name to retrieve the value from</param>
-        public CssValueAttribute(string propertyName)
+        if (string.IsNullOrEmpty(propertyName))
         {
-            if (string.IsNullOrEmpty(propertyName))
-            {
-                throw new ArgumentNullException(nameof(propertyName), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
-            }
-
-            PropertyName = propertyName;
+            throw new ArgumentNullException(nameof(propertyName), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
         }
 
-        /// <summary>
-        /// Gets the CSS property name
-        /// </summary>
-        public string PropertyName { get; }
+        PropertyName = propertyName;
+    }
 
-        internal override IQuestion<T> CreateQuestion<T>(ITarget target, IConverters<T> converters, CultureInfo culture)
-        {
-            return Apply(CssValue.Of(target).AndTheProperty(PropertyName), converters, culture);
-        }
+    /// <summary>
+    /// Gets the CSS property name
+    /// </summary>
+    public string PropertyName { get; }
+
+    internal override IQuestion<T> CreateQuestion<T>(ITarget target, IConverters<T> converters, CultureInfo culture)
+    {
+        return Apply(CssValue.Of(target).AndTheProperty(PropertyName), converters, culture);
     }
 }

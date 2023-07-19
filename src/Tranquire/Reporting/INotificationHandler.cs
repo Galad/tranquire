@@ -1,7 +1,6 @@
-﻿namespace Tranquire.Reporting
+﻿namespace Tranquire.Reporting;
+
+internal interface INotificationHandler
 {
-    internal interface INotificationHandler
-    {
-        void Handle(XmlDocumentObserver observer, INamed named);
-    }
+    void Handle(XmlDocumentObserver observer, INamed named);
 }

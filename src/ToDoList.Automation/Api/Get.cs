@@ -5,12 +5,11 @@ using ToDoList.Automation.Api.ApiQuestions;
 using ToDoList.Automation.Model;
 using Tranquire;
 
-namespace ToDoList.Automation.Api
+namespace ToDoList.Automation.Api;
+
+public static class Get
 {
-    public static class Get
-    {
-        public static IQuestion<Task<ImmutableArray<ToDoItem>>> TheToDoItems { get; } = new QueryToDoItems();
-        public static IQuestion<Task<ToDoItem>> TheToDoItem(string title) =>
-            TheToDoItems.Select(items => items.FirstOrDefault(i => i.Name == title));
-    }
+    public static IQuestion<Task<ImmutableArray<ToDoItem>>> TheToDoItems { get; } = new QueryToDoItems();
+    public static IQuestion<Task<ToDoItem>> TheToDoItem(string title) =>
+        TheToDoItems.Select(items => items.FirstOrDefault(i => i.Name == title));
 }

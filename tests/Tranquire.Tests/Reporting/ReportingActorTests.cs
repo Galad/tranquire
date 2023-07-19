@@ -11,527 +11,526 @@ using Moq;
 using Tranquire.Reporting;
 using Xunit;
 
-namespace Tranquire.Tests.Reporting
+namespace Tranquire.Tests.Reporting;
+
+public class ReportingActorTests
 {
-    public class ReportingActorTests
+    public class ReportingActorCustomization : ICustomization
     {
-        public class ReportingActorCustomization : ICustomization
+        public void Customize(IFixture fixture)
         {
-            public void Customize(IFixture fixture)
-            {
-                fixture.Register<ICanNotify>(() => new Mock<CanNotify>() { CallBase = true }.As<ICanNotify>().Object);
-            }
+            fixture.Register<ICanNotify>(() => new Mock<CanNotify>() { CallBase = true }.As<ICanNotify>().Object);
         }
+    }
 
-        public class ReportingActorAutoDataAttribute : AutoDataAttribute
+    public class ReportingActorAutoDataAttribute : AutoDataAttribute
+    {
+        public ReportingActorAutoDataAttribute() : base(CreateFixture)
         {
-            public ReportingActorAutoDataAttribute() : base(CreateFixture)
-            {
-            }
         }
+    }
 
-        public class ReportingActorInlineAutoDataAttribute : InlineAutoDataAttribute
+    public class ReportingActorInlineAutoDataAttribute : InlineAutoDataAttribute
+    {
+        public ReportingActorInlineAutoDataAttribute(params object[] values) : base(new ReportingActorAutoDataAttribute(), values)
         {
-            public ReportingActorInlineAutoDataAttribute(params object[] values) : base(new ReportingActorAutoDataAttribute(), values)
-            {
-            }
         }
+    }
 
-        private static IFixture CreateFixture()
-        {
-            return new Fixture().Customize(new DomainCustomization())
-                                .Customize(new ReportingActorCustomization())
-                                .Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
-        }
+    private static IFixture CreateFixture()
+    {
+        return new Fixture().Customize(new DomainCustomization())
+                            .Customize(new ReportingActorCustomization())
+                            .Customize(new ConstructorCustomization(typeof(ReportingActor), new GreedyConstructorQuery()));
+    }
 
-        [Theory, DomainAutoData]
-        public void Sut_ShouldBeActor(
-            ReportingActor sut)
-        {
-            sut.Should().BeAssignableTo<IActor>();
-        }
+    [Theory, DomainAutoData]
+    public void Sut_ShouldBeActor(
+        ReportingActor sut)
+    {
+        sut.Should().BeAssignableTo<IActor>();
+    }
 
-        [Theory, DomainAutoData]
-        public void Sut_VerifyGuardClauses(
-            GuardClauseAssertion assertion)
-        {
-            assertion.Verify(typeof(ReportingActor));
-        }
+    [Theory, DomainAutoData]
+    public void Sut_VerifyGuardClauses(
+        GuardClauseAssertion assertion)
+    {
+        assertion.Verify(typeof(ReportingActor));
+    }
 
-        [Theory, DomainAutoData]
-        public void Sut_VerifyInitializedMembers(
-            ConstructorInitializedMemberAssertion assertion)
-        {
-            assertion.Verify(typeof(ReportingActor).GetConstructors());
-        }
+    [Theory, DomainAutoData]
+    public void Sut_VerifyInitializedMembers(
+        ConstructorInitializedMemberAssertion assertion)
+    {
+        assertion.Verify(typeof(ReportingActor).GetConstructors());
+    }
 
-        [Theory, DomainAutoData]
-        public void Name_ShouldReturnCorrectValue(
-            ReportingActor sut,
-            string expected)
-        {
-            //arrange
-            Mock.Get(sut.Actor).Setup(a => a.Name).Returns(expected);
-            //act
-            var actual = sut.Name;
-            //assert
-            Assert.Equal(expected, actual);
-        }
+    [Theory, DomainAutoData]
+    public void Name_ShouldReturnCorrectValue(
+        ReportingActor sut,
+        string expected)
+    {
+        //arrange
+        Mock.Get(sut.Actor).Setup(a => a.Name).Returns(expected);
+        //act
+        var actual = sut.Name;
+        //assert
+        Assert.Equal(expected, actual);
+    }
 
-        [Theory, MemberData(nameof(ExecutionTestCases))]
-        public void Sut_AllMethods_ShouldReturnInnerResult(
-            Func<ReportingActor, INamed, object> executeAction,
-            Func<INamed, Expression<Func<IActor, object>>> expression,
+    [Theory, MemberData(nameof(ExecutionTestCases))]
+    public void Sut_AllMethods_ShouldReturnInnerResult(
+        Func<ReportingActor, INamed, object> executeAction,
+        Func<INamed, Expression<Func<IActor, object>>> expression,
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-            CommandType commandType)
+        CommandType commandType)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
-        {
-            //arrange                  
-            var fixture = CreateFixture();
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
-            var duration = fixture.Create<TimeSpan>();
-            var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();
-            var expected = fixture.Create<object>();
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                           .Returns((Func<object> f) => (duration, f(), null));
-            Mock.Get(sut.Actor).Setup(expression(action)).Returns(expected);
-            //act
-            var actual = executeAction(sut, action);
-            //assert
-            Assert.Equal(expected, actual);
-        }
+    {
+        //arrange                  
+        var fixture = CreateFixture();
+        var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
+        var duration = fixture.Create<TimeSpan>();
+        var sut = fixture.Create<ReportingActor>();
+        var action = fixture.Create<MockToString>();
+        var expected = fixture.Create<object>();
+        measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
+                       .Returns((Func<object> f) => (duration, f(), null));
+        Mock.Get(sut.Actor).Setup(expression(action)).Returns(expected);
+        //act
+        var actual = executeAction(sut, action);
+        //assert
+        Assert.Equal(expected, actual);
+    }
 
 
-        //Moq does not mock ToString if it is not overridden in the class
+    //Moq does not mock ToString if it is not overridden in the class
 #pragma warning disable CS0618 // Type or member is obsolete
-        public class MockToString : IQuestion<object>, IQuestion<Ability1, object>, IAction<object>, IAction<Ability2, object>
+    public class MockToString : IQuestion<object>, IQuestion<Ability1, object>, IAction<object>, IAction<Ability2, object>
 #pragma warning restore CS0618 // Type or member is obsolete
+    {
+        public string ToStringValue { get; }
+        public object Result { get; }
+
+        public MockToString(string toStringValue, object result)
         {
-            public string ToStringValue { get; }
-            public object Result { get; }
-
-            public MockToString(string toStringValue, object result)
-            {
-                ToStringValue = toStringValue;
-                Result = result;
-            }
-
-            public object AnsweredBy(IActor actor) => Result;
-            public object AnsweredBy(IActor actor, Ability1 ability) => Result;
-            public object ExecuteGivenAs(IActor actor) => new object();
-            public object ExecuteGivenAs(IActor actor, Ability2 ability) => Result;
-            public object ExecuteWhenAs(IActor actor) => Result;
-            public object ExecuteWhenAs(IActor actor, Ability2 ability) => Result;
-            public string Name => "";
-            public override string ToString() => ToStringValue;
+            ToStringValue = toStringValue;
+            Result = result;
         }
 
-        public static IEnumerable<object[]> ExecutionTestCases
-        {
-            get
-            {
-                return NotifyingTestCases.Concat(NotNotifyingActionTestCases);
-            }
-        }
+        public object AnsweredBy(IActor actor) => Result;
+        public object AnsweredBy(IActor actor, Ability1 ability) => Result;
+        public object ExecuteGivenAs(IActor actor) => new();
+        public object ExecuteGivenAs(IActor actor, Ability2 ability) => Result;
+        public object ExecuteWhenAs(IActor actor) => Result;
+        public object ExecuteWhenAs(IActor actor, Ability2 ability) => Result;
+        public string Name => "";
+        public override string ToString() => ToStringValue;
+    }
 
-        public static IEnumerable<object[]> NotifyingTestCases
+    public static IEnumerable<object[]> ExecutionTestCases
+    {
+        get
         {
-            get
-            {
-                yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action), CommandType.Question);
-                yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action), CommandType.Action);
-            }
+            return NotifyingTestCases.Concat(NotNotifyingActionTestCases);
         }
+    }
 
-        public static IEnumerable<object[]> NotNotifyingActionTestCases
+    public static IEnumerable<object[]> NotifyingTestCases
+    {
+        get
         {
-            get
-            {
+            yield return ExecutionTestCasesValues((sut, action) => sut.AsksFor((IQuestion<object>)action), action => a => a.AsksFor((IQuestion<object>)action), CommandType.Question);
+            yield return ExecutionTestCasesValues((sut, action) => sut.Execute((IAction<object>)action), action => a => a.Execute((IAction<object>)action), CommandType.Action);
+        }
+    }
+
+    public static IEnumerable<object[]> NotNotifyingActionTestCases
+    {
+        get
+        {
 #pragma warning disable CS0618 // Type or member is obsolete
-                yield return ExecutionTestCasesValues(
-                    (sut, action) => sut.ExecuteWithAbility((IAction<Ability2, object>)action),
-                    action => a => a.ExecuteWithAbility((IAction<Ability2, object>)action),
-                    CommandType.Action);
-                yield return ExecutionTestCasesValues(
-                    (sut, action) => sut.AsksForWithAbility((IQuestion<Ability1, object>)action),
-                    action => a => a.AsksForWithAbility((IQuestion<Ability1, object>)action),
-                    CommandType.Question);
+            yield return ExecutionTestCasesValues(
+                (sut, action) => sut.ExecuteWithAbility((IAction<Ability2, object>)action),
+                action => a => a.ExecuteWithAbility((IAction<Ability2, object>)action),
+                CommandType.Action);
+            yield return ExecutionTestCasesValues(
+                (sut, action) => sut.AsksForWithAbility((IQuestion<Ability1, object>)action),
+                action => a => a.AsksForWithAbility((IQuestion<Ability1, object>)action),
+                CommandType.Question);
 #pragma warning restore CS0618 // Type or member is obsolete
-            }
         }
+    }
 
-        private static object[] ExecutionTestCasesValues(
-            Func<ReportingActor, INamed, object> action,
-            Func<INamed, Expression<Func<IActor, object>>> expression,
-            CommandType commandType
-            )
-        {
-            return new object[] { action, expression, commandType };
-        }
+    private static object[] ExecutionTestCasesValues(
+        Func<ReportingActor, INamed, object> action,
+        Func<INamed, Expression<Func<IActor, object>>> expression,
+        CommandType commandType
+        )
+    {
+        return new object[] { action, expression, commandType };
+    }
 
-        [Theory, MemberData(nameof(NotifyingTestCases))]
-        public void Sut_AllMethods_ShouldCallOnNext(
-            Func<ReportingActor, INamed, object> executeAction,
+    [Theory, MemberData(nameof(NotifyingTestCases))]
+    public void Sut_AllMethods_ShouldCallOnNext(
+        Func<ReportingActor, INamed, object> executeAction,
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-            Func<INamed, Expression<Func<IActor, object>>> dummy,
+        Func<INamed, Expression<Func<IActor, object>>> dummy,
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
-            CommandType commandType)
-        {
-            //arrange                  
-            var fixture = CreateFixture();
-            var observer = new TestObserver<ActionNotification>();
-            fixture.Inject((IObserver<ActionNotification>)observer);
-            var date = fixture.Freeze<DateTimeOffset>();
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
-            var expectedDuration = fixture.Create<TimeSpan>();
-            var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object(), null));
-            //act
-            executeAction(sut, action);
-            //assert
-            var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
-                new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
-        }
+        CommandType commandType)
+    {
+        //arrange                  
+        var fixture = CreateFixture();
+        var observer = new TestObserver<ActionNotification>();
+        fixture.Inject((IObserver<ActionNotification>)observer);
+        var date = fixture.Freeze<DateTimeOffset>();
+        var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
+        var expectedDuration = fixture.Create<TimeSpan>();
+        var sut = fixture.Create<ReportingActor>();
+        var action = fixture.Create<MockToString>();
+        measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, new object(), null));
+        //act
+        executeAction(sut, action);
+        //assert
+        var expected = new[]{
+            new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
+            new ActionNotification(action, 1, new AfterActionNotificationContent(expectedDuration))
+        };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+    }
 
-        [Theory, MemberData(nameof(NotifyingTestCases))]
-        public void Sut_AllMethods_Recursive_ShouldCallOnNext(
-            Func<ReportingActor, INamed, object> executeAction,
-            Func<INamed, Expression<Func<IActor, object>>> expression,
-            CommandType commandType)
+    [Theory, MemberData(nameof(NotifyingTestCases))]
+    public void Sut_AllMethods_Recursive_ShouldCallOnNext(
+        Func<ReportingActor, INamed, object> executeAction,
+        Func<INamed, Expression<Func<IActor, object>>> expression,
+        CommandType commandType)
+    {
+        //arrange 
+        var fixture = CreateFixture();
+        var observer = new TestObserver<ActionNotification>();
+        fixture.Inject((IObserver<ActionNotification>)observer);
+        var date = fixture.Freeze<DateTimeOffset>();
+        var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
+        var sut = fixture.Create<ReportingActor>();
+        const int NumberOfActions = 4;
+        var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();
+        var expectedDurations = fixture.CreateMany<TimeSpan>(NumberOfActions).ToArray();
+        for (var i = 0; i < actions.Length - 1; i++)
         {
-            //arrange 
-            var fixture = CreateFixture();
-            var observer = new TestObserver<ActionNotification>();
-            fixture.Inject((IObserver<ActionNotification>)observer);
-            var date = fixture.Freeze<DateTimeOffset>();
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
-            var sut = fixture.Create<ReportingActor>();
-            const int NumberOfActions = 4;
-            var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();
-            var expectedDurations = fixture.CreateMany<TimeSpan>(NumberOfActions).ToArray();
-            for (var i = 0; i < actions.Length - 1; i++)
-            {
-                var ii = i;
-                Mock.Get(sut.Actor).Setup(expression(actions[ii]))
-                                   .Returns(() =>
-                                   {
-                                       var innerResult = executeAction(sut, actions[ii + 1]);
-                                       return actions[ii].Result;
-                                   });
-                measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
-                               .Returns((Func<object> f) =>
+            var ii = i;
+            Mock.Get(sut.Actor).Setup(expression(actions[ii]))
+                               .Returns(() =>
                                {
-                                   var result = f();
-                                   var resultIndex = Array.FindIndex(actions, a => a.Result == result);
-                                   var duration = expectedDurations[resultIndex == -1 ? NumberOfActions - 1 : resultIndex];
-                                   return (duration, result, null);
+                                   var innerResult = executeAction(sut, actions[ii + 1]);
+                                   return actions[ii].Result;
                                });
-            }
-            //act
-            executeAction(sut, actions[0]);
-            //assert
-            BeforeActionNotificationContent before()
-            {
-                return new BeforeActionNotificationContent(date, commandType);
-            }
-
-            var expected = new[]{
-                new ActionNotification(actions[0], 1, before()),
-                new ActionNotification(actions[1], 2, before()),
-                new ActionNotification(actions[2], 3, before()),
-                new ActionNotification(actions[3], NumberOfActions, before()),
-                new ActionNotification(actions[3], NumberOfActions, new AfterActionNotificationContent(expectedDurations[3])),
-                new ActionNotification(actions[2], 3, new AfterActionNotificationContent(expectedDurations[2])),
-                new ActionNotification(actions[1], 2, new AfterActionNotificationContent(expectedDurations[1])),
-                new ActionNotification(actions[0], 1, new AfterActionNotificationContent(expectedDurations[0]))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
-        }
-
-        [Theory, MemberData(nameof(ExecutionTestCases))]
-        public void Sut_AllMethods_WhenErrorOccurs_ShouldThrow(
-          Func<ReportingActor, INamed, object> executeAction,
-          Func<INamed, Expression<Func<IActor, object>>> expression,
-#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-          CommandType commandType)
-#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
-        {
-            //arrange   
-            var fixture = CreateFixture();
-            var observer = new TestObserver<ActionNotification>();
-            fixture.Inject((IObserver<ActionNotification>)observer);
-            fixture.Inject<IMeasureDuration>(new DefaultMeasureDuration());
-            var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();
-            var expected = fixture.Create<Exception>();
-            Mock.Get(sut.Actor).Setup(expression(action)).Throws(expected);
-            //act and assert
-            var actual = Assert.Throws<Exception>(() => executeAction(sut, action));
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory, MemberData(nameof(NotifyingTestCases))]
-        public void Sut_AllMethods_WhenErrorOccurs_ShouldCallOnNext(
-           Func<ReportingActor, INamed, object> executeAction,
-#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-           Func<INamed, Expression<Func<IActor, object>>> dummy,
-#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
-           CommandType commandType)
-        {
-            //arrange                  
-            var fixture = CreateFixture();
-            var observer = new TestObserver<ActionNotification>();
-            fixture.Inject((IObserver<ActionNotification>)observer);
-            var date = fixture.Freeze<DateTimeOffset>();
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
-            var sut = fixture.Create<ReportingActor>();
-            var action = fixture.Create<MockToString>();
-            var exception = fixture.Create<Exception>();
-            var expectedDuration = fixture.Create<TimeSpan>();
-            measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, null, exception));
-            //act
-            try
-            {
-                executeAction(sut, action);
-            }
-            catch { }
-            //assert
-            var expected = new[]{
-                new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
-                new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
-        }
-
-        [Theory, MemberData(nameof(NotifyingTestCases))]
-        public void Sut_AllMethods_Recursive_WhenErrorOccurs_ShouldCallOnNext(
-            Func<ReportingActor, INamed, object> executeAction,
-            Func<INamed, Expression<Func<IActor, object>>> expression,
-            CommandType commandType)
-        {
-            //arrange 
-            var fixture = CreateFixture();
-            var observer = new TestObserver<ActionNotification>();
-            fixture.Inject((IObserver<ActionNotification>)observer);
-            var date = fixture.Freeze<DateTimeOffset>();
-            var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
-            var sut = fixture.Create<ReportingActor>();
-            const int NumberOfActions = 4;
-            var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();
-            var exception = fixture.Create<Exception>();
-            var expectedDuration = fixture.Create<TimeSpan>();
-
-            for (var i = 0; i < actions.Length - 1; i++)
-            {
-                var ii = i;
-                Mock.Get(sut.Actor).Setup(expression(actions[ii]))
-                                   .Returns(() => executeAction(sut, actions[ii + 1]));
-            }
-            Mock.Get(sut.Actor).Setup(expression(actions.Last()))
-                               .Throws(exception);
             measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
                            .Returns((Func<object> f) =>
                            {
-                               try
-                               {
-                                   return (expectedDuration, f(), null);
-                               }
-                               catch (Exception ex)
-                               {
-                                   return (expectedDuration, null, ex);
-                               }
+                               var result = f();
+                               var resultIndex = Array.FindIndex(actions, a => a.Result == result);
+                               var duration = expectedDurations[resultIndex == -1 ? NumberOfActions - 1 : resultIndex];
+                               return (duration, result, null);
                            });
-            //act
-            new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
-            //assert
-            BeforeActionNotificationContent before()
-            {
-                return new BeforeActionNotificationContent(date, commandType);
-            }
-
-            var expected = new[]{
-                new ActionNotification(actions[0], 1, before()),
-                new ActionNotification(actions[1], 2, before()),
-                new ActionNotification(actions[2], 3, before()),
-                new ActionNotification(actions[3], NumberOfActions, before()),
-                new ActionNotification(actions[3], NumberOfActions, new ExecutionErrorNotificationContent(exception, expectedDuration)),
-                new ActionNotification(actions[2], 3, new ExecutionErrorNotificationContent(exception, expectedDuration)),
-                new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception, expectedDuration)),
-                new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+        }
+        //act
+        executeAction(sut, actions[0]);
+        //assert
+        BeforeActionNotificationContent before()
+        {
+            return new BeforeActionNotificationContent(date, commandType);
         }
 
-        [Theory, ReportingActorAutoData]
-        public void ExecuteWithAbility_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            ReportingActor sut,
-#pragma warning disable CS0618 // Type or member is obsolete
-            IAction<Ability2, object> action)
-#pragma warning restore CS0618 // Type or member is obsolete
-        {
-            //arrange                                                      
-            //act
-            sut.ExecuteWithAbility(action);
-            //assert
-            observer.Values.Should().BeEmpty();
-        }
-
-        [Theory, ReportingActorAutoData]
-        public void AsksFor_WithAbility_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            ReportingActor sut,
-#pragma warning disable CS0618 // Type or member is obsolete
-            IQuestion<Ability1, object> question)
-#pragma warning restore CS0618 // Type or member is obsolete
-        {
-            //arrange                                                      
-            //act
-            sut.AsksForWithAbility(question);
-            //assert
-            observer.Values.Should().BeEmpty();
-        }
-
-        [Theory, ReportingActorAutoData]
-        public void Execute_WhenCanNotifyReturnsFalse_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            [Frozen]ICanNotify canNotify,
-            ReportingActor sut,
-            IAction<object> action)
-        {
-            //arrange                                          
-            Mock.Get(canNotify).Setup(c => c.Action(action)).Returns(false);
-            //act
-            sut.Execute(action);
-            //assert
-            observer.Values.Should().BeEmpty();
-        }
-
-        [Theory, ReportingActorAutoData]
-        public void AsksFor_WhenCanNotifyReturnsFalse_ShouldNotNotify(
-            [Frozen]TestObserver<ActionNotification> observer,
-            [Frozen]ICanNotify canNotify,
-            ReportingActor sut,
-            IQuestion<object> question)
-        {
-            //arrange                                          
-            Mock.Get(canNotify).Setup(c => c.Question(question)).Returns(false);
-            //act
-            sut.AsksFor(question);
-            //assert
-            observer.Values.Should().BeEmpty();
-        }
-
-        [Theory, ReportingActorAutoData]
-        public void Execute_WithThenAction_ShouldCallOnNext(
-            [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
-            [Frozen]DateTimeOffset date,
-            [Frozen]IMeasureDuration measureDuration,
-            ReportingActor sut,
-            TimeSpan expectedDuration,
-            ThenAction<object, string> thenAction
-            )
-        {
-            //arrange                              
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>())).Returns((expectedDuration, string.Empty, null));
-            //act
-            sut.Execute(thenAction);
-            //assert
-            var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
-                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Pass))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
-        }
-
-        [Theory, ReportingActorAutoData]
-        public void Execute_WithThenActionWithError_ShouldCallOnNext(
-            [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
-            [Frozen]DateTimeOffset date,
-            [Frozen]IMeasureDuration measureDuration,
-            ReportingActor sut,
-            ThenAction<object, string> thenAction,
-            Exception error,
-            TimeSpan expectedDuration
-            )
-        {
-            //arrange                
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>()))
-                                     .Returns((expectedDuration, null, error));
-            //act
-            try
-            {
-                sut.Execute(thenAction);
-            }
-            catch (Exception)
-            {
-            }
-            //assert
-            var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
-                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Error, error))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
-        }
-
-        private static System.Action[] _assertions = new System.Action[]
-        {
-            () => Assert.True(false),
-            () => NUnit.Framework.Assert.Fail(),
-            () => NUnit.Framework.Assert.That(true, NUnit.Framework.Is.False),
-            () => Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail()
+        var expected = new[]{
+            new ActionNotification(actions[0], 1, before()),
+            new ActionNotification(actions[1], 2, before()),
+            new ActionNotification(actions[2], 3, before()),
+            new ActionNotification(actions[3], NumberOfActions, before()),
+            new ActionNotification(actions[3], NumberOfActions, new AfterActionNotificationContent(expectedDurations[3])),
+            new ActionNotification(actions[2], 3, new AfterActionNotificationContent(expectedDurations[2])),
+            new ActionNotification(actions[1], 2, new AfterActionNotificationContent(expectedDurations[1])),
+            new ActionNotification(actions[0], 1, new AfterActionNotificationContent(expectedDurations[0]))
         };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+    }
 
-        [Theory]
-        [ReportingActorInlineAutoData(0)]
-        [ReportingActorInlineAutoData(1)]
-        [ReportingActorInlineAutoData(2)]
-        [ReportingActorInlineAutoData(3)]
-        public void Execute_WithThenActionWithAssertionError_ShouldCallOnNext(
-            int i,
-            [Frozen(Matching.ImplementedInterfaces)]TestObserver<ActionNotification> observer,
-            [Frozen]DateTimeOffset date,
-            [Frozen]IMeasureDuration measureDuration,
-            ReportingActor sut,
-            ThenAction<object, string> thenAction,
-            TimeSpan expectedDuration
-            )
+    [Theory, MemberData(nameof(ExecutionTestCases))]
+    public void Sut_AllMethods_WhenErrorOccurs_ShouldThrow(
+      Func<ReportingActor, INamed, object> executeAction,
+      Func<INamed, Expression<Func<IActor, object>>> expression,
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+      CommandType commandType)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+    {
+        //arrange   
+        var fixture = CreateFixture();
+        var observer = new TestObserver<ActionNotification>();
+        fixture.Inject((IObserver<ActionNotification>)observer);
+        fixture.Inject<IMeasureDuration>(new DefaultMeasureDuration());
+        var sut = fixture.Create<ReportingActor>();
+        var action = fixture.Create<MockToString>();
+        var expected = fixture.Create<Exception>();
+        Mock.Get(sut.Actor).Setup(expression(action)).Throws(expected);
+        //act and assert
+        var actual = Assert.Throws<Exception>(() => executeAction(sut, action));
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory, MemberData(nameof(NotifyingTestCases))]
+    public void Sut_AllMethods_WhenErrorOccurs_ShouldCallOnNext(
+       Func<ReportingActor, INamed, object> executeAction,
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+       Func<INamed, Expression<Func<IActor, object>>> dummy,
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+       CommandType commandType)
+    {
+        //arrange                  
+        var fixture = CreateFixture();
+        var observer = new TestObserver<ActionNotification>();
+        fixture.Inject((IObserver<ActionNotification>)observer);
+        var date = fixture.Freeze<DateTimeOffset>();
+        var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
+        var sut = fixture.Create<ReportingActor>();
+        var action = fixture.Create<MockToString>();
+        var exception = fixture.Create<Exception>();
+        var expectedDuration = fixture.Create<TimeSpan>();
+        measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>())).Returns((expectedDuration, null, exception));
+        //act
+        try
         {
-            //arrange                
-            Exception expectedException = null;
-            Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>()))
-                                     .Returns(() =>
-                                     {
-                                         try
-                                         {
-                                             _assertions[i]();
-                                         }
-                                         catch (Exception ex)
-                                         {
-                                             expectedException = ex;
-                                             return (expectedDuration, string.Empty, ex);
-                                         }
-                                         throw new InvalidOperationException("Should not happen as the assertions actions should throw an exception");
-                                     });
-            //act
-            try
-            {
-                sut.Execute(thenAction);
-            }
-            catch (Exception)
-            {
-            }
-            //assert
-            var expected = new[]{
-                new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
-                new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Failed, expectedException))
-            };
-            observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+            executeAction(sut, action);
         }
+        catch { }
+        //assert
+        var expected = new[]{
+            new ActionNotification(action, 1, new BeforeActionNotificationContent(date, commandType)),
+            new ActionNotification(action, 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
+        };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+    }
+
+    [Theory, MemberData(nameof(NotifyingTestCases))]
+    public void Sut_AllMethods_Recursive_WhenErrorOccurs_ShouldCallOnNext(
+        Func<ReportingActor, INamed, object> executeAction,
+        Func<INamed, Expression<Func<IActor, object>>> expression,
+        CommandType commandType)
+    {
+        //arrange 
+        var fixture = CreateFixture();
+        var observer = new TestObserver<ActionNotification>();
+        fixture.Inject((IObserver<ActionNotification>)observer);
+        var date = fixture.Freeze<DateTimeOffset>();
+        var measureDuration = fixture.Freeze<Mock<IMeasureDuration>>();
+        var sut = fixture.Create<ReportingActor>();
+        const int NumberOfActions = 4;
+        var actions = fixture.CreateMany<MockToString>(NumberOfActions).ToArray();
+        var exception = fixture.Create<Exception>();
+        var expectedDuration = fixture.Create<TimeSpan>();
+
+        for (var i = 0; i < actions.Length - 1; i++)
+        {
+            var ii = i;
+            Mock.Get(sut.Actor).Setup(expression(actions[ii]))
+                               .Returns(() => executeAction(sut, actions[ii + 1]));
+        }
+        Mock.Get(sut.Actor).Setup(expression(actions.Last()))
+                           .Throws(exception);
+        measureDuration.Setup(m => m.Measure(It.IsAny<Func<object>>()))
+                       .Returns((Func<object> f) =>
+                       {
+                           try
+                           {
+                               return (expectedDuration, f(), null);
+                           }
+                           catch (Exception ex)
+                           {
+                               return (expectedDuration, null, ex);
+                           }
+                       });
+        //act
+        new System.Action(() => { executeAction(sut, actions[0]); }).Should().Throw<Exception>().And.Should().Be(exception);
+        //assert
+        BeforeActionNotificationContent before()
+        {
+            return new BeforeActionNotificationContent(date, commandType);
+        }
+
+        var expected = new[]{
+            new ActionNotification(actions[0], 1, before()),
+            new ActionNotification(actions[1], 2, before()),
+            new ActionNotification(actions[2], 3, before()),
+            new ActionNotification(actions[3], NumberOfActions, before()),
+            new ActionNotification(actions[3], NumberOfActions, new ExecutionErrorNotificationContent(exception, expectedDuration)),
+            new ActionNotification(actions[2], 3, new ExecutionErrorNotificationContent(exception, expectedDuration)),
+            new ActionNotification(actions[1], 2, new ExecutionErrorNotificationContent(exception, expectedDuration)),
+            new ActionNotification(actions[0], 1, new ExecutionErrorNotificationContent(exception, expectedDuration))
+        };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+    }
+
+    [Theory, ReportingActorAutoData]
+    public void ExecuteWithAbility_ShouldNotNotify(
+        [Frozen] TestObserver<ActionNotification> observer,
+        ReportingActor sut,
+#pragma warning disable CS0618 // Type or member is obsolete
+        IAction<Ability2, object> action)
+#pragma warning restore CS0618 // Type or member is obsolete
+    {
+        //arrange                                                      
+        //act
+        sut.ExecuteWithAbility(action);
+        //assert
+        observer.Values.Should().BeEmpty();
+    }
+
+    [Theory, ReportingActorAutoData]
+    public void AsksFor_WithAbility_ShouldNotNotify(
+        [Frozen] TestObserver<ActionNotification> observer,
+        ReportingActor sut,
+#pragma warning disable CS0618 // Type or member is obsolete
+        IQuestion<Ability1, object> question)
+#pragma warning restore CS0618 // Type or member is obsolete
+    {
+        //arrange                                                      
+        //act
+        sut.AsksForWithAbility(question);
+        //assert
+        observer.Values.Should().BeEmpty();
+    }
+
+    [Theory, ReportingActorAutoData]
+    public void Execute_WhenCanNotifyReturnsFalse_ShouldNotNotify(
+        [Frozen] TestObserver<ActionNotification> observer,
+        [Frozen] ICanNotify canNotify,
+        ReportingActor sut,
+        IAction<object> action)
+    {
+        //arrange                                          
+        Mock.Get(canNotify).Setup(c => c.Action(action)).Returns(false);
+        //act
+        sut.Execute(action);
+        //assert
+        observer.Values.Should().BeEmpty();
+    }
+
+    [Theory, ReportingActorAutoData]
+    public void AsksFor_WhenCanNotifyReturnsFalse_ShouldNotNotify(
+        [Frozen] TestObserver<ActionNotification> observer,
+        [Frozen] ICanNotify canNotify,
+        ReportingActor sut,
+        IQuestion<object> question)
+    {
+        //arrange                                          
+        Mock.Get(canNotify).Setup(c => c.Question(question)).Returns(false);
+        //act
+        sut.AsksFor(question);
+        //assert
+        observer.Values.Should().BeEmpty();
+    }
+
+    [Theory, ReportingActorAutoData]
+    public void Execute_WithThenAction_ShouldCallOnNext(
+        [Frozen(Matching.ImplementedInterfaces)] TestObserver<ActionNotification> observer,
+        [Frozen] DateTimeOffset date,
+        [Frozen] IMeasureDuration measureDuration,
+        ReportingActor sut,
+        TimeSpan expectedDuration,
+        ThenAction<object, string> thenAction
+        )
+    {
+        //arrange                              
+        Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>())).Returns((expectedDuration, string.Empty, null));
+        //act
+        sut.Execute(thenAction);
+        //assert
+        var expected = new[]{
+            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
+            new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Pass))
+        };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+    }
+
+    [Theory, ReportingActorAutoData]
+    public void Execute_WithThenActionWithError_ShouldCallOnNext(
+        [Frozen(Matching.ImplementedInterfaces)] TestObserver<ActionNotification> observer,
+        [Frozen] DateTimeOffset date,
+        [Frozen] IMeasureDuration measureDuration,
+        ReportingActor sut,
+        ThenAction<object, string> thenAction,
+        Exception error,
+        TimeSpan expectedDuration
+        )
+    {
+        //arrange                
+        Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>()))
+                                 .Returns((expectedDuration, null, error));
+        //act
+        try
+        {
+            sut.Execute(thenAction);
+        }
+        catch (Exception)
+        {
+        }
+        //assert
+        var expected = new[]{
+            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
+            new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Error, error))
+        };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
+    }
+
+    private static System.Action[] _assertions = new System.Action[]
+    {
+        () => Assert.True(false),
+        () => NUnit.Framework.Assert.Fail(),
+        () => NUnit.Framework.Assert.That(true, NUnit.Framework.Is.False),
+        () => Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail()
+    };
+
+    [Theory]
+    [ReportingActorInlineAutoData(0)]
+    [ReportingActorInlineAutoData(1)]
+    [ReportingActorInlineAutoData(2)]
+    [ReportingActorInlineAutoData(3)]
+    public void Execute_WithThenActionWithAssertionError_ShouldCallOnNext(
+        int i,
+        [Frozen(Matching.ImplementedInterfaces)] TestObserver<ActionNotification> observer,
+        [Frozen] DateTimeOffset date,
+        [Frozen] IMeasureDuration measureDuration,
+        ReportingActor sut,
+        ThenAction<object, string> thenAction,
+        TimeSpan expectedDuration
+        )
+    {
+        //arrange                
+        Exception expectedException = null;
+        Mock.Get(measureDuration).Setup(m => m.Measure(It.IsAny<Func<string>>()))
+                                 .Returns(() =>
+                                 {
+                                     try
+                                     {
+                                         _assertions[i]();
+                                     }
+                                     catch (Exception ex)
+                                     {
+                                         expectedException = ex;
+                                         return (expectedDuration, string.Empty, ex);
+                                     }
+                                     throw new InvalidOperationException("Should not happen as the assertions actions should throw an exception");
+                                 });
+        //act
+        try
+        {
+            sut.Execute(thenAction);
+        }
+        catch (Exception)
+        {
+        }
+        //assert
+        var expected = new[]{
+            new ActionNotification(thenAction, 1, new BeforeThenNotificationContent(date, thenAction.Question)),
+            new ActionNotification(thenAction, 1, new AfterThenNotificationContent(expectedDuration, ThenOutcome.Failed, expectedException))
+        };
+        observer.Values.Should().BeEquivalentTo(expected, o => o.RespectingRuntimeTypes().ComparingByMembers<ActionNotification>());
     }
 }

@@ -2,10 +2,9 @@
 using ToDoList.Automation.Api.ApiActions;
 using Tranquire;
 
-namespace ToDoList.Automation.Api
+namespace ToDoList.Automation.Api;
+
+public static class Add
 {
-    public static class Add
-    {
-        public static IAction<Task> TheToDoItem(string title) => new AddToDoItem(title);
-    }
+    public static IAction<Task> TheToDoItem(string title) => new AddToDoItem(title);
 }

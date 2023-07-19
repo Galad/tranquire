@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="AutoFixture.AutoMoq" Version="4.18.0" />
+    <PackageVersion Include="AutoFixture.Idioms" Version="4.18.0" />
+    <PackageVersion Include="AutoFixture.Xunit2" Version="4.18.0" />
+    <PackageVersion Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.6" />
+    <PackageVersion Include="FluentAssertions" Version="6.11.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="7.0.9" />
+    <!--<PackageVersion Include="Microsoft.AspNetCore.App">
+			<Version>$(AspNetCoreAllRuntimeFrameworkVersion)</Version>
+			<IsImplicitlyDefined>true</IsImplicitlyDefined>
+			<PrivateAssets>All</PrivateAssets>
+			<Publish>true</Publish>
+		</PackageReference>-->
+    <!--<PackageVersion Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" />
+		<PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />-->
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="7.0.9" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageVersion Include="Microsoft.Owin.SelfHost" Version="4.2.2" />
+    <PackageVersion Include="Microsoft.Owin.StaticFiles" Version="4.2.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.1.1" />
+    <PackageVersion Include="Selenium.Support" Version="3.14.0" />
+    <PackageVersion Include="Selenium.WebDriver" Version="3.14.0" />
+    <PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="115.0.5790.9800" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.5.0.73987" />
+    <PackageVersion Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
+    <PackageVersion Include="SpecFlow.xUnit" version="3.9.74" />
+    <PackageVersion Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+    <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="System.Collections.Immutable" Version="7.0.0" />
+    <PackageVersion Include="xunit" Version="2.5.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" />
+  </ItemGroup>
+</Project>

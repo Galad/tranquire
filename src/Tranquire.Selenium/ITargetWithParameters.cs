@@ -1,28 +1,27 @@
-﻿namespace Tranquire.Selenium
+﻿namespace Tranquire.Selenium;
+
+/// <summary>
+/// Represent a target taking parameters
+/// </summary>
+public interface ITargetWithParameters
 {
     /// <summary>
-    /// Represent a target taking parameters
+    /// Returns a target with the given parameters
     /// </summary>
-    public interface ITargetWithParameters
-    {
-        /// <summary>
-        /// Returns a target with the given parameters
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        ITarget Of(params object[] parameters);
-    }
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    ITarget Of(params object[] parameters);
+}
 
+/// <summary>
+/// Represent a target taking parameters
+/// </summary>
+public interface ITargetWithParameters<in T>
+{
     /// <summary>
-    /// Represent a target taking parameters
+    /// Returns a target with the given parameters
     /// </summary>
-    public interface ITargetWithParameters<in T>
-    {
-        /// <summary>
-        /// Returns a target with the given parameters
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        ITarget Of(T parameter);
-    }
+    /// <param name="parameter"></param>
+    /// <returns></returns>
+    ITarget Of(T parameter);
 }

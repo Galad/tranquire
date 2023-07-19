@@ -1,13 +1,12 @@
 ﻿using TechTalk.SpecFlow;
 using Tranquire;
 
-namespace ToDoList.Specifications
+namespace ToDoList.Specifications;
+
+public static class SpecContext
 {
-    public static class SpecContext
+    public static IActorFacade Actor(this ScenarioContext context)
     {
-        public static IActorFacade Actor(this ScenarioContext context)
-        {
-            return context.Get<IActorFacade>();
-        }
+        return context.Get<IActorFacade>();
     }
 }

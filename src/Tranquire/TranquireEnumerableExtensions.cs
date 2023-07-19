@@ -2,57 +2,56 @@
 using System.Threading.Tasks;
 using Tranquire;
 
-namespace System.Linq
+namespace System.Linq;
+
+/// <summary>
+/// Extension methods for IEnumerable of actions and questions
+/// </summary>
+public static class TranquireEnumerableExtensions
 {
     /// <summary>
-    /// Extension methods for IEnumerable of actions and questions
+    /// Transform an IEnumerable of action in a single action
     /// </summary>
-    public static class TranquireEnumerableExtensions
+    /// <param name="actions">The list of actions</param>
+    /// <param name="name">The resulting action name</param>
+    /// <returns>A new action that will execute the input action one after the other</returns>
+    public static IAction<Unit> ToAction(this IEnumerable<IAction<Unit>> actions, string name)
     {
-        /// <summary>
-        /// Transform an IEnumerable of action in a single action
-        /// </summary>
-        /// <param name="actions">The list of actions</param>
-        /// <param name="name">The resulting action name</param>
-        /// <returns>A new action that will execute the input action one after the other</returns>
-        public static IAction<Unit> ToAction(this IEnumerable<IAction<Unit>> actions, string name)
+        if (actions == null)
         {
-            if (actions == null)
-            {
-                throw new ArgumentNullException(nameof(actions));
-            }
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            return new DefaultCompositeAction(name, actions.ToArray());
+            throw new ArgumentNullException(nameof(actions));
+        }
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentNullException(nameof(name));
         }
 
-        /// <summary>
-        /// Transform an IEnumerable of action in a single action
-        /// </summary>
-        /// <param name="actions">The list of actions</param>
-        /// <param name="name">The resulting action name</param>
-        /// <returns>A new action that will execute the input action one after the other</returns>
-        public static IAction<Task> ToAction(this IEnumerable<IAction<Task>> actions, string name)
-        {
-            if (actions == null)
-            {
-                throw new ArgumentNullException(nameof(actions));
-            }
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+        return new DefaultCompositeAction(name, actions.ToArray());
+    }
 
-            return Actions.Create(name, async actor =>
-            {
-                foreach (var action in actions)
-                {
-                    await actor.Execute(action);
-                }
-            });
+    /// <summary>
+    /// Transform an IEnumerable of action in a single action
+    /// </summary>
+    /// <param name="actions">The list of actions</param>
+    /// <param name="name">The resulting action name</param>
+    /// <returns>A new action that will execute the input action one after the other</returns>
+    public static IAction<Task> ToAction(this IEnumerable<IAction<Task>> actions, string name)
+    {
+        if (actions == null)
+        {
+            throw new ArgumentNullException(nameof(actions));
         }
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
+        return Actions.Create(name, async actor =>
+        {
+            foreach (var action in actions)
+            {
+                await actor.Execute(action);
+            }
+        });
     }
 }

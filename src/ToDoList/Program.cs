@@ -1,17 +1,5 @@
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using ToDoList;
 
-namespace ToDoList
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                   .UseStartup<Startup>();
-    }
-}
+var startup = WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
+startup.Build().Run();

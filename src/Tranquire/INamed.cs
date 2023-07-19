@@ -1,13 +1,12 @@
-﻿namespace Tranquire
+﻿namespace Tranquire;
+
+/// <summary>
+/// Represent an object having a name
+/// </summary>
+public interface INamed
 {
     /// <summary>
-    /// Represent an object having a name
+    /// Gets the name
     /// </summary>
-    public interface INamed
-    {
-        /// <summary>
-        /// Gets the name
-        /// </summary>
-        string Name { get; }
-    }
+    string Name { get; }
 }

@@ -219,3 +219,4 @@ nuget.exe
 .sonar
 .sonarqube
 *.feature.cs
+/src/ToDoList/Startup.cs

@@ -1,24 +1,23 @@
-﻿namespace Tranquire.Selenium.Questions
+﻿namespace Tranquire.Selenium.Questions;
+
+/// <summary>
+/// A question returning the page title
+/// </summary>
+public class PageTitle : QuestionBase<WebBrowser, string>
 {
     /// <summary>
-    /// A question returning the page title
+    /// Returns the page title
     /// </summary>
-    public class PageTitle : QuestionBase<WebBrowser, string>
+    /// <param name="actor"></param>
+    /// <param name="ability"></param>
+    /// <returns></returns>
+    protected override string Answer(IActor actor, WebBrowser ability)
     {
-        /// <summary>
-        /// Returns the page title
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="ability"></param>
-        /// <returns></returns>
-        protected override string Answer(IActor actor, WebBrowser ability)
-        {
-            return ability.Driver.Title;
-        }
-
-        /// <summary>
-        /// Gets the action's name
-        /// </summary>
-        public override string Name => "Page title";
+        return ability.Driver.Title;
     }
+
+    /// <summary>
+    /// Gets the action's name
+    /// </summary>
+    public override string Name => "Page title";
 }

@@ -1,20 +1,19 @@
 ﻿using System.Globalization;
 
-namespace Tranquire.Selenium.Questions.Converters
+namespace Tranquire.Selenium.Questions.Converters;
+
+/// <summary>
+/// Convert a value
+/// </summary>
+/// <typeparam name="TSource"></typeparam>
+/// <typeparam name="TConverted"></typeparam>
+public interface IConverter<in TSource, out TConverted>
 {
     /// <summary>
-    /// Convert a value
+    /// Conver the given value to the specified type.
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TConverted"></typeparam>
-    public interface IConverter<in TSource, out TConverted>
-    {
-        /// <summary>
-        /// Conver the given value to the specified type.
-        /// </summary>
-        /// <param name="value">The value to convert</param>
-        /// <param name="culture">The culture from which the value is formatted</param>
-        /// <returns></returns>
-        TConverted Convert(TSource value, CultureInfo culture);
-    }
+    /// <param name="value">The value to convert</param>
+    /// <param name="culture">The culture from which the value is formatted</param>
+    /// <returns></returns>
+    TConverted Convert(TSource value, CultureInfo culture);
 }

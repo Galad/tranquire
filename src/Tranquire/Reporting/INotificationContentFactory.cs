@@ -1,84 +1,80 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Tranquire.Reporting
+namespace Tranquire.Reporting;
+
+internal interface INotificationContentFactory
 {
-    internal interface INotificationContentFactory
+    IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType);
+    IActionNotificationContent CreateAfter(TimeSpan time);
+    IActionNotificationContent CreateError(Exception error, TimeSpan time);
+}
+
+internal class ThenNotificationContentFactory : INotificationContentFactory
+{
+    public IActionNotificationContent CreateAfter(TimeSpan time)
     {
-        IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType);
-        IActionNotificationContent CreateAfter(TimeSpan time);
-        IActionNotificationContent CreateError(Exception error, TimeSpan time);
+        return new AfterThenNotificationContent(time, ThenOutcome.Pass);
     }
 
-    internal class ThenNotificationContentFactory : INotificationContentFactory
+    public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
     {
-        public IActionNotificationContent CreateAfter(TimeSpan time)
-        {
-            return new AfterThenNotificationContent(time, ThenOutcome.Pass);
-        }
-
-        public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
-        {
-            return new BeforeThenNotificationContent(date, (action as ThenAction<T>).Question);
-        }
-
-        public IActionNotificationContent CreateError(Exception error, TimeSpan time)
-        {
-            return new AfterThenNotificationContent(time, GetOutcome(error), error);
-        }
-
-        private static ThenOutcome GetOutcome(Exception error)
-        {
-            if (_knownNamespaces.Any(error.GetType().FullName.StartsWith))
-            {
-                return ThenOutcome.Failed;
-            }
-            return ThenOutcome.Error;
-        }
-
-        private static readonly string[] _knownNamespaces = new[]
-        {
-            "Xunit.Sdk.",
-            "NUnit.Framework.",
-            "Microsoft.VisualStudio.TestTools.UnitTesting."
-        };
+        return new BeforeThenNotificationContent(date, (action as ThenAction<T>).Question);
     }
 
-    internal class CommandNotificationContentfactory : INotificationContentFactory
+    public IActionNotificationContent CreateError(Exception error, TimeSpan time)
     {
-        public IActionNotificationContent CreateAfter(TimeSpan time)
-        {
-            return new AfterActionNotificationContent(time);
-        }
-
-        public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
-        {
-            return new BeforeFirstActionNotificationContent(date, (action as CommandAction<T>).ActionContext);
-        }
-
-        public IActionNotificationContent CreateError(Exception error, TimeSpan time)
-        {
-            return new ExecutionErrorNotificationContent(error, time);
-        }
+        return new AfterThenNotificationContent(time, GetOutcome(error), error);
     }
 
-    internal class DefaultNotificationContentFactory : INotificationContentFactory
+    private static ThenOutcome GetOutcome(Exception error)
     {
-        public IActionNotificationContent CreateAfter(TimeSpan time)
+        if (Array.Exists(_knownNamespaces, error.GetType().FullName.StartsWith))
         {
-            return new AfterActionNotificationContent(time);
+            return ThenOutcome.Failed;
         }
+        return ThenOutcome.Error;
+    }
 
-        public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
-        {
-            return new BeforeActionNotificationContent(date, commandType);
-        }
+    private static readonly string[] _knownNamespaces = new[]
+    {
+        "Xunit.Sdk.",
+        "NUnit.Framework.",
+        "Microsoft.VisualStudio.TestTools.UnitTesting."
+    };
+}
 
-        public IActionNotificationContent CreateError(Exception error, TimeSpan time)
-        {
-            return new ExecutionErrorNotificationContent(error, time);
-        }
+internal class CommandNotificationContentfactory : INotificationContentFactory
+{
+    public IActionNotificationContent CreateAfter(TimeSpan time)
+    {
+        return new AfterActionNotificationContent(time);
+    }
+
+    public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
+    {
+        return new BeforeFirstActionNotificationContent(date, (action as CommandAction<T>).ActionContext);
+    }
+
+    public IActionNotificationContent CreateError(Exception error, TimeSpan time)
+    {
+        return new ExecutionErrorNotificationContent(error, time);
+    }
+}
+
+internal class DefaultNotificationContentFactory : INotificationContentFactory
+{
+    public IActionNotificationContent CreateAfter(TimeSpan time)
+    {
+        return new AfterActionNotificationContent(time);
+    }
+
+    public IActionNotificationContent CreateBefore<T>(INamed action, DateTimeOffset date, CommandType commandType)
+    {
+        return new BeforeActionNotificationContent(date, commandType);
+    }
+
+    public IActionNotificationContent CreateError(Exception error, TimeSpan time)
+    {
+        return new ExecutionErrorNotificationContent(error, time);
     }
 }

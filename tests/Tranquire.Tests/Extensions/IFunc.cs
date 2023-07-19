@@ -1,7 +1,6 @@
-﻿namespace Tranquire.Tests.Extensions
+﻿namespace Tranquire.Tests.Extensions;
+
+public interface IFunc
 {
-    public interface IFunc
-    {
-        T Func<T1, T>(T1 value);
-    }
+    T Func<T1, T>(T1 value);
 }

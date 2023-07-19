@@ -1,4 +1,3 @@
-﻿namespace Tranquire.Tests.Extensions
-{
-    public class AbilityAction { }
-}
+﻿namespace Tranquire.Tests.Extensions;
+
+public class AbilityAction { }

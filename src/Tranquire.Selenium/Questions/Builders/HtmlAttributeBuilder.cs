@@ -1,29 +1,28 @@
-﻿namespace Tranquire.Selenium.Questions.Builders
+﻿namespace Tranquire.Selenium.Questions.Builders;
+
+/// <summary>
+/// Build a <see cref="HtmlAttribute "/> object
+/// </summary>
+public class HtmlAttributeBuilder
 {
+    private readonly ITarget _target;
+
     /// <summary>
-    /// Build a <see cref="HtmlAttribute "/> object
+    /// Creates a new instance of <see cref="HtmlAttributeBuilder"/>
     /// </summary>
-    public class HtmlAttributeBuilder
+    /// <param name="target"></param>
+    public HtmlAttributeBuilder(ITarget target)
     {
-        private readonly ITarget _target;
+        _target = target;
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="HtmlAttributeBuilder"/>
-        /// </summary>
-        /// <param name="target"></param>
-        public HtmlAttributeBuilder(ITarget target)
-        {
-            _target = target;
-        }
-
-        /// <summary>
-        /// Returns a <see cref="HtmlAttribute"/> object with the given attribute name
-        /// </summary>
-        /// <param name="attributeName"></param>
-        /// <returns></returns>
-        public HtmlAttribute Named(string attributeName)
-        {
-            return new HtmlAttribute(_target, attributeName);
-        }
+    /// <summary>
+    /// Returns a <see cref="HtmlAttribute"/> object with the given attribute name
+    /// </summary>
+    /// <param name="attributeName"></param>
+    /// <returns></returns>
+    public HtmlAttribute Named(string attributeName)
+    {
+        return new HtmlAttribute(_target, attributeName);
     }
 }

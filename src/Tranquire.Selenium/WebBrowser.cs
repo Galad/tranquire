@@ -1,34 +1,33 @@
 ﻿using OpenQA.Selenium;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium;
+
+/// <summary>
+/// Represent the ability to use a web browser with selenium
+/// </summary>
+public sealed partial class WebBrowser
 {
     /// <summary>
-    /// Represent the ability to use a web browser with selenium
+    /// Gets the Selenium <see cref="IWebDriver"/>
     /// </summary>
-    public sealed partial class WebBrowser
+    public IWebDriver Driver { get; }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="WebBrowser"/>
+    /// </summary>
+    /// <param name="driver">The driver to use to browse the web</param>        
+    public WebBrowser(IWebDriver driver)
     {
-        /// <summary>
-        /// Gets the Selenium <see cref="IWebDriver"/>
-        /// </summary>
-        public IWebDriver Driver { get; }
+        Driver = driver;
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="WebBrowser"/>
-        /// </summary>
-        /// <param name="driver">The driver to use to browse the web</param>        
-        public WebBrowser(IWebDriver driver)
-        {
-            Driver = driver;
-        }
-
-        /// <summary>
-        /// Returns a new <see cref="WebBrowser"/> instance
-        /// </summary>
-        /// <param name="driver">The driver to use</param>
-        /// <returns></returns>
-        public static WebBrowser With(IWebDriver driver)
-        {
-            return new WebBrowser(driver);
-        }
+    /// <summary>
+    /// Returns a new <see cref="WebBrowser"/> instance
+    /// </summary>
+    /// <param name="driver">The driver to use</param>
+    /// <returns></returns>
+    public static WebBrowser With(IWebDriver driver)
+    {
+        return new WebBrowser(driver);
     }
 }

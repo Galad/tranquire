@@ -4,144 +4,143 @@ using AutoFixture.Xunit2;
 using Moq;
 using Xunit;
 
-namespace Tranquire.Tests
+namespace Tranquire.Tests;
+
+public class ActionUnitTests
 {
-    public class ActionUnitTests
+    public class ActionExecuteWhen : ActionBaseUnit
     {
-        public class ActionExecuteWhen : ActionBaseUnit
+        public IActor Actor;
+        private readonly IAction<Unit> _action;
+        public override string Name { get; }
+
+        public ActionExecuteWhen(IAction<Unit> action, string name)
         {
-            public IActor Actor;
-            private readonly IAction<Unit> _action;
-            public override string Name { get; }
-
-            public ActionExecuteWhen(IAction<Unit> action, string name)
-            {
-                _action = action;
-                Name = name;
-            }
-
-            protected override void ExecuteWhen(IActor actor)
-            {
-                Actor = actor;
-                actor.Execute(_action);
-            }
-
-            protected override void ExecuteGiven(IActor actor)
-            {
-            }
+            _action = action;
+            Name = name;
         }
 
-        public class ActionExecuteGiven : ActionBaseUnit
+        protected override void ExecuteWhen(IActor actor)
         {
-            public IActor Actor;
-            private readonly IAction<Unit> _action;
-            public override string Name => "";
-
-            public ActionExecuteGiven(IAction<Unit> action)
-            {
-                _action = action;
-            }
-
-            protected override void ExecuteWhen(IActor actor)
-            {
-            }
-
-            protected override void ExecuteGiven(IActor actor)
-            {
-                Actor = actor;
-                actor.Execute(_action);
-            }
+            Actor = actor;
+            actor.Execute(_action);
         }
 
-        public class ActionExecuteWhenAndGivenNotOverridden : ActionBaseUnit
+        protected override void ExecuteGiven(IActor actor)
         {
-            private readonly IAction<Unit> _action;
-            public override string Name => "";
+        }
+    }
 
-            public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
-            {
-                _action = action;
-            }
+    public class ActionExecuteGiven : ActionBaseUnit
+    {
+        public IActor Actor;
+        private readonly IAction<Unit> _action;
+        public override string Name => "";
 
-            protected override void ExecuteWhen(IActor actor)
-            {
-                actor.Execute(_action);
-            }
+        public ActionExecuteGiven(IAction<Unit> action)
+        {
+            _action = action;
         }
 
-        [Theory, DomainAutoData]
-        public void Sut_ShouldBeAction(ActionBase<object> sut)
+        protected override void ExecuteWhen(IActor actor)
         {
-            Assert.IsAssignableFrom<IAction<object>>(sut);
         }
 
-        [Theory, DomainAutoData]
-        public void Sut_VerifyGuardClauses(IFixture fixture)
+        protected override void ExecuteGiven(IActor actor)
         {
-            var assertion = new GuardClauseAssertion(fixture);
-            assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
+            Actor = actor;
+            actor.Execute(_action);
+        }
+    }
+
+    public class ActionExecuteWhenAndGivenNotOverridden : ActionBaseUnit
+    {
+        private readonly IAction<Unit> _action;
+        public override string Name => "";
+
+        public ActionExecuteWhenAndGivenNotOverridden(IAction<Unit> action)
+        {
+            _action = action;
         }
 
-        [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhen sut, Mock<IActor> actor)
+        protected override void ExecuteWhen(IActor actor)
         {
-            //arrange
-            //act
-            sut.ExecuteWhenAs(actor.Object);
-            //assert
-            actor.Verify(a => a.Execute(expected));
+            actor.Execute(_action);
         }
+    }
 
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteGiven sut, Mock<IActor> actor)
-        {
-            //arrange
-            //act
-            sut.ExecuteGivenAs(actor.Object);
-            //assert
-            actor.Verify(a => a.Execute(expected));
-        }
+    [Theory, DomainAutoData]
+    public void Sut_ShouldBeAction(ActionBase<object> sut)
+    {
+        Assert.IsAssignableFrom<IAction<object>>(sut);
+    }
 
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor)
-        {
-            //arrange
-            //act
-            sut.ExecuteGivenAs(actor.Object);
-            //assert
-            actor.Verify(a => a.Execute(expected));
-        }
+    [Theory, DomainAutoData]
+    public void Sut_VerifyGuardClauses(IFixture fixture)
+    {
+        var assertion = new GuardClauseAssertion(fixture);
+        assertion.Verify(typeof(ActionExecuteGiven).GetMethods());
+    }
 
-        [Theory, DomainAutoData]
-        public void ExecuteWhenAs_ShouldUseCorrectActor(ActionExecuteWhen sut, Mock<IActor> actor)
-        {
-            //arrange
-            var expected = actor.Object;
-            //act
-            sut.ExecuteWhenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, sut.Actor);
-        }
+    [Theory, DomainAutoData]
+    public void ExecuteWhenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhen sut, Mock<IActor> actor)
+    {
+        //arrange
+        //act
+        sut.ExecuteWhenAs(actor.Object);
+        //assert
+        actor.Verify(a => a.Execute(expected));
+    }
 
-        [Theory, DomainAutoData]
-        public void ExecuteGivenAs_ShouldUseCorrectActor(ActionExecuteGiven sut, Mock<IActor> actor)
-        {
-            //arrange
-            var expected = actor.Object;
-            //act
-            sut.ExecuteGivenAs(actor.Object);
-            //assert
-            Assert.Equal(expected, sut.Actor);
-        }
+    [Theory, DomainAutoData]
+    public void ExecuteGivenAs_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteGiven sut, Mock<IActor> actor)
+    {
+        //arrange
+        //act
+        sut.ExecuteGivenAs(actor.Object);
+        //assert
+        actor.Verify(a => a.Execute(expected));
+    }
 
-        [Theory, DomainAutoData]
-        public void ToString_ShouldReturnCorrectValue(ActionExecuteWhen sut)
-        {
-            //arrange
-            //act
-            var actual = sut.ToString();
-            //assert
-            Assert.Equal(sut.Name, actual);
-        }
+    [Theory, DomainAutoData]
+    public void ExecuteGivenAs_WhenExecuteGivenIsNotOverridden_ShouldCallActorExecute([Frozen] IAction<Unit> expected, ActionExecuteWhenAndGivenNotOverridden sut, Mock<IActor> actor)
+    {
+        //arrange
+        //act
+        sut.ExecuteGivenAs(actor.Object);
+        //assert
+        actor.Verify(a => a.Execute(expected));
+    }
+
+    [Theory, DomainAutoData]
+    public void ExecuteWhenAs_ShouldUseCorrectActor(ActionExecuteWhen sut, Mock<IActor> actor)
+    {
+        //arrange
+        var expected = actor.Object;
+        //act
+        sut.ExecuteWhenAs(actor.Object);
+        //assert
+        Assert.Equal(expected, sut.Actor);
+    }
+
+    [Theory, DomainAutoData]
+    public void ExecuteGivenAs_ShouldUseCorrectActor(ActionExecuteGiven sut, Mock<IActor> actor)
+    {
+        //arrange
+        var expected = actor.Object;
+        //act
+        sut.ExecuteGivenAs(actor.Object);
+        //assert
+        Assert.Equal(expected, sut.Actor);
+    }
+
+    [Theory, DomainAutoData]
+    public void ToString_ShouldReturnCorrectValue(ActionExecuteWhen sut)
+    {
+        //arrange
+        //act
+        var actual = sut.ToString();
+        //assert
+        Assert.Equal(sut.Name, actual);
     }
 }

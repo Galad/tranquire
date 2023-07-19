@@ -1,13 +1,12 @@
-﻿namespace Tranquire.Selenium
+﻿namespace Tranquire.Selenium;
+
+/// <summary>
+/// Represent an object using a <see cref="ITarget"/>
+/// </summary>
+public interface ITargeted
 {
     /// <summary>
-    /// Represent an object using a <see cref="ITarget"/>
+    /// Gets the target
     /// </summary>
-    public interface ITargeted
-    {
-        /// <summary>
-        /// Gets the target
-        /// </summary>
-        ITarget Target { get; }
-    }
+    ITarget Target { get; }
 }

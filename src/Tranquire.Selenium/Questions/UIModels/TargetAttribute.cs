@@ -3,93 +3,92 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using OpenQA.Selenium;
 
-namespace Tranquire.Selenium.Questions.UIModels
+namespace Tranquire.Selenium.Questions.UIModels;
+
+/// <summary>
+/// Identify a property that should be mapped to a UI element, and specify how the element is located
+/// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+public class TargetAttribute : Attribute
 {
     /// <summary>
-    /// Identify a property that should be mapped to a UI element, and specify how the element is located
+    /// Initialize a new instance of <see cref="TargetAttribute"/>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public class TargetAttribute : Attribute
+    /// <param name="by">Define the method used to locate the element</param>
+    /// <param name="value">The By value</param>
+    public TargetAttribute(ByMethod by, string value)
     {
-        /// <summary>
-        /// Initialize a new instance of <see cref="TargetAttribute"/>
-        /// </summary>
-        /// <param name="by">Define the method used to locate the element</param>
-        /// <param name="value">The By value</param>
-        public TargetAttribute(ByMethod by, string value)
+        if (by != ByMethod.Self && string.IsNullOrEmpty(value))
         {
-            if (by != ByMethod.Self && string.IsNullOrEmpty(value))
-            {
-                throw new ArgumentNullException(nameof(value), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
-            }
-
-            ByMethod = by;
-            Value = value;
+            throw new ArgumentNullException(nameof(value), ExceptionMessages.ArgumentCannotBeNullOrEmpty);
         }
 
-        /// <summary>
-        /// Initialize a new instance of <see cref="TargetAttribute"/> that use the container as the element
-        /// </summary>
-        public TargetAttribute() : this(ByMethod.Self, null)
+        ByMethod = by;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Initialize a new instance of <see cref="TargetAttribute"/> that use the container as the element
+    /// </summary>
+    public TargetAttribute() : this(ByMethod.Self, null)
+    {
+    }
+
+    /// <summary>
+    /// Gets the By method
+    /// </summary>
+    public ByMethod ByMethod { get; }
+    /// <summary>
+    /// Gets the By value
+    /// </summary>
+    public string Value { get; }
+    /// <summary>
+    /// Gets the target name
+    /// </summary>
+    public string Name { get; set; }
+
+    private static readonly Dictionary<ByMethod, Func<string, By>> _byMethods = new()
+    {
+        {ByMethod.CssSelector, By.CssSelector },
+        {ByMethod.Id, By.Id },
+        {ByMethod.Name, By.Name },
+        {ByMethod.ClassName, By.ClassName },
+        {ByMethod.TagName, By.TagName },
+        {ByMethod.XPath, By.XPath }
+    };
+
+    internal ITarget CreateTarget(string name)
+    {
+        if (ByMethod == ByMethod.Self)
         {
+            return new SelfTarget(name);
         }
 
-        /// <summary>
-        /// Gets the By method
-        /// </summary>
-        public ByMethod ByMethod { get; }
-        /// <summary>
-        /// Gets the By value
-        /// </summary>
-        public string Value { get; }
-        /// <summary>
-        /// Gets the target name
-        /// </summary>
-        public string Name { get; set; }
+        return Target.The(name).LocatedBy(_byMethods[ByMethod](Value));
+    }
 
-        private static readonly Dictionary<ByMethod, Func<string, By>> _byMethods = new Dictionary<ByMethod, Func<string, By>>()
+    private sealed class SelfTarget : ITarget
+    {
+        public SelfTarget(string name)
         {
-            {ByMethod.CssSelector, By.CssSelector },
-            {ByMethod.Id, By.Id },
-            {ByMethod.Name, By.Name },
-            {ByMethod.ClassName, By.ClassName },
-            {ByMethod.TagName, By.TagName },
-            {ByMethod.XPath, By.XPath }
-        };
-
-        internal ITarget CreateTarget(string name)
-        {
-            if (ByMethod == ByMethod.Self)
-            {
-                return new SelfTarget(name);
-            }
-
-            return Target.The(name).LocatedBy(_byMethods[ByMethod](Value));
+            Name = name;
         }
 
-        private class SelfTarget : ITarget
+        public string Name { get; }
+
+        public ITarget RelativeTo(ITarget targetSource)
         {
-            public SelfTarget(string name)
-            {
-                Name = name;
-            }
+            return targetSource;
+        }
 
-            public string Name { get; }
+        public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
+        {
+            throw new InvalidOperationException();
+        }
 
-            public ITarget RelativeTo(ITarget targetSource)
-            {
-                return targetSource;
-            }
-
-            public ImmutableArray<IWebElement> ResolveAllFor(ISearchContext searchContext)
-            {
-                throw new InvalidOperationException();
-            }
-
-            public IWebElement ResolveFor(ISearchContext searchContext)
-            {
-                throw new InvalidOperationException();
-            }
+        public IWebElement ResolveFor(ISearchContext searchContext)
+        {
+            throw new InvalidOperationException();
         }
     }
 }

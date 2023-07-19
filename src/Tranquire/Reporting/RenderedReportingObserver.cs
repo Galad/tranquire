@@ -2,110 +2,104 @@
 using System.Globalization;
 using System.Linq;
 
-namespace Tranquire.Reporting
+namespace Tranquire.Reporting;
+
+/// <summary>
+/// An observer which render a <see cref="ActionNotification"/> as a string and call an inner <see cref="IObserver{T}"/>
+/// </summary>
+public class RenderedReportingObserver : IObserver<ActionNotification>
 {
     /// <summary>
-    /// An observer which render a <see cref="ActionNotification"/> as a string and call an inner <see cref="IObserver{T}"/>
+    /// Gets the observer
     /// </summary>
-    public class RenderedReportingObserver : IObserver<ActionNotification>
+    public IObserver<string> Observer { get; }
+
+    /// <summary>
+    /// Gets the rendered
+    /// </summary>
+    public Func<ActionNotification, string> Renderer { get; }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="RenderedReportingObserver"/>
+    /// </summary>
+    /// <param name="observer">The observer to render to</param>
+    /// <param name="renderer">The rendering function which transforms a <see cref="ActionNotification"/> to a string</param>
+    public RenderedReportingObserver(
+        IObserver<string> observer,
+        Func<ActionNotification, string> renderer)
     {
-        /// <summary>
-        /// Gets the observer
-        /// </summary>
-        public IObserver<string> Observer { get; }
+        Observer = observer ?? throw new ArgumentNullException(nameof(observer));
+        Renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+    }
 
-        /// <summary>
-        /// Gets the rendered
-        /// </summary>
-        public Func<ActionNotification, string> Renderer { get; }
+    /// <inheritsdoc />
+    public void OnCompleted()
+    {
+        Observer.OnCompleted();
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="RenderedReportingObserver"/>
-        /// </summary>
-        /// <param name="observer">The observer to render to</param>
-        /// <param name="renderer">The rendering function which transforms a <see cref="ActionNotification"/> to a string</param>
-        public RenderedReportingObserver(
-            IObserver<string> observer,
-            Func<ActionNotification, string> renderer)
+    /// <inheritsdoc />
+    public void OnError(Exception error)
+    {
+        if (error == null)
         {
-            Observer = observer ?? throw new ArgumentNullException(nameof(observer));
-            Renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+            throw new ArgumentNullException(nameof(error));
         }
 
-        /// <inheritsdoc />
-        public void OnCompleted()
+        Observer.OnError(error);
+    }
+
+    /// <inheritsdoc />
+    public void OnNext(ActionNotification value)
+    {
+        Observer.OnNext(Renderer(value));
+    }
+
+    /// <summary>
+    /// Gets a default renderer
+    /// </summary>
+    /// <param name="notification"></param>
+    /// <returns></returns>
+    public static string DefaultRenderer(ActionNotification notification)
+    {
+        if (notification.Content == null)
         {
-            Observer.OnCompleted();
+            return "Unknown action";
         }
 
-        /// <inheritsdoc />
-        public void OnError(Exception error)
+        return notification.Content.NotificationContentType switch {
+            ActionNotificationContentType.BeforeActionExecution => RenderBefore(notification),
+            ActionNotificationContentType.AfterActionExecution => RenderAfter(notification, notification.Content as AfterActionNotificationContent),
+            ActionNotificationContentType.ExecutionError => RenderError(notification, notification.Content as ExecutionErrorNotificationContent),
+            _ => "Unknown action",
+        };
+    }
+
+    private static string RenderError(ActionNotification notification, ExecutionErrorNotificationContent executionErrorNotificationContent)
+    {
+        return GetPrefix(notification.Depth) + "Error in " + notification.Action.Name + "\n" + executionErrorNotificationContent.Exception.Message;
+    }
+
+    private static string RenderAfter(ActionNotification notification, AfterActionNotificationContent afterActionNotificationContent)
+    {
+        return GetPrefix(notification.Depth) + $"Ending   {notification.Action.Name} ({afterActionNotificationContent.Duration.ToString("g", CultureInfo.CurrentCulture)})";
+    }
+
+    private static string RenderBefore(ActionNotification notification)
+    {
+        return GetPrefix(notification.Depth) + "Starting " + notification.Action.Name;
+    }
+
+    private static string GetPrefix(int depth)
+    {
+        if (depth == 0)
         {
-            if (error == null)
-            {
-                throw new ArgumentNullException(nameof(error));
-            }
-
-            Observer.OnError(error);
+            return " ";
         }
-
-        /// <inheritsdoc />
-        public void OnNext(ActionNotification value)
+        if (depth == 1)
         {
-            Observer.OnNext(Renderer(value));
+            return "--- ";
         }
-
-        /// <summary>
-        /// Gets a default renderer
-        /// </summary>
-        /// <param name="notification"></param>
-        /// <returns></returns>
-        public static string DefaultRenderer(ActionNotification notification)
-        {
-            if (notification.Content == null)
-            {
-                return "Unknown action";
-            }
-
-            switch (notification.Content.NotificationContentType)
-            {
-                case ActionNotificationContentType.BeforeActionExecution:
-                    return RenderBefore(notification);
-                case ActionNotificationContentType.AfterActionExecution:
-                    return RenderAfter(notification, notification.Content as AfterActionNotificationContent);
-                case ActionNotificationContentType.ExecutionError:
-                    return RenderError(notification, notification.Content as ExecutionErrorNotificationContent);
-                default:
-                    return "Unknown action";
-            }
-        }
-
-        private static string RenderError(ActionNotification notification, ExecutionErrorNotificationContent executionErrorNotificationContent)
-        {
-            return GetPrefix(notification.Depth) + "Error in " + notification.Action.Name + "\n" + executionErrorNotificationContent.Exception.Message;
-        }
-
-        private static string RenderAfter(ActionNotification notification, AfterActionNotificationContent afterActionNotificationContent)
-        {
-            return GetPrefix(notification.Depth) + $"Ending   {notification.Action.Name} ({afterActionNotificationContent.Duration.ToString("g", CultureInfo.CurrentCulture)})";
-        }
-
-        private static string RenderBefore(ActionNotification notification)
-        {
-            return GetPrefix(notification.Depth) + "Starting " + notification.Action.Name;
-        }
-
-        private static string GetPrefix(int depth)
-        {
-            if (depth == 0)
-            {
-                return " ";
-            }
-            if (depth == 1)
-            {
-                return "--- ";
-            }
-            return new string(Enumerable.Repeat(' ', (depth - 1) * 3).ToArray()) + "|--- ";
-        }
+        return new string(Enumerable.Repeat(' ', (depth - 1) * 3).ToArray()) + "|--- ";
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Tranquire.Extensions
+﻿namespace Tranquire.Extensions;
+
+internal interface ISelectMany<out TResult> : INamed
 {
-    internal interface ISelectMany<out TResult> : INamed
-    {
-        TResult Apply(IActor actor);
-    }
+    TResult Apply(IActor actor);
 }

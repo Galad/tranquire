@@ -1,129 +1,128 @@
 ﻿using System;
 using System.Threading;
 
-namespace Tranquire.Selenium
+namespace Tranquire.Selenium;
+
+/// <summary>
+/// Slow actions and questions that requires Selenium. Can be used in combination of <see cref="HighlightTarget"/>
+/// </summary>
+public class SlowSelenium : IActor
 {
     /// <summary>
-    /// Slow actions and questions that requires Selenium. Can be used in combination of <see cref="HighlightTarget"/>
+    /// Gets the actor
     /// </summary>
-    public class SlowSelenium : IActor
-    {
-        /// <summary>
-        /// Gets the actor
-        /// </summary>
-        public IActor Actor { get; }
-        /// <summary>
-        /// Gets the delay
-        /// </summary>
-        public TimeSpan Delay { get; }
-        private int DelayMilliseconds => (int)Delay.TotalMilliseconds;
+    public IActor Actor { get; }
+    /// <summary>
+    /// Gets the delay
+    /// </summary>
+    public TimeSpan Delay { get; }
+    private int DelayMilliseconds => (int)Delay.TotalMilliseconds;
 
-        /// <summary>
-        /// Creates a new instance of <see cref="SlowSelenium"/>
-        /// </summary>
-        /// <param name="actor">The decorated actor</param>
-        /// <param name="delay">The wait time. A delay is observerd before and after the action is performed.</param>
-        public SlowSelenium(IActor actor, TimeSpan delay)
-        {
-            this.Actor = actor;
-            Delay = delay;
-        }
+    /// <summary>
+    /// Creates a new instance of <see cref="SlowSelenium"/>
+    /// </summary>
+    /// <param name="actor">The decorated actor</param>
+    /// <param name="delay">The wait time. A delay is observerd before and after the action is performed.</param>
+    public SlowSelenium(IActor actor, TimeSpan delay)
+    {
+        Actor = actor;
+        Delay = delay;
+    }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public string Name => Actor.Name;
+    public string Name => Actor.Name;
 
-        public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
-        {
-            return Actor.AsksFor(question);
-        }
+    public TAnswer AsksFor<TAnswer>(IQuestion<TAnswer> question)
+    {
+        return Actor.AsksFor(question);
+    }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question)
+    public TAnswer AsksForWithAbility<TAbility, TAnswer>(IQuestion<TAbility, TAnswer> question)
+    {
+        var targeted = question as ITargeted;
+        if (question is IQuestion<WebBrowser, TAnswer> webBrowserQuestion && targeted != null)
         {
-            var targeted = question as ITargeted;
-            if (question is IQuestion<WebBrowser, TAnswer> webBrowserQuestion && targeted != null)
-            {
-                return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer>(webBrowserQuestion, DelayMilliseconds, targeted));
-            }
-            return Actor.AsksForWithAbility(question);
+            return Actor.AsksForWithAbility(new SlowSeleniumQuestion<TAnswer>(webBrowserQuestion, DelayMilliseconds, targeted));
+        }
+        return Actor.AsksForWithAbility(question);
+    }
+
+    private sealed class SlowSeleniumQuestion<TAnswer> : QuestionBase<WebBrowser, TAnswer>, ITargeted
+    {
+        private readonly int _delay;
+        private readonly IQuestion<WebBrowser, TAnswer> _question;
+        private readonly ITargeted _targeted;
+
+        public SlowSeleniumQuestion(IQuestion<WebBrowser, TAnswer> question, int delay, ITargeted targeted)
+        {
+            _question = question;
+            _delay = delay;
+            _targeted = targeted;
         }
 
-        private sealed class SlowSeleniumQuestion<TAnswer> : QuestionBase<WebBrowser, TAnswer>, ITargeted
+        public override string Name => $"[Delayed of {_delay}ms] " + _question.Name;
+
+        public ITarget Target => _targeted.Target;
+
+        protected override TAnswer Answer(IActor actor, WebBrowser ability)
         {
-            private readonly int _delay;
-            private readonly IQuestion<WebBrowser, TAnswer> _question;
-            private readonly ITargeted _targeted;
-
-            public SlowSeleniumQuestion(IQuestion<WebBrowser, TAnswer> question, int delay, ITargeted targeted)
-            {
-                _question = question;
-                _delay = delay;
-                _targeted = targeted;
-            }
-
-            public override string Name => $"[Delayed of {_delay}ms] " + _question.Name;
-
-            public ITarget Target => _targeted.Target;
-
-            protected override TAnswer Answer(IActor actor, WebBrowser ability)
-            {
-                Thread.Sleep(_delay);
-                var value = _question.AnsweredBy(actor, ability);
-                Thread.Sleep(_delay);
-                return value;
-            }
+            Thread.Sleep(_delay);
+            var value = _question.AnsweredBy(actor, ability);
+            Thread.Sleep(_delay);
+            return value;
         }
+    }
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        public TResult Execute<TResult>(IAction<TResult> action)
-        {
-            return Actor.Execute(action);
-        }
+    public TResult Execute<TResult>(IAction<TResult> action)
+    {
+        return Actor.Execute(action);
+    }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
+    public TResult ExecuteWithAbility<TAbility, TResult>(IAction<TAbility, TResult> action)
+    {
+        var targeted = action as ITargeted;
+        if (typeof(TAbility) != typeof(WebBrowser) || targeted == null)
         {
-            var targeted = action as ITargeted;
-            if (typeof(TAbility) != typeof(WebBrowser) || targeted == null)
-            {
-                return Actor.ExecuteWithAbility(action);
-            }
-            return Actor.ExecuteWithAbility(new SlowSeleniumAction<TAbility, TResult>(action, DelayMilliseconds, targeted));
+            return Actor.ExecuteWithAbility(action);
+        }
+        return Actor.ExecuteWithAbility(new SlowSeleniumAction<TAbility, TResult>(action, DelayMilliseconds, targeted));
+    }
+
+    private sealed class SlowSeleniumAction<TAbility, TResult> : ActionBase<TAbility, TResult>, ITargeted
+    {
+        private readonly IAction<TAbility, TResult> action;
+        private readonly int _delay;
+        private readonly ITargeted _targeted;
+        public override string Name => $"[Delayed of {_delay}ms] " + action.Name;
+
+        public SlowSeleniumAction(IAction<TAbility, TResult> action, int delay, ITargeted targeted)
+        {
+            this.action = action;
+            _delay = delay;
+            _targeted = targeted;
         }
 
-        private sealed class SlowSeleniumAction<TAbility, TResult> : ActionBase<TAbility, TResult>, ITargeted
+        public ITarget Target => _targeted.Target;
+
+        protected override TResult ExecuteGiven(IActor actor, TAbility ability)
         {
-            private readonly IAction<TAbility, TResult> action;
-            private readonly int _delay;
-            private readonly ITargeted _targeted;
-            public override string Name => $"[Delayed of {_delay}ms] " + action.Name;
-
-            public SlowSeleniumAction(IAction<TAbility, TResult> action, int delay, ITargeted targeted)
-            {
-                this.action = action;
-                _delay = delay;
-                _targeted = targeted;
-            }
-
-            public ITarget Target => _targeted.Target;
-
-            protected override TResult ExecuteGiven(IActor actor, TAbility ability)
-            {
-                Thread.Sleep(_delay);
-                var value = action.ExecuteGivenAs(actor, ability);
-                Thread.Sleep(_delay);
-                return value;
-            }
-
-            protected override TResult ExecuteWhen(IActor actor, TAbility ability)
-            {
-                Thread.Sleep(_delay);
-                var value = action.ExecuteWhenAs(actor, ability);
-                Thread.Sleep(_delay);
-                return value;
-            }
+            Thread.Sleep(_delay);
+            var value = action.ExecuteGivenAs(actor, ability);
+            Thread.Sleep(_delay);
+            return value;
         }
+
+        protected override TResult ExecuteWhen(IActor actor, TAbility ability)
+        {
+            Thread.Sleep(_delay);
+            var value = action.ExecuteWhenAs(actor, ability);
+            Thread.Sleep(_delay);
+            return value;
+        }
+    }
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-    }
 }

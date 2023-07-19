@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace Tranquire
+namespace Tranquire;
+
+/// <summary>
+/// Represent a composite action that can be instanciated
+/// </summary>
+public class DefaultCompositeAction : CompositeAction
 {
     /// <summary>
-    /// Represent a composite action that can be instanciated
+    /// Creates a new instance of  <see cref="DefaultCompositeAction"/>
     /// </summary>
-    public class DefaultCompositeAction : CompositeAction
+    /// <param name="name">The action name.</param>
+    /// <param name="actions">The actions to execute.</param>
+    public DefaultCompositeAction(string name, params IAction<Unit>[] actions) : base(actions)
     {
-        /// <summary>
-        /// Creates a new instance of  <see cref="DefaultCompositeAction"/>
-        /// </summary>
-        /// <param name="name">The action name.</param>
-        /// <param name="actions">The actions to execute.</param>
-        public DefaultCompositeAction(string name, params IAction<Unit>[] actions) : base(actions)
+        if (string.IsNullOrEmpty(name))
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            Name = name;
+            throw new ArgumentNullException(nameof(name));
         }
 
-        /// <inheritsdoc />
-        public override string Name { get; }
+        Name = name;
     }
+
+    /// <inheritsdoc />
+    public override string Name { get; }
 }

@@ -1,59 +1,58 @@
 ﻿using System;
 
-namespace Tranquire.Selenium.Extensions
+namespace Tranquire.Selenium.Extensions;
+
+/// <summary>
+/// Represent an observer the render a <see cref="ScreenshotInfo"/> to a string and send to to the inner observer
+/// </summary>
+public sealed class RenderedScreenshotInfoObserver : IObserver<ScreenshotInfo>
 {
     /// <summary>
-    /// Represent an observer the render a <see cref="ScreenshotInfo"/> to a string and send to to the inner observer
+    /// Creates a new instance of <see cref="RenderedScreenshotInfoObserver"/>
     /// </summary>
-    public sealed class RenderedScreenshotInfoObserver : IObserver<ScreenshotInfo>
+    /// <param name="observer">The observer to render to</param>
+    /// <param name="format">The format which the screenshots are saved</param>
+    public RenderedScreenshotInfoObserver(IObserver<string> observer, ScreenshotFormat format)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="RenderedScreenshotInfoObserver"/>
-        /// </summary>
-        /// <param name="observer">The observer to render to</param>
-        /// <param name="format">The format which the screenshots are saved</param>
-        public RenderedScreenshotInfoObserver(IObserver<string> observer, ScreenshotFormat format)
+        Observer = observer ?? throw new ArgumentNullException(nameof(observer));
+        Format = format ?? throw new ArgumentNullException(nameof(format));
+    }
+
+    /// <summary>
+    /// Gets the observer
+    /// </summary>
+    public IObserver<string> Observer { get; }
+
+    /// <summary>
+    /// The format which the screenshots are saved
+    /// </summary>
+    public ScreenshotFormat Format { get; }
+
+    /// <inheritdoc />
+    public void OnNext(ScreenshotInfo value)
+    {
+        if (value == null)
         {
-            this.Observer = observer ?? throw new ArgumentNullException(nameof(observer));
-            Format = format ?? throw new ArgumentNullException(nameof(format));
+            throw new ArgumentNullException(nameof(value));
         }
 
-        /// <summary>
-        /// Gets the observer
-        /// </summary>
-        public IObserver<string> Observer { get; }
+        Observer.OnNext(value.FileName + Format.Extension);
+    }
 
-        /// <summary>
-        /// The format which the screenshots are saved
-        /// </summary>
-        public ScreenshotFormat Format { get; }
-
-        /// <inheritdoc />
-        public void OnNext(ScreenshotInfo value)
+    /// <inheritdoc />
+    public void OnError(Exception error)
+    {
+        if (error == null)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            Observer.OnNext(value.FileName + Format.Extension);
+            throw new ArgumentNullException(nameof(error));
         }
 
-        /// <inheritdoc />
-        public void OnError(Exception error)
-        {
-            if (error == null)
-            {
-                throw new ArgumentNullException(nameof(error));
-            }
+        Observer.OnError(error);
+    }
 
-            Observer.OnError(error);
-        }
-
-        /// <inheritdoc />
-        public void OnCompleted()
-        {
-            Observer.OnCompleted();
-        }
+    /// <inheritdoc />
+    public void OnCompleted()
+    {
+        Observer.OnCompleted();
     }
 }

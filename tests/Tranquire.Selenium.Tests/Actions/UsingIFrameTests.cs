@@ -3,64 +3,63 @@ using OpenQA.Selenium;
 using Tranquire.Selenium.Actions;
 using Xunit;
 
-namespace Tranquire.Selenium.Tests.Actions
+namespace Tranquire.Selenium.Tests.Actions;
+
+public class UsingIFrameTests : WebDriverTest
 {
-    public class UsingIFrameTests : WebDriverTest
+    public UsingIFrameTests(WebDriverFixture fixture) : base(fixture, "PageWithIFrame.html")
     {
-        public UsingIFrameTests(WebDriverFixture fixture) : base(fixture, "PageWithIFrame.html")
-        {
-        }
+    }
 
-        [Fact]
-        public void UsingIFrame_ShouldAllowToReachElementsInIFrame()
+    [Fact]
+    public void UsingIFrame_ShouldAllowToReachElementsInIFrame()
+    {
+        //arrange
+        var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
+        var expectedElement = Target.The("element in iframe").LocatedBy(By.Id("ElementInIFrame"));
+        //act            
+        ExecuteWithRetry(() =>
         {
-            //arrange
-            var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
-            var expectedElement = Target.The("element in iframe").LocatedBy(By.Id("ElementInIFrame"));
-            //act            
-            ExecuteWithRetry(() =>
+            using (Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)))
             {
-                using (Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)))
-                {
-                    var element = expectedElement.ResolveFor(Fixture.WebDriver);
-                    //assert
-                    Assert.NotNull(element);
-                }
-            });
-        }
+                var element = expectedElement.ResolveFor(Fixture.WebDriver);
+                //assert
+                Assert.NotNull(element);
+            }
+        });
+    }
 
-        [Fact]
-        public void UsingIFrame_WhenDisposed_ShouldAllowToReachElementsOutsideIFrame()
+    [Fact]
+    public void UsingIFrame_WhenDisposed_ShouldAllowToReachElementsOutsideIFrame()
+    {
+        //arrange
+        var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
+        var expectedElement = Target.The("element outside iframe").LocatedBy(By.Id("ElementOutsideIFrame"));
+        //act      
+        ExecuteWithRetry(() =>
         {
-            //arrange
-            var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
-            var expectedElement = Target.The("element outside iframe").LocatedBy(By.Id("ElementOutsideIFrame"));
-            //act      
-            ExecuteWithRetry(() =>
-            {
-                Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)).Dispose();
-            });
-            var element = expectedElement.ResolveFor(Fixture.WebDriver);
-            //assert
-            Assert.NotNull(element);
-        }
+            Fixture.Actor.When(UsingIFrame.LocatedBy(iframe)).Dispose();
+        });
+        var element = expectedElement.ResolveFor(Fixture.WebDriver);
+        //assert
+        Assert.NotNull(element);
+    }
 
-        private void ExecuteWithRetry(Action action)
+    private void ExecuteWithRetry(Action action)
+    {
+        // Switching to an iframe seems to fail sometimes, so we reload the page until it stops failing
+        var start = DateTimeOffset.Now;
+        while (true)
         {
-            // Switching to an iframe seems to fail sometimes, so we reload the page until it stops failing
-            var start = DateTimeOffset.Now;
-            while (true)
+            try
             {
-                try
-                {
-                    action();
-                    return;
-                }
-                catch (NoSuchFrameException) when (DateTimeOffset.Now.Subtract(start) < TimeSpan.FromSeconds(5))
-                {
-                    System.Threading.Thread.Sleep(200);
-                    ReloadPage();
-                }
+                action();
+                return;
+            }
+            catch (NoSuchFrameException) when (DateTimeOffset.Now.Subtract(start) < TimeSpan.FromSeconds(5))
+            {
+                System.Threading.Thread.Sleep(200);
+                ReloadPage();
             }
         }
     }
