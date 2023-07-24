@@ -130,10 +130,11 @@ public class Presence : SingleUIState<bool, Presence>
         public string GetAttribute(string attributeName) => string.Empty;
         public string GetCssValue(string propertyName) => string.Empty;
 
-        public string GetProperty(string propertyName)
-        {
-            return string.Empty;
-        }
+        public string GetDomAttribute(string attributeName) => string.Empty;
+
+        public string GetDomProperty(string propertyName) => string.Empty;
+
+        public ISearchContext GetShadowRoot() => null;
 
         public void SendKeys(string text)
         {

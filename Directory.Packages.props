@@ -24,9 +24,9 @@
     <PackageVersion Include="Microsoft.Owin.SelfHost" Version="4.2.2" />
     <PackageVersion Include="Microsoft.Owin.StaticFiles" Version="4.2.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageVersion Include="Selenium.Support" Version="3.14.0" />
-    <PackageVersion Include="Selenium.WebDriver" Version="3.14.0" />
-    <PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="115.0.5790.9800" />
+    <PackageVersion Include="Selenium.Support" Version="4.10.0" />
+    <PackageVersion Include="Selenium.WebDriver" Version="4.10.0" />
+    <PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="115.0.5790.10200" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.5.0.73987" />
     <PackageVersion Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
     <PackageVersion Include="SpecFlow.xUnit" version="3.9.74" />
