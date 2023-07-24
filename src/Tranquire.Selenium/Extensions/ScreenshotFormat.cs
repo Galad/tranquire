@@ -8,8 +8,8 @@ namespace Tranquire.Selenium.Extensions;
 public sealed class ScreenshotFormat
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public static ScreenshotFormat Jpeg { get; } = new ScreenshotFormat(ScreenshotImageFormat.Jpeg);
     public static ScreenshotFormat Png { get; } = new ScreenshotFormat(ScreenshotImageFormat.Png);
+    public static ScreenshotFormat Jpeg { get; } = new ScreenshotFormat(ScreenshotImageFormat.Jpeg);
     public static ScreenshotFormat Bmp { get; } = new ScreenshotFormat(ScreenshotImageFormat.Bmp);
     public static ScreenshotFormat Tiff { get; } = new ScreenshotFormat(ScreenshotImageFormat.Tiff);
     public static ScreenshotFormat Gif { get; } = new ScreenshotFormat(ScreenshotImageFormat.Gif);

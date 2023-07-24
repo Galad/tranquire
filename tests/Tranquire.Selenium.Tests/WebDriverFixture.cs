@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using OpenQA.Selenium.Chrome;
+#if NET48
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Hosting;
 using Microsoft.Owin.StaticFiles;
-using OpenQA.Selenium.Chrome;
 using Owin;
+#else
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+#endif
 
 namespace Tranquire.Selenium.Tests;
 
@@ -20,7 +29,29 @@ public sealed class WebDriverFixture : IDisposable
     public WebDriverFixture()
     {
         _port = Interlocked.Increment(ref Port);
-        _host = WebApp.Start(RootUrl, BuildHost);
+#if NET48
+        _host = WebApp.Start(RootUrl, builder => builder.UseFileServer(new FileServerOptions() {
+            FileSystem = new EmbeddedResourceFileSystem(typeof(WebDriverFixture).Assembly),
+            EnableDirectoryBrowsing = true
+        }));
+#else
+        var fileProvider = new EmbeddedFileProvider(typeof(WebDriverFixture).Assembly, typeof(WebDriverFixture).Namespace);
+        // build host on RootUrl, and serve static files from the current assembly embedded resources.
+        var builder = WebHost.CreateDefaultBuilder()
+            .UseUrls(RootUrl)
+            .Configure(app => app.UseStaticFiles(new StaticFileOptions() {
+                FileProvider = fileProvider
+            })
+            .UseDirectoryBrowser(new DirectoryBrowserOptions() {
+                FileProvider= fileProvider,
+                RequestPath = ""
+            }))
+            .ConfigureLogging(c => c.AddDebug());
+        builder.ConfigureServices(s => s.AddDirectoryBrowser());
+        var host = builder.Build();
+        host.Start();
+        _host = host;
+#endif
         var options = new ChromeOptions();
         if (IsLiveUnitTesting)
         {
@@ -37,15 +68,16 @@ public sealed class WebDriverFixture : IDisposable
 
     public void NavigateTo(string localFileName)
     {
-        WebDriver.Navigate().GoToUrl($"{RootUrl}/{typeof(WebDriverFixture).Namespace}.{localFileName}");
+        WebDriver.Navigate().GoToUrl($"{RootUrl}/{GetResourceFileName(localFileName)}");
     }
 
-    private void BuildHost(IAppBuilder builder)
+    private static string GetResourceFileName(string localFileName)
     {
-        builder.UseFileServer(new FileServerOptions() {
-            FileSystem = new EmbeddedResourceFileSystem(typeof(WebDriverFixture).Assembly),
-            EnableDirectoryBrowsing = true
-        });
+#if NET48
+        return $"{typeof(WebDriverFixture).Namespace}.{localFileName}";
+#else
+        return localFileName;
+#endif
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "<WebDriver>k__BackingField")]

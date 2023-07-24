@@ -7,6 +7,11 @@ namespace Tranquire.Selenium.Tests.Actions;
 
 public class UsingIFrameTests : WebDriverTest
 {
+#if NET48
+    private const string IFrameId = "IFrame";
+#else
+    private const string IFrameId = "IFrameShortName";
+#endif
     public UsingIFrameTests(WebDriverFixture fixture) : base(fixture, "PageWithIFrame.html")
     {
     }
@@ -15,7 +20,7 @@ public class UsingIFrameTests : WebDriverTest
     public void UsingIFrame_ShouldAllowToReachElementsInIFrame()
     {
         //arrange
-        var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
+        var iframe = Target.The("iframe").LocatedBy(By.Id(IFrameId));
         var expectedElement = Target.The("element in iframe").LocatedBy(By.Id("ElementInIFrame"));
         //act            
         ExecuteWithRetry(() =>
@@ -33,7 +38,7 @@ public class UsingIFrameTests : WebDriverTest
     public void UsingIFrame_WhenDisposed_ShouldAllowToReachElementsOutsideIFrame()
     {
         //arrange
-        var iframe = Target.The("iframe").LocatedBy(By.Id("IFrame"));
+        var iframe = Target.The("iframe").LocatedBy(By.Id(IFrameId));
         var expectedElement = Target.The("element outside iframe").LocatedBy(By.Id("ElementOutsideIFrame"));
         //act      
         ExecuteWithRetry(() =>

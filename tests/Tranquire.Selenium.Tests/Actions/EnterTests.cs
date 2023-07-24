@@ -1,4 +1,5 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using OpenQA.Selenium;
 using Tranquire.Selenium.Actions;
 using Tranquire.Selenium.Questions;

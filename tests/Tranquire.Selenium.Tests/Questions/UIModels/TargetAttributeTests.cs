@@ -23,9 +23,8 @@ public class TargetAttributeTests
     public void AllByMethodsCanMapToTarget(ByMethod byMethod)
     {
         // arrange
-        var fixture = new Fixture();
-        var targetName = fixture.Create<string>();
-        var sut = new TargetAttribute(byMethod, fixture.Create<string>());
+        var targetName = "target";
+        var sut = new TargetAttribute(byMethod, "targetId");
         // act
         var actual = sut.CreateTarget(targetName);
         // arrange

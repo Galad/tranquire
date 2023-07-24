@@ -1,65 +1,70 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net48</TargetFrameworks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net48;net7</TargetFrameworks>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Actions.html" />
-    <None Remove="ClickWhenTargetIsNotClickableYet.html" />
-    <None Remove="Html.html" />
-    <None Remove="IFrame.html" />
-    <None Remove="OpenContextMenu.html" />
-    <None Remove="Page.html" />
-    <None Remove="PageWithIFrame.html" />
-    <None Remove="Questions.html" />
-    <None Remove="Targets.html" />
-    <None Remove="UIModels.html" />
-    <None Remove="Wait.html" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Actions.html" />
+		<None Remove="ClickWhenTargetIsNotClickableYet.html" />
+		<None Remove="Html.html" />
+		<None Remove="IFrame.html" />
+		<None Remove="OpenContextMenu.html" />
+		<None Remove="Page.html" />
+		<None Remove="PageWithIFrame.html" />
+		<None Remove="Questions.html" />
+		<None Remove="Targets.html" />
+		<None Remove="UIModels.html" />
+		<None Remove="Wait.html" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Tranquire.Tests\IdiomaticAssertionExtensions.cs" Link="IdiomaticAssertionExtensions.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\Tranquire.Tests\IdiomaticAssertionExtensions.cs" Link="IdiomaticAssertionExtensions.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="UIModels.html" />
-    <EmbeddedResource Include="Actions.html" />
-    <EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
-    <EmbeddedResource Include="IFrame.html" />
-    <EmbeddedResource Include="OpenContextMenu.html" />
-    <EmbeddedResource Include="Html.html">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Page.html" />
-    <EmbeddedResource Include="PageWithIFrame.html" />
-    <EmbeddedResource Include="Questions.html" />
-    <EmbeddedResource Include="Targets.html" />
-    <EmbeddedResource Include="Wait.html" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="UIModels.html" />
+		<EmbeddedResource Include="Actions.html" />
+		<EmbeddedResource Include="ClickWhenTargetIsNotClickableYet.html" />
+		<EmbeddedResource Include="IFrame.html" />
+		<EmbeddedResource Include="OpenContextMenu.html" />
+		<EmbeddedResource Include="Html.html" />
+		<EmbeddedResource Include="Page.html" />
+		<EmbeddedResource Include="PageWithIFrame.html" />
+		<EmbeddedResource Include="Questions.html" />
+		<EmbeddedResource Include="Targets.html" />
+		<EmbeddedResource Include="Wait.html" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoFixture.Xunit2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Microsoft.Owin.SelfHost" />
-    <PackageReference Include="Microsoft.Owin.StaticFiles" />
-    <PackageReference Include="AutoFixture.AutoMoq" />
-    <PackageReference Include="AutoFixture.Idioms" />
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" />
-    <PackageReference Include="System.Collections.Immutable" />
-    <PackageReference Include="System.ComponentModel.TypeConverter" />
-    <PackageReference Include="Selenium.Support" />
-    <PackageReference Include="Selenium.WebDriver" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoFixture.Xunit2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="AutoFixture.AutoMoq" />
+		<PackageReference Include="AutoFixture.Idioms" />
+		<PackageReference Include="FluentAssertions" />
+		<PackageReference Include="Selenium.WebDriver.ChromeDriver" />
+		<PackageReference Include="System.Collections.Immutable" />
+		<PackageReference Include="System.ComponentModel.TypeConverter" />
+		<PackageReference Include="Selenium.Support" />
+		<PackageReference Include="Selenium.WebDriver" />
+		<PackageReference Include="xunit" />
+		<PackageReference Include="xunit.runner.visualstudio">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Tranquire.Selenium\Tranquire.Selenium.csproj" />
-    <ProjectReference Include="..\..\src\Tranquire\Tranquire.csproj" />
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+		<PackageReference Include="Microsoft.Owin.SelfHost" />
+		<PackageReference Include="Microsoft.Owin.StaticFiles" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7' ">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Tranquire.Selenium\Tranquire.Selenium.csproj" />
+		<ProjectReference Include="..\..\src\Tranquire\Tranquire.csproj" />
+	</ItemGroup>
 </Project>

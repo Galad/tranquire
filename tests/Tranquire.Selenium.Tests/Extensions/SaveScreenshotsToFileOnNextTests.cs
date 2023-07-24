@@ -59,6 +59,7 @@ public class SaveScreenshotsToFileOnNextTests : WebDriverTest
     {
         // arrange
         fixture.Inject(CreateTestDirectoryPath());
+        fixture.Inject(ScreenshotFormat.Png);
         var sut = fixture.Create<SaveScreenshotsToFileOnNext>();
         var screenshotInfo = GetScreenshotInfo();
         // act
