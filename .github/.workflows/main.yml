@@ -1,0 +1,76 @@
+name: Build, test and publish to NuGet
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+    DOTNET_VERSION: 7.0.9
+    PROJECT_CONFIGURATION: Release
+# restore packages, build, run tests
+# Unit tests are run first using filter Category!=UI&Category!=Api
+# Api tests are run second using filter Category=Api
+# UI tests are run third using filter Category=UI
+# run sonarqube scan at build and publish code coverage to sonarqube of all the tests
+# then publish the package to nuget 
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+    
+    - uses: dotnet/nbgv@master
+      with:
+        setAllVars: true
+  
+    - name: Setup .NET ${{ env.DOTNET_VERSION }} }}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }} }}
+    
+    - name: Install Chrome, Firefox and Git on OS
+      uses: shreyash-Pandey-Katni/Chrome-Firefox-git-install-action@v2
+      with:
+        chrome: true
+        firefox: true
+        isWindows: true
+
+    #- name: Start sonarqube analysis
+    #  uses: SonarSource/sonarqube-scan-action@v2.0.0
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+    - name: Restore dependencies
+      run: dotnet restore --configuration ${{ env.PROJECT_CONFIGURATION }}
+
+    - name: Build
+      run: dotnet build --configuration ${{ env.PROJECT_CONFIGURATION }} --no-restore
+
+    - name: Run unit tests
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter Category!=UI&Category!=Api
+
+    - name: Run api tests (demo project)
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter Category=Api
+
+    - name: Run UI tests (demo project)
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter Category=UI
+
+    - name: Pack nuget packages
+      run: dotnet pack --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --no-restore
+
+    - name: Publish nuget packages
+      run: dotnet nuget push Packages/*.nupkg --source "github" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
+      
+    - name: Publish to GitHub Packages
+      if: env.NBGV_PublicRelease == 'false'
+      run: dotnet nuget push 'Packages/*.nupkg' --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+
+    - name: Publish to NuGet
+      if: env.NBGV_PublicRelease == 'true'
+      run: dotnet nuget push 'Packages/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
