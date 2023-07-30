@@ -37,7 +37,6 @@ jobs:
       uses: shreyash-Pandey-Katni/Chrome-Firefox-git-install-action@v2
       with:
         chrome: true
-        firefox: true
         isWindows: true
 
     #- name: Start sonarqube analysis
