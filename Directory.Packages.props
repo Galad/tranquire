@@ -8,6 +8,8 @@
     <PackageVersion Include="AutoFixture.Idioms" Version="4.18.0" />
     <PackageVersion Include="AutoFixture.Xunit2" Version="4.18.0" />
     <PackageVersion Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.6" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.11.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="7.0.9" />

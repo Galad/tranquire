@@ -39,19 +39,49 @@ jobs:
         chrome: true
         isWindows: true
 
-    #- name: Start sonarqube analysis
-    #  uses: SonarSource/sonarqube-scan-action@v2.0.0
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  
-    - name: dir
-      run: dir
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+          java-version: 11
+          distribution: 'zulu' # Alternative distribution options are available.
+
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v3
+      with:
+        path: .\.sonar\scanner
+        key: ${{ runner.os }}-sonar-scanner
+        restore-keys: ${{ runner.os }}-sonar-scanner
+
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+        New-Item -Path .\.sonar\scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+    
+    - name: Install report generator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Start sonarqube analysis
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: |
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Galad_tranquire" /o:"galad-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=.\TestResults\coverage\cobertura.xml
 
     - name: Restore dependencies
       run: dotnet restore
       
-    - name: Build
+    - name: Build   
       run: dotnet build --configuration ${{ env.PROJECT_CONFIGURATION }} --no-restore
       
     - name: Restore To-do list client dependencies
@@ -63,7 +93,7 @@ jobs:
       working-directory: ./src/ToDoList/ClientApp
 
     - name: Run unit tests
-      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category!=UI&Category!=Api" --logger trx -v n 
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category!=UI&Category!=Api" --logger trx -v m --collect:"XPlat Code Coverage" --results-directory .\TestResults
 
     - name: Run api tests (demo project)
       run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category=Api"
@@ -75,6 +105,16 @@ jobs:
       env:
         TEST_LEVEL: UI
 
+    - name: Merge coverage reports
+      run: reportgenerator "-reports:TestResults\**\coverage.cobertura.xml" "-targetdir:TestResults\coverage" "-reporttypes:Cobertura"
+
+    - name: End sonarqube analysis
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+  
     - name: Pack nuget packages
       run: dotnet pack --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --no-restore
 
