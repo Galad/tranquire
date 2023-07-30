@@ -28,10 +28,10 @@ jobs:
       with:
         setAllVars: true
   
-    - name: Setup .NET ${{ env.DOTNET_VERSION }} }}
+    - name: Setup .NET ${{ env.DOTNET_VERSION }}
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }} }}
+        dotnet-version: ${{ env.DOTNET_VERSION }}
     
     - name: Install Chrome, Firefox and Git on OS
       uses: shreyash-Pandey-Katni/Chrome-Firefox-git-install-action@v2
