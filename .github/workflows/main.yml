@@ -46,8 +46,11 @@ jobs:
     #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
+    - name: dir
+      run: dir
+
     - name: Restore dependencies
-      run: dotnet restore --configuration ${{ env.PROJECT_CONFIGURATION }}
+      run: dotnet restore
 
     - name: Build
       run: dotnet build --configuration ${{ env.PROJECT_CONFIGURATION }} --no-restore
