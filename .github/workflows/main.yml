@@ -78,9 +78,6 @@ jobs:
     - name: Pack nuget packages
       run: dotnet pack --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --no-restore
 
-    - name: Publish nuget packages
-      run: dotnet nuget push Packages/*.nupkg --source "github" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }}
-      
     - name: Publish to GitHub Packages
       if: env.NBGV_PublicRelease == 'false'
       run: dotnet nuget push 'Packages/*.nupkg' --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
