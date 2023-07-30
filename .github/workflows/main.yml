@@ -55,7 +55,7 @@ jobs:
       run: dotnet build --configuration ${{ env.PROJECT_CONFIGURATION }} --no-restore
 
     - name: Run unit tests
-      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category!=UI&Category!=Api" --logger trx 
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category!=UI&Category!=Api" --logger trx -v n 
 
     - name: Run api tests (demo project)
       run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category=Api"

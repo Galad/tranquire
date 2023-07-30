@@ -53,7 +53,7 @@ public sealed class WebDriverFixture : IDisposable
         _host = host;
 #endif
         var options = new ChromeOptions();
-        if (IsLiveUnitTesting)
+        if (IsLiveUnitTesting || true)
         {
             options.AddArguments("--headless", "--disable-gpu");
         }
