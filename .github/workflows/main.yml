@@ -50,9 +50,17 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
-
+      
     - name: Build
       run: dotnet build --configuration ${{ env.PROJECT_CONFIGURATION }} --no-restore
+      
+    - name: Restore To-do list client dependencies
+      run: npm ci
+      working-directory: ./src/ToDoList/ClientApp
+
+    - name: Restore To-do list client dependencies
+      run: npm run build
+      working-directory: ./src/ToDoList/ClientApp
 
     - name: Run unit tests
       run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category!=UI&Category!=Api" --logger trx -v n 
