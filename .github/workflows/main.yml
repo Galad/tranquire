@@ -117,11 +117,15 @@ jobs:
   
     - name: Pack nuget packages
       run: dotnet pack --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --no-restore
-
+        
     - name: Publish to GitHub Packages
       if: env.NBGV_PublicRelease == 'false'
-      run: dotnet nuget push 'Packages/**/*.nupkg' --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+      run: |
+        dotnet nuget add source --username USERNAME --password ${GITHUB_TOKEN} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+        dotnet nuget push 'Packages/**/*.nupkg' --api-key ${GITHUB_TOKEN} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --skip-duplicate
+      env: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish to NuGet
       if: env.NBGV_PublicRelease == 'true'
-      run: dotnet nuget push 'Packages/**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push 'Packages/**/*.nupkg' --api-key ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      env: ${{ secrets.NUGET_API_KEY }}
