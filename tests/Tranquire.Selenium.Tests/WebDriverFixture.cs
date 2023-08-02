@@ -53,10 +53,7 @@ public sealed class WebDriverFixture : IDisposable
         _host = host;
 #endif
         var options = new ChromeOptions();
-        if (IsLiveUnitTesting)
-        {
-            options.AddArguments("--headless", "--disable-gpu");
-        }
+        options.AddArguments("--headless", "--disable-gpu");
         WebDriver = new ChromeDriver(options);
         Actor = (Actor)(new Actor("James").CanUse(WebBrowser.With(WebDriver)));
     }

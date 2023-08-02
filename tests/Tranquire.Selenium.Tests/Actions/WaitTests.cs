@@ -80,7 +80,7 @@ public class WaitTests : WebDriverTest
     private void ChangeText(string expected)
     {
         var js = $"var element = document.getElementById('ChangeTextElement').innerText = '{expected}';";
-        js = "setTimeout(function(){" + js + "}, 1000);";
+        js = "setTimeout(function(){" + js + "}, 5000);";
         Fixture.WebDriver.ExecuteScript(js);
     }
 

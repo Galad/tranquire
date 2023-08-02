@@ -1,0 +1,131 @@
+name: Build, test and publish to NuGet
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+    DOTNET_VERSION: 7.0.x
+    PROJECT_CONFIGURATION: Release
+# restore packages, build, run tests
+# Unit tests are run first using filter Category!=UI&Category!=Api
+# Api tests are run second using filter Category=Api
+# UI tests are run third using filter Category=UI
+# run sonarqube scan at build and publish code coverage to sonarqube of all the tests
+# then publish the package to nuget 
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+    
+    - uses: dotnet/nbgv@master
+      with:
+        setAllVars: true
+  
+    - name: Setup .NET ${{ env.DOTNET_VERSION }}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Install Chrome, Firefox and Git on OS
+      uses: shreyash-Pandey-Katni/Chrome-Firefox-git-install-action@v2
+      with:
+        chrome: true
+        isWindows: true
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+          java-version: 11
+          distribution: 'zulu' # Alternative distribution options are available.
+
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v3
+      with:
+        path: .\.sonar\scanner
+        key: ${{ runner.os }}-sonar-scanner
+        restore-keys: ${{ runner.os }}-sonar-scanner
+
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+        New-Item -Path .\.sonar\scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+    
+    - name: Install report generator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Start sonarqube analysis
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: |
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Galad_tranquire" /o:"galad-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=.\TestResults\coverage\SonarQube.xml
+
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build   
+      run: dotnet build --configuration ${{ env.PROJECT_CONFIGURATION }} --no-restore
+      
+    - name: Restore To-do list client dependencies
+      run: npm ci
+      working-directory: ./src/ToDoList/ClientApp
+
+    - name: Build To-do list client
+      run: npm run build
+      working-directory: ./src/ToDoList/ClientApp
+
+    - name: Run unit tests
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category!=UI&Category!=Api" --logger trx -v m --results-directory .\TestResults /p:CoverletOutputFormat=opencover /p:CollectCoverage=true /p:CoverletOutput='./TestResults/'
+
+    - name: Run api tests (demo project)
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category=Api"
+      env:
+        TEST_LEVEL: Api
+
+    - name: Run UI tests (demo project)
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category=UI"
+      env:
+        TEST_LEVEL: UI
+
+    - name: Merge coverage reports
+      run: reportgenerator "-reports:**\TestResults\*.opencover.xml" "-targetdir:TestResults\coverage" "-reporttypes:sonarqube"
+
+    - name: End sonarqube analysis
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+  
+    - name: Pack nuget packages
+      run: dotnet pack --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --no-restore
+       
+    - name: Publish to GitHub Packages
+      if: env.NBGV_PublicRelease == 'false'
+      run: dotnet nuget push 'Packages/**/*.nupkg' --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+ 
+    - name: Publish to NuGet
+      if: env.NBGV_PublicRelease == 'true'
+      run: dotnet nuget push 'Packages/**/*.nupkg' --api-key ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      env: 
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
