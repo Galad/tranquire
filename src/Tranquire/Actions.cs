@@ -60,7 +60,7 @@ public static class Actions
     private sealed class DelegateAction : ActionBaseUnit
     {
         public override string Name { get; }
-        public System.Action<IActor> Action { get; }
+        private System.Action<IActor> Action { get; }
 
         public DelegateAction(string name, System.Action<IActor> action)
         {
@@ -93,7 +93,7 @@ public static class Actions
     private sealed class DelegateAction<T> : ActionBaseUnit<T>
     {
         public override string Name { get; }
-        public System.Action<IActor, T> Action { get; }
+        private System.Action<IActor, T> Action { get; }
 
         public DelegateAction(string name, System.Action<IActor, T> action)
         {
@@ -128,7 +128,7 @@ public static class Actions
     private sealed class FuncAction<TResult> : ActionBase<TResult>
     {
         public override string Name { get; }
-        public Func<IActor, TResult> Action { get; }
+        private Func<IActor, TResult> Action { get; }
 
         public FuncAction(string name, Func<IActor, TResult> action)
         {
@@ -158,10 +158,21 @@ public static class Actions
         return new FuncAction<T>(name, action);
     }
 
+    /// <summary>
+    /// Creates an action that returns the given value
+    /// </summary>
+    /// <param name="name">The action name</param>
+    /// <param name="value">The delegate to execute</param>
+    /// <returns></returns>
+    public static IAction<T> Create<T>(string name, T value)
+    {
+        return new FuncAction<T>(name, _ => value);
+    }
+
     private sealed class FuncAction<TAbility, TResult> : ActionBase<TAbility, TResult>
     {
         public override string Name { get; }
-        public Func<IActor, TAbility, TResult> Action { get; }
+        private Func<IActor, TAbility, TResult> Action { get; }
 
         public FuncAction(string name, Func<IActor, TAbility, TResult> action)
         {

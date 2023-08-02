@@ -334,6 +334,36 @@ object expected
         //assert
         Assert.Equal(expected, actual);
     }
+    
+    [Theory, DomainAutoData]
+    public void Create_ReturningSimpleValue_ShouldReturnValueWhenCallingExecuteWhenAs(
+        string name,
+        IActor actor,
+        object expected
+    )
+    {
+        //arrange
+        //act
+        var actualAction = Actions.Create(name, expected);
+        var actual = actualAction.ExecuteGivenAs(actor);
+        //assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Theory, DomainAutoData]
+    public void Create_ReturningSimpleValue_ShouldReturnValueWhenCallingExecuteGivenAs(
+        string name,
+        IActor actor,
+        object expected
+    )
+    {
+        //arrange
+        //act
+        var actualAction = Actions.Create(name, expected);
+        var actual = actualAction.ExecuteGivenAs(actor);
+        //assert
+        Assert.Equal(expected, actual);
+    }
     #endregion
 
     #region Create returning value with ability
