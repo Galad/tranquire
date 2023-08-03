@@ -220,3 +220,6 @@ nuget.exe
 .sonarqube
 *.feature.cs
 /src/ToDoList/Startup.cs
+
+#JetBrains Rider
+.idea/

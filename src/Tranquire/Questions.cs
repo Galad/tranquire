@@ -29,6 +29,22 @@ public static class Questions
         return new FuncQuestions<TAnswer>(name, func);
     }
 
+    /// <summary>
+    /// Creates a question that return the given value
+    /// </summary>
+    /// <param name="name">The action name</param>
+    /// <param name="value">The value to return</param>
+    /// <returns></returns>
+    public static IQuestion<TAnswer> Create<TAnswer>(string name, TAnswer value)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
+        return new FuncQuestions<TAnswer>(name, _ => value);
+    }
+
     private sealed class FuncQuestions<TAnswer> : QuestionBase<TAnswer>
     {
         private readonly string name;

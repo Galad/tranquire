@@ -11,6 +11,7 @@ namespace Tranquire;
 public static class ActionExtensions
 {
     #region If
+
     /// <summary>
     /// Execute the current action only if the given predicate is true
     /// </summary>
@@ -44,7 +45,8 @@ public static class ActionExtensions
     /// <param name="action">The action to execute if the predicate is true</param>
     /// <param name="defaultValue">The value which is returned by the action when the predicate is false</param>
     /// <returns>Returns a instance of <see cref="IfAction{TAbility, T}"/></returns>
-    public static IfAction<TPredicateAbility, T> If<T, TPredicateAbility>(this IAction<T> action, Func<TPredicateAbility, bool> predicate, T defaultValue)
+    public static IfAction<TPredicateAbility, T> If<T, TPredicateAbility>(this IAction<T> action,
+        Func<TPredicateAbility, bool> predicate, T defaultValue = default)
     {
         return new IfAction<TPredicateAbility, T>(predicate, action, defaultValue);
     }
@@ -56,13 +58,66 @@ public static class ActionExtensions
     /// <param name="predicate">The predicate</param>
     /// <param name="action">The action to execute if the predicate is true</param>        
     /// <returns>Returns a instance of <see cref="IfAction{TAbility, T}"/></returns>
-    public static IfAction<TPredicateAbility, Unit> If<TPredicateAbility>(this IAction<Unit> action, Func<TPredicateAbility, bool> predicate)
+    public static IfAction<TPredicateAbility, Unit> If<TPredicateAbility>(this IAction<Unit> action,
+        Func<TPredicateAbility, bool> predicate)
     {
         return action.If(predicate, Unit.Default);
     }
+
+    /// <summary>
+    /// Execute the current action only if the given question is true
+    /// </summary>
+    /// <param name="questionPredicate">The predicate</param>
+    /// <param name="action">The action to execute if the predicate is true</param>        
+    /// <returns>Returns a instance of <see cref="IfAction{TAbility, T}"/></returns>
+    public static IAction<Unit> If(
+        this IAction<Unit> action,
+        IQuestion<bool> questionPredicate)
+    {
+        if (action == null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
+
+        if (questionPredicate == null)
+        {
+            throw new ArgumentNullException(nameof(questionPredicate));
+        }
+
+        return questionPredicate.SelectMany(value => value ? action : Actions.Empty);
+    }
+
+    /// <summary>
+    /// Execute the current action only if the given question is true
+    /// </summary>
+    /// <param name="questionPredicate">The predicate</param>
+    /// <param name="action">The action to execute if the predicate is true</param>
+    /// <param name="defaultValue">The default value returned by the action when the question
+    /// predicate is false.</param>
+    /// <returns>Returns a instance of <see cref="IfAction{TAbility, T}"/></returns>
+    public static IAction<T> If<T>(
+        this IAction<T> action,
+        IQuestion<bool> questionPredicate,
+        T defaultValue = default)
+    {
+        if (action == null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
+
+        if (questionPredicate == null)
+        {
+            throw new ArgumentNullException(nameof(questionPredicate));
+        }
+
+        return questionPredicate.SelectMany(value =>
+            value ? action : Actions.Create(action.Name, defaultValue));
+    }
+
     #endregion
 
     #region AsActionUnit
+
     /// <summary>
     /// Transform the given action to a action returning <see cref="Unit"/> that execute the action and discards its result
     /// </summary>
@@ -93,9 +148,11 @@ public static class ActionExtensions
         protected override void ExecuteWhen(IActor actor) => _action.ExecuteWhenAs(actor);
         protected override void ExecuteGiven(IActor actor) => _action.ExecuteGivenAs(actor);
     }
+
     #endregion
 
     #region Using
+
     /// <summary>
     /// Creates an action that executes the <paramref name="disposableAction"/>, then the <paramref name="actionToExecute"/> and finally dispose the result of the <paramref name="disposableAction"/>
     /// </summary>
@@ -103,10 +160,13 @@ public static class ActionExtensions
     /// <param name="actionToExecute">The action to execute</param>
     /// <param name="disposableAction">The action that creates a <see cref="IDisposable"/> instance</param>
     /// <returns></returns>
-    public static IAction<T> Using<T>(this IAction<T> actionToExecute, IAction<IDisposable> disposableAction) => new UsingAction<T>(disposableAction, actionToExecute);
+    public static IAction<T> Using<T>(this IAction<T> actionToExecute, IAction<IDisposable> disposableAction) =>
+        new UsingAction<T>(disposableAction, actionToExecute);
+
     #endregion
 
     #region SelectMany
+
     /// <summary>
     /// Projects the result of an action into a new action.
     /// </summary>
@@ -115,7 +175,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IAction<TResult> SelectMany<TSource, TResult>(this IAction<TSource> source, Func<TSource, IAction<TResult>> selector)
+    public static IAction<TResult> SelectMany<TSource, TResult>(this IAction<TSource> source,
+        Func<TSource, IAction<TResult>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<TSource>(), selector, SM.Execute<TResult>());
         return selectMany.ToAction();
@@ -129,7 +190,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IQuestion<TResult> SelectMany<TSource, TResult>(this IAction<TSource> source, Func<TSource, IQuestion<TResult>> selector)
+    public static IQuestion<TResult> SelectMany<TSource, TResult>(this IAction<TSource> source,
+        Func<TSource, IQuestion<TResult>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<TSource>(), selector, SM.AsksFor<TResult>());
         return selectMany.ToQuestion();
@@ -143,7 +205,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source, Func<TSource, IAction<TResult>> selector)
+    public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source,
+        Func<TSource, IAction<TResult>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task<TSource>>(), selector, SM.ExecuteAsync<TResult>());
         return selectMany.ToAction();
@@ -157,7 +220,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source, Func<TSource, IAction<Task<TResult>>> selector)
+    public static IAction<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source,
+        Func<TSource, IAction<Task<TResult>>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task<TSource>>(), selector, SM.ExecuteAsync<Task<TResult>>());
         return selectMany.ToAction();
@@ -170,7 +234,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IAction<Task> SelectMany<TSource>(this IAction<Task<TSource>> source, Func<TSource, IAction<Task>> selector)
+    public static IAction<Task> SelectMany<TSource>(this IAction<Task<TSource>> source,
+        Func<TSource, IAction<Task>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task<TSource>>(), selector, SM.ExecuteAsync<Task>());
         return selectMany.ToAction();
@@ -184,7 +249,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source, Func<TSource, IQuestion<TResult>> selector)
+    public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source,
+        Func<TSource, IQuestion<TResult>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task<TSource>>(), selector, SM.AsksForAsync<TResult>());
         return selectMany.ToQuestion();
@@ -198,7 +264,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source, Func<TSource, IQuestion<Task<TResult>>> selector)
+    public static IQuestion<Task<TResult>> SelectMany<TSource, TResult>(this IAction<Task<TSource>> source,
+        Func<TSource, IQuestion<Task<TResult>>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task<TSource>>(), selector, SM.AsksForAsync<Task<TResult>>());
         return selectMany.ToQuestion();
@@ -236,7 +303,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IAction<Task<TResult>> SelectMany<TResult>(this IAction<Task> source, Func<IAction<Task<TResult>>> selector)
+    public static IAction<Task<TResult>> SelectMany<TResult>(this IAction<Task> source,
+        Func<IAction<Task<TResult>>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task>(), selector, SM.ExecuteAsync<Task<TResult>>());
         return selectMany.ToAction();
@@ -249,7 +317,8 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IQuestion<Task<TResult>> SelectMany<TResult>(this IAction<Task> source, Func<IQuestion<TResult>> selector)
+    public static IQuestion<Task<TResult>> SelectMany<TResult>(this IAction<Task> source,
+        Func<IQuestion<TResult>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task>(), selector, SM.AsksForAsync<TResult>());
         return selectMany.ToQuestion();
@@ -262,14 +331,17 @@ public static class ActionExtensions
     /// <param name="source">The action which result is transformed</param>
     /// <param name="selector">A transform function that returns a new action.</param>
     /// <returns></returns>
-    public static IQuestion<Task<TResult>> SelectMany<TResult>(this IAction<Task> source, Func<IQuestion<Task<TResult>>> selector)
+    public static IQuestion<Task<TResult>> SelectMany<TResult>(this IAction<Task> source,
+        Func<IQuestion<Task<TResult>>> selector)
     {
         var selectMany = SM.Create(source, SM.Execute<Task>(), selector, SM.AsksForAsync<Task<TResult>>());
         return selectMany.ToQuestion();
     }
+
     #endregion
 
     #region Select
+
     /// <summary>
     /// Projects the result of an action into a new form.
     /// </summary>
@@ -278,7 +350,8 @@ public static class ActionExtensions
     /// <param name="action">The action which result is transformed</param>
     /// <param name="selector">A transform function to the action result.</param>
     /// <returns></returns>
-    public static IAction<TResult> Select<TSource, TResult>(this IAction<TSource> action, Func<TSource, TResult> selector)
+    public static IAction<TResult> Select<TSource, TResult>(this IAction<TSource> action,
+        Func<TSource, TResult> selector)
     {
         return new SelectAction<TSource, TResult>(action, selector);
     }
@@ -291,7 +364,8 @@ public static class ActionExtensions
     /// <param name="action">The action which result is transformed</param>
     /// <param name="selector">A transform function to the action result.</param>
     /// <returns></returns>
-    public static IAction<Task<TResult>> Select<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, TResult> selector)
+    public static IAction<Task<TResult>> Select<TSource, TResult>(this IAction<Task<TSource>> action,
+        Func<TSource, TResult> selector)
     {
         if (selector is null)
         {
@@ -309,13 +383,16 @@ public static class ActionExtensions
     /// <param name="action">The action which result is transformed</param>
     /// <param name="selector">A transform function to the action result.</param>
     /// <returns></returns>
-    public static IAction<Task<TResult>> Select<TSource, TResult>(this IAction<Task<TSource>> action, Func<TSource, Task<TResult>> selector)
+    public static IAction<Task<TResult>> Select<TSource, TResult>(this IAction<Task<TSource>> action,
+        Func<TSource, Task<TResult>> selector)
     {
         return new SelectActionAsync<TSource, TResult>(action, selector);
     }
+
     #endregion
 
     #region Tagged
+
     /// <summary>
     /// Create a tagged action from the current action.
     /// </summary>
@@ -333,9 +410,11 @@ public static class ActionExtensions
 
         return Actions.CreateTagged(action.Name, (tag, action));
     }
+
     #endregion
 
     #region Named
+
     /// <summary>
     /// Change the named of the action
     /// </summary>
@@ -349,6 +428,7 @@ public static class ActionExtensions
         {
             throw new ArgumentNullException(nameof(action));
         }
+
         if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentNullException(nameof(name));
@@ -379,5 +459,6 @@ public static class ActionExtensions
             return _action.ExecuteWhenAs(actor);
         }
     }
+
     #endregion
 }
