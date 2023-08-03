@@ -29,7 +29,7 @@ public abstract class TargetedAction : ActionBaseUnit<WebBrowser>, ITargeted
     protected override void ExecuteWhen(IActor actor, WebBrowser ability)
     {
         var element = Target.ResolveFor(ability.Driver);
-        ExecuteAction(actor, element);
+        ExecuteAction(actor, element, ability.Driver);
     }
 
     /// <summary>
@@ -37,5 +37,6 @@ public abstract class TargetedAction : ActionBaseUnit<WebBrowser>, ITargeted
     /// </summary>        
     /// <param name="actor"></param>
     /// <param name="element"></param>
-    protected abstract void ExecuteAction(IActor actor, IWebElement element);
+    /// <param name="webDriver"></param>
+    protected abstract void ExecuteAction(IActor actor, IWebElement element, IWebDriver webDriver);
 }

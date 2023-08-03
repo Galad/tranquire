@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10,6 +10,10 @@
     <a href="#" id="LinkToClick" onclick="document.getElementById('ClickExpectedContent').textContent = document.getElementById('ClickInput').value">Click</a>
     <button id="ButtonToClick" onclick="document.getElementById('ClickExpectedContent').textContent = document.getElementById('ClickInput').value">Click</button>
     <div id="ClickExpectedContent"></div>
+
+    <input id="DoubleClickInput" />
+    <button id="ButtonToDoubleClick" ondblclick="document.getElementById('DoubleClickExpectedContent').textContent = document.getElementById('DoubleClickInput').value">Click</button>
+    <div id="DoubleClickExpectedContent"></div>
 
     <select id="SelectElement">
         <option value="1">Yellow</option>
