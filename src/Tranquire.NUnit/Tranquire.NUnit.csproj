@@ -34,4 +34,8 @@
   <ItemGroup>
     <ProjectCapability Remove="TestContainer" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Tranquire\Attributes\AssertionMethodAttribute.cs" Link="AssertionMethodAttribute.cs" />
+  </ItemGroup>
 </Project>

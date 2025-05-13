@@ -9,6 +9,6 @@ namespace Tranquire.Attributes;
 /// This attribute is useful for static analysis tools.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public sealed class AssertionMethodAttribute : Attribute
+internal sealed class AssertionMethodAttribute : Attribute
 {
 }
