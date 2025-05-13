@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using Tranquire.Attributes;
 
 namespace Tranquire;
 
@@ -18,6 +19,7 @@ public static class VerifiesExtensions
     /// <param name="question">The question to verify the answer from</param>
     /// <param name="constraint">A NUnit constraint that encapsulate the expected result</param>        
     /// <returns>The answer, when the verification succeeds</returns>
+    [AssertionMethod]
     public static T Then<T>(this IVerifies verifies, IQuestion<T> question, IResolveConstraint constraint)
     {
         if (verifies == null)
@@ -45,6 +47,7 @@ public static class VerifiesExtensions
     /// <param name="constraint">A NUnit constraint that encapsulate the expected result</param>
     /// <param name="getExceptionMessage">A function that returns the message to return when the assertion fails</param>        
     /// <returns>The answer, when the verification succeeds</returns>
+    [AssertionMethod]
     public static T Then<T>(
         this IVerifies verifies,
         IQuestion<T> question,
@@ -81,6 +84,7 @@ public static class VerifiesExtensions
     /// <param name="message">The message to return when the assertion fails</param>
     /// <param name="args">Arguments to add to the message</param>
     /// <returns>The answer, when the verification succeeds</returns>
+    [AssertionMethod]
     public static T Then<T>(
         this IVerifies verifies,
         IQuestion<T> question,
