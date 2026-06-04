@@ -11,22 +11,22 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.11.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="7.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="7.0.9" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
     <PackageVersion Include="Microsoft.Owin.SelfHost" Version="4.2.2" />
     <PackageVersion Include="Microsoft.Owin.StaticFiles" Version="4.2.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageVersion Include="Selenium.Support" Version="4.10.0" />
     <PackageVersion Include="Selenium.WebDriver" Version="4.10.0" />
-    <PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="115.0.5790.10200" />
+    <PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="149.0.7827.5400" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.5.0.73987" />
     <PackageVersion Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
     <PackageVersion Include="SpecFlow.xUnit" version="3.9.74" />
     <PackageVersion Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageVersion Include="NUnit" Version="4.3.2" />
-    <PackageVersion Include="System.Collections.Immutable" Version="7.0.0" />
+    <PackageVersion Include="System.Collections.Immutable" Version="10.0.8" />
     <PackageVersion Include="xunit" Version="2.5.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
   </ItemGroup>
