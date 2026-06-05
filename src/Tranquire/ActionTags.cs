@@ -24,7 +24,7 @@ public static class ActionTags
         }
 
         var whenTags = tags.Select((tag, index) => (tag, index)).ToImmutableDictionary(t => t.tag, t => t.index);
-        var givenTags = tags.Reverse().Select((tag, index) => (tag, index)).ToImmutableDictionary(t => t.tag, t => t.index);
+        var givenTags = tags.AsEnumerable().Reverse().Select((tag, index) => (tag, index)).ToImmutableDictionary(t => t.tag, t => t.index);
         return new ActionTags<TTag>(whenTags, givenTags);
     }
 }

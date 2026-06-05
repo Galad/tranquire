@@ -68,7 +68,7 @@ public static class VerifiesExtensions
             throw new ArgumentNullException(nameof(getExceptionMessage));
         }
 
-        return verifies.Then(question, answer => Assert.That(answer, constraint, getExceptionMessage));
+        return verifies.Then(question, answer => Assert.That(answer, constraint, getExceptionMessage()));
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public static class VerifiesExtensions
 
         ValidateArguments(verifies, question, constraint, message, args);
 
-        return verifies.Then(question, answer => Assert.That(answer, constraint, message, args));
+        return verifies.Then(question, answer => Assert.That(answer, constraint, string.Format(message, args)));
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public static class VerifiesExtensions
             throw new ArgumentNullException(nameof(getExceptionMessage));
         }
 
-        return verifies.Then<T>(question, answer => Assert.That(answer, constraint, getExceptionMessage));
+        return verifies.Then<T>(question, answer => Assert.That(answer, constraint, getExceptionMessage()));
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ public static class VerifiesExtensions
     {
         ValidateArguments(verifies, question, constraint, message, args);
 
-        return verifies.Then<T>(question, answer => Assert.That(answer, constraint, message, args));
+        return verifies.Then<T>(question, answer => Assert.That(answer, constraint, string.Format(message, args)));
     }
 
     private static void ValidateArguments<T>(IVerifies verifies, IQuestion<T> question, IResolveConstraint constraint, string message, object[] args)
