@@ -21,9 +21,9 @@ namespace Tranquire.Selenium.Tests;
 public sealed class WebDriverFixture : IDisposable
 {
 #if NET48
-    public static int Port = 30000;
+    private static int Port = 30000;
 #else
-    public static int Port = 35000;
+    private static int Port = 35000;
 #endif
     private readonly IDisposable _host;
     public IActorFacade Actor { get; }
