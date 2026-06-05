@@ -64,6 +64,6 @@ public class SaveScreenshotsToFileOnNext : IObserver<ScreenshotInfo>
             System.IO.Directory.CreateDirectory(Directory);
         }
         var filename = Path.Combine(Directory, value.FileName + Format.Extension);
-        value.Screenshot.SaveAsFile(filename, Format.Format);
+        value.Screenshot.SaveAsFile(filename);
     }
 }

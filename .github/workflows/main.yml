@@ -2,15 +2,15 @@ name: Build, test and publish to NuGet
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, releases/** ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, releases/** ]
   release:
     types: [published]
   workflow_dispatch:
 
 env:
-    DOTNET_VERSION: 7.0.x
+    DOTNET_VERSION: 10.0.x
     PROJECT_CONFIGURATION: Release
 # restore packages, build, run tests
 # Unit tests are run first using filter Category!=UI&Category!=Api
@@ -34,7 +34,7 @@ jobs:
         setAllVars: true
   
     - name: Setup .NET ${{ env.DOTNET_VERSION }}
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     

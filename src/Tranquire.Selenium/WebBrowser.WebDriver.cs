@@ -31,6 +31,11 @@ public partial class WebBrowser : IWebDriver
         Driver.Dispose();
     }
 
+    public System.Threading.Tasks.ValueTask DisposeAsync()
+    {
+        return ((System.IAsyncDisposable)Driver).DisposeAsync();
+    }
+
     public IWebElement FindElement(By by)
     {
         return Driver.FindElement(by);
