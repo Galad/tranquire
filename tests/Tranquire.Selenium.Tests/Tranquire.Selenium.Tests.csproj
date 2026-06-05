@@ -50,6 +50,8 @@
 		<PackageReference Include="AutoFixture.AutoMoq" />
 		<PackageReference Include="AutoFixture.Idioms" />
 		<PackageReference Include="FluentAssertions" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+		<PackageReference Include="Moq" />
 		<PackageReference Include="Selenium.WebDriver.ChromeDriver" />
 		<PackageReference Include="System.Collections.Immutable" />
 		<PackageReference Include="System.ComponentModel.TypeConverter" />

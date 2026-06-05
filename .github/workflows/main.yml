@@ -2,9 +2,9 @@ name: Build, test and publish to NuGet
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, releases/** ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, releases/** ]
   release:
     types: [published]
   workflow_dispatch:
