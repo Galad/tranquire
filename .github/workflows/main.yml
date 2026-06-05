@@ -50,38 +50,38 @@ jobs:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
 
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v3
-      with:
-        path: ~\sonar\cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
+    # - name: Cache SonarCloud packages
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~\sonar\cache
+    #     key: ${{ runner.os }}-sonar
+    #     restore-keys: ${{ runner.os }}-sonar
 
-    - name: Cache SonarCloud scanner
-      id: cache-sonar-scanner
-      uses: actions/cache@v3
-      with:
-        path: .\.sonar\scanner
-        key: ${{ runner.os }}-sonar-scanner
-        restore-keys: ${{ runner.os }}-sonar-scanner
+    # - name: Cache SonarCloud scanner
+    #   id: cache-sonar-scanner
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: .\.sonar\scanner
+    #     key: ${{ runner.os }}-sonar-scanner
+    #     restore-keys: ${{ runner.os }}-sonar-scanner
 
-    - name: Install SonarCloud scanner
-      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-      shell: powershell
-      run: |
-        New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+    # - name: Install SonarCloud scanner
+    #   if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+    #   shell: powershell
+    #   run: |
+    #     New-Item -Path .\.sonar\scanner -ItemType Directory
+    #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
     
-    - name: Install report generator
-      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+    # - name: Install report generator
+    #   run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
-    - name: Start sonarqube analysis
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      shell: powershell
-      run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Galad_tranquire" /o:"galad-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=.\TestResults\coverage\SonarQube.xml
+    # - name: Start sonarqube analysis
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #   shell: powershell
+    #   run: |
+    #     .\.sonar\scanner\dotnet-sonarscanner begin /k:"Galad_tranquire" /o:"galad-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=.\TestResults\coverage\SonarQube.xml
 
     - name: Restore dependencies
       run: dotnet restore
@@ -110,15 +110,15 @@ jobs:
       env:
         TEST_LEVEL: UI
 
-    - name: Merge coverage reports
-      run: reportgenerator "-reports:**\TestResults\*.opencover.xml" "-targetdir:TestResults\coverage" "-reporttypes:sonarqube"
+    # - name: Merge coverage reports
+    #   run: reportgenerator "-reports:**\TestResults\*.opencover.xml" "-targetdir:TestResults\coverage" "-reporttypes:sonarqube"
 
-    - name: End sonarqube analysis
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      shell: powershell
-      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+    # - name: End sonarqube analysis
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #   shell: powershell
+    #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
   
     - name: Pack nuget packages
       run: dotnet pack --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --no-restore
