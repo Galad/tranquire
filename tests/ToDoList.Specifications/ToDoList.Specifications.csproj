@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>    
@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" />
-    <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="Selenium.Support" />
     <PackageReference Include="Selenium.WebDriver" />
     <PackageReference Include="xunit" />
@@ -23,8 +22,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.ComponentModel.TypeConverter" />
   </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net4.8' ">
+		<PackageReference Include="System.Collections.Immutable" />     
+        <PackageReference Include="System.ComponentModel.TypeConverter" />
+    </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tranquire.Selenium\Tranquire.Selenium.csproj" />
