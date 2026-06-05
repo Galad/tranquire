@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-
-namespace Tranquire.Selenium.Extensions;
+﻿namespace Tranquire.Selenium.Extensions;
 
 /// <summary>
 /// Represent the format of a screenshot
