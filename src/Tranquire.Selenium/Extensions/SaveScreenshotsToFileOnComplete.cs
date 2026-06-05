@@ -48,7 +48,7 @@ public class SaveScreenshotsToFileOnComplete : IObserver<ScreenshotInfo>
         foreach (var screenshot in screenshots)
         {
             var filename = Path.Combine(Directory, screenshot.FileName + Format.Extension);
-            screenshot.Screenshot.SaveAsFile(filename, Format.Format);
+            screenshot.Screenshot.SaveAsFile(filename);
         }
     }
 
