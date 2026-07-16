@@ -47,6 +47,23 @@ public class Actions : WebDriverTest
         Assert.Equal(expected, actual);
     }
 
+    [Fact]
+    public void TestDoubleClick()
+    {
+        //arrange
+        Fixture.WebDriver.Navigate().Refresh();
+        var inputTarget = Target.The("double click input").LocatedBy(By.Id("DoubleClickInput"));
+        var clickTarget = Target.The("double click target").LocatedBy(By.Id("ButtonToDoubleClick"));
+        var expectedClickContent = Target.The("expected click content").LocatedBy(By.Id("DoubleClickExpectedContent"));
+        var expected = Guid.NewGuid().ToString();
+        Fixture.Actor.Given(Enter.TheValue(expected).Into(inputTarget));
+        //act            
+        Fixture.Actor.When(DoubleClick.On(clickTarget));
+        //assert
+        var actual = Answer(TextContent.Of(expectedClickContent));
+        Assert.Equal(expected, actual);
+    }
+
     [Theory]
     [InlineData("1")]
     [InlineData("3")]
