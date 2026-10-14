@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Update UI Models</title>
+</head>
+<body>
+    <h3>UI Model for Update</h3>
+    <div class="Model1" id="ContainerID">
+        <div class="TextLabel">
+            <strong><i>Container Title</i></strong>
+            <input type="text" name="NameOfText" />
+        </div><br>
+
+        <div class="Checkbox">
+            <strong><i>Is this a checkbox?</i></strong>
+            <input type="checkbox" name="NameOfCheckbox" value="Yes" checked />
+        </div><br>
+
+        <div class="RadioLabel">
+            <strong><i>Radio Buttons</i></strong>
+            <br>
+            <input type="radio" id="option1" value="1" name="NameOfRadio" checked />
+            <label for="option1">Option 1</label>
+
+            <input type="radio" id="option2" value="2" name="NameOfRadio" />
+            <label class="option2">Option 2</label>
+
+            <input type="radio" id="option3" value="3" name="NameOfRadio" />
+            <label class="option3">Option 3</label>
+        </div><br>
+
+        <div class="CheckboxLabel">
+            <strong><i>Date</i></strong>
+            <input type="datetime" placeholder="dd/MM/yyyy" id="IdOfDate" />
+        </div><br>
+
+        <div class="TextAreaLabel">
+            <strong><i>Text Area</i></strong>
+            <br><textarea id="IdOfTextArea" rows="4" cols="50"></textarea>
+        </div><br>
+
+        <div class="SelectLabel">
+            <strong><i>Select Options</i></strong>
+            <select name="SelectOptions" id="Seos">
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+            </select>
+        </div><br>
+
+        <div class="SelectMultipleLabel">
+            <strong><i>Multiple Select Options</i></strong>
+            <br>
+            <select name="SelectOptions" id="MultiSeos" multiple>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+            </select>
+        </div><br>
+
+        <input type="submit" value="Save" />
+    </div>
+</body>
+</html>
