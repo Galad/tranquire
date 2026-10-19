@@ -39,7 +39,7 @@ internal static class FormUpdate
             $"Fill form for {typeof(T).Name}",
             actor =>
             {
-                if (value != null)
+                if (value is not null)
                     UpdateModelFields(actor, value, container, propertiesTargetParameters ?? Array.Empty<string>());
                 return Unit.Default;
             });
@@ -206,14 +206,10 @@ internal static class FormUpdate
             modelType.GetCustomAttribute<TargetWithParametersAttribute>() != null)
             return true;
 
-        foreach (var property in modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        {
-            if (property.GetCustomAttribute<TargetAttribute>() != null ||
-                property.GetCustomAttribute<TargetWithParametersAttribute>() != null)
-                return true;
-        }
-
-        return false;
+        return Array.Exists(
+            modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public),
+            property => property.GetCustomAttribute<TargetAttribute>() != null ||
+                property.GetCustomAttribute<TargetWithParametersAttribute>() != null);
     }
 
     /// <summary>

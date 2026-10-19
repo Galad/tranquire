@@ -73,8 +73,17 @@ internal static class ResolveTarget
             namedParameters,
             positionalModelValues);
 
-        return Regex.Replace(format, @"\{(?<parameter>[A-Za-z_][A-Za-z0-9_]*|\d+)\}", match =>
-            ResolvePlaceholder(match.Groups["parameter"].Value, positionalParameters, namedParameters, modelProperties, model.GetType()));
+        return Regex.Replace(
+            format,
+            @"\{(?<parameter>[A-Za-z_][A-Za-z0-9_]*|\d+)\}",
+            match => ResolvePlaceholder(
+                match.Groups["parameter"].Value,
+                positionalParameters,
+                namedParameters,
+                modelProperties,
+                model.GetType()),
+            RegexOptions.None,
+            TimeSpan.FromSeconds(1));
     }
 
     private static Dictionary<string, object> CreateNamedParameters(

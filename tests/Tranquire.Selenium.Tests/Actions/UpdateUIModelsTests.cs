@@ -18,6 +18,8 @@ public class UpdateUIModelsTests : WebDriverTest
     }
 
     private static ITarget Container => Target.The("Container").LocatedBy(By.Id("ContainerID"));
+    private static readonly string[] FirstMultiSeosValues = { "2", "4" };
+    private static readonly string[] SecondMultiSeosValues = { "1", "3" };
 
     // Model for model-based overloads
     public class TestModel
@@ -55,7 +57,7 @@ public class UpdateUIModelsTests : WebDriverTest
             { "IdOfDate", "2024-06-01" },
             { "IdOfTextArea", "Some text" },
             { "Seos", "3" },
-            { "MultiSeos", new[] { "2", "4" } }
+            { "MultiSeos", FirstMultiSeosValues }
         };
 
         var action = UpdateUIModels.Update(Container, values, "unused");
@@ -75,7 +77,7 @@ public class UpdateUIModelsTests : WebDriverTest
             { "IdOfDate", "2024-06-02" },
             { "IdOfTextArea", "Another text" },
             { "Seos", "2" },
-            { "MultiSeos", new[] { "1", "3" } }
+            { "MultiSeos", SecondMultiSeosValues }
         };
 
         var action = UpdateUIModels.Update(Container, values);
@@ -124,7 +126,7 @@ public class UpdateUIModelsTests : WebDriverTest
         AssertFieldsFromModel(model);
     }
 
-    private void AssertFields(IDictionary<string, object> values)
+    private void AssertFields(Dictionary<string, object> values)
     {
         var model = Fixture.Actor.AsksFor(UIModel.Of<TestModel>(Container));
         Assert.Equal(values["NameOfText"], model.NameOfText);
@@ -308,7 +310,7 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         public string Name { get; set; }
     }
 
-    private ITarget RowTarget(int id) =>
+    private static ITarget RowTarget(int id) =>
         Target.The($"row {id}").LocatedBy(By.Id($"row_{id}"));
 
     private void AssertRow(int id, string expectedName, string expectedDescription)
