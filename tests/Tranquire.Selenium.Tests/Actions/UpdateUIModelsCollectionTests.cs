@@ -75,6 +75,15 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         public string Name { get; set; }
     }
 
+    public class PartiallySuppliedParameterizedItem
+    {
+        public string Prefix { get; set; }
+        public int Id { get; set; }
+
+        [TargetWithParameters(ByMethod.Name, "field_{0}_{1}", "Prefix", "Id"), Enter]
+        public string Name { get; set; }
+    }
+
     public class SuppliedParameterItem
     {
         public int Id { get; set; }
@@ -223,6 +232,21 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1)));
 
         AssertInputValue(1, "field_alpha", "Positional selector");
+    }
+
+    [Fact]
+    public void Update_Model_WithPartialPositionalParameters_ShouldFallBackToModelProperties()
+    {
+        var model = new PartiallySuppliedParameterizedItem
+        {
+            Prefix = "model",
+            Id = 42,
+            Name = "Partial parameters",
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1), "provided"));
+
+        AssertInputValue(1, "field_provided_42", "Partial parameters");
     }
 
     [Fact]

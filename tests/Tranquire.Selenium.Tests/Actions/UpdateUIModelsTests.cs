@@ -86,6 +86,55 @@ public class UpdateUIModelsTests : WebDriverTest
     }
 
     [Fact]
+    public void Update_WithContainerAndValues_ShouldUpdateRepeatedSameNameCheckboxes()
+    {
+        var values = new Dictionary<string, object>
+        {
+            { "NameOfCheckbox", true }
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
+        Assert.Equal(2, checkboxes.Count);
+        Assert.All(checkboxes, checkbox => Assert.True(checkbox.Selected));
+    }
+
+    [Fact]
+    public void Update_WithContainerAndValuesAndParameters_ShouldUpdateRepeatedSameNameCheckboxes()
+    {
+        var values = new Dictionary<string, object>
+        {
+            { "NameOfCheckbox", true }
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values, "unused"));
+
+        var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
+        Assert.Equal(2, checkboxes.Count);
+        Assert.All(checkboxes, checkbox => Assert.True(checkbox.Selected));
+    }
+
+    [Fact]
+    public void Update_WithContainerAndValues_ShouldHandleQuotesInRadioNameAndValue()
+    {
+        const string radioName = "Radio's Choice";
+        const string radioValue = "O'Reilly \"Special\"";
+        var values = new Dictionary<string, object>
+        {
+            { radioName, radioValue }
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        var radios = Fixture.WebDriver.FindElements(By.Name(radioName));
+        Assert.Equal(2, radios.Count);
+        Assert.True(radios[0].Selected);
+        Assert.False(radios[1].Selected);
+        Assert.Equal(radioValue, radios[0].GetAttribute("value"));
+    }
+
+    [Fact]
     public void Update_WithModelAndContainerAndParameters_ShouldSetFields()
     {
         var model = new TestModel

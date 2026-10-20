@@ -42,11 +42,16 @@ internal static class FormActions
                     .RelativeTo(container)
                 ).Many()
             );
+            var nameOccurrences = new Dictionary<(string TagName, string Name), int>();
 
             foreach (var element in elements)
             {
                 var name = element.GetAttribute("name");
                 var id = element.GetAttribute("id");
+                var tagName = element.TagName.ToLowerInvariant();
+                var nameOccurrence = string.IsNullOrEmpty(name)
+                    ? 0
+                    : GetNextNameOccurrence(nameOccurrences, tagName, name);
                 var key = !string.IsNullOrEmpty(name) && resolvedValues.ContainsKey(name)
                     ? name
                     : id;
@@ -57,23 +62,8 @@ internal static class FormActions
                 }
 
                 var value = resolvedValues[key];
-                var tagName = element.TagName.ToLowerInvariant();
                 var type = (element.GetAttribute("type") ?? "").ToLowerInvariant();
-
-                // Build a Target for this field, relative to the container
-                ITarget fieldTarget;
-                if (!string.IsNullOrEmpty(id))
-                {
-                    fieldTarget = Target.The($"{id} field")
-                        .LocatedBy(By.Id(id))
-                        .RelativeTo(container);
-                }
-                else
-                {
-                    fieldTarget = Target.The($"{name} field")
-                        .LocatedBy(By.Name(name))
-                        .RelativeTo(container);
-                }
+                var fieldTarget = CreateFieldTarget(id, name, tagName, nameOccurrence, container);
 
                 UpdateField.PerformFieldAction(actor, key, value, tagName, type, fieldTarget, container);
             }
@@ -93,11 +83,16 @@ internal static class FormActions
                     .RelativeTo(container)
                 ).Many()
             );
+            var nameOccurrences = new Dictionary<(string TagName, string Name), int>();
 
             foreach (var element in elements)
             {
                 var name = element.GetAttribute("name");
                 var id = element.GetAttribute("id");
+                var tagName = element.TagName.ToLowerInvariant();
+                var nameOccurrence = string.IsNullOrEmpty(name)
+                    ? 0
+                    : GetNextNameOccurrence(nameOccurrences, tagName, name);
                 var key = !string.IsNullOrEmpty(name) && values.ContainsKey(name)
                     ? name
                     : id;
@@ -108,26 +103,44 @@ internal static class FormActions
                 }
 
                 var value = values[key];
-                var tagName = element.TagName.ToLowerInvariant();
                 var type = (element.GetAttribute("type") ?? "").ToLowerInvariant();
-
-                ITarget fieldTarget;
-                if (!string.IsNullOrEmpty(id))
-                {
-                    fieldTarget = Target.The($"{id} field")
-                        .LocatedBy(By.Id(id))
-                        .RelativeTo(container);
-                }
-                else
-                {
-                    fieldTarget = Target.The($"{name} field")
-                        .LocatedBy(By.Name(name))
-                        .RelativeTo(container);
-                }
+                var fieldTarget = CreateFieldTarget(id, name, tagName, nameOccurrence, container);
 
                 UpdateField.PerformFieldAction(actor, key, value, tagName, type, fieldTarget, container);
             }
             return Unit.Default;
         });
+    }
+
+    private static int GetNextNameOccurrence(
+        IDictionary<(string TagName, string Name), int> nameOccurrences,
+        string tagName,
+        string name)
+    {
+        var key = (tagName, name);
+        nameOccurrences.TryGetValue(key, out var occurrence);
+        occurrence++;
+        nameOccurrences[key] = occurrence;
+        return occurrence;
+    }
+
+    private static ITarget CreateFieldTarget(
+        string id,
+        string name,
+        string tagName,
+        int nameOccurrence,
+        ITarget container)
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            return Target.The($"{id} field")
+                .LocatedBy(By.Id(id))
+                .RelativeTo(container);
+        }
+
+        var selector = $"(.//{tagName}[@name={XPathStringLiteral.Format(name)}])[{nameOccurrence}]";
+        return Target.The($"{name} field {nameOccurrence}")
+            .LocatedBy(By.XPath(selector))
+            .RelativeTo(container);
     }
 }

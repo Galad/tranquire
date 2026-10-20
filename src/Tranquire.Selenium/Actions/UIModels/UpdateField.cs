@@ -93,9 +93,11 @@ internal static class UpdateField
         {
             radioGroupName = actor.AsksFor(HtmlAttribute.Of(fieldTarget).Named("id"));
         }
+        var radioGroupNameLiteral = XPathStringLiteral.Format(radioGroupName);
+        var radioValueLiteral = XPathStringLiteral.Format(radioValue);
         By radioBy = !string.IsNullOrEmpty(radioGroupName)
-            ? By.XPath($".//input[@type='radio' and (@name='{radioGroupName}' or @id='{radioGroupName}') and @value='{radioValue}']")
-            : By.XPath($".//input[@type='radio' and @value='{radioValue}']");
+            ? By.XPath($".//input[@type='radio' and (@name={radioGroupNameLiteral} or @id={radioGroupNameLiteral}) and @value={radioValueLiteral}]")
+            : By.XPath($".//input[@type='radio' and @value={radioValueLiteral}]");
         var radioTarget = Target.The($"{fieldKey} radio with value {radioValue}")
             .LocatedBy(radioBy)
             .RelativeTo(container);

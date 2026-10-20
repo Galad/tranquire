@@ -121,10 +121,15 @@ internal static class ResolveTarget
         IDictionary<string, object> namedParameters,
         object[] positionalModelValues)
     {
-        if (suppliedParameters.Length > 0)
-            return suppliedParameters.Cast<object>().ToArray();
-        if (formatParameters.Length > 0)
-            return formatParameters.Select(parameterName => namedParameters[parameterName]).ToArray();
+        var parameterCount = Math.Max(formatParameters.Length, suppliedParameters.Length);
+        if (parameterCount > 0)
+        {
+            return Enumerable.Range(0, parameterCount)
+                .Select(index => index < suppliedParameters.Length
+                    ? (object)suppliedParameters[index]
+                    : namedParameters[formatParameters[index]])
+                .ToArray();
+        }
         if (currentValue != null)
             return new[] { currentValue };
         return positionalModelValues;
