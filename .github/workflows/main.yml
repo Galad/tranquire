@@ -106,12 +106,12 @@ jobs:
         TEST_LEVEL: Api
 
     - name: Run UI tests (demo project)
-      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category=UI"
+      run: dotnet test --configuration ${{ env.PROJECT_CONFIGURATION }} --no-build --filter "Category=UI" --logger trx -v m --results-directory .\TestResults\UI /p:CoverletOutputFormat=opencover /p:CollectCoverage=true /p:CoverletOutput='./TestResults/UI/'
       env:
         TEST_LEVEL: UI
 
     - name: Merge coverage reports
-      run: reportgenerator "-reports:**\TestResults\*.opencover.xml" "-targetdir:TestResults\coverage" "-reporttypes:sonarqube"
+      run: reportgenerator "-reports:**\TestResults\**\*.opencover.xml" "-targetdir:TestResults\coverage" "-reporttypes:sonarqube"
 
     - name: End sonarqube analysis
       env:
