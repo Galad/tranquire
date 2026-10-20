@@ -14,7 +14,6 @@ namespace Tranquire.Selenium.Tests.Actions;
 /// Uses UpdateUIModelsCollection.html which has two row containers: #row_1 and #row_2,
 /// each containing name and description text inputs located by their name attribute.
 /// </summary>
-[Trait("Category", "UI")]
 public class UpdateUIModelsCollectionTests : WebDriverTest
 {
     public UpdateUIModelsCollectionTests(WebDriverFixture fixture)

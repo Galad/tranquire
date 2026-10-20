@@ -10,7 +10,6 @@ using Xunit;
 using OpenQA.Selenium;
 
 namespace Tranquire.Selenium.Tests.Actions;
-[Trait("Category", "UI")]
 public class UpdateUIModelsTests : WebDriverTest
 {
     public UpdateUIModelsTests(WebDriverFixture fixture) : base(fixture, "UpdateUIModels.html")
