@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Xml;
 using Moq;
 using OpenQA.Selenium;
+using Tranquire;
 using Tranquire.Selenium.Actions.Enters;
 using Tranquire.Selenium.Actions.UIModels;
+using Tranquire.Selenium.Questions;
 using Tranquire.Selenium.Questions.UIModels;
 using Tranquire.Selenium.Targets;
 using Xunit;
@@ -90,6 +94,30 @@ public class UpdateUIModelsUnitTests
         Assert.Equal("row_42", ResolveTarget.ResolveClassLevelFormat(attribute, new SelectorModel { Id = 42 }));
     }
 
+    [Fact]
+    public void ResolveTargets_WithNullParameters_ShouldResolveFromModelProperty()
+    {
+        var model = new SelectorModel { Key = "alpha" };
+        var property = typeof(SelectorModel).GetProperty(nameof(SelectorModel.Key));
+        var target = ResolveTarget.ResolveTargets(
+            property,
+            model,
+            model.Key,
+            null,
+            new TargetWithParametersAttribute(ByMethod.Name, "field_{Key}"),
+            Target.The("container").LocatedBy(By.TagName("body")));
+        var element = new Mock<IWebElement>().Object;
+        var searchContext = new Mock<ISearchContext>();
+        searchContext
+            .Setup(context => context.FindElement(It.IsAny<By>()))
+            .Returns(element);
+
+        Assert.Same(element, target.ResolveFor(searchContext.Object));
+        searchContext.Verify(
+            context => context.FindElement(It.Is<By>(by => by.ToString() == "By.CssSelector: body [name=field_alpha]")),
+            Times.Once);
+    }
+
     [Theory]
     [InlineData("field_{Missing}", "{Missing}")]
     [InlineData("field_{2}", "{2}")]
@@ -150,6 +178,18 @@ public class UpdateUIModelsUnitTests
         actor.VerifyNoOtherCalls();
     }
 
+    [Fact]
+    public void FieldAction_WithNullSelectValue_ShouldExecuteSelectAction()
+    {
+        var actor = new Mock<IActor>(MockBehavior.Strict);
+        actor.Setup(executor => executor.Execute(It.IsAny<IAction<Unit>>())).Returns(Unit.Default);
+        var field = Target.The("field").LocatedBy(By.Id("field"));
+
+        UpdateField.PerformFieldAction(actor.Object, "field", null, "select", null, field, null);
+
+        actor.Verify(executor => executor.Execute(It.IsAny<IAction<Unit>>()), Times.Once);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("range")]
@@ -162,6 +202,77 @@ public class UpdateUIModelsUnitTests
 
         actor.Verify(executor => executor.Execute(It.Is<EnterNewValue>(action => action.Target == field && action.Value == "42")), Times.Once);
         actor.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public void FieldAction_WithUnrecognizedInputTypeAndNullValue_ShouldRejectNull()
+    {
+        var actor = new Mock<IActor>();
+        var field = Target.The("field").LocatedBy(By.Id("field"));
+
+        Assert.Throws<ArgumentNullException>(() =>
+            UpdateField.PerformFieldAction(actor.Object, "field", null, "input", null, field, null));
+
+        actor.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public void FormActions_WithEmptyParameterizedValues_ShouldReturnWithoutFields()
+    {
+        var actor = new Mock<IActor>(MockBehavior.Strict);
+        actor
+            .Setup(executor => executor.AsksFor(It.IsAny<IQuestion<ImmutableArray<IWebElement>>>()))
+            .Returns(ImmutableArray<IWebElement>.Empty);
+        var container = Target.The("container").LocatedBy(By.Id("container"));
+        var action = FormActions.FillFormFields(container, new Dictionary<string, object>(), "unused");
+
+        action.ExecuteWhenAs(actor.Object);
+        action.ExecuteWhenAs(actor.Object);
+
+        actor.Verify(executor => executor.AsksFor(It.IsAny<IQuestion<ImmutableArray<IWebElement>>>()), Times.Exactly(2));
+        actor.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public void FormActions_WithNullInputType_ShouldUseDefaultEnterAction()
+    {
+        var element = new Mock<IWebElement>(MockBehavior.Strict);
+        element.SetupGet(item => item.TagName).Returns("input");
+        element.Setup(item => item.GetAttribute("name")).Returns("field");
+        element.Setup(item => item.GetAttribute("id")).Returns("field");
+        element.Setup(item => item.GetAttribute("type")).Returns((string)null);
+        var actor = new Mock<IActor>(MockBehavior.Strict);
+        actor
+            .Setup(executor => executor.AsksFor(It.IsAny<IQuestion<ImmutableArray<IWebElement>>>()))
+            .Returns(ImmutableArray.Create(element.Object));
+        actor.Setup(executor => executor.Execute(It.IsAny<IAction<Unit>>())).Returns(Unit.Default);
+        var container = Target.The("container").LocatedBy(By.Id("container"));
+        var values = new Dictionary<string, object> { ["field"] = "value" };
+
+        FormActions.FillFormFields(container, values).ExecuteWhenAs(actor.Object);
+
+        actor.Verify(executor => executor.Execute(It.IsAny<IAction<Unit>>()), Times.Once);
+    }
+
+    [Fact]
+    public void FormUpdate_WithMissingTypeAndTagName_ShouldUseDefaultInputDispatch()
+    {
+        var actor = new Mock<IActor>(MockBehavior.Strict);
+        actor.Setup(executor => executor.AsksFor(It.IsAny<IQuestion<string>>())).Returns((string)null);
+        actor.Setup(executor => executor.Execute(It.IsAny<IAction<Unit>>())).Returns(Unit.Default);
+        var model = new DefaultDispatchModel { Value = "value" };
+        var container = Target.The("container").LocatedBy(By.Id("container"));
+
+        FormUpdate.FillFormFromModel(model, container).ExecuteWhenAs(actor.Object);
+
+        actor.Verify(executor => executor.AsksFor(It.IsAny<IQuestion<string>>()), Times.Exactly(2));
+        actor.Verify(executor => executor.Execute(It.IsAny<IAction<Unit>>()), Times.Once);
+    }
+
+    private sealed class DefaultDispatchModel
+    {
+        [Target(ByMethod.Id, "field"), Enter]
+        public string Value { get; set; }
     }
 
     private sealed class SelectorModel

@@ -140,6 +140,20 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         public object[] Children { get; set; }
     }
 
+    public class TargetedNestedCollectionParent
+    {
+        public object[] Children { get; set; }
+    }
+
+    [Target(ByMethod.Id, "row_{Id}", Name = "nested row")]
+    public class NamedNestedChild
+    {
+        public int Id { get; set; }
+
+        [Target(ByMethod.Name, "name"), Enter]
+        public string Name { get; set; }
+    }
+
     [Target(ByMethod.Self, "")]
     public class SelfScopedChild : FieldsOnlyChild
     {
@@ -404,6 +418,21 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         Fixture.Actor.When(UpdateUIModels.Update(model, container));
 
         AssertInputValue(1, "name", "Nested item");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_NestedCollection_ShouldUseEachItemsNamedTarget()
+    {
+        var model = new TargetedNestedCollectionParent
+        {
+            Children = new object[] { new NamedNestedChild { Id = 1, Name = "Named nested item" } }
+        };
+        var container = Target.The("body").LocatedBy(By.TagName("body"));
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, container));
+
+        AssertInputValue(1, "name", "Named nested item");
         AssertInputValue(2, "name", string.Empty);
     }
 
