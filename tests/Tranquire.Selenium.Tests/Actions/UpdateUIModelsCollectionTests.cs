@@ -94,6 +94,57 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         public string TargetedName { get; set; }
     }
 
+    public class ValueParameterizedItem
+    {
+        [TargetWithParameters(ByMethod.Name, "{Value}", "Value"), Enter]
+        public string Name { get; set; }
+    }
+
+    public class CurrentValueParameterizedItem
+    {
+        [TargetWithParameters(ByMethod.Name, "{0}"), Enter]
+        public string Name { get; set; }
+    }
+
+    public class ImplicitFieldActionItem
+    {
+        [TargetWithParameters(ByMethod.Name, "name")]
+        public string Name { get; set; }
+    }
+
+    public class SelfTargetItem
+    {
+        [Target(ByMethod.Self, ""), Enter]
+        public string Name { get; set; }
+    }
+
+    public class FieldsOnlyChild
+    {
+        [Target(ByMethod.Name, "name"), Enter]
+        public string Name { get; set; }
+    }
+
+    public class PropertyScopedParent
+    {
+        public int Id { get; set; }
+
+        [Target(ByMethod.Id, "row_{Id}")]
+        public FieldsOnlyChild Child { get; set; }
+    }
+
+    public class NestedCollectionParent
+    {
+        public int Id { get; set; }
+
+        [Target(ByMethod.Id, "row_{Id}")]
+        public object[] Children { get; set; }
+    }
+
+    [Target(ByMethod.Self, "")]
+    public class SelfScopedChild : FieldsOnlyChild
+    {
+    }
+
     public class KitchenModel
     {
         public RecipeModel Recipe { get; set; }
@@ -250,6 +301,113 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
     }
 
     [Fact]
+    public void Update_Model_WithValueParameter_ShouldPreferCurrentValueOverSuppliedParameter()
+    {
+        var model = new ValueParameterizedItem { Name = "name" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1), "description"));
+
+        AssertInputValue(1, "name", "name");
+        AssertInputValue(1, "description", string.Empty);
+    }
+
+    [Fact]
+    public void Update_Model_WithNullParameters_ShouldUseCurrentValueForPositionalSelector()
+    {
+        var model = new CurrentValueParameterizedItem { Name = "name" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1), (string[])null));
+
+        AssertInputValue(1, "name", "name");
+    }
+
+    [Fact]
+    public void Update_Model_WithoutEnterAttribute_ShouldUseDefaultFieldAction()
+    {
+        var model = new ImplicitFieldActionItem { Name = "Default action" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1)));
+
+        AssertInputValue(1, "name", "Default action");
+    }
+
+    [Fact]
+    public void Update_Model_WithSelfTarget_ShouldUpdateTheProvidedField()
+    {
+        var field = Target.The("name field").LocatedBy(By.Name("name")).RelativeTo(RowTarget(1));
+
+        Fixture.Actor.When(UpdateUIModels.Update(new SelfTargetItem { Name = "Self target" }, field));
+
+        AssertInputValue(1, "name", "Self target");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_WithNullModel_ShouldLeaveFieldsUnchanged()
+    {
+        var field = Fixture.WebDriver.FindElement(By.Id("row_1")).FindElement(By.Name("name"));
+        field.SendKeys("Existing value");
+
+        Fixture.Actor.When(UpdateUIModels.Update<CollectionItem>(null, RowTarget(1)));
+
+        AssertInputValue(1, "name", "Existing value");
+    }
+
+    [Fact]
+    public void Update_NestedModel_WithPropertyTarget_ShouldResolveParentModelProperties()
+    {
+        var model = new PropertyScopedParent
+        {
+            Id = 1,
+            Child = new FieldsOnlyChild { Name = "Property-scoped child" }
+        };
+        var container = Target.The("body").LocatedBy(By.TagName("body"));
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, container));
+
+        AssertInputValue(1, "name", "Property-scoped child");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_NestedModel_WithoutContainerMetadata_ShouldUseParentContainer()
+    {
+        var model = new { Child = new FieldsOnlyChild { Name = "Inherited container" } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1)));
+
+        AssertInputValue(1, "name", "Inherited container");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_NestedModel_WithSelfContainer_ShouldUseParentContainer()
+    {
+        var model = new { Child = new SelfScopedChild { Name = "Self-scoped child" } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1)));
+
+        AssertInputValue(1, "name", "Self-scoped child");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_NestedCollection_ShouldSkipNullAndNonModelItems()
+    {
+        var model = new NestedCollectionParent
+        {
+            Id = 1,
+            Children = new object[] { null, "Ignored text", 42, new FieldsOnlyChild { Name = "Nested item" } }
+        };
+        var container = Target.The("body").LocatedBy(By.TagName("body"));
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, container));
+
+        AssertInputValue(1, "name", "Nested item");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
     public void Update_Collection_WithParameterFunction_ShouldUseItemSpecificSelectorParameters()
     {
         var items = new[]
@@ -268,6 +426,25 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
 
         AssertInputValue(1, "field_alpha", "Function one");
         AssertInputValue(2, "field_beta", "Function two");
+    }
+
+    [Fact]
+    public void Update_Collection_WithNullParameterFunction_ShouldResolveModelProperties()
+    {
+        var items = new[]
+        {
+            new NamedParameterizedItem { Id = 1, FieldKey = "alpha", Name = "First item" },
+            new NamedParameterizedItem { Id = 2, FieldKey = "beta", Name = "Second item" }
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(
+            items,
+            RowContainer,
+            (item, container) => container.Of(item.Id.ToString()),
+            (Func<NamedParameterizedItem, string[]>)null));
+
+        AssertInputValue(1, "field_alpha", "First item");
+        AssertInputValue(2, "field_beta", "Second item");
     }
 
     [Fact]

@@ -32,7 +32,7 @@ internal static class UpdateField
                 }
                 break;
             case "textarea":
-                actor.Execute(Enter.TheValue(value?.ToString()).Into(fieldTarget));
+                actor.Execute(Enter.TheNewValue(value?.ToString()).Into(fieldTarget));
                 break;
         }
     }

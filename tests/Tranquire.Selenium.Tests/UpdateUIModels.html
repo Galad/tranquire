@@ -11,6 +11,12 @@
         <div class="TextLabel">
             <strong><i>Container Title</i></strong>
             <input type="text" name="NameOfText" />
+            <input type="password" name="PasswordInput" />
+            <input type="email" name="EmailInput" />
+            <input type="number" name="NumberInput" />
+            <input type="search" name="SearchInput" />
+            <input type="tel" name="TelephoneInput" />
+            <input type="url" name="UrlInput" />
         </div><br>
 
         <div class="Checkbox">
@@ -35,11 +41,18 @@
         <div class="QuotedRadio">
             <input type="radio" name="Radio's Choice" value="O'Reilly &quot;Special&quot;" />
             <input type="radio" name="Radio's Choice" value="Other" />
+            <input type="radio" id="RadioWithoutName" value="selected" />
+            <input type="radio" id="EmptyValueRadio" name="EmptyValueGroup" value="" />
+            <input type="radio" data-test="ungrouped-radio" value="ungrouped" />
         </div><br>
 
         <div class="CheckboxLabel">
             <strong><i>Date</i></strong>
             <input type="datetime" placeholder="dd/MM/yyyy" id="IdOfDate" />
+            <input type="text" name="DateWithLongYear" placeholder="DD/MM/YYYY" />
+            <input type="text" name="DateWithShortYear" placeholder="DD/MM/YY" />
+            <input type="text" name="DateWithSingleDay" placeholder="D/MM/YYYY" />
+            <input type="text" name="DateWithInvalidFormat" placeholder="%" />
         </div><br>
 
         <div class="TextAreaLabel">

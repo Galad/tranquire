@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using Tranquire.Selenium.Actions.UIModels;
 using Tranquire.Selenium.Targets;
@@ -78,6 +79,134 @@ public class UpdateUIModelsTests : WebDriverTest
         Fixture.Actor.When(action);
 
         Assert.Equal("Updated text", Fixture.WebDriver.FindElement(By.Name("NameOfText")).GetAttribute("value"));
+    }
+
+    [Theory]
+    [InlineData("DateWithLongYear", "01/10/2026")]
+    [InlineData("DateWithShortYear", "01/10/26")]
+    [InlineData("DateWithSingleDay", "1/10/2026")]
+    public void Update_WithDateValue_ShouldApplyPlaceholderFormat(string fieldName, string expected)
+    {
+        var values = new Dictionary<string, object>
+        {
+            { fieldName, new DateTime(2026, 10, 1) }
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.Equal(expected, Fixture.WebDriver.FindElement(By.Name(fieldName)).GetAttribute("value"));
+    }
+
+    [Fact]
+    public void Update_WithInvalidDateFormat_ShouldUseInvariantFallback()
+    {
+        var date = new DateTime(2026, 10, 21);
+        var values = new Dictionary<string, object>
+        {
+            { "DateWithInvalidFormat", date }
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.Equal(date.ToString(CultureInfo.InvariantCulture),
+            Fixture.WebDriver.FindElement(By.Name("DateWithInvalidFormat")).GetAttribute("value"));
+    }
+
+    [Theory]
+    [InlineData("PasswordInput", "secret")]
+    [InlineData("EmailInput", "test@example.com")]
+    [InlineData("NumberInput", "42")]
+    [InlineData("SearchInput", "search term")]
+    [InlineData("TelephoneInput", "0123456789")]
+    [InlineData("UrlInput", "https://example.com/")]
+    public void Update_WithTextualInput_ShouldEnterValue(string fieldName, string value)
+    {
+        var values = new Dictionary<string, object> { { fieldName, value } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.Equal(value, Fixture.WebDriver.FindElement(By.Name(fieldName)).GetAttribute("value"));
+    }
+
+    [Theory]
+    [InlineData("NameOfText")]
+    [InlineData("IdOfTextArea")]
+    public void Update_WithNullFieldValue_ShouldRejectNullWithoutChangingField(string fieldKey)
+    {
+        var field = Fixture.WebDriver.FindElement(By.CssSelector($"[name='{fieldKey}'], #{fieldKey}"));
+        field.SendKeys("Existing value");
+        var values = new Dictionary<string, object> { { fieldKey, null } };
+
+        var exception = Assert.Throws<ArgumentNullException>(() => Fixture.Actor.When(UpdateUIModels.Update(Container, values)));
+
+        Assert.Equal("value", exception.ParamName);
+        Assert.Equal("Existing value", field.GetAttribute("value"));
+    }
+
+    [Theory]
+    [InlineData("NameOfText")]
+    [InlineData("IdOfTextArea")]
+    public void Update_WithEmptyFieldValue_ShouldClearExistingValue(string fieldKey)
+    {
+        var field = Fixture.WebDriver.FindElement(By.CssSelector($"[name='{fieldKey}'], #{fieldKey}"));
+        field.SendKeys("Existing value");
+        var values = new Dictionary<string, object> { { fieldKey, string.Empty } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.Equal(string.Empty, field.GetAttribute("value"));
+    }
+
+    [Fact]
+    public void Update_WithTextareaValue_ShouldReplaceExistingValue()
+    {
+        var field = Fixture.WebDriver.FindElement(By.Id("IdOfTextArea"));
+        field.SendKeys("Existing value");
+        var values = new Dictionary<string, object> { { "IdOfTextArea", "Replacement value" } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.Equal("Replacement value", field.GetAttribute("value"));
+    }
+
+    [Fact]
+    public void Update_WithNonBooleanCheckboxValue_ShouldLeaveSelectionUnchanged()
+    {
+        var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
+        var initialSelections = checkboxes.Select(checkbox => checkbox.Selected).ToArray();
+        var values = new Dictionary<string, object> { { "NameOfCheckbox", "true" } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.Equal(initialSelections, checkboxes.Select(checkbox => checkbox.Selected).ToArray());
+    }
+
+    [Theory]
+    [InlineData("RadioWithoutName", "selected")]
+    [InlineData("EmptyValueRadio", null)]
+    public void Update_WithRadioFallback_ShouldSelectMatchingValue(string fieldId, string value)
+    {
+        var values = new Dictionary<string, object> { { fieldId, value } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+
+        Assert.True(Fixture.WebDriver.FindElement(By.Id(fieldId)).Selected);
+    }
+
+    public class UngroupedRadioModel
+    {
+        [Target(ByMethod.CssSelector, "input[data-test='ungrouped-radio']"), Enter]
+        public string Choice { get; set; }
+    }
+
+    [Fact]
+    public void Update_WithRadioWithoutNameOrId_ShouldFindValueWithinContainer()
+    {
+        var model = new UngroupedRadioModel { Choice = "ungrouped" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
+
+        Assert.True(Fixture.WebDriver.FindElement(By.CssSelector("input[data-test='ungrouped-radio']")).Selected);
     }
 
     [Fact]
