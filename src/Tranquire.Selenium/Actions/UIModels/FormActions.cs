@@ -35,39 +35,7 @@ internal static class FormActions
                 })
                 .ToDictionary(x => x.ResolvedKey, x => x.Value);
 
-            // Find all input, select, and textarea elements within the container
-            var elements = actor.AsksFor(
-                Element.Of(Target.The("All form fields")
-                    .LocatedBy(By.CssSelector("input,select,textarea"))
-                    .RelativeTo(container)
-                ).Many()
-            );
-            var nameOccurrences = new Dictionary<(string TagName, string Name), int>();
-
-            foreach (var element in elements)
-            {
-                var name = element.GetAttribute("name");
-                var id = element.GetAttribute("id");
-                var tagName = element.TagName.ToLowerInvariant();
-                var nameOccurrence = string.IsNullOrEmpty(name)
-                    ? 0
-                    : GetNextNameOccurrence(nameOccurrences, tagName, name);
-                var key = !string.IsNullOrEmpty(name) && resolvedValues.ContainsKey(name)
-                    ? name
-                    : id;
-
-                if (string.IsNullOrEmpty(key) || !resolvedValues.ContainsKey(key))
-                {
-                    continue; // Skip if no value provided for this field
-                }
-
-                var value = resolvedValues[key];
-                var type = (element.GetAttribute("type") ?? "").ToLowerInvariant();
-                var fieldTarget = CreateFieldTarget(id, name, tagName, nameOccurrence, container);
-
-                UpdateField.PerformFieldAction(actor, key, value, tagName, type, fieldTarget, container);
-            }
-            return Unit.Default;
+            return FillFields(actor, container, resolvedValues);
         });
     }
 
@@ -75,41 +43,46 @@ internal static class FormActions
         ITarget container,
         IReadOnlyDictionary<string, object> values)
     {
-        return Tranquire.Actions.Create("Fill form fields in container", actor =>
+        return Tranquire.Actions.Create("Fill form fields in container", actor => FillFields(actor, container, values));
+    }
+
+    private static Unit FillFields(
+        IActor actor,
+        ITarget container,
+        IReadOnlyDictionary<string, object> values)
+    {
+        var elements = actor.AsksFor(
+            Element.Of(Target.The("All form fields")
+                .LocatedBy(By.CssSelector("input,select,textarea"))
+                .RelativeTo(container)
+            ).Many()
+        );
+        var nameOccurrences = new Dictionary<(string TagName, string Name), int>();
+
+        foreach (var element in elements)
         {
-            var elements = actor.AsksFor(
-                Element.Of(Target.The("All form fields")
-                    .LocatedBy(By.CssSelector("input,select,textarea"))
-                    .RelativeTo(container)
-                ).Many()
-            );
-            var nameOccurrences = new Dictionary<(string TagName, string Name), int>();
+            var name = element.GetAttribute("name");
+            var id = element.GetAttribute("id");
+            var tagName = element.TagName.ToLowerInvariant();
+            var nameOccurrence = string.IsNullOrEmpty(name)
+                ? 0
+                : GetNextNameOccurrence(nameOccurrences, tagName, name);
+            var key = !string.IsNullOrEmpty(name) && values.ContainsKey(name)
+                ? name
+                : id;
 
-            foreach (var element in elements)
+            if (string.IsNullOrEmpty(key) || !values.ContainsKey(key))
             {
-                var name = element.GetAttribute("name");
-                var id = element.GetAttribute("id");
-                var tagName = element.TagName.ToLowerInvariant();
-                var nameOccurrence = string.IsNullOrEmpty(name)
-                    ? 0
-                    : GetNextNameOccurrence(nameOccurrences, tagName, name);
-                var key = !string.IsNullOrEmpty(name) && values.ContainsKey(name)
-                    ? name
-                    : id;
-
-                if (string.IsNullOrEmpty(key) || !values.ContainsKey(key))
-                {
-                    continue; // Skip if no value provided for this field
-                }
-
-                var value = values[key];
-                var type = (element.GetAttribute("type") ?? "").ToLowerInvariant();
-                var fieldTarget = CreateFieldTarget(id, name, tagName, nameOccurrence, container);
-
-                UpdateField.PerformFieldAction(actor, key, value, tagName, type, fieldTarget, container);
+                continue;
             }
-            return Unit.Default;
-        });
+
+            var value = values[key];
+            var type = (element.GetAttribute("type") ?? "").ToLowerInvariant();
+            var fieldTarget = CreateFieldTarget(id, name, tagName, nameOccurrence, container);
+
+            UpdateField.PerformFieldAction(actor, key, value, tagName, type, fieldTarget, container);
+        }
+        return Unit.Default;
     }
 
     private static int GetNextNameOccurrence(

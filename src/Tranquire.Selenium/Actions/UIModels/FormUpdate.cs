@@ -277,16 +277,6 @@ internal static class FormUpdate
         Func<T, ITargetWithParameters, ITarget> targetSelector,
         params string[] propertiesTargetParameters)
     {
-        return Tranquire.Actions.Create(
-            $"Fill form for collection of {typeof(T).Name}",
-            actor =>
-            {
-                foreach (var value in values)
-                {
-                    var rowContainer = targetSelector(value, container);
-                    actor.Execute(FillFormFromModel(value, rowContainer, propertiesTargetParameters));
-                }
-                return Unit.Default;
-            });
+        return FillFormFromModels(values, container, targetSelector, value => propertiesTargetParameters);
     }
 }

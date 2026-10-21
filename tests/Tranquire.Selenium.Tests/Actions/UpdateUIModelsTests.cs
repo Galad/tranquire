@@ -66,6 +66,21 @@ public class UpdateUIModelsTests : WebDriverTest
     }
 
     [Fact]
+    public void Update_WithParameterizedDictionaryKeys_ShouldResolveValuesWhenExecuted()
+    {
+        var values = new Dictionary<string, object>
+        {
+            { "NameOf{0}", "Initial text" }
+        };
+        var action = UpdateUIModels.Update(Container, values, "Text");
+        values["NameOf{0}"] = "Updated text";
+
+        Fixture.Actor.When(action);
+
+        Assert.Equal("Updated text", Fixture.WebDriver.FindElement(By.Name("NameOfText")).GetAttribute("value"));
+    }
+
+    [Fact]
     public void Update_WithContainerAndValues_ShouldSetFields()
     {
         var values = new Dictionary<string, object>
