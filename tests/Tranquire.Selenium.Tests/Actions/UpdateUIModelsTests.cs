@@ -18,6 +18,9 @@ public class UpdateUIModelsTests : WebDriverTest
     }
 
     private static ITarget Container => Target.The("Container").LocatedBy(By.Id("ContainerID"));
+    private static readonly string[] ExpectedNumericSelection = { "2", "4" };
+    private static readonly string[] PreselectedOptions = { "1", "3" };
+    private static readonly string[] SingleSelectValues = { "2" };
 
     // Model for model-based overloads
     public class TestModel
@@ -238,11 +241,45 @@ public class UpdateUIModelsTests : WebDriverTest
         Fixture.Actor.When(UpdateUIModels.Update(model, Container));
 
         Assert.Equal("3", Fixture.WebDriver.FindElement(By.Id("Seos")).GetAttribute("value"));
-        var selected = Fixture.WebDriver.FindElement(By.Id("MultiSeos"))
-            .FindElements(By.CssSelector("option:checked"))
-            .Select(option => option.GetAttribute("value"));
-        Assert.Equal(new[] { "2", "4" }, selected);
+        Assert.Equal(ExpectedNumericSelection, SelectedOptions("MultiSeos"));
     }
+
+    public class SelectCollectionModel
+    {
+        [Target(ByMethod.Id, "MultiSeos"), Enter]
+        public string[] Multiple { get; set; }
+
+        [Target(ByMethod.Id, "Seos"), Enter]
+        public string[] Single { get; set; }
+    }
+
+    [Theory]
+    [InlineData("2")]
+    [InlineData("")]
+    public void Update_WithMultiSelectValues_ShouldReplaceExistingSelection(string values)
+    {
+        var expected = values.Length == 0 ? Array.Empty<string>() : values.Split(',');
+        var multiSelect = Target.The("multi select").LocatedBy(By.Id("MultiSeos"));
+        Fixture.Actor.When(Tranquire.Selenium.Actions.Select.TheValues(PreselectedOptions).Into(multiSelect));
+
+        Fixture.Actor.When(UpdateUIModels.Update(new SelectCollectionModel { Multiple = expected }, Container));
+
+        Assert.Equal(expected, SelectedOptions("MultiSeos"));
+    }
+
+    [Fact]
+    public void Update_WithCollectionForSingleSelect_ShouldSelectTheValue()
+    {
+        Fixture.Actor.When(UpdateUIModels.Update(new SelectCollectionModel { Single = SingleSelectValues }, Container));
+
+        Assert.Equal("2", Fixture.WebDriver.FindElement(By.Id("Seos")).GetAttribute("value"));
+    }
+
+    private string[] SelectedOptions(string selectId) =>
+        Fixture.WebDriver.FindElement(By.Id(selectId))
+            .FindElements(By.CssSelector("option:checked"))
+            .Select(option => option.GetAttribute("value"))
+            .ToArray();
 
     public class UnsupportedElementModel
     {
@@ -297,12 +334,13 @@ public class UpdateUIModelsTests : WebDriverTest
     }
 
     [Fact]
-    public void Update_WithNonBooleanCheckboxValue_ShouldLeaveSelectionUnchanged()
+    public void Update_WithNonBooleanCheckboxValue_ShouldExplainFailure()
     {
         var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
         var initialSelections = checkboxes.Select(checkbox => checkbox.Selected).ToArray();
 
-        Fixture.Actor.When(UpdateUIModels.Update(new CheckboxTextModel { Checkbox = "true" }, Container));
+        Assert.Throws<NotSupportedException>(() =>
+            Fixture.Actor.When(UpdateUIModels.Update(new CheckboxTextModel { Checkbox = "true" }, Container)));
 
         Assert.Equal(initialSelections, checkboxes.Select(checkbox => checkbox.Selected).ToArray());
     }

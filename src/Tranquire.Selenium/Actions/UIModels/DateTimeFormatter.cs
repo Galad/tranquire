@@ -5,6 +5,7 @@ namespace Tranquire.Selenium.Actions.UIModels;
 
 internal static class DateTimeFormatter
 {
+    private static readonly char[] HourTokens = { 'h', 'H' };
     private static readonly Regex DateFormatPattern = new(
         @"\A[dMyHhmsft/\-.:, ]+\z",
         RegexOptions.None,
@@ -21,6 +22,9 @@ internal static class DateTimeFormatter
             .Replace("YY", "yy")
             .Replace("DD", "dd")
             .Replace("D", "d");
+        // Without an hour component, lower-case "m" means month (as in "dd/mm/yyyy"), not minutes.
+        if (format.IndexOfAny(HourTokens) < 0)
+            format = format.Replace('m', 'M');
         return DateFormatPattern.IsMatch(format) ? format : null;
     }
 }

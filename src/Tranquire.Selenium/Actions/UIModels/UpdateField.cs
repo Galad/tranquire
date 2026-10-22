@@ -27,7 +27,7 @@ internal static class UpdateField
                 if (field.Value is IEnumerable values && field.Value is not string)
                 {
                     var options = values.Cast<object>().Select(value => FormatValue(value, field.Culture)).ToArray();
-                    actor.Execute(Select.TheValues(options).Into(field.Target));
+                    actor.Execute(new SelectOnlyValues(field.Target, options));
                 }
                 else
                 {
@@ -89,7 +89,10 @@ internal static class UpdateField
 
     private static void HandleCheckbox(IActor actor, FormField field)
     {
-        if (field.Value is bool selected && selected != actor.AsksFor(Selected.Of(field.Target)))
+        if (field.Value is not bool selected)
+            throw new NotSupportedException($"Cannot update '{field.Key}': checkboxes need a bool value.");
+
+        if (selected != actor.AsksFor(Selected.Of(field.Target)))
         {
             actor.Execute(Click.On(field.Target));
         }

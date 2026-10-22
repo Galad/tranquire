@@ -24,6 +24,9 @@ public class UpdateUIModelsUnitTests
     [InlineData("YY/M/D", "yy/M/d")]
     [InlineData("dd/MM/yyyy", "dd/MM/yyyy")]
     [InlineData("DD/MM/YYYY hh:mm tt", "dd/MM/yyyy hh:mm tt")]
+    [InlineData("yyyy-mm-dd", "yyyy-MM-dd")]
+    [InlineData("dd/mm/yyyy", "dd/MM/yyyy")]
+    [InlineData("hh:mm", "hh:mm")]
     [InlineData("Quantity", null)]
     [InlineData("Enter a date", null)]
     public void DateTimeFormat_ShouldMapOnlyDatePlaceholders(string placeholder, string expected)
@@ -367,6 +370,58 @@ public class UpdateUIModelsUnitTests
     }
 
     [Fact]
+    public void FieldAction_WithNonBooleanCheckboxValue_ShouldExplainFailure()
+    {
+        var actor = new Mock<IActor>(MockBehavior.Strict);
+
+        var exception = Assert.Throws<NotSupportedException>(() =>
+            UpdateField.PerformFieldAction(actor.Object, Field("true", "input", "checkbox", null)));
+
+        Assert.Contains("'field'", exception.Message);
+        actor.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public void SelectOnlyValues_ShouldDescribeTargetAndValues()
+    {
+        var action = new SelectOnlyValues(Target.The("options").LocatedBy(By.Id("options")), OptionValues);
+
+        Assert.Equal("Select only the values [1, 2] of options", action.Name);
+    }
+
+    [Fact]
+    public void Update_WithNullItemsInCollection_ShouldSkipThem()
+    {
+        var actor = new Mock<IActor>();
+        var rows = new[] { null, new RowModel { Id = 1 } };
+        var rowTarget = Target.The("row").LocatedBy("row_{0}", By.Id);
+
+        UpdateUIModels.Update(rows).ExecuteWhenAs(actor.Object);
+        UpdateUIModels.Update(rows, rowTarget, (row, container) => container.Of(row.Id.ToString(CultureInfo.InvariantCulture)))
+            .ExecuteWhenAs(actor.Object);
+
+        actor.Verify(executor => executor.Execute(It.IsAny<IAction<Unit>>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public void FormUpdate_WithShadowedIndexerAndWriteOnlyProperties_ShouldUpdateVisiblePropertyOnly()
+    {
+        var actor = new Mock<IActor>();
+        var container = Target.The("container").LocatedBy(By.Id("container"));
+
+        FormUpdate.FillFormFromModel(new ShadowModel { Name = "derived" }, container).ExecuteWhenAs(actor.Object);
+
+        actor.Verify(executor => executor.Execute(It.Is<EnterNewValue>(action => action.Value == "derived")), Times.Once);
+        actor.Verify(executor => executor.Execute(It.IsAny<IAction<Unit>>()), Times.Once);
+    }
+
+    [Fact]
+    public void ResolveNamedFormat_WithShadowedProperty_ShouldUseDerivedValue()
+    {
+        Assert.Equal("field_derived", ResolveTarget.ResolveNamedFormat("field_{Name}", new ShadowModel { Name = "derived" }));
+    }
+
+    [Fact]
     public void FieldAction_WithNullSelectValue_ShouldExecuteSelectAction()
     {
         var actor = new Mock<IActor>(MockBehavior.Strict);
@@ -499,6 +554,8 @@ public class UpdateUIModelsUnitTests
         actor.Verify(executor => executor.Execute(It.IsAny<IAction<Unit>>()), Times.Once);
     }
 
+    private static readonly string[] OptionValues = { "1", "2" };
+
     private static FormField Field(
         object value,
         string tagName,
@@ -512,6 +569,28 @@ public class UpdateUIModelsUnitTests
     {
         [Target(ByMethod.Id, "amount"), Enter]
         public decimal Amount { get; set; }
+    }
+
+    [TargetWithParameters(ByMethod.Id, "row_{Id}")]
+    private sealed class RowModel
+    {
+        public int Id { get; set; }
+    }
+
+    private class ShadowBaseModel
+    {
+        [Target(ByMethod.Id, "base"), Enter]
+        public string Name { get; set; } = "base";
+    }
+
+    private sealed class ShadowModel : ShadowBaseModel
+    {
+        [Target(ByMethod.Id, "derived_{Name}"), Enter]
+        public new string Name { get; set; }
+
+        public string this[int index] => index.ToString(CultureInfo.InvariantCulture);
+
+        public string WriteOnly { set => throw new NotSupportedException(); }
     }
 
     private sealed class DefaultDispatchModel

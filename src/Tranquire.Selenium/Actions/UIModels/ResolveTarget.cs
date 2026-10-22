@@ -93,9 +93,7 @@ internal static class ResolveTarget
         suppliedParameters ??= Array.Empty<string>();
 
         var modelType = model.GetType();
-        var modelProperties = modelType
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(property => property.CanRead)
+        var modelProperties = ModelProperties.Of(modelType)
             .ToDictionary(
                 property => property.Name,
                 property => property.GetValue(model),

@@ -74,7 +74,7 @@ internal static class FormUpdate
             return;
 
         context.Ancestors.Push(model);
-        foreach (var property in model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        foreach (var property in ModelProperties.Of(model.GetType()))
             UpdateModelProperty(context, model, property, container);
         context.Ancestors.Pop();
     }
@@ -237,7 +237,7 @@ internal static class FormUpdate
             return true;
 
         return Array.Exists(
-            modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public),
+            ModelProperties.Of(modelType),
             property => property.GetCustomAttribute<TargetAttribute>() != null ||
                 property.GetCustomAttribute<TargetWithParametersAttribute>() != null);
     }
@@ -263,6 +263,9 @@ internal static class FormUpdate
 
                 foreach (var value in values)
                 {
+                    if (value is null)
+                        continue;
+
                     var container = ResolveTarget.ResolveClassTarget(classAttr, value, typeof(T).Name);
                     actor.Execute(FillFormFromModel(value, container).WithCulture(culture));
                 }
@@ -285,6 +288,9 @@ internal static class FormUpdate
             {
                 foreach (var value in values)
                 {
+                    if (value is null)
+                        continue;
+
                     var rowContainer = targetSelector(value, container);
                     var parameters = propertiesTargetParameters?.Invoke(value) ?? Array.Empty<string>();
                     actor.Execute(FillFormFromModel(value, rowContainer, parameters).WithCulture(culture));

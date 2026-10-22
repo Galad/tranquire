@@ -51,6 +51,7 @@ public static class UpdateUIModels
     /// </typeparam>
     /// <param name="values">The collection of model instances to fill into the form.</param>
     /// <returns>An IAction that fills the form for each item.</returns>
+    /// <remarks>Null items are skipped.</remarks>
     /// <example>
     /// <code>
     /// [TargetWithParameters(ByMethod.Id, "row_{Id}")]
@@ -80,6 +81,10 @@ public static class UpdateUIModels
     /// <see cref="Tranquire.Selenium.Targets.TargetWithParametersAttribute"/> selectors for each item.
     /// </param>
     /// <returns>An IAction that fills the form for each item.</returns>
+    /// <remarks>
+    /// Null items are skipped. Omit <paramref name="propertiesTargetParameters"/> rather than passing <c>null</c>,
+    /// which is ambiguous with the <c>params string[]</c> overload.
+    /// </remarks>
     /// <example>
     /// <code>
     /// var rowTarget = Target.The("row").LocatedBy("row_{0}", By.Id);
@@ -114,6 +119,7 @@ public static class UpdateUIModels
     /// <see cref="Tranquire.Selenium.Targets.TargetWithParametersAttribute"/> selectors.
     /// </param>
     /// <returns>An IAction that fills the form for each item.</returns>
+    /// <remarks>Null items are skipped.</remarks>
     public static UIModelUpdate Update<T>(
         IEnumerable<T> values,
         ITargetWithParameters container,

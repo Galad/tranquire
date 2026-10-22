@@ -7,6 +7,7 @@ namespace Tranquire.Selenium.Actions.UIModels;
 /// Use this attribute alongside <see cref="Tranquire.Selenium.Questions.UIModels.TargetAttribute"/>
 /// or <see cref="Tranquire.Selenium.Targets.TargetWithParametersAttribute"/> to specify
 /// how the element is located and that its value should be entered via typing.
+/// Checkboxes need a <see cref="bool"/> value; a collection replaces the selection of a select element.
 /// </summary>
 /// <example>
 /// <code>
