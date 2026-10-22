@@ -58,7 +58,7 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         public string Name { get; set; }
     }
 
-    [TargetWithParameters(ByMethod.Id, "row_{0}")]
+    [TargetWithParameters(ByMethod.Id, "row_{0}", "Id")]
     public class PositionalClassTargetItem
     {
         public int Id { get; set; }
@@ -100,6 +100,26 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         public string Name { get; set; }
     }
 
+    public class PositionalValueParameterizedItem
+    {
+        [TargetWithParameters(ByMethod.Name, "{0}", "Value"), Enter]
+        public string Name { get; set; }
+    }
+
+    public class ValuePropertyItem
+    {
+        public string Value { get; set; }
+
+        [TargetWithParameters(ByMethod.Name, "{Value}"), Enter]
+        public string Name { get; set; }
+    }
+
+    public class SuppliedTargetItem
+    {
+        [Target(ByMethod.Name, "field_{0}"), Enter]
+        public string Name { get; set; }
+    }
+
     public class CurrentValueParameterizedItem
     {
         [TargetWithParameters(ByMethod.Name, "{0}"), Enter]
@@ -114,7 +134,7 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
 
     public class SelfTargetItem
     {
-        [Target(ByMethod.Self, ""), Enter]
+        [Target, Enter]
         public string Name { get; set; }
     }
 
@@ -130,6 +150,12 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
 
         [Target(ByMethod.Id, "row_{Id}")]
         public FieldsOnlyChild Child { get; set; }
+    }
+
+    public class ClassTargetedParent
+    {
+        public int Id { get; set; }
+        public NamedNestedChild Child { get; set; }
     }
 
     public class NestedCollectionParent
@@ -241,8 +267,8 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         var action = UpdateUIModels.Update(
             items,
             RowContainer,
-            (item, container) => container.Of(item.Id.ToString()));
-        // params string[] overload — no property-level parameterized selectors on CollectionItem
+            (item, container) => container.Of(item.Id.ToString()),
+            Array.Empty<string>());
 
         Fixture.Actor.When(action);
 
@@ -326,6 +352,38 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
     }
 
     [Fact]
+    public void Update_Model_WithPositionalValueParameter_ShouldUseCurrentValueOverSuppliedParameter()
+    {
+        var model = new PositionalValueParameterizedItem { Name = "name" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1), "description"));
+
+        AssertInputValue(1, "name", "name");
+        AssertInputValue(1, "description", string.Empty);
+    }
+
+    [Fact]
+    public void Update_Model_WithValueProperty_ShouldUseModelPropertyForValuePlaceholder()
+    {
+        var model = new ValuePropertyItem { Value = "description", Name = "Model property" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1)));
+
+        AssertInputValue(1, "description", "Model property");
+        AssertInputValue(1, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_Model_WithTargetAttributeAndSuppliedParameters_ShouldResolvePositionalPlaceholder()
+    {
+        var model = new SuppliedTargetItem { Name = "Supplied target" };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1), "alpha"));
+
+        AssertInputValue(1, "field_alpha", "Supplied target");
+    }
+
+    [Fact]
     public void Update_Model_WithNullParameters_ShouldUseCurrentValueForPositionalSelector()
     {
         var model = new CurrentValueParameterizedItem { Name = "name" };
@@ -336,13 +394,13 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
     }
 
     [Fact]
-    public void Update_Model_WithoutEnterAttribute_ShouldUseDefaultFieldAction()
+    public void Update_Model_WithoutFormModelAttribute_ShouldNotUpdateField()
     {
-        var model = new ImplicitFieldActionItem { Name = "Default action" };
+        var model = new ImplicitFieldActionItem { Name = "Not written" };
 
         Fixture.Actor.When(UpdateUIModels.Update(model, RowTarget(1)));
 
-        AssertInputValue(1, "name", "Default action");
+        AssertInputValue(1, "name", string.Empty);
     }
 
     [Fact]
@@ -380,6 +438,22 @@ public class UpdateUIModelsCollectionTests : WebDriverTest
         Fixture.Actor.When(UpdateUIModels.Update(model, container));
 
         AssertInputValue(1, "name", "Property-scoped child");
+        AssertInputValue(2, "name", string.Empty);
+    }
+
+    [Fact]
+    public void Update_NestedModel_WithClassTarget_ShouldResolveNestedModelProperties()
+    {
+        var model = new ClassTargetedParent
+        {
+            Id = 2,
+            Child = new NamedNestedChild { Id = 1, Name = "Class-targeted child" }
+        };
+        var container = Target.The("body").LocatedBy(By.TagName("body"));
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, container));
+
+        AssertInputValue(1, "name", "Class-targeted child");
         AssertInputValue(2, "name", string.Empty);
     }
 

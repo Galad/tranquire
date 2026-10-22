@@ -1,129 +1,148 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
+using System.Linq;
 using OpenQA.Selenium;
 using Tranquire.Selenium.Questions;
 
 namespace Tranquire.Selenium.Actions.UIModels;
 internal static class UpdateField
 {
-    public static void PerformFieldAction(
-        IActor actor,
-        string fieldKey,
-        object value,
-        string tagName,
-        string type,
-        ITarget fieldTarget,
-        ITarget container)
+    private static readonly Dictionary<string, string> DateInputFormats = new()
     {
-        switch (tagName)
+        ["date"] = "yyyy-MM-dd",
+        ["datetime-local"] = "yyyy-MM-dd'T'HH:mm",
+        ["time"] = "HH:mm"
+    };
+
+    public static void PerformFieldAction(IActor actor, FormField field)
+    {
+        switch (field.TagName)
         {
             case "input":
-                HandleInputField(actor, fieldKey, value, type, fieldTarget, container);
+                HandleInputField(actor, field);
                 break;
             case "select":
-                if (value is IEnumerable<string> values)
+                if (field.Value is IEnumerable values && field.Value is not string)
                 {
-                    actor.Execute(Select.TheValues(values).Into(fieldTarget));
+                    var options = values.Cast<object>().Select(value => FormatValue(value, field.Culture)).ToArray();
+                    actor.Execute(Select.TheValues(options).Into(field.Target));
                 }
                 else
                 {
-                    actor.Execute(Select.TheValue(value?.ToString()).Into(fieldTarget));
+                    actor.Execute(Select.TheValue(FormatValue(field.Value, field.Culture)).Into(field.Target));
                 }
                 break;
             case "textarea":
-                actor.Execute(Enter.TheNewValue(value?.ToString()).Into(fieldTarget));
+                EnterValue(actor, field, FormatValue(field.Value, field.Culture));
                 break;
+            default:
+                throw new NotSupportedException(
+                    $"Cannot update '{field.Key}': <{field.TagName}> elements are not supported. " +
+                    $"Use a custom {nameof(BaseFormModelAttribute)} to update it.");
         }
     }
 
-    private static void HandleInputField(
-        IActor actor,
-        string fieldKey,
-        object value,
-        string type,
-        ITarget fieldTarget,
-        ITarget container)
+    private static string FormatValue(object value, CultureInfo culture) =>
+        value is IFormattable formattable
+            ? formattable.ToString(null, culture)
+            : value?.ToString();
+
+    private static void EnterValue(IActor actor, FormField field, string text)
     {
-        switch (type)
+        actor.Execute(Enter.TheNewValue(text).Into(field.Target));
+    }
+
+    private static void HandleInputField(IActor actor, FormField field)
+    {
+        switch (field.Type)
         {
             case "checkbox":
-                HandleCheckbox(actor, value, fieldTarget);
+                HandleCheckbox(actor, field);
                 break;
             case "radio":
-                HandleRadio(actor, fieldKey, value, fieldTarget, container);
+                HandleRadio(actor, field);
+                break;
+            // HTML number inputs only accept invariant numbers.
+            case "number":
+                EnterValue(actor, field, FormatValue(field.Value, CultureInfo.InvariantCulture));
                 break;
             case "text":
             case "password":
             case "email":
-            case "number":
             case "search":
             case "tel":
             case "url":
-                HandleTextualInput(actor, value, fieldTarget);
+                HandleTextualInput(actor, field);
+                break;
+            case "date":
+            case "datetime-local":
+            case "time":
+                HandleDateInput(actor, field);
                 break;
             default:
-                actor.Execute(Enter.TheNewValue(value?.ToString()).Into(fieldTarget));
+                EnterValue(actor, field, FormatValue(field.Value, field.Culture));
                 break;
         }
     }
 
-    private static void HandleCheckbox(IActor actor, object value, ITarget fieldTarget)
+    private static void HandleCheckbox(IActor actor, FormField field)
     {
-        if (value is bool b)
+        if (field.Value is bool selected && selected != actor.AsksFor(Selected.Of(field.Target)))
         {
-            var isChecked = actor.AsksFor(HtmlAttribute.Of(fieldTarget).Named("checked")) == "true";
-            if (b != isChecked)
-            {
-                actor.Execute(Click.On(fieldTarget));
-            }
+            actor.Execute(Click.On(field.Target));
         }
     }
 
-    private static void HandleRadio(
-        IActor actor,
-        string fieldKey,
-        object value,
-        ITarget fieldTarget,
-        ITarget container)
+    private static void HandleRadio(IActor actor, FormField field)
     {
-        var radioValue = value?.ToString();
-        var radioGroupName = actor.AsksFor(HtmlAttribute.Of(fieldTarget).Named("name"));
+        var radioValue = FormatValue(field.Value, field.Culture);
+        var radioGroupName = actor.AsksFor(HtmlAttribute.Of(field.Target).Named("name"));
         if (string.IsNullOrEmpty(radioGroupName))
         {
-            radioGroupName = actor.AsksFor(HtmlAttribute.Of(fieldTarget).Named("id"));
+            radioGroupName = actor.AsksFor(HtmlAttribute.Of(field.Target).Named("id"));
         }
         var radioGroupNameLiteral = XPathStringLiteral.Format(radioGroupName);
         var radioValueLiteral = XPathStringLiteral.Format(radioValue);
         By radioBy = !string.IsNullOrEmpty(radioGroupName)
             ? By.XPath($".//input[@type='radio' and (@name={radioGroupNameLiteral} or @id={radioGroupNameLiteral}) and @value={radioValueLiteral}]")
             : By.XPath($".//input[@type='radio' and @value={radioValueLiteral}]");
-        var radioTarget = Target.The($"{fieldKey} radio with value {radioValue}")
+        var radioTarget = Target.The($"{field.Key} radio with value {radioValue}")
             .LocatedBy(radioBy)
-            .RelativeTo(container);
+            .RelativeTo(field.Container);
         actor.Execute(Click.On(radioTarget));
     }
 
-    private static void HandleTextualInput(IActor actor, object value, ITarget fieldTarget)
+    private static void HandleTextualInput(IActor actor, FormField field)
     {
-        var placeholder = actor.AsksFor(HtmlAttribute.Of(fieldTarget).Named("placeholder"));
-        string formattedValue;
-        if (!string.IsNullOrEmpty(placeholder) && value is IFormattable formattable)
+        var placeholder = actor.AsksFor(HtmlAttribute.Of(field.Target).Named("placeholder"));
+        EnterValue(actor, field, FormatTextualValue(field, placeholder));
+    }
+
+    private static string FormatTextualValue(FormField field, string placeholder)
+    {
+        var format = DateTimeFormatter.MapPlaceholderToDotNetFormat(placeholder);
+        if (format == null || field.Value is not (DateTime or DateTimeOffset))
+            return FormatValue(field.Value, field.Culture);
+
+        try
         {
-            var dotNetFormat = DateTimeFormatter.MapPlaceholderToDotNetFormat(placeholder);
-            try
-            {
-                formattedValue = formattable.ToString(dotNetFormat, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                formattedValue = formattable.ToString(null, System.Globalization.CultureInfo.InvariantCulture);
-            }
+            // The placeholder spells out its separators, so they must not be replaced by the culture's.
+            return ((IFormattable)field.Value).ToString(format, CultureInfo.InvariantCulture);
         }
-        else
+        catch (FormatException)
         {
-            formattedValue = value?.ToString();
+            return FormatValue(field.Value, field.Culture);
         }
-        actor.Execute(Enter.TheNewValue(formattedValue).Into(fieldTarget));
+    }
+
+    // Typing into date/time inputs depends on the browser locale, so the ISO value is set directly.
+    private static void HandleDateInput(IActor actor, FormField field)
+    {
+        var text = field.Value is DateTime or DateTimeOffset
+            ? ((IFormattable)field.Value).ToString(DateInputFormats[field.Type], CultureInfo.InvariantCulture)
+            : FormatValue(field.Value, CultureInfo.InvariantCulture);
+        actor.Execute(new SetInputValue(field.Target, text));
     }
 }

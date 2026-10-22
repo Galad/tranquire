@@ -13,12 +13,5 @@ public abstract class BaseFormModelAttribute : Attribute
 	/// Performs this attribute's form update for the resolved field.
 	/// Derived attributes can provide custom interactions while reusing target resolution.
 	/// </summary>
-	public abstract void PerformFieldAction(
-		IActor actor,
-		string fieldKey,
-		object value,
-		string tagName,
-		string type,
-		ITarget fieldTarget,
-		ITarget container);
+	public abstract void PerformFieldAction(IActor actor, FormField field);
 }

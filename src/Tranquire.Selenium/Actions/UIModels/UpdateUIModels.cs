@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Tranquire.Selenium.Actions.UIModels;
 
@@ -10,33 +9,6 @@ namespace Tranquire.Selenium.Actions.UIModels;
 public static class UpdateUIModels
 {
     /// <summary>
-    /// Updates the UI models with the provided values.
-    /// </summary>
-    /// <param name="container">The container target for the UI models.</param>
-    /// <param name="values">A dictionary of field names and their corresponding values.</param>
-    /// <param name="parameters">Optional parameters to resolve field names.</param>
-    /// <returns>An IAction that updates the UI models.</returns>
-    public static IAction<Unit> Update(
-        ITarget container,
-        IReadOnlyDictionary<string, object> values,
-        params object[] parameters)
-    {
-        return FormActions.FillFormFields(container, values, parameters);
-    }
-    /// <summary>
-    /// Updates the UI models with the provided values.
-    /// </summary>
-    /// <param name="container">The container target for the UI models.</param>
-    /// <param name="values">A dictionary of field names and their corresponding values.</param>
-    /// <returns>An IAction that updates the UI models.</returns>
-    public static IAction<Unit> Update(
-        ITarget container,
-        IReadOnlyDictionary<string, object> values)
-    {
-        return FormActions.FillFormFields(container, values);
-    }
-
-    /// <summary>
     /// Updates the UI models with the provided values from a model.
     /// </summary>
     /// <typeparam name="T">The type of the model containing the values to update the UI models.</typeparam>
@@ -44,7 +16,8 @@ public static class UpdateUIModels
     /// <param name="container">The container target for the UI models.</param>
     /// <param name="propertiesTargetParameters">Optional parameters to resolve field names.</param>
     /// <returns>An IAction that updates the UI models.</returns>
-    public static IAction<Unit> Update<T>(
+    /// <exception cref="ArgumentException"><paramref name="value"/> is a collection.</exception>
+    public static UIModelUpdate Update<T>(
         T value,
         ITarget container,
         params string[] propertiesTargetParameters)
@@ -59,7 +32,8 @@ public static class UpdateUIModels
     /// <param name="value">The model containing the values to update the UI models.</param>
     /// <param name="container">The container target for the UI models.</param>
     /// <returns>An IAction that updates the UI models.</returns>
-    public static IAction<Unit> Update<T>(
+    /// <exception cref="ArgumentException"><paramref name="value"/> is a collection.</exception>
+    public static UIModelUpdate Update<T>(
         T value,
         ITarget container)
     {
@@ -86,7 +60,7 @@ public static class UpdateUIModels
     /// actor.When(action);
     /// </code>
     /// </example>
-    public static IAction<Unit> Update<T>(IEnumerable<T> values)
+    public static UIModelUpdate Update<T>(IEnumerable<T> values)
     {
         return FormUpdate.FillFormFromModels(values);
     }
@@ -116,7 +90,7 @@ public static class UpdateUIModels
     /// actor.When(action);
     /// </code>
     /// </example>
-    public static IAction<Unit> Update<T>(
+    public static UIModelUpdate Update<T>(
         IEnumerable<T> values,
         ITargetWithParameters container,
         Func<T, ITargetWithParameters, ITarget> targetSelector,
@@ -140,7 +114,7 @@ public static class UpdateUIModels
     /// <see cref="Tranquire.Selenium.Targets.TargetWithParametersAttribute"/> selectors.
     /// </param>
     /// <returns>An IAction that fills the form for each item.</returns>
-    public static IAction<Unit> Update<T>(
+    public static UIModelUpdate Update<T>(
         IEnumerable<T> values,
         ITargetWithParameters container,
         Func<T, ITargetWithParameters, ITarget> targetSelector,

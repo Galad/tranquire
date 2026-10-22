@@ -24,15 +24,8 @@ namespace Tranquire.Selenium.Actions.UIModels;
 public sealed class EnterAttribute : BaseFormModelAttribute
 {
 	/// <inheritdoc />
-	public override void PerformFieldAction(
-		IActor actor,
-		string fieldKey,
-		object value,
-		string tagName,
-		string type,
-		ITarget fieldTarget,
-		ITarget container)
+	public override void PerformFieldAction(IActor actor, FormField field)
 	{
-		UpdateField.PerformFieldAction(actor, fieldKey, value, tagName, type, fieldTarget, container);
+		UpdateField.PerformFieldAction(actor, field);
 	}
 }

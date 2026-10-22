@@ -18,8 +18,6 @@ public class UpdateUIModelsTests : WebDriverTest
     }
 
     private static ITarget Container => Target.The("Container").LocatedBy(By.Id("ContainerID"));
-    private static readonly string[] FirstMultiSeosValues = { "2", "4" };
-    private static readonly string[] SecondMultiSeosValues = { "1", "3" };
 
     // Model for model-based overloads
     public class TestModel
@@ -30,7 +28,8 @@ public class UpdateUIModelsTests : WebDriverTest
         [Target(ByMethod.Name, "NameOfCheckbox"), Enter, Selected]
         public bool NameOfCheckbox { get; set; }
 
-        [Target(ByMethod.CssSelector, "input[name='NameOfRadio']:checked"), Enter, Value]
+        // Reads the checked radio; writes through the group so no radio needs to be pre-selected.
+        [Target(ByMethod.CssSelector, "input[name='NameOfRadio']:checked"), TargetWithParameters(ByMethod.Name, "NameOfRadio"), Enter, Value]
         public string NameOfRadio { get; set; }
 
         [Target(ByMethod.Id, "IdOfDate"), Enter, Value]
@@ -46,127 +45,255 @@ public class UpdateUIModelsTests : WebDriverTest
         public ImmutableArray<string> MultiSeos { get; set; }
     }
 
-    [Fact]
-    public void Update_WithContainerAndValuesAndParameters_ShouldSetFields()
+    public class PlaceholderModel
     {
-        var values = new Dictionary<string, object>
-        {
-            { "NameOfText", "Test Text" },
-            { "NameOfCheckbox", false },
-            { "NameOfRadio", "2" },
-            { "IdOfDate", "2024-06-01" },
-            { "IdOfTextArea", "Some text" },
-            { "Seos", "3" },
-            { "MultiSeos", FirstMultiSeosValues }
-        };
+        [Target(ByMethod.Name, "DateWithLongYear"), Enter]
+        public DateTime? DateWithLongYear { get; set; }
 
-        var action = UpdateUIModels.Update(Container, values, "unused");
-        Fixture.Actor.When(action);
+        [Target(ByMethod.Name, "DateWithShortYear"), Enter]
+        public DateTime? DateWithShortYear { get; set; }
 
-        AssertFields(values);
+        [Target(ByMethod.Name, "DateWithSingleDay"), Enter]
+        public DateTime? DateWithSingleDay { get; set; }
+
+        [Target(ByMethod.Name, "DateWithInvalidFormat"), Enter]
+        public DateTime? DateWithInvalidFormat { get; set; }
+
+        [Target(ByMethod.Name, "DateWithTextPlaceholder"), Enter]
+        public DateTimeOffset? DateWithTextPlaceholder { get; set; }
+
+        [Target(ByMethod.Name, "QuantityInput"), Enter]
+        public int? Quantity { get; set; }
     }
 
     [Fact]
-    public void Update_WithParameterizedDictionaryKeys_ShouldResolveValuesWhenExecuted()
+    public void Update_WithDateValues_ShouldApplyDatePlaceholderFormats()
     {
-        var values = new Dictionary<string, object>
+        var date = new DateTime(2026, 10, 1);
+        var model = new PlaceholderModel
         {
-            { "NameOf{0}", "Initial text" }
-        };
-        var action = UpdateUIModels.Update(Container, values, "Text");
-        values["NameOf{0}"] = "Updated text";
-
-        Fixture.Actor.When(action);
-
-        Assert.Equal("Updated text", Fixture.WebDriver.FindElement(By.Name("NameOfText")).GetAttribute("value"));
-    }
-
-    [Theory]
-    [InlineData("DateWithLongYear", "01/10/2026")]
-    [InlineData("DateWithShortYear", "01/10/26")]
-    [InlineData("DateWithSingleDay", "1/10/2026")]
-    public void Update_WithDateValue_ShouldApplyPlaceholderFormat(string fieldName, string expected)
-    {
-        var values = new Dictionary<string, object>
-        {
-            { fieldName, new DateTime(2026, 10, 1) }
+            DateWithLongYear = date,
+            DateWithShortYear = date,
+            DateWithSingleDay = date
         };
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
 
-        Assert.Equal(expected, Fixture.WebDriver.FindElement(By.Name(fieldName)).GetAttribute("value"));
+        Assert.Equal("01/10/2026", InputValue("DateWithLongYear"));
+        Assert.Equal("01/10/26", InputValue("DateWithShortYear"));
+        Assert.Equal("1/10/2026", InputValue("DateWithSingleDay"));
     }
 
     [Fact]
-    public void Update_WithInvalidDateFormat_ShouldUseInvariantFallback()
+    public void Update_WithNonDatePlaceholderOrInvalidFormat_ShouldNotApplyPlaceholder()
     {
         var date = new DateTime(2026, 10, 21);
-        var values = new Dictionary<string, object>
+        var offset = new DateTimeOffset(date, TimeSpan.Zero);
+        var model = new PlaceholderModel
         {
-            { "DateWithInvalidFormat", date }
+            DateWithInvalidFormat = date,
+            DateWithTextPlaceholder = offset,
+            Quantity = 42
         };
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container).WithCulture(CultureInfo.InvariantCulture));
 
-        Assert.Equal(date.ToString(CultureInfo.InvariantCulture),
-            Fixture.WebDriver.FindElement(By.Name("DateWithInvalidFormat")).GetAttribute("value"));
+        Assert.Equal(date.ToString(CultureInfo.InvariantCulture), InputValue("DateWithInvalidFormat"));
+        Assert.Equal(offset.ToString(CultureInfo.InvariantCulture), InputValue("DateWithTextPlaceholder"));
+        Assert.Equal("42", InputValue("QuantityInput"));
     }
 
-    [Theory]
-    [InlineData("PasswordInput", "secret")]
-    [InlineData("EmailInput", "test@example.com")]
-    [InlineData("NumberInput", "42")]
-    [InlineData("SearchInput", "search term")]
-    [InlineData("TelephoneInput", "0123456789")]
-    [InlineData("UrlInput", "https://example.com/")]
-    public void Update_WithTextualInput_ShouldEnterValue(string fieldName, string value)
+    public class DateInputModel
     {
-        var values = new Dictionary<string, object> { { fieldName, value } };
+        [Target(ByMethod.Name, "DateInput"), Enter]
+        public DateTime? Date { get; set; }
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        [Target(ByMethod.Name, "DateTimeLocalInput"), Enter]
+        public DateTimeOffset? DateTimeLocal { get; set; }
 
-        Assert.Equal(value, Fixture.WebDriver.FindElement(By.Name(fieldName)).GetAttribute("value"));
-    }
+        [Target(ByMethod.Name, "TimeInput"), Enter]
+        public DateTime? Time { get; set; }
 
-    [Theory]
-    [InlineData("NameOfText")]
-    [InlineData("IdOfTextArea")]
-    public void Update_WithNullFieldValue_ShouldRejectNullWithoutChangingField(string fieldKey)
-    {
-        var field = Fixture.WebDriver.FindElement(By.CssSelector($"[name='{fieldKey}'], #{fieldKey}"));
-        field.SendKeys("Existing value");
-        var values = new Dictionary<string, object> { { fieldKey, null } };
-
-        var exception = Assert.Throws<ArgumentNullException>(() => Fixture.Actor.When(UpdateUIModels.Update(Container, values)));
-
-        Assert.Equal("value", exception.ParamName);
-        Assert.Equal("Existing value", field.GetAttribute("value"));
-    }
-
-    [Theory]
-    [InlineData("NameOfText")]
-    [InlineData("IdOfTextArea")]
-    public void Update_WithEmptyFieldValue_ShouldClearExistingValue(string fieldKey)
-    {
-        var field = Fixture.WebDriver.FindElement(By.CssSelector($"[name='{fieldKey}'], #{fieldKey}"));
-        field.SendKeys("Existing value");
-        var values = new Dictionary<string, object> { { fieldKey, string.Empty } };
-
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
-
-        Assert.Equal(string.Empty, field.GetAttribute("value"));
+        [Target(ByMethod.Name, "DateAsText"), Enter]
+        public string DateAsText { get; set; }
     }
 
     [Fact]
-    public void Update_WithTextareaValue_ShouldReplaceExistingValue()
+    public void Update_WithDateInputs_ShouldSetIsoValues()
     {
-        var field = Fixture.WebDriver.FindElement(By.Id("IdOfTextArea"));
-        field.SendKeys("Existing value");
-        var values = new Dictionary<string, object> { { "IdOfTextArea", "Replacement value" } };
+        var model = new DateInputModel
+        {
+            Date = new DateTime(2026, 10, 1),
+            DateTimeLocal = new DateTimeOffset(2026, 10, 1, 13, 45, 0, TimeSpan.Zero),
+            Time = new DateTime(2026, 10, 1, 8, 5, 0),
+            DateAsText = "2026-12-31"
+        };
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
 
-        Assert.Equal("Replacement value", field.GetAttribute("value"));
+        Assert.Equal("2026-10-01", InputValue("DateInput"));
+        Assert.Equal("2026-10-01T13:45", InputValue("DateTimeLocalInput"));
+        Assert.Equal("08:05", InputValue("TimeInput"));
+        Assert.Equal("2026-12-31", InputValue("DateAsText"));
+    }
+
+    public class TextualInputModel
+    {
+        [Target(ByMethod.Name, "PasswordInput"), Enter]
+        public string Password { get; set; }
+
+        [Target(ByMethod.Name, "EmailInput"), Enter]
+        public string Email { get; set; }
+
+        [Target(ByMethod.Name, "NumberInput"), Enter]
+        public int Number { get; set; }
+
+        [Target(ByMethod.Name, "SearchInput"), Enter]
+        public string Search { get; set; }
+
+        [Target(ByMethod.Name, "TelephoneInput"), Enter]
+        public string Telephone { get; set; }
+
+        [Target(ByMethod.Name, "UrlInput"), Enter]
+        public string Url { get; set; }
+    }
+
+    [Fact]
+    public void Update_WithTextualInputs_ShouldEnterValues()
+    {
+        var model = new TextualInputModel
+        {
+            Password = "secret",
+            Email = "test@example.com",
+            Number = 42,
+            Search = "search term",
+            Telephone = "0123456789",
+            Url = "https://example.com/"
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
+
+        Assert.Equal("secret", InputValue("PasswordInput"));
+        Assert.Equal("test@example.com", InputValue("EmailInput"));
+        Assert.Equal("42", InputValue("NumberInput"));
+        Assert.Equal("search term", InputValue("SearchInput"));
+        Assert.Equal("0123456789", InputValue("TelephoneInput"));
+        Assert.Equal("https://example.com/", InputValue("UrlInput"));
+    }
+
+    public class DecimalInputModel
+    {
+        [Target(ByMethod.Name, "NumberInput"), Enter]
+        public decimal Amount { get; set; }
+    }
+
+    [Fact]
+    public void Update_WithDecimalUnderFrenchCulture_ShouldEnterInvariantNumber()
+    {
+        var action = UpdateUIModels.Update(new DecimalInputModel { Amount = 1.5m }, Container)
+            .WithCulture(new CultureInfo("fr-FR"));
+
+        Fixture.Actor.When(action);
+
+        Assert.Equal("1.5", InputValue("NumberInput"));
+    }
+
+    public class CultureRoundTripModel
+    {
+        [Target(ByMethod.Name, "SearchInput"), Enter, Value]
+        public double Amount { get; set; }
+
+        [Target(ByMethod.Name, "DateWithTextPlaceholder"), Enter, Value]
+        public DateTime Date { get; set; }
+    }
+
+    [Fact]
+    public void Update_WithCulture_ShouldBeReadBackByUIModelWithSameCulture()
+    {
+        var culture = new CultureInfo("fr-FR");
+        var model = new CultureRoundTripModel { Amount = 1.5, Date = new DateTime(2026, 10, 1, 13, 45, 0) };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container).WithCulture(culture));
+        var result = Fixture.Actor.AsksFor(UIModel.Of<CultureRoundTripModel>(Container).WithCulture(culture));
+
+        Assert.Equal("1,5", InputValue("SearchInput"));
+        Assert.Equal(model.Amount, result.Amount);
+        Assert.Equal(model.Date, result.Date);
+    }
+
+    public class NumericSelectModel
+    {
+        [Target(ByMethod.Id, "Seos"), Enter]
+        public int Single { get; set; }
+
+        [Target(ByMethod.Id, "MultiSeos"), Enter]
+        public List<int> Multiple { get; set; }
+    }
+
+    [Fact]
+    public void Update_WithNumericSelectValues_ShouldSelectMatchingOptions()
+    {
+        var model = new NumericSelectModel { Single = 3, Multiple = new List<int> { 2, 4 } };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
+
+        Assert.Equal("3", Fixture.WebDriver.FindElement(By.Id("Seos")).GetAttribute("value"));
+        var selected = Fixture.WebDriver.FindElement(By.Id("MultiSeos"))
+            .FindElements(By.CssSelector("option:checked"))
+            .Select(option => option.GetAttribute("value"));
+        Assert.Equal(new[] { "2", "4" }, selected);
+    }
+
+    public class UnsupportedElementModel
+    {
+        [Target(ByMethod.Id, "EditableDiv"), Enter]
+        public string Text { get; set; }
+    }
+
+    [Fact]
+    public void Update_WithUnsupportedElement_ShouldExplainFailure()
+    {
+        var exception = Assert.Throws<NotSupportedException>(() =>
+            Fixture.Actor.When(UpdateUIModels.Update(new UnsupportedElementModel { Text = "text" }, Container)));
+
+        Assert.Contains("<div>", exception.Message);
+        Assert.Equal(string.Empty, Fixture.WebDriver.FindElement(By.Id("EditableDiv")).Text);
+    }
+
+    [Fact]
+    public void Update_WithNullModelValues_ShouldLeaveFieldsUnchanged()
+    {
+        var text = Fixture.WebDriver.FindElement(By.Name("NameOfText"));
+        var textArea = Fixture.WebDriver.FindElement(By.Id("IdOfTextArea"));
+        text.SendKeys("Existing text");
+        textArea.SendKeys("Existing area");
+
+        Fixture.Actor.When(UpdateUIModels.Update(new TextInputEnterModel(), Container));
+
+        Assert.Equal("Existing text", text.GetAttribute("value"));
+        Assert.Equal("Existing area", textArea.GetAttribute("value"));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("Replacement value")]
+    public void Update_WithTextValue_ShouldReplaceExistingValue(string value)
+    {
+        var text = Fixture.WebDriver.FindElement(By.Name("NameOfText"));
+        var textArea = Fixture.WebDriver.FindElement(By.Id("IdOfTextArea"));
+        text.SendKeys("Existing value");
+        textArea.SendKeys("Existing value");
+
+        Fixture.Actor.When(UpdateUIModels.Update(new TextInputEnterModel { NameOfText = value, IdOfTextArea = value }, Container));
+
+        Assert.Equal(value, text.GetAttribute("value"));
+        Assert.Equal(value, textArea.GetAttribute("value"));
+    }
+
+    public class CheckboxTextModel
+    {
+        [Target(ByMethod.Name, "NameOfCheckbox"), Enter]
+        public string Checkbox { get; set; }
     }
 
     [Fact]
@@ -174,29 +301,58 @@ public class UpdateUIModelsTests : WebDriverTest
     {
         var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
         var initialSelections = checkboxes.Select(checkbox => checkbox.Selected).ToArray();
-        var values = new Dictionary<string, object> { { "NameOfCheckbox", "true" } };
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        Fixture.Actor.When(UpdateUIModels.Update(new CheckboxTextModel { Checkbox = "true" }, Container));
 
         Assert.Equal(initialSelections, checkboxes.Select(checkbox => checkbox.Selected).ToArray());
     }
 
-    [Theory]
-    [InlineData("RadioWithoutName", "selected")]
-    [InlineData("EmptyValueRadio", null)]
-    public void Update_WithRadioFallback_ShouldSelectMatchingValue(string fieldId, string value)
+    public class RadioFallbackModel
     {
-        var values = new Dictionary<string, object> { { fieldId, value } };
+        [Target(ByMethod.Id, "RadioWithoutName"), Enter]
+        public string WithoutName { get; set; }
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        [Target(ByMethod.Id, "EmptyValueRadio"), Enter]
+        public string EmptyValue { get; set; }
+    }
 
-        Assert.True(Fixture.WebDriver.FindElement(By.Id(fieldId)).Selected);
+    [Fact]
+    public void Update_WithRadioFallback_ShouldSelectMatchingValue()
+    {
+        var model = new RadioFallbackModel { WithoutName = "selected", EmptyValue = string.Empty };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
+
+        Assert.True(Fixture.WebDriver.FindElement(By.Id("RadioWithoutName")).Selected);
+        Assert.True(Fixture.WebDriver.FindElement(By.Id("EmptyValueRadio")).Selected);
     }
 
     public class UngroupedRadioModel
     {
         [Target(ByMethod.CssSelector, "input[data-test='ungrouped-radio']"), Enter]
         public string Choice { get; set; }
+    }
+
+    public class XPathTemplateModel
+    {
+        public string Key { get; set; }
+
+        [Target(ByMethod.XPath, ".//input[@name='{Key}']"), Enter]
+        public string Value { get; set; }
+
+        [Target(ByMethod.XPath, ".//input[@name={Key}]"), Enter]
+        public string UnquotedValue { get; set; }
+    }
+
+    public class CssTemplateModel
+    {
+        public string Key { get; set; }
+
+        [Target(ByMethod.CssSelector, "input[name='{Key}']"), Enter]
+        public string Value { get; set; }
+
+        [Target(ByMethod.CssSelector, "input[name=\"{Key}\"]"), Enter]
+        public string DoubleQuotedValue { get; set; }
     }
 
     [Fact]
@@ -209,69 +365,62 @@ public class UpdateUIModelsTests : WebDriverTest
         Assert.True(Fixture.WebDriver.FindElement(By.CssSelector("input[data-test='ungrouped-radio']")).Selected);
     }
 
-    [Fact]
-    public void Update_WithContainerAndValues_ShouldSetFields()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Update_WithXPathTemplateValue_ShouldTargetExactField(bool quotedValue)
     {
-        var values = new Dictionary<string, object>
+        const string fieldName = "missing'] | .//input[@name='NameOfText";
+        var model = new XPathTemplateModel
         {
-            { "NameOfText", "Another Text" },
-            { "NameOfCheckbox", true },
-            { "NameOfRadio", "3" },
-            { "IdOfDate", "2024-06-02" },
-            { "IdOfTextArea", "Another text" },
-            { "Seos", "2" },
-            { "MultiSeos", SecondMultiSeosValues }
+            Key = fieldName,
+            Value = quotedValue ? "Exact field" : null,
+            UnquotedValue = quotedValue ? null : "Exact field"
         };
 
-        var action = UpdateUIModels.Update(Container, values);
-        Fixture.Actor.When(action);
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
 
-        AssertFields(values);
+        Assert.Equal(string.Empty, Fixture.WebDriver.FindElement(By.Name("NameOfText")).GetAttribute("value"));
+        Assert.Equal(
+            "Exact field",
+            Fixture.WebDriver.FindElement(By.CssSelector("[data-test='xpath-template-target']")).GetAttribute("value"));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Update_WithCssTemplateValue_ShouldTargetExactField(bool singleQuoted)
+    {
+        const string fieldName = "x'], [name='NameOfText";
+        var model = new CssTemplateModel
+        {
+            Key = fieldName,
+            Value = singleQuoted ? "Exact field" : null,
+            DoubleQuotedValue = singleQuoted ? null : "Exact field"
+        };
+
+        Fixture.Actor.When(UpdateUIModels.Update(model, Container));
+
+        Assert.Equal(string.Empty, InputValue("NameOfText"));
+        Assert.Equal(
+            "Exact field",
+            Fixture.WebDriver.FindElement(By.CssSelector("[data-test='css-template-target']")).GetAttribute("value"));
+    }
+
+    public class QuotedRadioModel
+    {
+        [Target(ByMethod.CssSelector, "input[name=\"Radio's Choice\"]"), Enter]
+        public string Choice { get; set; }
     }
 
     [Fact]
-    public void Update_WithContainerAndValues_ShouldUpdateRepeatedSameNameCheckboxes()
+    public void Update_WithQuotesInRadioNameAndValue_ShouldSelectMatchingRadio()
     {
-        var values = new Dictionary<string, object>
-        {
-            { "NameOfCheckbox", true }
-        };
-
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
-
-        var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
-        Assert.Equal(2, checkboxes.Count);
-        Assert.All(checkboxes, checkbox => Assert.True(checkbox.Selected));
-    }
-
-    [Fact]
-    public void Update_WithContainerAndValuesAndParameters_ShouldUpdateRepeatedSameNameCheckboxes()
-    {
-        var values = new Dictionary<string, object>
-        {
-            { "NameOfCheckbox", true }
-        };
-
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values, "unused"));
-
-        var checkboxes = Fixture.WebDriver.FindElements(By.Name("NameOfCheckbox"));
-        Assert.Equal(2, checkboxes.Count);
-        Assert.All(checkboxes, checkbox => Assert.True(checkbox.Selected));
-    }
-
-    [Fact]
-    public void Update_WithContainerAndValues_ShouldHandleQuotesInRadioNameAndValue()
-    {
-        const string radioName = "Radio's Choice";
         const string radioValue = "O'Reilly \"Special\"";
-        var values = new Dictionary<string, object>
-        {
-            { radioName, radioValue }
-        };
 
-        Fixture.Actor.When(UpdateUIModels.Update(Container, values));
+        Fixture.Actor.When(UpdateUIModels.Update(new QuotedRadioModel { Choice = radioValue }, Container));
 
-        var radios = Fixture.WebDriver.FindElements(By.Name(radioName));
+        var radios = Fixture.WebDriver.FindElements(By.Name("Radio's Choice"));
         Assert.Equal(2, radios.Count);
         Assert.True(radios[0].Selected);
         Assert.False(radios[1].Selected);
@@ -318,17 +467,8 @@ public class UpdateUIModelsTests : WebDriverTest
         AssertFieldsFromModel(model);
     }
 
-    private void AssertFields(Dictionary<string, object> values)
-    {
-        var model = Fixture.Actor.AsksFor(UIModel.Of<TestModel>(Container));
-        Assert.Equal(values["NameOfText"], model.NameOfText);
-        Assert.Equal(values["NameOfCheckbox"], model.NameOfCheckbox);
-        Assert.Equal(values["NameOfRadio"], model.NameOfRadio);
-        Assert.Equal(values["IdOfDate"], model.IdOfDate);
-        Assert.Equal(values["IdOfTextArea"], model.IdOfTextArea);
-        Assert.Equal(values["Seos"], model.Seos);
-        Assert.Equal(((string[])values["MultiSeos"]).OrderBy(x => x), model.MultiSeos.OrderBy(x => x));
-    }
+    private string InputValue(string name) =>
+        Fixture.WebDriver.FindElement(By.Name(name)).GetAttribute("value");
 
     private void AssertFieldsFromModel(TestModel expected)
     {
@@ -371,16 +511,9 @@ public class UpdateUIModelsTests : WebDriverTest
 
     public sealed class CustomEnterAttribute : BaseFormModelAttribute
     {
-        public override void PerformFieldAction(
-            IActor actor,
-            string fieldKey,
-            object value,
-            string tagName,
-            string type,
-            ITarget fieldTarget,
-            ITarget container)
+        public override void PerformFieldAction(IActor actor, FormField field)
         {
-            actor.Execute(Tranquire.Selenium.Actions.Enter.TheNewValue(value?.ToString()).Into(fieldTarget));
+            actor.Execute(Tranquire.Selenium.Actions.Enter.TheNewValue(field.Value?.ToString()).Into(field.Target));
         }
     }
 

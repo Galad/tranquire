@@ -1,5 +1,4 @@
 using System;
-using OpenQA.Selenium;
 using Tranquire.Selenium.Questions.UIModels;
 
 namespace Tranquire.Selenium.Targets;
@@ -20,33 +19,14 @@ public class TargetWithParametersAttribute : Attribute
     public string Format { get; }
 
     /// <summary>
-    /// Gets the format parameters used in the format string.
+    /// Gets the model property names bound to the positional placeholders (<c>{0}</c>, <c>{1}</c>, ...) of the format string.
     /// </summary>
     public string[] FormatParameters { get; }
-
-    /// <summary>
-    /// Gets the Selenium <see cref="By"/> locator used to find the target.
-    /// </summary>
-    public By By { get; }
 
     /// <summary>
     /// Gets the method used to locate the target.
     /// </summary>
     public ByMethod ByMethod { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TargetWithParametersAttribute"/> class
-    /// with a Selenium <see cref="By"/> locator, a format string, and optional format parameters.
-    /// </summary>
-    /// <param name="by">The Selenium <see cref="By"/> locator.</param>
-    /// <param name="format">The format string used to construct the target.</param>
-    /// <param name="formatParameters">The format parameters used in the format string.</param>
-    public TargetWithParametersAttribute(By by, string format, params string[] formatParameters)
-    {
-        By = by;
-        Format = format;
-        FormatParameters = formatParameters ?? Array.Empty<string>();
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TargetWithParametersAttribute"/> class
@@ -59,6 +39,6 @@ public class TargetWithParametersAttribute : Attribute
     {
         ByMethod = byMethod;
         Format = format;
-        FormatParameters = formatParameters;
+        FormatParameters = formatParameters ?? Array.Empty<string>();
     }
 }
