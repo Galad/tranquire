@@ -16,6 +16,8 @@
 		<None Remove="Targets.html" />
 		<None Remove="UIModels.html" />
 		<None Remove="Wait.html" />
+		<None Remove="UpdateUIModels.html" />
+		<None Remove="UpdateUIModelsCollection.html" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,6 +36,8 @@
 		<EmbeddedResource Include="Questions.html" />
 		<EmbeddedResource Include="Targets.html" />
 		<EmbeddedResource Include="Wait.html" />
+		<EmbeddedResource Include="UpdateUIModels.html" />
+		<EmbeddedResource Include="UpdateUIModelsCollection.html" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using OpenQA.Selenium;
 
@@ -47,16 +46,6 @@ public class TargetAttribute : Attribute
     /// </summary>
     public string Name { get; set; }
 
-    private static readonly Dictionary<ByMethod, Func<string, By>> _byMethods = new()
-    {
-        {ByMethod.CssSelector, By.CssSelector },
-        {ByMethod.Id, By.Id },
-        {ByMethod.Name, By.Name },
-        {ByMethod.ClassName, By.ClassName },
-        {ByMethod.TagName, By.TagName },
-        {ByMethod.XPath, By.XPath }
-    };
-
     internal ITarget CreateTarget(string name)
     {
         if (ByMethod == ByMethod.Self)
@@ -64,7 +53,7 @@ public class TargetAttribute : Attribute
             return new SelfTarget(name);
         }
 
-        return Target.The(name).LocatedBy(_byMethods[ByMethod](Value));
+        return Target.The(name).LocatedBy(ByMethod.ToBy(Value));
     }
 
     private sealed class SelfTarget : ITarget

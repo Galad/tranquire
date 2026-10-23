@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Update UI Models</title>
+</head>
+<body>
+    <h3>UI Model for Update</h3>
+    <div class="Model1" id="ContainerID">
+        <div class="TextLabel">
+            <strong><i>Container Title</i></strong>
+            <input type="text" name="NameOfText" />
+            <input type="text" name="missing'] | .//input[@name='NameOfText" data-test="xpath-template-target" />
+            <input type="text" name="x'], [name='NameOfText" data-test="css-template-target" />
+            <input type="password" name="PasswordInput" />
+            <input type="email" name="EmailInput" />
+            <input type="number" name="NumberInput" />
+            <input type="search" name="SearchInput" />
+            <input type="tel" name="TelephoneInput" />
+            <input type="url" name="UrlInput" />
+        </div><br>
+
+        <div class="Checkbox">
+            <strong><i>Is this a checkbox?</i></strong>
+            <input type="checkbox" name="NameOfCheckbox" value="Yes" checked />
+            <input type="checkbox" name="NameOfCheckbox" value="No" />
+        </div><br>
+
+        <div class="RadioLabel">
+            <strong><i>Radio Buttons</i></strong>
+            <br>
+            <input type="radio" id="option1" value="1" name="NameOfRadio" />
+            <label for="option1">Option 1</label>
+
+            <input type="radio" id="option2" value="2" name="NameOfRadio" />
+            <label class="option2">Option 2</label>
+
+            <input type="radio" id="option3" value="3" name="NameOfRadio" />
+            <label class="option3">Option 3</label>
+        </div><br>
+
+        <div class="QuotedRadio">
+            <input type="radio" name="Radio's Choice" value="O'Reilly &quot;Special&quot;" />
+            <input type="radio" name="Radio's Choice" value="Other" />
+            <input type="radio" id="RadioWithoutName" value="selected" />
+            <input type="radio" id="EmptyValueRadio" name="EmptyValueGroup" value="" />
+            <input type="radio" data-test="ungrouped-radio" value="ungrouped" />
+        </div><br>
+
+        <div class="CheckboxLabel">
+            <strong><i>Date</i></strong>
+            <input type="datetime" placeholder="dd/MM/yyyy" id="IdOfDate" />
+            <input type="text" name="DateWithLongYear" placeholder="DD/MM/YYYY" />
+            <input type="text" name="DateWithShortYear" placeholder="DD/MM/YY" />
+            <input type="text" name="DateWithSingleDay" placeholder="D/MM/YYYY" />
+            <input type="text" name="DateWithInvalidFormat" placeholder="H" />
+            <input type="text" name="DateWithTextPlaceholder" placeholder="Enter a date" />
+            <input type="text" name="QuantityInput" placeholder="Quantity" />
+            <input type="date" name="DateInput" />
+            <input type="datetime-local" name="DateTimeLocalInput" />
+            <input type="time" name="TimeInput" />
+            <input type="date" name="DateAsText" />
+        </div><br>
+
+        <div class="TextAreaLabel">
+            <strong><i>Text Area</i></strong>
+            <br><textarea id="IdOfTextArea" rows="4" cols="50"></textarea>
+            <div id="EditableDiv" contenteditable="true"></div>
+        </div><br>
+
+        <div class="SelectLabel">
+            <strong><i>Select Options</i></strong>
+            <select name="SelectOptions" id="Seos">
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+            </select>
+        </div><br>
+
+        <div class="SelectMultipleLabel">
+            <strong><i>Multiple Select Options</i></strong>
+            <br>
+            <select name="SelectOptions" id="MultiSeos" multiple>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+            </select>
+        </div><br>
+
+        <input type="submit" value="Save" />
+    </div>
+</body>
+</html>
